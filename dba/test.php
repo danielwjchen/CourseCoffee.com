@@ -13,6 +13,17 @@ class test_DBA implements DBATemplate{
 					'size' => '23',
 				),
 			),
+		'key' => array(
+				'primary' => array('nid', 'vid'),
+				'unique' => array(
+					'vid' => array('vid')
+				),
+				'index' => array(
+					'nid' => array('nid'),
+					'subject_id' => array('subject_id'),
+					'num' => array('num'),
+				),
+			),
 		);
 	}
 }

@@ -9,7 +9,9 @@ interface DBATemplate{
 	 *
 	 * @return array $definition
 	 *  an associative array that uses keys and values to define a table
-	 *  - 
+	 *  - name
+	 *  - columns
+	 *  - key (optional)
 	 */
 	public function schema();
 }
@@ -36,13 +38,46 @@ class DBAFactory{
 
 		$dba_sql = 'CREATE TABLE '.$dba_schema['name'].'(';
 
+		$columns = array();
 		foreach ($dba_schema['column'] as $column_name => $column) {
-			$dba_sql .= $column_name . ' ' . $column['type'];
-			$dba_sql .= isset($column['size']) ? '(' .$column['size'] ."), " : ", ";
+			$column_sql = $column_name . ' ' . $column['type'];
+			$column_sql.= isset($column['size']) ? '(' .$column['size'] .')' : '';
+			$columns[] = $column_sql;
 		}
-		$dba_sql .= ')';
+		$dba_sql .= implode(', ', $columns);
 
+		if (isset($dba_schema['key'])) {
+			$keys = array();
+			foreach ($dba_schema['key'] as $key) {
+				if (isset($key['primary'])) {
+					$keys[] = 'PRIMARY KEY (' . $this->create_key_sql($key['primary']) . ') ';
+				}
+				if (isset($key['unique'])) {
+					foreach ($key['unique'] as $key_name => $key_def ) {
+						$keys[] = 'UNIQUE KEY ' . $key_name . ' (' . $this->create_key_sql($key_def) . ') ';
+					}
+				}
+				if (isset($key['index'])) {
+					foreach ($key['index'] as $key_name => $key_def ) {
+						$keys[] = 'INDEX ' . $key_name . ' (' . $this->create_key_sql($key_def) . ') ';
+					}
+				}
+			}
+			$dba_sql .= implode(', ', $keys);
+		}
+
+
+		$dba_sql .= ')';
 		echo $dba_sql;
+	}
+
+	private function create_key_sql($keys) {
+		print_r($keys);
+		foreach ($keys as $key) {
+			$sql .= ' ' . $key . '';
+		}
+
+		return $sql;
 	}
 
 	/**
