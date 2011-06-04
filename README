@@ -1,0 +1,40 @@
+== README v0,1 ==
+This document explains how everything works. If you are new to this project,
+you really should read this, with caution and care.
+
+== file structure  ==
+This system organizes itself by files. Follow the convention carefully.
+
+core/                        <--- core files of the system. handles important 
+    /dispatcher.php               functions such as caching, database abstraction, 
+		/dao.php                      3rd party API abstraction, etc.
+		/config.php
+		/libs.php
+
+module/                      <--- addon modules that implements the MVC design 
+      /model/                     pattern and uses Active pattern record for DAO
+		  /view/
+			     /template/
+					 /js/
+					 /css/
+					 /image/
+			/controller/
+			/dao/
+		 ./router.php
+
+libs/                        <-- third party libraries, e.g. facebook, Google.
+
+docroot/                     <--- web root for uploaded or temporary files
+			 /tmp/
+       /file/
+
+./index.php
+
+== conventions ==
+1. file names
+    - there shall be no space, number, hyphen, or any character other than 
+		  those in the alphabet. The first letter letter in every word shall be
+			capitalized, including the first work, e.g. UserDao.php, UserModel.php.
+2. Special words
+    - words such as 'Controller', 'Modell', 'View' are reserved by the system,
+		  this also includes the obvious.
