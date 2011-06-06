@@ -65,6 +65,7 @@ class LocationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 */
 	function tearDown() {
 		$this->db->perform('TRUNCATE TABLE `location`');
+
 	}
 
 	/**
@@ -74,8 +75,8 @@ class LocationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 		$location = new LocationDAO($this->db, $this->defaultParams);
 		$result = ($location->id == $this->defaultObject['id']);
 		$error = print_r($location, true) . print_r($this->defaultObject, true);
-
 		$this->assertTrue($result, $error);
+
 	}
 
 	/**

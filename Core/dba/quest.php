@@ -12,6 +12,20 @@ class QuestDBA implements DBATemplate{
 					'not null' => TRUE,
 					'description' => 'the primary key that identifies a quest',
 				),
+        'user_id' => array(
+					'type' => 'int',
+					'unsigned' => TRUE,
+					'not null' => TRUE,
+					'default' => 0,
+					'description' => 'the primary key that identifies the creating user',
+				),
+				'type_id' => array(
+					'type' => 'int',
+					'unsigned' => TRUE,
+					'not null' => TRUE,
+					'default' => 0,
+					'description' => 'the primary key that identifies a quest type',
+				),
 				'objective' => array(
 					'type' => 'char',
 					'length' => 128,
@@ -25,6 +39,14 @@ class QuestDBA implements DBATemplate{
 				),
 			),
 			'primary' => array('id'),
+			'unique' => array(
+				'type_id' => array('type_id'),
+			),
+      'index' => array(
+        'user_id' => array('user_id'),
+        'objective' => array('objective'),
+        'user_objective_relation' => array('user_id', 'objective'),
+      )
 		);
 	}
 }

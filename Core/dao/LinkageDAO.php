@@ -31,7 +31,7 @@ abstract class LinkageDAO extends DAO{
 		";
 
 		parent::create($sql, $params);
-		$this->read($params);
+		$this->attr = $params;
 	}
 
 	/**

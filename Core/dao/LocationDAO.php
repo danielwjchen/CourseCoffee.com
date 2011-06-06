@@ -35,6 +35,13 @@ class LocationDAO extends DAO{
 			return ;
 
 		} else {
+      $this->attr = array(
+        'name' => $params['name'],
+        'longitude' => $params['longitude'],
+        'latitude' => $params['latitude'],
+        'type' => $params['type'],
+      );
+
 			parent::create("
 			INSERT INTO `location`
 				(`name`, `longitude`, `latitude`, `type_id`)
@@ -43,16 +50,10 @@ class LocationDAO extends DAO{
 				:longitude,
 				:latitude,
 				(SELECT `id` FROM `location_type` lt WHERE lt.name = :type)",
-				array(
-					'name' => $params['name'],
-					'longitude' => $params['longitude'],
-					'latitude' => $params['latitude'],
-					'type' => $params['type'],
-				)
+				$this->attr
 			);
 		}
 		
-		$this->read($params);
 	}
 
 	/**

@@ -12,7 +12,7 @@ class CollegeCampusDAO extends LocationDAO{
 	 */
 	function __construct($db, $params = NULL) {
 		if (!empty($params)) {
-			$college = $this->findCollege($params);
+			$college = $this->linkCollege($params);
 			$this->attr['college'] = $college->name;
 			$this->attr['college_id'] = $college->id;
 			$params['type'] = 'college_campus';
@@ -25,12 +25,12 @@ class CollegeCampusDAO extends LocationDAO{
 	}
 	
 	/**
-	 * Find associated college
+	 * Find associated college and create linkage
 	 *
 	 * @param array $params
 	 *  an associative array conatin either id or name of the college
 	 */
-	private function findCollege($params) {
+	private function linkCollege($params) {
 		if (isset($params['college_id'])) {
 			$college_params['id'] = $params['college_id'];
 			
@@ -45,6 +45,8 @@ class CollegeCampusDAO extends LocationDAO{
 
 		$college = Factory::DAO('college', $college_params);
 		$college->read($college_params);
+		$this->attr['college_id'] = $college->id;
+		$this->attr['college'] = $college->name;
 		return $college;
 	}
 
@@ -54,9 +56,13 @@ class CollegeCampusDAO extends LocationDAO{
 	public function create($params) {
 		$params['type'] = 'college_campus';
 		parent::create($params);
-		$college = $this->findCollege($params);
+		$college = $this->linkCollege($params);
 		$linkage = Factory::DAO('affiliation_location_linkage');
-		$linkage->create($college->id, $this->id);
+    $linkage->create(array(
+      'affiliation_id' => $college->id, 
+      'location_id' => $this->id
+    ));
+
 	}
 
 	/**
@@ -65,9 +71,7 @@ class CollegeCampusDAO extends LocationDAO{
 	public function read($params) {
 		$params['type'] = 'college_campus';
 		parent::read($params);
-		$college = $this->findCollege($params);
-		$this->attr['college_id'] = $college->id;
-		$this->attr['college'] = $college->name;
+		$college = $this->linkCollege($params);
 
 	}
 

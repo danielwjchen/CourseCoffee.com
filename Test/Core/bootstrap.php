@@ -26,7 +26,7 @@ class CoreTestCase extends UnitTestCase{
 				'driver' => 'mysql',
 				'host' => 'localhost',
 				'user' => 'root',
-				'password' => 'bTaEaFaTl2aBl',
+				'password' => 'jzK76L',
 				'port' => '3306',
 			),
 		));

@@ -1,6 +1,7 @@
 <?php
 
-require_once '../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/DAOSetup.php';
 
 interface DAOTestTemplate {
 	/**
@@ -40,14 +41,21 @@ interface DAOTestTemplate {
 
 }
 
-class DAOTestCase extends CoreTestCase{
+abstract class DAOTestCase extends CoreTestCase{
 	protected $db;
 
 	function __construct() {
 		parent::__construct();
 		$this->db = new DB($this->config->db);
 		Factory::Init($this->config->db);
+    DAOSetup::Init($this->config->db);
 	}
 
+  function setUp() {
+    return ;
+  }
+
+  function tearDown() {
+  }
 
 }

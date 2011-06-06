@@ -57,7 +57,14 @@ class Factory{
 
 		switch ($type) {
 			case 'DAO':
-				$result = new $className(self::$db, $params[1]);
+        if (isset($params[1])) {
+          $result = new $className(self::$db, $params[1]);
+
+        } else {
+          $result = new $className(self::$db);
+
+        }
+
 				break;
 			case 'MODEL':
 				break;

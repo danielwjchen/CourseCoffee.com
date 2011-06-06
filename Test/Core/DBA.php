@@ -11,14 +11,13 @@ $config = new Config(array(
 		'driver' => 'mysql',
 		'host' => 'localhost',
 		'user' => 'root',
-		'password' => 'bTaEaFaTl2aBl',
+		'password' => 'jzK76L',
 		'port' => '3306',
 	),
 ));
 
 $db = new DB($config->db);
 
-/*
 $dbas = array();
 
 if ($handle = opendir(DBA_PATH)) {
@@ -32,8 +31,8 @@ if ($handle = opendir(DBA_PATH)) {
 for ($i = 0; $i < count($dbas); $i++) {
 	DBA::Request($db, $dbas[$i], DBA_PATH . $dbas[$i] . '.php');
 }
-*/
 
+/*
 DBA::Request($db, 'affiliation_location_linkage', DBA_PATH . 'affiliation_location_linkage' . '.php');
 
 /*

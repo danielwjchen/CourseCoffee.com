@@ -60,8 +60,6 @@ class CollegeCampusDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 			array('name' => 'college_campus')
 		);
 
-		print_r($this->defaultParams);
-
 		$this->db->perform(
 			'INSERT INTO `location` (name, longitude, latitude, type_id)
 				VALUES (
