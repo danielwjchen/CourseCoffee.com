@@ -4,8 +4,8 @@ require_once dirname(__FILE__) . '/DAOTestCase.php';
 
 class LocationTypeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 
-	protected $defaultObject;
-	protected $defaultParams;
+	protected $record;
+	protected $params;
 
 	/**
 	 * Implement DAOTestCase::__construct()
@@ -20,35 +20,27 @@ class LocationTypeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Set up test case.
 	 */
 	function setUp() {
-		$this->db->perform('TRUNCATE TABLE `Location_type`');
-		$this->defaultParams = array(
-			'name' => mt_rand(4, 5)
-		);
-
-		$this->db->perform(
-			"INSERT INTO `Location_type` (`name`) VALUE (:name)",
-			$this->defaultParams);
-
-		$this->defaultObject = $this->db->fetch(
-			"SELECT * FROM `Location_type` WHERE `name` = :name",
-			$this->defaultParams);
+		DAOSetup::CleanUp('location_type');
+		$stage = DAOSetup::Prepare('location_type');
+		$this->record = $stage['record'];
+		$this->params = $stage['params'];
 	}
 
 	/**
 	 * Tear down test case.
 	 */
 	function tearDown() {
-		$this->db->perform('TRUNCATE TABLE `Location_type`');
+		DAOSetup::CleanUp('location_type');
 	}
 
 	/**
 	 * Implement DAOTestTemplate::testInstantiation()
 	 */
 	function testInstantiation() {
-		$type = new LocationTypeDAO($this->db, $this->defaultParams);
+		$type = new LocationTypeDAO($this->db, $this->params);
 
-		$result = ($type->id == $this->defaultObject['id'] &&
-			$type->name == $this->defaultObject['name']);
+		$result = ($type->id == $this->record['id'] &&
+			$type->name == $this->record['name']);
 
 		$error = "
 			id - {$type->id}
@@ -77,15 +69,15 @@ class LocationTypeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 */
 	function testRead() {
 		$type = new LocationTypeDAO($this->db);
-		$type->read($this->defaultObject);
+		$type->read($this->record);
 
-		$result = ($type->name == $this->defaultObject['name'] && 
-				$type->id == $this->defaultObject['id']);
+		$result = ($type->name == $this->record['name'] && 
+				$type->id == $this->record['id']);
 
 		$error = "
 			id - {$type->id}
 			name - {$type->name}
-		".print_r($this->defaultObject, true);
+		".print_r($this->record, true);
 
 		$this->assertTrue($result, $error);
 
@@ -95,16 +87,16 @@ class LocationTypeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Implement DAOTestTemplate::testUpdate().
 	 */
 	function testUpdate() {
-		$type = new LocationTypeDAO($this->db, $this->defaultParams);
+		$type = new LocationTypeDAO($this->db, $this->params);
 		$type->name = 'foo bar';
 		$type->update();
-		$result = ($type->name != $this->defaultObject['name'] &&
-				$type->id == $this->defaultObject['id']);
+		$result = ($type->name != $this->record['name'] &&
+				$type->id == $this->record['id']);
 
 		$error = "
 			id - {$type->id}
 			name - {$type->name}
-		".print_r($this->defaultObject, true);
+		".print_r($this->record, true);
 
 		$this->assertTrue($result, $error);
 
@@ -114,7 +106,7 @@ class LocationTypeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Implement DAOTestTemplate::testDestroy().
 	 */
 	function testDestroy() {
-		$type = new LocationTypeDAO($this->db, $this->defaultParams);
+		$type = new LocationTypeDAO($this->db, $this->params);
 		$result = (empty($type->name) && empty($type->id));
 
 		$error = "

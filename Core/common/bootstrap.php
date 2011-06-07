@@ -1,6 +1,6 @@
 <?php
 
-define('COMMON_PATH', dirname(__FILE__));
+define('COMMON_PATH', __DIR__);
 define('ROOT_PATH', str_replace('common', '', COMMON_PATH));
 define('DBA_PATH', ROOT_PATH . 'dba/');
 define('DAO_PATH', ROOT_PATH . 'dao/');

@@ -51,7 +51,8 @@ abstract class LinkageDAO extends DAO{
 				$this->column[0] => $params[$this->column[0]],
 				$this->column[1] => $params[$this->column[1]],
 			);
-			$sql .= "{$this->column[0]}= :{$this->column[0]} 
+
+			$sql .= "{$this->column[0]} = :{$this->column[0]} 
 				AND {$this->column[1]} = :{$this->column[1]}";
 
 		} elseif (isset($params[$this->column[0]])) {
@@ -63,7 +64,7 @@ abstract class LinkageDAO extends DAO{
 			$sql .= "{$this->column[1]} = :{$this->column[1]}";
 
 		} else {
-			throw new Exception("unknown {$this->linkage} identifier");
+			throw new Exception("unknown {$this->linkage} identifier - " . print_r($params, true));
 
 		}
 
@@ -73,7 +74,7 @@ abstract class LinkageDAO extends DAO{
 	}
 
 	/**
-	 * Implement DAO::upitem()
+	 * Implement DAO::update()
 	 */
 	public function update() {
 		$sql = "

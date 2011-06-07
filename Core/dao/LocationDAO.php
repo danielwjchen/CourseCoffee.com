@@ -90,7 +90,7 @@ class LocationDAO extends DAO{
 			));
 
 		} else {
-			throw new Exception('unknown location identifier');
+			throw new Exception('unknown location identifier - ' . print_r($params, true));
 			return ;
 
 		}

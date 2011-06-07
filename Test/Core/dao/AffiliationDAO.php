@@ -4,8 +4,8 @@ require_once dirname(__FILE__) . '/DAOTestCase.php';
 
 class AffiliationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 
-	protected $defaultObject;
-	protected $defaultParams;
+	protected $record;
+	protected $params;
 
 	/**
 	 * Implement DAOTestCase::__construct()
@@ -20,40 +20,10 @@ class AffiliationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Set up test case.
 	 */
 	function setUp() {
-		$this->db->perform('TRUNCATE TABLE `affiliation`');
-		$this->db->perform('TRUNCATE TABLE `affiliation_type`');
-		$this->defaultParams = array(
-			'name' => 'Department of Science and Enginerring',
-			'url' => mt_rand(12, 15),
-			'type' => 'college',
-			'type_id' => '',
-		);
-		$this->db->perform(
-			'INSERT INTO `affiliation_type` (name) VALUE (:name)',
-			array('name' => $this->defaultParams['type'])
-		);
-
-		$affiliation_type = $this->db->fetch(
-			'SELECT * FROM `affiliation_type` WHERE `name` = :name',
-			array('name' => $this->defaultParams['type'])
-		);
-
-		$this->defaultParams['type_id'] = $affiliation_type['id'];
-
-		$this->db->perform(
-			'INSERT INTO `affiliation` (name, url, type_id) 
-				VALUES (:name, :url, :type_id)',
-			array(
-				'name' => $this->defaultParams['name'],
-				'url' => $this->defaultParams['url'],
-				'type_id' => $this->defaultParams['type_id']
-			)
-		);
-
-		$this->defaultObject = $this->db->fetch(
-			"SELECT * FROM `affiliation` WHERE	name = :name",
-			array('name' => $this->defaultParams['name']));
-
+		DAOSetup::CleanUp('affiliation');
+		$stage = DAOSetup::Prepare('affiliation');
+		$this->record = $stage['record'];
+		$this->params = $stage['params'];
 
 	}
 
@@ -61,17 +31,16 @@ class AffiliationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Tear down test case.
 	 */
 	function tearDown() {
-		$this->db->perform('TRUNCATE TABLE `affiliation`');
-		$this->db->perform('TRUNCATE TABLE `affiliation_type`');
+		DAOSetup::CleanUp('affiliation');
 	}
 
 	/**
 	 * Implement DAOTestTemplate::testInstantiation()
 	 */
 	function testInstantiation() {
-		$affiliation = new AffiliationDAO($this->db, $this->defaultParams);
-		$result = ($affiliation->id == $this->defaultObject['id']);
-		$error = print_r($affiliation, true) . print_r($this->defaultObject, true);
+		$affiliation = new AffiliationDAO($this->db, $this->params);
+		$result = ($affiliation->id == $this->record['id']);
+		$error = print_r($affiliation, true) . print_r($this->record, true);
 
 		$this->assertTrue($result, $error);
 	}
@@ -98,9 +67,9 @@ class AffiliationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 */
 	function testRead() {
 		$affiliation = new AffiliationDAO($this->db);
-		$affiliation->read($this->defaultObject);
-		$result = ($affiliation->id == $this->defaultObject['id']);
-		$error = print_r($affiliation, true) . print_r($this->defaultObject, true);
+		$affiliation->read($this->record);
+		$result = ($affiliation->id == $this->record['id']);
+		$error = print_r($affiliation, true) . print_r($this->record, true);
 		$this->assertTrue($result, $error);
 	}
 
@@ -109,12 +78,12 @@ class AffiliationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 */
 	function testUpdate() {
 		$affiliation = new AffiliationDAO($this->db);
-		$affiliation->read($this->defaultObject);
+		$affiliation->read($this->record);
 		$affiliation->name = 'asdfsadf';
 		$affiliation->update();
-		$result = (($affiliation->id == $this->defaultObject['id']) &&
-			($affiliation->name != $this->defaultObject['name']));
-		$error = print_r($affiliation, true) . print_r($this->defaultObject, true);
+		$result = (($affiliation->id == $this->record['id']) &&
+			($affiliation->name != $this->record['name']));
+		$error = print_r($affiliation, true) . print_r($this->record, true);
 		$this->assertTrue($result, $error);
 	}
 
@@ -122,11 +91,11 @@ class AffiliationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Implement DAOTestTemplate::testDestroy().
 	 */
 	function testDestroy() {
-		$affiliation = new AffiliationDAO($this->db, $this->defaultParams);
+		$affiliation = new AffiliationDAO($this->db, $this->params);
 		$affiliation->destroy();
 		$record = $this->db->perform(
 			'SELECT * FROM affiliation WHERE id = :id', 
-			array('id' => $this->defaultObject['id'])
+			array('id' => $this->record['id'])
 		);
 		$result = (empty($affiliation->id) && empty($record));
 		$error = print_r($affiliation, true) . print_r($record, true);

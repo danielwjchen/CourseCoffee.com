@@ -39,7 +39,7 @@ abstract class TypeDAO extends DAO{
 			$sql .= "name = :name";
 
 		} else {
-			throw new Exception("unknown {$this->type} identifier");
+			throw new Exception("unknown {$this->type} identifier - " . print_r($params, true));
 
 		}
 

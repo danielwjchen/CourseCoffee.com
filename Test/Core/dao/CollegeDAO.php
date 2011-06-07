@@ -4,8 +4,8 @@ require_once dirname(__FILE__) . '/DAOTestCase.php';
 
 class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 
-	protected $defaultObject;
-	protected $defaultParams;
+	protected $record;
+	protected $params;
 
 	/**
 	 * Implement DAOTestCase::__construct()
@@ -20,36 +20,10 @@ class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Set up test case.
 	 */
 	function setUp() {
-		$this->db->perform('TRUNCATE TABLE `affiliation`');
-		$this->db->perform('TRUNCATE TABLE `affiliation_type`');
-		$this->db->perform(
-			'INSERT INTO `affiliation_type` (name) VALUE (:name)',
-			array('name' => 'college')
-		);
-
-		$this->defaultParams = array(
-			'name' => 'Department of Science and Enginerring',
-			'url' => mt_rand(12, 15),
-		);
-
-		$this->db->perform(
-			'INSERT INTO `affiliation` (name, url, type_id) 
-				VALUES (
-					:name, 
-					:url,
-					(SELECT `id` FROM `affiliation_type` lt WHERE lt.name = :type)
-					)',
-			array(
-				'name' => $this->defaultParams['name'],
-				'url' => $this->defaultParams['url'],
-				'type' => 'college',
-			)
-		);
-
-		$this->defaultObject = $this->db->fetch(
-			"SELECT * FROM `affiliation` WHERE	name = :name",
-			array('name' => $this->defaultParams['name']));
-
+		DAOSetup::CleanUp('affiliation');
+		$stage = DAOSetup::Prepare('affiliation');
+		$this->record = $stage['record'];
+		$this->params = $stage['params'];
 
 	}
 
@@ -57,17 +31,16 @@ class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Tear down test case.
 	 */
 	function tearDown() {
-		$this->db->perform('TRUNCATE TABLE `affiliation`');
-		$this->db->perform('TRUNCATE TABLE `affiliation_type`');
+		DAOSetup::CleanUp('affiliation');
 	}
 
 	/**
 	 * Implement DAOTestTemplate::testInstantiation()
 	 */
 	function testInstantiation() {
-		$college = new CollegeDAO($this->db, $this->defaultParams);
-		$result = ($college->id == $this->defaultObject['id']);
-		$error = print_r($college, true) . print_r($this->defaultObject, true);
+		$college = new CollegeDAO($this->db, $this->params);
+		$result = ($college->id == $this->record['id']);
+		$error = print_r($college, true) . print_r($this->record, true);
 
 		$this->assertTrue($result, $error);
 	}
@@ -93,9 +66,9 @@ class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 */
 	function testRead() {
 		$college = new CollegeDAO($this->db);
-		$college->read($this->defaultObject);
-		$result = ($college->id == $this->defaultObject['id']);
-		$error = print_r($college, true) . print_r($this->defaultObject, true);
+		$college->read($this->record);
+		$result = ($college->id == $this->record['id']);
+		$error = print_r($college, true) . print_r($this->record, true);
 		$this->assertTrue($result, $error);
 	}
 
@@ -104,12 +77,12 @@ class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 */
 	function testUpdate() {
 		$college = new CollegeDAO($this->db);
-		$college->read($this->defaultObject);
+		$college->read($this->record);
 		$college->name = 'asdfsadf';
 		$college->update();
-		$result = (($college->id == $this->defaultObject['id']) &&
-			($college->name != $this->defaultObject['name']));
-		$error = print_r($college, true) . print_r($this->defaultObject, true);
+		$result = (($college->id == $this->record['id']) &&
+			($college->name != $this->record['name']));
+		$error = print_r($college, true) . print_r($this->record, true);
 		$this->assertTrue($result, $error);
 	}
 
@@ -117,11 +90,11 @@ class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Implement DAOTestTemplate::testDestroy().
 	 */
 	function testDestroy() {
-		$college = new CollegeDAO($this->db, $this->defaultParams);
+		$college = new CollegeDAO($this->db, $this->params);
 		$college->destroy();
 		$record = $this->db->perform(
 			'SELECT * FROM affiliation WHERE id = :id', 
-			array('id' => $this->defaultObject['id'])
+			array('id' => $this->record['id'])
 		);
 		$result = (empty($college->id) && empty($record));
 		$error = print_r($college, true) . print_r($record, true);
