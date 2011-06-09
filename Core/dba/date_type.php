@@ -1,22 +1,22 @@
 <?php
 
-class StatisticTypeDBA implements DBATemplate{
+class DateTypeDBA implements DBATemplate{
 	public function schema() {
 		return array(
-			'name' => 'statistic_type',
-			'description' => 'define an statistic type',
+			'name' => 'date_type',
+			'description' => 'define possible date type',
 			'column' => array(
 				'id' => array(
 					'type' => 'serial',
 					'unsigned' => TRUE,
 					'not null' => TRUE,
-					'description' => "the primary key that identifies an statistic type",
+					'description' => 'the primary key that identifies a attribute type',
 				),
 				'name' => array(
 					'type' => 'char',
 					'length' => 64,
 					'not null' => TRUE,
-					'description' => 'the name of the statistic type, e.g. traffic, best_reply, comment.',
+					'description' => 'the name of the type',
 				),
 			),
 			'primary' => array('id'),

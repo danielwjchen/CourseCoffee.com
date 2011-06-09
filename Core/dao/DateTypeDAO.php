@@ -1,17 +1,17 @@
 <?php
 
-require_once __DIR__ . '/TypeDAO.php';
+require_once dirname(__FILE__) . '/TypeDAO.php';
 
 /**
- * Represent statistic types
+ * Represent date types
  */
-class StatisticTypeDAO extends TypeDAO{
+class DateTypeDAO extends TypeDAO{
 
 	/**
 	 * Implement TypeDAO::__construct().
 	 */
 	function __construct($db, $params = NULL) {
-		$this->type = 'statistic_type';
+		$this->type = 'date_type';
 		parent::__construct($db, $params);
 	}
 

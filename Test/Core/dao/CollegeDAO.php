@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/DAOTestCase.php';
+require_once __DIR__ . '/DAOTestCase.php';
 
 class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 
@@ -20,8 +20,8 @@ class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Set up test case.
 	 */
 	function setUp() {
-		DAOSetup::CleanUp('affiliation');
-		$stage = DAOSetup::Prepare('affiliation');
+		DAOSetup::CleanUp('college');
+		$stage = DAOSetup::Prepare('college');
 		$this->record = $stage['record'];
 		$this->params = $stage['params'];
 
@@ -31,7 +31,7 @@ class CollegeDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Tear down test case.
 	 */
 	function tearDown() {
-		DAOSetup::CleanUp('affiliation');
+		DAOSetup::CleanUp('college');
 	}
 
 	/**

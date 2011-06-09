@@ -19,9 +19,20 @@ class DateDBA implements DBATemplate{
 					'default' => 0,
 					'description' => 'the UNIX timestamp of the date',
 				),
+				'type_id' => array(
+					'type' => 'int',
+					'signed' => TRUE,
+					'not null' => TRUE,
+					'default' => 0,
+					'description' => 'type of the timestamp, e.g. begin, end, checkpoint, appointment.',
+				),
 			),
 			'primary' => array('id'),
+			'unique' => array(
+				'type_id' => array('type_id'),
+			),
 			'index' => array(
+				'type_timestamp_relation' => array('type_id', 'timestamp'),
 				'timestamp' => array('timestamp'),
 			),
 		);

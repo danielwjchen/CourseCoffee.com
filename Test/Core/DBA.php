@@ -11,12 +11,15 @@ $config = new Config(array(
 		'driver' => 'mysql',
 		'host' => 'localhost',
 		'user' => 'root',
-		'password' => 'jzK76L',
+		'password' => 'bTaEaFaTl2aBl',
 		'port' => '3306',
 	),
 ));
 
 $db = new DB($config->db);
+DBA::Request($db, 'quest_attribute', DBA_PATH . 'quest_attribute.php');
+
+/*
 
 $dbas = array();
 
@@ -32,10 +35,6 @@ for ($i = 0; $i < count($dbas); $i++) {
 	DBA::Request($db, $dbas[$i], DBA_PATH . $dbas[$i] . '.php');
 }
 
-/*
-DBA::Request($db, 'affiliation_location_linkage', DBA_PATH . 'affiliation_location_linkage' . '.php');
-
-/*
 $schema_new = array(
 	'name' => 'test',
 	'description' => 'Create a test table',

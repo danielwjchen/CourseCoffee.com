@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/DAOTestCase.php';
+require_once __DIR__ . '/DAOTestCase.php';
 
 class AffiliationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 
@@ -52,7 +52,7 @@ class AffiliationDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 		$params = array(
 			'name' => 'Michigan State University',
 			'url' => mt_rand(),
-			'type' => 'college'
+			'type' => $this->params['type']
 		);
 
 		$affiliation = new AffiliationDAO($this->db);

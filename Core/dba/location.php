@@ -17,7 +17,7 @@ class LocationDBA implements DBATemplate{
 					'signed' => TRUE,
 					'not null' => TRUE,
 					'default' => 0,
-					'description' => 'type of the achievement, e.g. personal.',
+					'description' => 'type of the location, e.g. campus, building, city.',
 				),
 				'longitude' => array(
 					'type' => 'float',

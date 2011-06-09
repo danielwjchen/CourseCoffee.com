@@ -1,11 +1,11 @@
 <?php
 
-require_once dirname(__FILE__) . '/DAOTestCase.php';
+require_once __DIR__ . '/DAOTestCase.php';
 
 class UserDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 
-	protected $defualtUser;
-	protected $defaultParams;
+	protected $record;
+	protected $params;
 
 	/**
 	 * Implement DAOTestTemplate::__construct()
@@ -20,41 +20,30 @@ class UserDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Implement DAOTestTemplate::setUp().
 	 */
 	function setUp() {
-		$this->db->perform('TRUNCATE TABLE `user`');
-		$this->defaultParams = array(
-			'account' => 's1300045',
-			'password' => 'asdfasdfasdfasdf',
-		);
-		$this->db->perform(
-			"INSERT INTO `user` (account, password) VALUES (:account, :password)",
-			$this->defaultParams);
-		$this->defaultObject = $this->db->fetch(
-			"SELECT * FROM `user` WHERE account = :account AND password = :password",
-			$this->defaultParams);
+		DAOSetup::CleanUp('user');
+		$stage = DAOSetup::Prepare('user');
+		$this->record = $stage['record'];
+		$this->params = $stage['params'];
 	}
 
 	/**
 	 * Implement DAOTestTemplate::tearDown().
 	 */
 	function tearDown() {
-		$this->db->perform('TRUNCATE TABLE `user`');
+		DAOSetup::CleanUp('user');
 	}
 
 	/**
 	 * Implement DAOTestTemplate::testInstantiation()
 	 */
 	function testInstantiation() {
-		$user = new UserDAO($this->db, $this->defaultParams);
+		$user = new UserDAO($this->db, $this->params);
 
-		$result = ($user->account == $this->defaultObject['account'] && 
-				$user->password == $this->defaultObject['password'] && 
-				$user->id == $this->defaultObject['id']);
+		$result = ($user->account == $this->record['account'] && 
+				$user->password == $this->record['password'] && 
+				$user->id == $this->record['id']);
 
-		$error = "
-			id - {$user->id}
-			account - {$user->account}
-			password - {$user->password}
-		".print_r($this->defaultObject, true);
+		$error = print_r($user, true) . print_r($this->record, true);
 
 		$this->assertTrue($result, $error);
 
@@ -64,13 +53,15 @@ class UserDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Implement DAOTestTemplate::testCreate()
 	 */
 	function testCreate() {
-		$credential = array('account' => '333',	'password' => 'asdasda');
+		$params = array('account' => '333',	'password' => 'asdasda');
 		$user = new UserDAO($this->db);
-		$user->create($credential);
-		$result = ($user->account == $credential['account'] &&
-				$user->password == $credential['password']);
+		$user->create($params);
+		$result = ($user->account == $params['account'] &&
+				$user->password == $params['password']);
 
-		$this->assertTrue($result, 'User Creation');
+		$error = print_r($user, true) . print_r($params, true);
+
+		$this->assertTrue($result, $error);
 
 	}
 
@@ -79,17 +70,13 @@ class UserDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 */
 	function testRead() {
 		$user = new UserDAO($this->db);
-		$user->read($this->defaultParams);
+		$user->read($this->params);
 
-		$result = ($user->account == $this->defaultObject['account'] && 
-				$user->password == $this->defaultObject['password'] && 
-				$user->id == $this->defaultObject['id']);
+		$result = ($user->account == $this->record['account'] && 
+				$user->password == $this->record['password'] && 
+				$user->id == $this->record['id']);
 
-		$error = "
-			id - {$user->id}
-			account - {$user->account}
-			password - {$user->password}
-		".print_r($this->defaultObject, true);
+		$error = print_r($user, true) . print_r($this->record, true);
 
 		$this->assertTrue($result, $error);
 
@@ -99,15 +86,17 @@ class UserDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Implement DAOTestTemplate::testUpdate().
 	 */
 	function testUpdate() {
-		$user = new UserDAO($this->db, $this->defaultParams);
+		$user = new UserDAO($this->db, $this->params);
 		$user->account = 'foo';
 		$user->password = 'bar';
 		$user->update();
-		$result = (($user->account != $this->defaultObject['account'] && 
-				$user->password != $this->defaultObject['password']) &&
-				$user->id == $this->defaultObject['id']);
+		$result = (($user->account != $this->record['account'] && 
+				$user->password != $this->record['password']) &&
+				$user->id == $this->record['id']);
 
-		$this->assertTrue($result, 'User Update');
+		$error = print_r($user, true) . print_r($this->record, true);
+
+		$this->assertTrue($result, $error);
 
 	}
 
@@ -115,15 +104,14 @@ class UserDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 	 * Implement DAOTestTemplate::testDestroy().
 	 */
 	function testDestroy() {
-		$user = new UserDAO($this->db, $this->defaultParams);
-		$result = (empty($user->account) && 
-				empty($user->password) &&
-				empty($user->id));
-		$error = "
-			account - {$user->account}
-			password - {$user->password}
-			id - {$user->id}
-		";
+		$user = new UserDAO($this->db, $this->params);
+		$record = $this->db->perform(
+			'SELECT * FROM user WHERE id = :id', 
+			array('id' => $this->record['id'])
+		);
+		$result = (empty($user->id) && empty($record));
+
+		$error = print_r($user, true) . print_r($this->record, true);
 
 		$this->assertTrue($result, $error);
 

@@ -9,8 +9,8 @@ class UserDAO extends DAO{
 	 * Implement DAO::__construct().
 	 */
 	function __construct($db, $params = NULL) {
-		$this->setAttribute(array('account', 'password', 'id'));
-		parent::__construct($db, $params);
+		$attr = array('account', 'password', 'id');
+		parent::__construct($db, $attr, $params);
 
 	}
 
@@ -18,13 +18,25 @@ class UserDAO extends DAO{
 	 * Implement DAO::create().
 	 */
 	public function create($params) {
-		$sql = "
-			INSERT INTO `user` (`account`, `password`)
-			VALUES (:account, :password)
-		";
+		if (!isset($params['account']) || !isset($params['password'])) {
+			throw new Exception('incomplete user pramas - ' . print_r($params, true));
+			return ;
 
-		parent::create($sql, $params);
-		$this->read($params);
+		}else{
+			$this->attr = array(
+				'account' => $params['account'], 
+				'password' => $params['password']
+			);
+
+			parent::create("
+				INSERT INTO `user` (`account`, `password`)
+				VALUES (:account, :password)",
+			array(
+				'account' => $params['account'], 
+				'password' => $params['password']
+			));
+
+		}
 
 	}
 

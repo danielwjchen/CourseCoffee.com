@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/DAOTestCase.php';
+require_once __DIR__ . '/DAOTestCase.php';
 
 class AffiliationLocationLinkageDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 

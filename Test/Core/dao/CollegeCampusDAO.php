@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/DAOTestCase.php';
+require_once __DIR__ . '/DAOTestCase.php';
 
 class CollegeCampusDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 
@@ -106,6 +106,7 @@ class CollegeCampusDAOTestCase extends DAOTestCase implements DAOTestTemplate{
 
 	/**
 	 * Tear down test case.
+	 */
 	function tearDown() {
 		$this->db->perform('TRUNCATE TABLE `location`');
 		$this->db->perform('TRUNCATE TABLE `location_type`');

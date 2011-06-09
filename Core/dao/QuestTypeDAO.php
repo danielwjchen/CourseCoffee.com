@@ -3,15 +3,15 @@
 require_once __DIR__ . '/TypeDAO.php';
 
 /**
- * Represent statistic types
+ * Represent quest types
  */
-class StatisticTypeDAO extends TypeDAO{
+class QuestTypeDAO extends TypeDAO{
 
 	/**
 	 * Implement TypeDAO::__construct().
 	 */
 	function __construct($db, $params = NULL) {
-		$this->type = 'statistic_type';
+		$this->type = 'quest_type';
 		parent::__construct($db, $params);
 	}
 

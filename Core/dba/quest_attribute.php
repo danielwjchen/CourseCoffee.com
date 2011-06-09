@@ -12,12 +12,19 @@ class QuestAttributeDBA implements DBATemplate{
 					'not null' => TRUE,
 					'description' => 'the primary key that identifies a quest attribute',
 				),
-				'type_id' => array(
+				'quest_id' => array(
 					'type' => 'int',
 					'unsigned' => TRUE,
 					'not null' => TRUE,
 					'default' => 0,
 					'description' => 'the primary key that identifies a quest',
+				),
+				'type_id' => array(
+					'type' => 'int',
+					'unsigned' => TRUE,
+					'not null' => TRUE,
+					'default' => 0,
+					'description' => 'the primary key that identifies an attribute type ',
 				),
 				'value' => array(
 					'type' => 'char',
@@ -27,6 +34,9 @@ class QuestAttributeDBA implements DBATemplate{
 				),
 			),
 			'primary' => array('id'),
+			'unique' => array(
+				'type_id' => array('type_id'),
+			),
 			'index' => array(
 				'quest_id' => array('quest_id'),
 				'value' => array('value'),

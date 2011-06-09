@@ -147,7 +147,7 @@ abstract class DAO{
 	 *  an associative array of params to be executed with the SQL query
 	 */
 	protected function update($sql, $params = NULL) {
-		$params = empty($params) ? $this->attr : $fixedParams;
+		$params = empty($params) ? $this->attr : $params;
 		$fixedParams = $this->rewriteParams($params);
 		$this->db->perform($sql, $fixedParams);
 	}

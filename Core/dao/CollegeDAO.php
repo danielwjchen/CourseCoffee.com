@@ -37,20 +37,4 @@ class CollegeDAO extends AffiliationDAO{
 
 	}
 
-	/**
-	 * Implement AffiliationDAO::update()
-	 */
-	public function update() {
-		parent::update();
-
-	}
-
-	/**
-	 * Implement AffiliationDAO::destroy()
-	 */
-	public function destroy() {
-		parent::destroy();
-
-	}
-
 }
