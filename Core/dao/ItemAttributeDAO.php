@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Represent a quest_attribute
+ * Represent a item_attribute
  */
-class QuestAttributeDAO extends DAO{
+class ItemAttributeDAO extends DAO{
 
 	/**
 	 * Implement DAO::__construct().
@@ -12,7 +12,7 @@ class QuestAttributeDAO extends DAO{
 		$attr = array(
 			'id',
 			'value',
-			'quest_id',
+			'item_id',
 			'type',
 			'type_id',
 		);
@@ -26,29 +26,29 @@ class QuestAttributeDAO extends DAO{
 	 */
 	public function create($params) {
 		if (!isset($params['value']) || 
-				!isset($params['quest_id']) || 
+				!isset($params['item_id']) || 
 				!isset($params['type'])) 
 		{
-			throw new Exception('incomplete quest_attribute params - '. print_r($params, true));
+			throw new Exception('incomplete item_attribute params - '. print_r($params, true));
 			return ;
 
 		} else {
       $this->attr = array(
         'value' => $params['value'],
-				'quest_id' => $params['quest_id'],
+				'item_id' => $params['item_id'],
         'type' => $params['type'],
       );
 
 			parent::create("
-				INSERT INTO `quest_attribute`
-					(`value`, `quest_id`, `type_id`)
+				INSERT INTO `item_attribute`
+					(`value`, `item_id`, `type_id`)
 				VALUES (
 					:value,
-					:quest_id,
-					(SELECT `id` FROM `quest_attribute_type` WHERE name = :type)",
+					:item_id,
+					(SELECT `id` FROM `item_attribute_type` WHERE name = :type)",
 				array(
 					'value' => $params['value'],
-					'quest_id' => $params['quest_id'],
+					'item_id' => $params['item_id'],
 					'type' => $params['type'],
 				)
 			);
@@ -65,8 +65,8 @@ class QuestAttributeDAO extends DAO{
 				qa.*, 
 				qat.id AS type_id,
 				qat.name AS type
-			FROM `quest_attribute` qa
-			INNER JOIN `quest_attribute_type` qat
+			FROM `item_attribute` qa
+			INNER JOIN `item_attribute_type` qat
 				ON qa.type_id = qat.id
 		";
 
@@ -74,23 +74,9 @@ class QuestAttributeDAO extends DAO{
 			$sql .= 'WHERE qa.id = :id';
 			$data = parent::read($sql, array('id' => $params['id']));
 
-		} elseif (isset($params['quest_id']) && isset($params['type_id'])) {
-			$sql .= 'WHERE qa.quest_id = :quest_id AND qat.id = :type_id';
-			$data = parent::read($sql, array(
-				'quest_id' => $params['quest_id'],
-				'type_id' => $params['type_id']
-			));
-
-		} elseif (isset($params['quest_id']) && isset($params['type'])) {
-			$sql .= 'WHERE qa.quest_id = :quest_id AND qat.name = :type';
-			$data = parent::read($sql, array(
-				'quest_id' => $params['quest_id'],
-				'type' => $params['type']
-			));
-
-		} elseif (isset($params['quest_id'])) {
-			$sql .= 'WHERE qa.quest_id = :quest_id';
-			$data = parent::read($sql, array('quest_id' => $params['quest_id']));
+		} elseif (isset($params['item_id'])) {
+			$sql .= 'WHERE qa.item_id = :item_id';
+			$data = parent::read($sql, array('item_id' => $params['item_id']));
 
 		} elseif (isset($params['type_id'])) {
 			$sql .= "WHERE qat.id = :type_id";
@@ -105,7 +91,7 @@ class QuestAttributeDAO extends DAO{
 			));
 
 		} else {
-			throw new Exception('unknown quest_attribute identifier - ' . print_r($params, true));
+			throw new Exception('unknown item_attribute identifier - ' . print_r($params, true));
 			return ;
 
 		}
@@ -125,17 +111,17 @@ class QuestAttributeDAO extends DAO{
 	 */
 	public function update() {
 		$sql = "
-			UPDATE `quest_attribute` SET
+			UPDATE `item_attribute` SET
 				value = :value,
-				quest_id = :quest_id,
-				type_id = (SELECT id FROM quest_attribute_type WHERE name = :type)
+				item_id = :item_id,
+				type_id = (SELECT id FROM item_attribute_type WHERE name = :type)
 			WHERE id = :id
 		";
 
 		parent::update($sql, array(
 			'value' => $this->attr['value'],
 			'type' => $this->attr['type'],
-			'quest_id' => $this->attr['quest_id'],
+			'item_id' => $this->attr['item_id'],
 			'id' => $this->attr['id']
 		));
 
@@ -147,7 +133,7 @@ class QuestAttributeDAO extends DAO{
 	 * Implement DAO::destroy()
 	 */
 	public function destroy() {
-		$sql = 'DELETE FROM `quest_attribute` WHERE id = :id';
+		$sql = 'DELETE FROM `item_attribute` WHERE id = :id';
 		parent::destroy($sql, array('id' => $this->id));
 
 	}

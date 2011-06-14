@@ -82,8 +82,8 @@ class QuestDAO extends DAO{
 			$data = parent::read($sql, array('user_id' => $params['user_id']));
 
 		} elseif (isset($params['objective'])) {
-			$sql .= 'WHERE q.objective LIKE %:objective%';
-			$data = parent::read($sql, array('objective' => $params['objective']));
+			$sql .= 'WHERE q.objective LIKE :objective';
+			$data = parent::read($sql, array('objective' => $params['objective'] . '%'));
 
 		} elseif (isset($params['type_id'])) {
 			$sql .= "WHERE lt.id = :type_id";
@@ -98,7 +98,7 @@ class QuestDAO extends DAO{
 			));
 
 		} else {
-			throw new Exception('unknown quest identifier');
+			throw new Exception('unknown quest identifier - ' . print_r($params, true));
 			return ;
 
 		}

@@ -5,24 +5,20 @@ require_once TEST_CORE_PATH . '/CoreSetup.php';
 /**
  * Set up the environment for testing DAO.
  */
-class DAOSetup extends CoreSetup {
-
-	static private $stage;
-
-  /**
-   * Extend CoreSetup::Init()
-   */
-  static public function Init($db_config) {
-    parent::Init($db_config);
-  }
+class DAOSetup extends CoreSetup{
 
 	/**
 	 * Generate randomized types.
 	 *
 	 * @param string $model
 	 *  the model which this method generates types for, e.g. location, date.
+	 * @oaram string $mode
+	 *  a flag to dictate how the type(s) are generated
+	 *
+	 * @return string $type
+	 *  name of the type
 	 */
-	static private function generateType($model) {
+	static protected function generateType($model, $mode = 'random') {
 		$model = str_replace('_type', '', $model);
 		$types = array(
 			'location' => array('campus', 'building', 'city'),
@@ -36,6 +32,11 @@ class DAOSetup extends CoreSetup {
 				'college_lab',
 				'college_essay',
 				'college_quiz',
+			),
+			'item_attribute' => array(
+				'isbn',
+				'weight',
+				'dimension',
 			),
 			'quest_attribute' => array(
 				'college_session_num',
@@ -63,14 +64,14 @@ class DAOSetup extends CoreSetup {
 		);
 
 		if (isset($types[$model])) {
-			static $used_key;
-			do {
-				$key = mt_rand(0, count($types[$model]) - 1);
 
-			} while ($used_key == $key);
-
-			$used_key = $key;
-			return $types[$model][$key];
+			switch ($mode) {
+				case 'random':
+					$key = mt_rand(0, count($types[$model]) - 1);
+					return $types[$model][$key];
+				default:
+					throw new Exception('unknown mode - ' . $mode);
+			}
 
 		}else{
 			throw new Exception('unknown model type - ' . $model);
@@ -81,9 +82,15 @@ class DAOSetup extends CoreSetup {
 	/**
 	 * Extend CoreSetup::Prepare()
 	 */
-  static public function Prepare($stage) {
+  static public function Prepare($stage, $params = null) {
 		$params = false;
 		$object = false;
+
+		// temporarily hack before refactoring is finished
+		if (strpos($stage, 'DAO')) {
+			require_once __DIR__ . '/setups/' . $stage . 'Setup.php';
+			return call_user_func($stage. 'Setup::Prepare', $params);
+		}
 
 		switch ($stage) {
 			// prepare stage to test implementation of TypeDAO.
@@ -95,7 +102,8 @@ class DAOSetup extends CoreSetup {
 			case 'achievement_type':
 			case 'statistic_type':
 			case 'item_type':
-				$params['name'] = self::generateType($stage);
+			case 'item_attribute_type':
+				$params['name'] = empty($params) ? self::generateType($stage) : $params;
 				self::$db->perform(
 					"INSERT INTO `{$stage}` (name) VALUE (:name)",
 					array('name' => $params['name'])
@@ -134,12 +142,30 @@ class DAOSetup extends CoreSetup {
 					$params);
 				break;
 
+			case 'quest_linkage':
+				$parent = self::Prepare('quest');
+				$child = self::Prepare('quest');
+				$params = array(
+					'parent_id' => $parent['record']['id'],
+					'child_id' => $child['record']['id']
+				);
+
+				self::$db->perform("
+					INSERT INTO `quest_linkage` (parent_id, child_id) 
+						VALUES (:parent_id, :child_id)",
+					$params);
+
+				$record = self::$db->fetch(
+					"SELECT * FROM `quest_linkage` 
+					WHERE parent_id = :parent_id AND child_id = :child_id", 
+					$params);
+				break;
 
 			case 'location':
 				$params = array(
-					'name' => 'East Lansing',
-					'longitude' => mt_rand(12, 15),
-					'latitude' => mt_rand(12, 15),
+					'name' => self::generateString(128),
+					'longitude' => mt_rand(0, 15),
+					'latitude' => mt_rand(0, 15),
 					'type' => '',
 					'type_id' => '',
 				);
@@ -176,6 +202,9 @@ class DAOSetup extends CoreSetup {
 
 			case 'statistic':
 				break;
+
+			case 'begin_date':
+			case 'end_date':
 			case 'date':
 				$params = array(
 					'timestamp' => mt_rand(0, time()),
@@ -216,7 +245,7 @@ class DAOSetup extends CoreSetup {
 			case 'college':
 			case 'affiliation':
 				$params = array(
-					'name' => 'Department of Science and Enginerring',
+					'name' => self::generateString(128),
 					'url' => mt_rand(12, 15),
 					'type' => '',
 					'type_id' => '',
@@ -294,25 +323,201 @@ class DAOSetup extends CoreSetup {
 				break;
 
 			case 'person':
+				break;
+
 			case 'college_subject':
 				$params = array(
-					'user_id' => '',
-					'objective' => 'Department of Science and Enginerring',
-					'description' => mt_rand(12, 15),
-					'type' => '',
-					'type_id' => '',
-					'date' => array(
-						'begin' => mt_rand(9, 10),
-						'end' => mt_rand(9, 10),
-						'checkpoint' => mt_rand(9, 10),
-					),
+					'user_id' => 1,
+					'subject' => self::generateString(128),
+					'description' => self::generateString(512),
+					'type' => 'college_subject',
+					'college' => '',
+					'college_id' => '',
+					'abbr' => self::generateString(5),
+				);
+
+				$college = self::Prepare('college');
+				$params['college'] = $college['record']['name'];
+				$params['college_id'] = $college['record']['id'];
+				self::$db->perform(
+					"INSERT INTO `quest_type` (name) VALUE (:name)",
+					array('name' => 'college_subject')
+				);
+
+				$type = self::$db->fetch(
+					"SELECT * FROM `quest_type` WHERE `name` = :name",
+					array('name' => 'college_subject')
+				);
+
+				self::$db->perform(
+					"INSERT INTO `quest_attribute_type` (name) VALUE (:name)",
+					array('name' => 'college_subject_abbreviation')
+				);
+
+				// create the quest
+				self::$db->perform(
+					'INSERT INTO `quest` 
+						(user_id, objective, description, type_id)
+						VALUES (
+							:user_id,
+							:objective,
+							:description,
+							(SELECT `id` FROM `quest_type` lt WHERE lt.name = :type)
+							)',
+					array(
+						'user_id' => $params['user_id'],
+						'objective' => $params['subject'],
+						'description' => $params['description'],
+						'type' => $params['type'],
+					)
+				);
+
+				$record = self::$db->fetch("
+					SELECT 
+						q.id,
+						q.objective AS subject,
+						q.description,
+						t.name AS type,
+						t.id AS type_id
+					FROM `quest` q
+					INNER JOIN `quest_type` t
+						ON q.type_id = t.id
+					WHERE q.objective = :objective",
+					array('objective' => $params['subject'])
+				);
+
+				self::$db->perform('
+					INSERT INTO `quest_attribute` (quest_id, value, type_id)
+					VALUES (
+						:quest_id,
+						:value, 
+						(SELECT id FROM `quest_attribute_type` WHERE name = :type)
+					)',
+					array(
+						'quest_id' => $record['id'],
+						'value' => $params['abbr'],
+						'type' => 'college_subject_abbreviation',
+					)
+				);
+
+				$abbr = self::$db->fetch("
+					SELECT 
+						qa.*,
+						qat.name AS type,
+						qat.id AS type_id
+					FROM `quest_attribute` qa
+					INNER JOIN `quest_attribute_type` qat
+						ON qa.type_id = qat.id
+					WHERE	qa.value = :value", 
+					array('value' => $params['abbr'])
+				);
+
+				$record['abbr'] = $abbr['value'];
+				$record['college'] = $college['record']['name'];
+				$record['college_id'] = $college['record']['id'];
+				break;
+
+			case 'college_semester':
+				$date_begin = self::Prepare('begin_date');
+				$date_end = self::Prepare('end_date');
+				$college = self::Prepare('college');
+				$params = array(
+					'college' => $college['record']['name'],
+					'college_id' => $college['record']['id'],
 				);
 				break;
+
+			case 'college_course':
+				$college_subject = self::Prepare('college_subject');
+
+				$params = array(
+					'user_id' => 1,
+					'college' => $college_subject['record']['college'],
+					'college_id' => $college_subject['record']['id'],
+					'subject' => $college_subject['record']['subject'],
+					'subject_id' => $college_subject['record']['id'],
+					'title' => self::generateString(128),
+					'num' => self::generateString(4),
+					'description' => self::generateString(512),
+				);
+
+				// create the quest
+				self::$db->perform(
+					"INSERT INTO `quest_type` (name) VALUE (:name)",
+					array('name' => 'college_course')
+				);
+
+				self::$db->perform(
+					'INSERT INTO `quest` 
+						(user_id, objective, description, type_id)
+						VALUES (
+							:user_id,
+							:objective,
+							:description,
+							(SELECT `id` FROM `quest_type` lt WHERE lt.name = :type)
+							)',
+					array(
+						'user_id' => $params['user_id'],
+						'objective' => $params['title'],
+						'description' => $params['description'],
+						'type' => 'college_course',
+					)
+				);
+
+				$record = self::$db->fetch("
+					SELECT 
+						q.id,
+						q.objective AS title,
+						q.description,
+						t.name AS type,
+						t.id AS type_id
+					FROM `quest` q
+					INNER JOIN `quest_type` t
+						ON q.type_id = t.id
+					WHERE q.objective = :objective",
+					array('objective' => $params['title'])
+				);
+
+				// create the quest attribute
+				self::$db->perform(
+					"INSERT INTO `quest_attribute_type` (name) VALUE (:name)",
+					array('name' => 'college_course_number')
+				);
+
+				self::$db->perform('
+					INSERT INTO `quest_attribute` (quest_id, value, type_id)
+					VALUES (
+						:quest_id,
+						:value, 
+						(SELECT id FROM `quest_attribute_type` WHERE name = :type)
+					)',
+					array(
+						'quest_id' => $record['id'],
+						'value' => $params['num'],
+						'type' => 'college_course_number',
+					)
+				);
+
+				$num = self::$db->fetch("
+					SELECT qa.* FROM `quest_attribute` qa
+					INNER JOIN `quest_attribute_type` qat
+						ON qa.type_id = qat.id
+					WHERE	qa.value = :value", 
+					array('value' => $params['num'])
+				);
+
+				$record['num'] = $num['value'];
+				$record['college'] = $college_subject['record']['college'];
+				$record['college_id'] = $college_subject['record']['college_id'];
+				$record['subject'] = $college_subject['record']['subject'];
+				$record['subject_id'] = $college_subject['record']['id'];
+				break;
+
 			case 'quest':
 				$params = array(
 					'user_id' => '',
-					'objective' => 'Department of Science and Enginerring',
-					'description' => mt_rand(0, time()),
+					'objective' => self::generateString(128),
+					'description' => self::generateString(256),
 					'type' => '',
 					'type_id' => '',
 				);
@@ -355,30 +560,35 @@ class DAOSetup extends CoreSetup {
 					array('objective' => $params['objective']));
 				break;
 
+			case 'item_attribute':
 			case 'quest_attribute':
+				$model = str_replace('_attribute', '', $stage);
+				$model_id = $model . '_id';
+
 				$params = array(
-					'value' => mt_rand(0, time()),
-					'quest_id' => '',
+					'value' => self::generateString(128),
+					$model_id => '',
 					'type_id' => '',
 					'type' => ''
 				);
 
-				$quest = self::Prepare('quest');
-				$params['quest_id'] = $quest['record']['id'];
+
+				$model_record = self::Prepare($model);
+				$params[$model_id] = $model_record['record']['id'];
 				
-				$type = self::Prepare('quest_attribute_type');
+				$type = self::Prepare($stage . '_type');
 				$params['type'] = $type['record']['name'];
 				$params['type_id'] = $type['record']['id'];
 
 				self::$db->perform('
-					INSERT INTO `quest_attribute` (quest_id, value, type_id)
+					INSERT INTO `' . $stage . '` (' . $model_id . ', value, type_id)
 					VALUES (
-						:quest_id,
+						:' . $model_id . ',
 						:value, 
-						(SELECT id FROM `quest_attribute_type` WHERE name = :type)
+						(SELECT id FROM `' . $stage . '_type` WHERE name = :type)
 					)',
 					array(
-						'quest_id' => $params['quest_id'],
+						$model_id => $params[$model_id],
 						'value' => $params['value'],
 						'type' => $params['type']
 					)
@@ -389,8 +599,8 @@ class DAOSetup extends CoreSetup {
 						qa.*,
 						qat.name AS type,
 						qat.id AS type_id
-					FROM `quest_attribute` qa
-					INNER JOIN `quest_attribute_type` qat
+					FROM `{$stage}` qa
+					INNER JOIN `{$stage}_type` qat
 						ON qa.type_id = qat.id
 					WHERE	qa.value = :value", 
 					array('value' => $params['value'])
@@ -399,7 +609,7 @@ class DAOSetup extends CoreSetup {
 
 			case 'item':
 				$params = array(
-					'name' => 'To Kill a Mocking Bird',
+					'name' => self::generateString(128),
 					'type' => '',
 					'type_id' => '',
 				);
@@ -444,6 +654,11 @@ class DAOSetup extends CoreSetup {
   }
 
   static public function CleanUp($stage) {
+		if (strpos($stage, 'DAO')) {
+			require_once __DIR__ . '/setups/' . $stage . 'Setup.php';
+			return call_user_func($stage. 'Setup::CleanUp');
+		}
+
 		switch ($stage) {
 			// clean up the stage for implementation of TypeDAO
 			case 'quest_type':
@@ -454,6 +669,7 @@ class DAOSetup extends CoreSetup {
 			case 'achievement_type':
 			case 'statistic_type':
 			case 'item_type':
+			case 'item_attribute_type':
 				self::$db->perform("TRUNCATE TABLE `{$stage}`");
 				break;
 
@@ -470,8 +686,10 @@ class DAOSetup extends CoreSetup {
 				self::CleanUp("{$stage}_type");
 				break;
 
+			case 'item_attribute':
 			case 'quest_attribute':
-				self::$db->perform("TRUNCATE TABLE `quest`");
+				$model = str_replace('_attribute', '', $stage);
+				self::$db->perform("TRUNCATE TABLE `{$model}`");
 				self::$db->perform("TRUNCATE TABLE `{$stage}`");
 				self::CleanUp("{$stage}_type");
 				break;
@@ -503,6 +721,14 @@ class DAOSetup extends CoreSetup {
 				self::$db->perform("TRUNCATE TABLE `{$stage}`");
 				self::CleanUp('user');
 				self::CleanUp("{$stage}_type");
+				break;
+
+			case 'college_course':
+			case 'college_subject':
+				self::CleanUp('quest');
+				self::CleanUp('affiliation');
+				self::CleanUp('quest_affiliation_linkage');
+				self::CleanUp('quest_attribute');
 				break;
 
 			default:

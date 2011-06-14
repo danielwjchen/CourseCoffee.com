@@ -17,7 +17,8 @@ $config = new Config(array(
 ));
 
 $db = new DB($config->db);
-DBA::Request($db, 'quest_attribute', DBA_PATH . 'quest_attribute.php');
+DBA::Request($db, 'item_attribute', DBA_PATH . 'item_attribute.php');
+DBA::Request($db, 'item_attribute_type', DBA_PATH . 'item_attribute_type.php');
 
 /*
 
