@@ -1,0 +1,116 @@
+<?php
+
+class SystemDBA implements DBAInterface {
+	
+	/**
+	 * Implement DBAInterface::schema()
+	 */
+	public function schema() {
+		return array(
+			'DBA' => array(
+				'description' => 'This table manages schemas installed via DBA',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'description' => 'the primary key',
+					),
+					'request' => array(
+						'type' => 'char',
+						'length' => 32,
+						'not null' => TRUE,
+						'description' => 'name of the schema',
+					),
+					'schema' => array(
+						'type' => 'text',
+						'not null' => TRUE,
+						'description' => 'the schema array encoded in json string',
+					),
+					'timestamp' => array(
+						'type' => 'int',
+						'not null' => TRUE,
+						'description' => 'the timestamp when the DBA request is performed',
+					),
+				),
+				'primary' => array('id', 'request'),
+			),
+			'autoload' => array(
+				'description' => 'register a class and the file path',
+				'column' => array(
+					'class' => array(
+						'type' => 'varchar',
+						'length' => '64',
+						'not null' => TRUE,
+						'description' => 'name of the class',
+					),
+					'path' => array(
+						'type' => 'varchar',
+						'length' => '256',
+						'not null' => TRUE,
+						'description' => 'file path',
+					),
+				),
+				'unique' => array(
+					'path' => array('path'),
+					'class' => array('class'),
+				),
+			),
+			'router' => array(
+				'description' => 'Map path to controller',
+				'column' => array(
+					'path' => array(
+						'type' => 'varchar',
+						'length' => '64',
+						'not null' => TRUE,
+						'description' => 'the path that is mapped to a controller',
+					),
+					'controller' => array(
+						'type' => 'varchar',
+						'length' => '64',
+						'not null' => TRUE,
+						'description' => 'name of the controller class',
+					),
+					'action' => array(
+						'type' => 'varchar',
+						'length' => '64',
+						'not null' => TRUE,
+						'description' => 'name of the method if the controlelr class that will carry out the action',
+					),
+				),
+				'unique' => array(
+					'path' => array('path'),
+				),
+				'index' => array(
+					'controller' => array('controller')
+				),
+			),
+			'user' => array(
+				'description' => 'define a user',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'description' => 'the primary key that identifies a user',
+					),
+					'account' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'the account of a user',
+					),
+					'password' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'the password of a user',
+					),
+				),
+				'primary' => array('id'),
+				'index' => array(
+					'account' => array('account'),
+					'password' => array('password'),
+				),
+			),
+		);
+	}
+}

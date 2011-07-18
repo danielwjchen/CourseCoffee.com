@@ -1,0 +1,26 @@
+== README v0.1 ==
+ - includes/                    <--- core files of the system. handles important 
+       /router.php                   functions such as caching, database abstraction, 
+			 /dao.php                      3rd party API abstraction, etc.
+	   	 /config.php
+       /libs.php
+			 /input.php
+			 /cache.php
+
+ - dao/
+ - dba/
+
+ - model/
+ - view/
+ - controller/
+
+ - libs/                        <-- third party libraries, e.g. facebook, Google.
+
+docroot/                     <--- web root for uploaded or temporary files
+			 /tmp/
+       /file/
+
+ - ./index.php
+ - ./update.php
+ - ./install.php
+
