@@ -12,11 +12,34 @@ class CollegeController extends Controller implements ControllerInterface{
 		//$this->college = Factory::Model('College');
 
 	}
+	
+	/**
+	 * Implement ControllerInterface::path()
+	 */
+	public static function path() {
+		return array(
+			'college/create' => 'createCollege',
+			'college/remove' => 'removeCollege',
+			'college/list'   => 'listCollege',
+		);
+	}
 
-	public function test($params = null) {
-		echo "Hello World";
-		print_r($params);
+	/**
+	 * Create a new college.
+	 */
+	public function createCollege() {
+	}
 
+	/**
+	 * Remove a college
+	 */
+	public function removeCollege() {
+	}
+
+	/**
+	 * List college
+	 */
+	public function listCollege() {
 	}
 
 }

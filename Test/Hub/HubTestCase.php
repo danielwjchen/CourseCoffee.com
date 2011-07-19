@@ -16,7 +16,7 @@ abstract class HubTestCase extends UnitTestCase{
 
 		$this->config = new Config(array(
 			'db' => array(
-				'name' => 'qilin_test_core',
+				'name' => 'plnnr_test',
 				'driver' => 'mysql',
 				'host' => 'localhost',
 				'user' => 'root',

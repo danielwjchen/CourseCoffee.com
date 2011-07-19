@@ -1,7 +1,13 @@
 <?php
+/**
+ * @file
+ * Define the basic structures of a model class
+ */
+interface ModelInterface {
+}
 
 /**
- * Base class
+ * This class defines methods that are commonly shared by all models
  */
 abstract class Model {
 }

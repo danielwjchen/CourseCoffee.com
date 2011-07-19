@@ -22,8 +22,8 @@ class CollegeBuildingDAO extends LocationDAO{
 	 * Implement LocationDAO::__construct().
 	 */
 	function __construct($db, $params = NULL) {
-		$this->college = Factory::DAO('College');
-		$this->linkage = Factory::DAO('AffiliationLocationLinkage');
+		$this->college = new CollegeDAO($db);
+		$this->linkage = new AffiliationLocationLinkageDAO($db);
 		if (!empty($params)) {
 			$this->findCollege($params);
 			$this->attr['college'] = $this->college->name;

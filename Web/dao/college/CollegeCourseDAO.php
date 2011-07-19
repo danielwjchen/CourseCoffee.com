@@ -31,11 +31,11 @@ class CollegeCourseDAO extends DAO implements DAOInterface{
 			'description',
 		);
 
-		$this->college_subject = Factory::DAO('CollegeSubject');
-		$this->quest_linkage = Factory::DAO('QuestLinkage');
-		$this->quest = Factory::DAO('Quest');
-		$this->quest_attribute = Factory::DAO('QuestAttribute');
-		$this->quest_affiliation_linkage = Factory::DAO('QuestAffiliationLinkage');
+		$this->college_subject = new CollegeSubjectDAO($db);
+		$this->quest_linkage = new QuestLinkageDAO($db);
+		$this->quest = new QuestDAO($db);
+		$this->quest_attribute = new QuestAttributeDAO($db);
+		$this->quest_affiliation_linkage = new QuestAffiliationLinkageDAO($db);
 
 		parent::__construct($db, $attr, $params);
 

@@ -6,8 +6,8 @@
 
 $config = new Config(array(
 	'db' => array(
-		'system' => array(
-			'name' => 'plnnr_hub_system',
+		'sys' => array(
+			'name' => 'plnnr_sys',
 			'driver' => 'mysql',
 			'host' => 'localhost',
 			'user' => 'root',
@@ -15,7 +15,7 @@ $config = new Config(array(
 			'port' => '3306',
 		),
 		'core' => array(
-			'name' => 'plnnr_hub_core',
+			'name' => 'plnnr_core',
 			'driver' => 'mysql',
 			'host' => 'localhost',
 			'user' => 'root',

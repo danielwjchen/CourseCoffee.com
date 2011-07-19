@@ -1,13 +1,12 @@
 <?php
-
 /**
  * @file
- * The DBA system.
+ * Perform database administrative tasks
  *
- * This system is heavily influenced by drupal 6.
+ * This is heavily influenced by drupal 6.
  */ 
 
-require_once DBA_PATH . 'DBAInterface.php';
+require_once DBA_PATH . '/DBAInterface.php';
 
 /**
  * Handle database administrative tasks.
@@ -226,7 +225,7 @@ class DBAInvoker{
 	 *  an associative array that defines the database configuration
 	 */
 	static function Init(array $config_db) {
-		self::$db['system'] = new DB($config_db['system']);
+		self::$db['sys'] = new DB($config_db['sys']);
 		self::$db['core'] = new DB($config_db['core']);
 	}
 
@@ -244,11 +243,13 @@ class DBAInvoker{
 		require_once($dba_path);
 
 		$dba_schema = call_user_func($dba_request . '::schema');
-		$dba_record  = self::$db['system']->fetch(
+		$dba_record  = self::$db['sys']->fetch(
 			'SELECT `schema` FROM DBA
 				WHERE `request` = :request',
 			array('request' => $dba_request)
 		);
+
+		$dba_encoded = json_encode($dba_schema);
 
 		$sql = '';
 		if (!isset($dba_record['schema'])) {
@@ -258,7 +259,7 @@ class DBAInvoker{
 				VALUES (:request, :schema, UNIX_TIMESTAMP())
 			';
 			
-		} elseif (json_decode($dba_record['schema'], true) !== $dba_schema) {
+		} elseif ($dba_record['schema'] !== $dba_encoded) {
 			self::Alter($dba_schema, $dba_record);
 			$sql = '
 				UPDATE DBA SET
@@ -268,8 +269,8 @@ class DBAInvoker{
 			';
 		}
 
-		self::$db['system']->perform($sql, array(
-			'schema' => json_encode($dba_schema),
+		self::$db['sys']->perform($sql, array(
+			'schema' => $dba_encoded,
 			'request' => $dba_request,
 		));
 	}

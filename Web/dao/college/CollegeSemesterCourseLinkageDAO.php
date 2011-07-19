@@ -19,9 +19,9 @@ class CollegeSemesterCourseLinkageDAO extends DAO implements DAOInterface {
 			'course',
 		);
 
-		$this->college_course = Factory::DAO('CollegeCourse');
-		$this->college_semester = Factory::DAO('CollegeSemester');
-		$this->linkage = Factory::DAO('QuestLinkage');
+		$this->college_course  = new CollegeCourseDAO($db);
+		$this->college_semester = new CollegeSemesterDAO($db);
+		$this->quest_linkage = new QuestLinkageDAO($db);
 
 		parent::__construct($db, $attr, $params);
 

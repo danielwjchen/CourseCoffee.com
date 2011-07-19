@@ -22,10 +22,10 @@ class CollegeBookDAO extends DAO implements DAOInterface{
 			'isbn',
 		);
 
-		$this->item = Factory::DAO('Item');
-		$this->image_src = Factory::DAO('ItemAttribute');
-		$this->isbn = Factory::DAO('ItemAttribute');
-		$this->linkage = Factory::DAO('QuestItemLinkage');
+		$this->item = new ItemDAO($db);;
+		$this->image_src = new ItemAttributeDAO($db);
+		$this->isbn = new ItemAttributeDAO($db);
+		$this->linkage = new QuestItemLinkageDAO($db);
 
 		parent::__construct($db, $attr, $params);
 

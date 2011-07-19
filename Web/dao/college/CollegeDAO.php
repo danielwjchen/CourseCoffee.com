@@ -25,7 +25,7 @@ class CollegeDAO extends AffiliationDAO{
 	 */
 	public function create($params) {
 		$params['type'] = 'college';
-		return $this->db->insert($params);
+		return parent::create($params);
 
 	}
 
@@ -34,7 +34,7 @@ class CollegeDAO extends AffiliationDAO{
 	 */
 	public function read($params) {
 		$params['type'] = 'college';
-		return $this->db->fetch($params);
+		return parent::read($params);
 
 	}
 

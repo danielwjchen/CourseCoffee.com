@@ -26,10 +26,10 @@ class CollegeSemesterDAO extends DAO implements DAOInterface{
 			'end_date',
 		);
 
-		$this->college = Factory::DAO('College');
-		$this->quest = Factory::DAO('Quest');
-		$this->quest_affiliation_linkage = Factory::DAO('QuestAffiliationLinkage');
-		$this->quest_date_range = Factory::DAO('QuestDateRange');
+		$this->college  = new CollegeDAO($db);
+		$this->quest = new QuestDAO($db);
+		$this->quest_affiliation_linkage = new QuestAffiliationLinkageDAO($db);
+		$this->quest_date_range = new QuestDateRangeDAO($db);
 
 		parent::__construct($db, $attr, $params);
 
