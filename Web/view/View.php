@@ -26,7 +26,8 @@ abstract class View {
 	 * @param string $type
 	 *  a string that indicates the type of header to be set
 	 */
-	protected function setHeader($type) {
+	public function setHeader($type) {
 		header($type);
+		header('Cache-Control: no-cache, must-revalidate');
 	}
 }

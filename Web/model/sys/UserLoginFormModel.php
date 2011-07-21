@@ -32,29 +32,14 @@ class UserLoginFormModel extends FormModel {
 	 */
 	const EVENT_FAILED_TO_LOGIN = 'Failed login attempt';
 
-	/**
-	 * Form fields empty
-	 */
 	const EVENT_FORM_EMPTY = 'An empty user login submission is made. How is this possible?';
 
-	/**
-	 * Password failed
-	 */
 	const EVENT_FAILED_PASSWORD = 'The password provided does not match the email';
 
-	/**
-	 * Form has expired
-	 */
 	const EVENT_FORM_EXPIRED = 'User login form expired. Please try again.';
 
-	/**
-	 * Exceeded max login attempt
-	 */
 	const EVENT_EXCEEDED_MAX_ATTEMP = 'User exceeded max login attempt';
 
-	/**
-	 * New login
-	 */
 	const EVENT_NEW_LOGIN = 'User Logged in';
 
 	/**
@@ -62,9 +47,14 @@ class UserLoginFormModel extends FormModel {
 	 */
 
 	/**
-	 * New login
+	 * Redirecting after successful login attempt
 	 */
 	const REDIRECT = '/home';
+
+	/**
+	 * Name to be used for the cookie
+	 */
+	const LOGIN_COOKIE = 'lc';
 
 	/**
 	 * Access to user record
@@ -72,11 +62,18 @@ class UserLoginFormModel extends FormModel {
 	private $user_dao;
 
 	/**
+	 * Access to user cookie record
+	 */
+	private $user_cookie_dao;
+
+
+	/**
 	 * Extend Model::__construct()
 	 */
 	function __construct() {
 		parent::__construct();
 		$this->user_dao = new UserDAO($this->db);
+		$this->user_cookie_dao = new UserCookieDAO($this->db);
 		$this->form_name = 'user_login_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
@@ -156,6 +153,16 @@ class UserLoginFormModel extends FormModel {
 		} else {
 			Logger::write(self::EVENT_NEW_LOGIN);
 			$this->unsetFormToken();
+			// we drop a cookie so we can automatically log in when the user comes 
+			// back. Why are we not using user's id? because if the user changes his
+			// password, this will force him to re-login when accessing from other 
+			// browsers
+			$signature = Crypto::encrypt($email . $password);
+			$this->user_cookie_dao->create(array(
+				'user_id' => $this->user_dao->id,
+				'signature' => $signature, 
+			));
+			Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
 			return array(
 				'user_id' => $this->user_dao->id,
 				'redirect' => self::REDIRECT,

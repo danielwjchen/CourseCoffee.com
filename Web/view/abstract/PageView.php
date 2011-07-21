@@ -3,6 +3,17 @@
  * @file
  * Base class for all views that generates a text/HTML response
  */
+
+interface PageViewInterface {
+	/**
+	 * Render the pieces together and send it to the user
+	 *
+	 * @return string
+	 *  a rendered HTML output
+	 */
+	public function render();
+}
+
 abstract class PageView extends View {
 
 	const CONTENT_TYPE = 'text/html; charset=utf-8';
@@ -33,7 +44,7 @@ abstract class PageView extends View {
 		// meta tags to be added to the page
 		$this->content['meta'] = '';
 		
-		$this->content['page']['title'] = 'CourseCoffee.com';
+		$this->setPageTitle('CourseCoffee.com');
 		$this->addMeta(array(
 			'http-equiv' => 'content-type',
 			'content' => 'text/html;charset=UTF-8',
@@ -44,6 +55,16 @@ abstract class PageView extends View {
 		$this->addCSS('layout.css');
 		$this->addCSS('main.css');
 		$this->addCSS('navigation.css');
+	}
+
+	/**
+	 * Set page title
+	 *
+	 * @param string $title
+	 *  a string to be used as page title
+	 */
+	public function setPageTitle($title) {
+		$this->content['page']['title'] = 'CourseCoffee.com - ' . $title;
 	}
 	
 	/**
@@ -116,15 +137,6 @@ CSS;
 		$this->content['meta'] .= <<<META
 <meta {$string} />
 META;
-	}
-
-	/**
-	 * Render the pieces together and send it to the user
-	 */
-	public function render() {
-		$this->setHeader(self::HTML_HEADER);
-		extract($this->content);
-		include TEMPLATE_PATH . '/welcome.page.tpl';
 	}
 
 }

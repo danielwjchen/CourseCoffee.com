@@ -26,7 +26,8 @@ class PageController extends Controller implements ControllerInterface {
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
-		$this->page_view->render();
+		$this->page_view->setHeader(PageView::HTML_HEADER);
+		echo $this->page_view->render();
 	}
 
 	/**

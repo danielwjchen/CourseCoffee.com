@@ -19,3 +19,4 @@ require_once INCLUDES_PATH . '/File.php';
 require_once INCLUDES_PATH . '/Router.php';
 require_once INCLUDES_PATH . '/Logger.php';
 require_once INCLUDES_PATH . '/Crypto.php';
+require_once INCLUDES_PATH . '/Cookie.php';

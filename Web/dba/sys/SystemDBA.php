@@ -132,6 +132,44 @@ class SystemDBA implements DBAInterface {
 					'password' => array('password'),
 				),
 			),
+			'user_cookie' => array(
+				'description' => "store user's cookie signature",
+				'column' => array(
+					'user_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a user',
+					),
+					'signature' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'the signature generated for the user',
+					),
+				),
+				'primary' => array('user_id'),
+				'unique' => array(
+					'signature' => array('signature'),
+				),
+			),
+			'user_session' => array(
+				'description' => "store user's session",
+				'column' => array(
+					'user_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a user',
+					),
+					'session' => array(
+						'type' => 'text',
+						'not null' => TRUE,
+						'description' => 'serialized user session',
+					),
+				),
+				'primary' => array('user_id'),
+			),
 		);
 	}
 }

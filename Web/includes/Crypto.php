@@ -42,7 +42,7 @@ class Crypto{
 	 */
 	public static function Init($config_db) {
 		self::$db = new DB($config_db);
-		$record = self::$db->fetch("SELECT * FROM crypto LIMIT 1 ORDER BY id DESC");
+		$record = self::$db->fetch("SELECT * FROM crypto ORDER BY id DESC LIMIT 1");
 		self::$salt = $record['salt'];
 	}
 
