@@ -8,6 +8,7 @@ define('CONTROLLER_PATH', ROOT_PATH . '/controller');
 define('MODEL_PATH', ROOT_PATH . '/model');
 define('VIEW_PATH', ROOT_PATH . '/view');
 define('LIB_PATH', ROOT_PATH . '/lib');
+define('TEMPLATE_PATH', ROOT_PATH . '/template');
 
 require_once INCLUDES_PATH . '/Autoload.php';
 require_once INCLUDES_PATH . '/Config.php';
@@ -16,3 +17,5 @@ require_once INCLUDES_PATH . '/DB.php';
 require_once INCLUDES_PATH . '/DBAInvoker.php';
 require_once INCLUDES_PATH . '/File.php';
 require_once INCLUDES_PATH . '/Router.php';
+require_once INCLUDES_PATH . '/Logger.php';
+require_once INCLUDES_PATH . '/Crypto.php';

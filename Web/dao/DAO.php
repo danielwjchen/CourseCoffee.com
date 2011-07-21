@@ -55,6 +55,17 @@ abstract class DAO{
 	protected $db;
 
 	/**
+	 * Set the object attribute
+	 *
+	 * @param array $attribute
+	 *  an associative array of object attributes
+	 */
+	protected function setAttribute($attribute) {
+		$this->attr = array_fill_keys($attribute, '');
+
+	}
+
+	/**
 	 * Update the object Attribute
 	 *
 	 * @param array $data

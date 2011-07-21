@@ -1,0 +1,109 @@
+/**
+ * @file
+ * Define styles for the navigation menu
+ */
+#navigation-menu{
+}
+#navigation-menu ul,
+#navigation-menu li{
+}
+#navigation-menu ul{
+}
+#navigation-menu li{
+	float:left;
+	padding:5px 0 5px 30px;
+	height:35px;
+	display:block;
+}
+#navigation-menu li.active{
+	background: url('../images/plus.png') 12px 15px no-repeat;
+}
+#navigation-menu li a{
+	color: white;
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	padding: 8px 12px;
+	display: block;
+}
+#navigation-menu a:hover{
+	background: #5c5c5c;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #444444;
+	-webkit-box-shadow: 2px 2px 5px #444444;
+	box-shadow: 2px 2px 5px #444444;
+}
+
+/**
+ * Define styles for home button
+ */
+#navigation-menu li.home{
+}
+#navigation-menu li.home .button{
+}
+
+/**
+ * Define styles for calendar button
+ */
+#navigation-menu li.calendar{
+}
+#navigation-menu li.calendar .button{
+}
+
+/**
+ * Define styles for class button
+ */
+#navigation-menu li.class{
+}
+#navigation-menu li.class .button{
+}
+
+/**
+ * Define styles for logout button
+ */
+#navigation-menu li.logout{
+	float: right;
+}
+#navigation-menu li.logout .button{
+}
+
+/**
+ * Define styles for login button
+ */
+#navigation-menu li.login{
+	float: right;
+	text-align: right;
+	width: 563px;
+}
+#navigation-menu li.login .error{
+	color: white;
+	float: left;
+	width: 200px;
+	margin-right: -200px;
+	text-align: left;
+}
+#navigation-menu li.login .error p{
+	margin: 0;
+	padding: 0 5px;
+}
+#navigation-menu li.login .login-form{
+	float: left;
+	width: 363px;
+	margin-left: 200px;
+}
+#navigation-menu li.login input{
+	color: #787474;
+	font-size: 18px;
+	line-height: 18px;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	margin: 5px;
+	width: 138px;
+	float: left;
+	padding: 0 4px;
+}
+#navigation-menu li.login .button{
+	float: left;
+}

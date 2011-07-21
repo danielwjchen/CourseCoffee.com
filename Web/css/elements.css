@@ -1,0 +1,41 @@
+body,
+html{
+	padding: 0;
+	margin: 0;
+}
+body{
+	background: #457319;
+	background-image: -moz-linear-gradient(#9cc24c, #457319);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#9cc24c), to(#457319)); 
+	font-family: Sans-Serif;
+}
+
+div{
+	padding:0;
+	margin:0;
+	position:relative;
+	display:block;
+}
+
+ul, li{
+	padding:0;
+	margin:0;
+}
+dl{
+	font-size:12px;
+}
+dl dt{
+	font-size:16px;
+}
+dl dl{
+	margin:0;
+}
+dl dl dt{
+	font-size:14px;
+}
+dt{
+	margin:5px 0;
+}
+.hidden{
+	display: none;
+}

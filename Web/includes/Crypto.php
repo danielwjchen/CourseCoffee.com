@@ -6,26 +6,51 @@
 class Crypto{
 
 	/**
+	 * Manage database access
+	 */
+	private static $db;
+
+	/**
+	 *  A unique string to be used as the "salt" for encryption
+	 */
+	private static $salt;
+
+	/**
 	 * Generate a unique string to be used as the "salt" of the encryption
 	 *
-	 * @param string
-	 *
 	 * @return string
+	 *  a md5 hash value generated from database configuration
 	 */
 	public static function generateSalt() {
+		global $config;
+		return md5(serialize($config->db));
 	}
 
-	public static function Init() {
+	/**
+	 * Create a persistent record in database to store the salt
+	 */
+	public static function Build() {
+		$salt = self::generateSalt();
+		self::$db->perform(
+			"INSERT INTO crypto (salt, timestamp) VALUES (:salt, UNIX_TIMESTAMP())",
+			array('salt' => $salt)
+		);
 	}
 
+	/**
+	 * Initialize Crypto
+	 */
+	public static function Init($config_db) {
+		self::$db = new DB($config_db);
+		$record = self::$db->fetch("SELECT * FROM crypto LIMIT 1 ORDER BY id DESC");
+		self::$salt = $record['salt'];
+	}
+
+	/**
+	 * Encrypt the string
+	 */
 	public static function Encrypt($string) {
-
-		return $string;
-	}
-
-	public static function Decrypt($string) {
-
-		return $string;
+		return base64_encode(sha1($string. self::$salt, true) . self::$salt); 
 	}
 
 }

@@ -1,5 +1,5 @@
 #
-# Apache/PHP/Drupal settings:
+# Apache/PHP settings:
 #
 
 # Protect files and directories from prying eyes.
@@ -13,7 +13,7 @@ Options -Indexes
 # Follow symbolic links in this directory.
 Options +FollowSymLinks
 
-# Make Drupal handle any 404 errors.
+# Make the system handle any 404 errors.
 ErrorDocument 404 /index.php
 
 # Force simple error message for requests for non-existent favicon.ico.
@@ -110,6 +110,9 @@ DirectoryIndex index.php
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !=/favicon.ico
+  RewriteCond %{REQUEST_URI} !(css)
+  RewriteCond %{REQUEST_URI} !(js)
+  RewriteCond %{REQUEST_URI} !(image)
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 

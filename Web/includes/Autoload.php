@@ -6,6 +6,12 @@
 class Autoload {
 
 	/**
+	 * @defgroup fail log 
+	 * @{
+	 */
+	const FAIL_EMPTY_PATH = 'failed to resolve path';
+
+	/**
 	 * A map of component paths and the regular expression that identifies an 
 	 * implementation.
 	 */
@@ -34,8 +40,11 @@ class Autoload {
 
 	/**
 	 * Scan and build a registry for the classes and their path.
+	 *
+	 * WARNING!! This method clears the table and repopulates it with new data.
 	 */
 	public static function Build() {
+		self::$db->perform('TRUNCATE TABLE autoload');
 		$sql = "
 			INSERT INTO autoload
 				(class, path) 
@@ -46,11 +55,10 @@ class Autoload {
 		foreach (self::$paths as $path => $pattern) {
 			$classes = array_merge($classes, FILE::ScanDirectory($path, $pattern));
 		}
-
 		foreach ($classes as $path => $file) {
 			self::$db->perform(
 				$sql, 
-				array('class' => $file->name, 'path' => $file->uri)
+				array('class' => $file->name, 'path' => $path)
 			);
 		}
 	}
@@ -59,11 +67,21 @@ class Autoload {
 	 * Add the necessary file
 	 */
 	public static function Add($classname) {
-		$path = self::$db->fetch(
+		$record = self::$db->fetch(
 			'SELECT path FROM autoload WHERE class = :class',
 			array('class' => $classname)
 		);
 
-		require_once $path;
+		if (empty($record['path'])) {
+			Logger::write(self::FAIL_EMPTY_PATH . ' - ' . $classname, Logger::SEVERITY_HIGH);
+			header('Location: /all-system-down');
+		}
+
+		try {
+			require_once $record['path'];
+
+		} catch (Exception $e) {
+			echo 'sss';
+		}
 	}
 }

@@ -1,0 +1,243 @@
+/**
+ * @file
+ * Define CSS for the welcome body
+ */
+.welcome.body{
+	position: relative;
+}
+.welcome .body-inner{
+	position: relative;
+}
+/* log-sloggan */
+.welcome .logo-slogan{
+	height: 200px;
+	margin: 50px auto -250px;
+	width: 778px;
+}
+.welcome .logo-slogan .content{
+	margin: 10px;
+	width: 778px;
+}
+.welcome .logo-slogan .logo{
+	float: left;
+}
+.welcome .logo-slogan .slogan{
+	line-height: 140px;
+	height: 140px;
+	font-size: 20px;
+	font-weight: bold;
+	color: white;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
+}
+/* dialog */
+.welcome .dialog{
+	background: #f6f5f4;
+	width: 598px;
+	margin: 250px auto 0;
+	height: 68px;
+	border: 1px solid #f6f5f4;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: white;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+.welcome .dialog .content{
+	margin: 10px;
+	width: 578px;
+}
+
+/**
+ * Form elements
+ */
+.welcome .dialog .error{
+	color: red;
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+}
+.welcome .dialog input{
+	color: #787474;
+	font-weight: bold;
+	float: left;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	padding: 0 5px;
+	margin: 0;
+	height: 48px;
+	line-height: 30px;
+	font-size: 30px;
+}
+.welcome .dialog .description{
+	text-align: center;
+	color: #2e2e2e;
+	font-weight: bold;
+	float: left;
+	text-shadow: 0 0 1px #787474;
+	-moz-text-shadow: 0 0 1px #787474;
+	-webkit-text-shadow: 0 0 1px #787474;
+}
+.welcome .dialog .button{
+	color: white;
+	display: block;
+	border: 1px solid #ff8400;
+	border-radius: 4px;
+	font-size: 30px;
+	height: 46px;
+	line-height: 46px;
+	text-align: center;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 0 6px #8a4c0a;
+	-moz-text-shadow: 0 0 6px #8a4c0a;
+	-webkit-text-shadow: 0 0 6px #8a4c0a;
+	background: #ff8400;
+	background-image: -moz-linear-gradient(#ff8400, #d06e06);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
+}
+.welcome .dialog .button:hover{
+	text-shadow: 0 0 3px #fff;
+	-moz-text-shadow: 0 0 3px #fff;
+	-webkit-text-shadow: 0 0 3px #fff;
+}
+
+/**
+ * attributes shared by search forms
+ *
+ * This defines the borders and colors. Each template needs to define their own
+ * dimensions.
+ */
+.welcome .dialog .search-form{
+	float: left;
+}
+.welcome .dialog .search-form input{
+	border-radius: 4px 0 0 4px;
+}
+.welcome .dialog .search-form .button{
+	float: left;
+	border-radius: 0 4px 4px 0;
+}
+.welcome .dialog .search-form .button:hover{
+	text-shadow: 0 0 3px #fff;
+	-moz-text-shadow: 0 0 3px #fff;
+	-webkit-text-shadow: 0 0 3px #fff;
+}
+
+/**
+ * attributes shared by upload forms
+ *
+ * This defines the borders and colors. Each template needs to define their own
+ * dimensions.
+ */
+.welcome .dialog .upload-form{
+	float: left;
+}
+.welcome .dialog .upload-form .description{
+}
+.welcome .dialog .upload-form .button{
+}
+
+/**
+ * search template specific 
+ *
+ * this template shows only the search field
+ */
+.welcome .dialog.search .search-form{
+	width: 578px;
+}
+.welcome .dialog.search .search-form input{
+	width: 370px;
+}
+.welcome .dialog.search .search-form .button{
+	width: 203px;
+}
+
+/**
+ * upload template specific 
+ *
+ * this template shows only the upload field
+ */
+.welcome .dialog.upload .upload-form{
+	width: 578px;
+}
+.welcome .dialog.upload .upload-form .description{
+	font-size: 20px;
+	width: 398px;
+	line-height: 46px;
+	height: 46px;
+}
+.welcome .dialog.upload .upload-form .button{
+	width: 178px;
+}
+
+/**
+ * hybrid template specific 
+ *
+ * this template shows both the search and upload forms
+ */
+.welcome .dialog.hybrid .search-form{
+	width: 260px;
+}
+.welcome .dialog.hybrid .search-form input{
+	width: 198px;
+}
+.welcome .dialog.hybrid .search-form .button{
+	width: 58px;
+}
+.welcome .dialog.hybrid .upload-form{
+}
+.welcome .dialog.hybrid .upload-form .description{
+	padding: 10px 15px 0;
+	font-size: 14px;
+	line-height: 14px;
+	width: 128px;
+	height: 26px;
+}
+.welcome .dialog.hybrid .upload-form .button{
+	float: left;
+	width: 150px;
+}
+
+/**
+ * user registration form specific
+ */
+.welcome .dialog.user-registration {
+	height: 300px;
+}
+.welcome .dialog.user-registration .row{
+	height: 44px;
+	margin: 0 auto;
+	padding: 10px 0;
+	clear: both;
+}
+.welcome .dialog.user-registration .title{
+	float: left;
+	width: 239px;
+	padding: 0 10px;
+	text-align: right;
+}
+.welcome .dialog.user-registration .field{
+	float: left;
+	width: 263px;
+}
+.welcome .dialog.user-registration label,
+.welcome .dialog.user-registration input{
+	height: 34px;
+	line-height: 34px;
+}
+.welcome .dialog.user-registration label{
+	font-size: 24px;
+}
+.welcome .dialog.user-registration input{
+	font-size: 20px;
+	width: 263px;
+}
+.welcome .dialog.user-registration .button{
+	clear: both;
+	width: 200px;
+	margin: 20px auto;
+}

@@ -4,6 +4,8 @@
  * Define the basic structures of a controller class
  */
 
+require_once INCLUDES_PATH . '/Input.php';
+
  /*
  * List of methods a controller class must have.
  */
@@ -39,6 +41,7 @@ interface ControllerInterface {
 abstract class Controller {
 
 	protected $oauth2;
+	protected $model;
 
 	/**
 	 * Hold the data to be returned to client
@@ -46,7 +49,8 @@ abstract class Controller {
 	protected $output;
 
 	function __construct() {
-		$this->oauth2 = Factory::Model('OAuth2');
+		// we are not doing OAuth2 at the moment.
+		// $this->oauth2 = new OAuth2Model();
 
 	}
 
@@ -54,7 +58,7 @@ abstract class Controller {
 	 * Implement Controller::beforeAction()
 	 */
 	public function beforeAction() {
-		$this->oauth2->verifyAccessToken();
+		//$this->oauth2->verifyAccessToken();
 
 	}
 
@@ -62,7 +66,6 @@ abstract class Controller {
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
-		print $this->output;
 	}
 
 }

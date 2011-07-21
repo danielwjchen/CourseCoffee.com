@@ -1,0 +1,90 @@
+/**
+ * Define styles for home body
+ */
+.home.body{
+}
+.home .body-inner{
+}
+
+/**
+ * Define styles for profile
+ */
+.home .profile{
+	height: 200px;
+}
+.home .profile img{
+	position: absolute;
+	top: -20px;
+	left: -20px;
+	height: 200px;
+	width: 200px;
+	-moz-box-shadow: 2px 2px #000;
+	-webkit-box-shadow: 2px 2px 5px #000;
+	box-shadow: 2px 2px 5px #000;
+}
+.home .profile .name{
+	left: 225px;
+	width: 200px;
+	font-weight: bold;
+	font-size: 18px;
+	color: #333333;
+}
+.home .profile .school{
+	left: 225px;
+	font-weight: bold;
+	font-size: 18px;
+	color: #333333;
+}
+.home .profile .achievement{
+	left: 225px;
+}
+.home .profile .achievement .karma{
+	font-weight: bold;
+	font-size: 18px;
+	color: #ec7b02;
+}
+.home .profile .achievement strong{
+	font-weight: bold;
+	font-size: 18px;
+	color: #333333;
+}
+
+/**
+ * Define styles for panels
+ */
+.home h1{
+	font-weight: bold;
+	font-size: 24px;
+	color: #333333;
+	text-shadow: 0 0 1px #000;
+	-moz-text-shadow: 0 0 1px #000;
+	-webkit-text-shadow: 0 0 1px #000;
+}
+.home h2{
+	font-weight: bold;
+	font-size: 18px;
+	color: #333333;
+	padding: 0;
+	margin: 0;
+}
+.home p{
+	padding: 0 0 0 10px;
+	margin: 0;
+	color: #333333;
+	font-size: 12px;
+}
+.home ul,
+.home ul li{
+	list-style: none;
+}
+.home ul li{
+	margin-bottom: 15px;
+}
+
+/**
+ * Define styles for class panel
+ */
+.home ul,
+.home ul li{
+	list-style: none;
+}

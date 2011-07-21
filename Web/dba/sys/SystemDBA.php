@@ -33,6 +33,27 @@ class SystemDBA implements DBAInterface {
 				),
 				'primary' => array('id', 'request'),
 			),
+			'crypto' => array(
+				'description' => 'keep a record of salt user',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'description' => 'the primary key',
+					),
+					'salt' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => ' a unique string to be used as the "salt" for encryption',
+					),
+					'timestamp' => array(
+						'type' => 'int',
+						'not null' => TRUE,
+						'description' => 'the timestamp when the DBA request is performed',
+					),
+				),
+				'primary' => array('id'),
+			),
 			'autoload' => array(
 				'description' => 'register a class and the file path',
 				'column' => array(

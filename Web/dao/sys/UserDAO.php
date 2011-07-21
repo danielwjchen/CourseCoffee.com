@@ -23,7 +23,7 @@ class UserDAO extends DAO implements DAOInterface{
 			return ;
 
 		}else{
-			$this->db->insert("
+			return $this->db->insert("
 				INSERT INTO `user` (`account`, `password`)
 				VALUES (:account, :password)",
 			array(

@@ -1,0 +1,41 @@
+/**
+ * @file
+ * Define styles for class body
+ */
+.class .panel-top{
+	position: absolute;
+	top: -35px;
+	left: 25px;
+}
+.class .panel-top .panel-inner{
+	position: relative;
+}
+.class ul.class-list,
+.class ul.class-list li{
+	list-style: none;
+}
+.class ul.class-list{
+	width: 800px;
+}
+.class ul.class-list li{
+	float: left;
+	padding: 2px 10px;
+	margin: 0 5px;
+	font-weight: bold;
+	font-size: 18px;
+	color: #fefefe;
+	text-shadow: 0 0 4px #787474;
+	-moz-text-shadow: 0 0 4px #787474;
+	-webkit-text-shadow: 0 0 4px #787474;
+}
+.class ul.class-list li.active{
+	color: #333333;
+	float: left;
+	background: #fefefe;
+	border: solid #fefefe;
+	border: 1px 1px 0 1px;
+	border-radius: 8px 8px 0 0;
+	text-shadow: 0 0 2px #787474;
+	-moz-text-shadow: 0 0 2px #787474;
+	-webkit-text-shadow: 0 0 2px #787474;
+}

@@ -1,0 +1,213 @@
+/**
+ * Define styles for header, body, and footer sections
+ */
+ .container{
+	height: 100%;
+	position: relative;
+ }
+.header,
+.body,
+.footer{
+	width: 100%;
+	clear: both;
+	padding: 0;
+	margin: 0;
+}
+.header-inner,
+.body-inner,
+.footer-inner{
+	padding: 0;
+	margin: 0 auto;
+}
+
+/** 
+ * Define styles for the header section
+ */
+.header{
+	height: 50px;
+	background: #313131;
+	background-image: -moz-linear-gradient(#313131, #5e5b5b);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
+}
+.header-inner{
+	width: 960px;
+}
+
+/** 
+ * Define styles for the body section
+ */
+.home.body,
+.calendar.body,
+.class.body{
+	margin: 50px 0;
+}
+.home .body-inner,
+.calendar .body-inner,
+.class .body-inner{
+	width: 960px;
+}
+.home .content,
+.calendar .content,
+.class .content{
+	float: left;
+	background: #f6f5f4;
+	width: 958px;
+	border: 1px solid #f6f5f4;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: white;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+
+/**
+ * Define styles for panels
+ */
+.panel-top{
+	position: relative;
+	width: 958px;
+	clear: both
+}
+.panel-01,
+.panel-02,
+.panel-03{
+	float: left;
+	width: 469px;
+	position: relative;
+	padding: 5px;
+}
+.panel-01{
+	margin-right: -479px;
+}
+.panel-02{
+	margin-left: 479px;
+	margin-right: -958px;
+}
+.panel-03{
+	margin-left: 958px;
+	margin-right: -1437px;
+}
+.panel-inner{
+	padding: 5px;
+	width: 459px;
+}
+
+/**
+ * @file
+ * Define styles for calendars
+ */
+.calendars{
+}
+.calendars .month{
+	font-weight: bold;
+	font-size: 20px;
+	color: #333333;
+}
+.calendars .week{
+	font-weight: bold;
+	font-size: 16px;
+	color: #333333;
+}
+.calendars tr{
+	text-align:center;
+}
+.calendars td{
+	width: 67px;
+}
+.calendars a{
+	color:white;
+	text-decoration:none;
+}
+.calendars a:hover{
+	color: #54FFFF;
+}
+.calendars .active-orange{
+	background: #ff8000;
+}
+.calendars .active-blue{
+	background: #7eb8ed;
+}
+
+/**
+ * Define styles for task panel
+ */
+.tasks ul,
+.tasks li{
+}
+.tasks a{
+}
+.tasks dt{
+	font-weight: bold;
+	font-size: 18px;
+	color: #333333;
+}
+
+/**
+ * Define styles for detail panel
+ */
+.details{
+	width: 449px;
+	padding: 0 5px;
+	font-size: 12px;
+}
+.details-inner{
+	width: 449px;
+	padding: 0 5px;
+}
+.details textarea{
+	width: 439px;
+	height: 50px;
+	margin: 5px;
+}
+.details #submit{
+	float: right;
+	margin-bottom: 25px;
+}
+.details ul,
+.details li{
+	list-style: none;
+}
+.details ul{
+}
+.details li{
+	clear: both;
+}
+.details li p{
+	width: 375px;
+	float: left;
+	margin: 0;
+	padding: 0;
+	margin-left: 60px;
+	margin-bottom: 25px
+}
+.details .comment-author-image{
+	padding: 5px;
+	float: left;
+	width: 50px;
+	margin-left: 0;
+	margin-right: -60px;
+}
+.new-course{
+	background: url("../images/body-background-off-focus.png") repeat;
+}
+.course-add-inner{
+	background:white;
+}
+
+/** 
+ * Define styles for footer 
+ */
+.footer{
+	position: absolute;
+	bottom: 0;
+	height: 150px;
+	background: #313131;
+	background-image: -moz-linear-gradient(#313131, #5e5b5b);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
+}
+.footer-inner{
+	margin-top: -150px;
+	width: 100%;
+}

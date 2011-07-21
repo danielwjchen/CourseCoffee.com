@@ -20,9 +20,9 @@ class OAuth2Model extends OAuth2 {
 			'display_error' => true,
 		));
 
-		$this->token_dao = Factory::DAO('OAuth2Token');
-		$this->code_dao = Factory::DAO('OAuth2Code');
-		$this->client_dao = Factory::DAO('OAuth2Client');
+		$this->token_dao = new OAuth2TokenDAO();
+		$this->code_dao = new OAuth2CodeDAO();
+		$this->client_dao = new OAuth2ClientDAO();
 
   }
 
