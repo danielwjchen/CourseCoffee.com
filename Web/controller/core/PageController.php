@@ -23,6 +23,13 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Override Controller::beforeAction()
+	 */
+	public function beforeAction() {
+
+	}
+
+	/**
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
@@ -32,8 +39,13 @@ class PageController extends Controller implements ControllerInterface {
 
 	/**
 	 * Get the welcome page
+	 *
+	 * we redirect if the user is logged in
 	 */
 	public function getWelcomePage() {
+		if ($this->isUserLoggedIn()) {
+			header('Location: '. self::PAGE_HOME);
+		}
 		$block_content = '';
 		$block = new WelcomeBlockView($block_content);
 		$page_content['body']['block'] = $block->render();
@@ -46,6 +58,7 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the home page for a user
 	 */
 	public function getHomePage() {
+		$this->redirectUnknownUser();
 		$this->page_view = new HomePageView();
 	}
 
@@ -53,6 +66,7 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the calendar page for a user
 	 */
 	public function getCalendarPage() {
+		$this->redirectUnknownUser();
 		$this->page_view = new CalendarPageView();
 	}
 
@@ -60,6 +74,7 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the class page for a user
 	 */
 	public function getClassPage() {
+		$this->redirectUnknownUser();
 		$this->page_view = new ClassPageView();
 	}
 

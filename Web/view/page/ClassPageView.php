@@ -10,8 +10,9 @@ class ClassPageView extends PageView implements PageViewInterface {
 	 */
 	function __construct($content = null) {
 		parent::__construct($content);
-		$this->content['body']['css'] = 'welcome';
+		$this->setPageTitle('class');
 		$this->addJS('model/login.js');
+		$this->addJS('model/logout.js');
 		$this->addJS('model/registration.js');
 		$this->addJS('controller/welcome.js');
 		$this->addJS('controller/navigation.js');
@@ -37,21 +38,22 @@ class ClassPageView extends PageView implements PageViewInterface {
 		<div class="header">
 			<div class="header-inner">
 				<ul id="navigation-menu">
-					<li class="login">
-						<div class="error hidden"></div>
-						<div class="login-form">
-							<form id="user-login-form" name="user-login" action="user/login" method="post">
-								<input type="hidden" name="token" value="{$header['block']['login_token']}" />
-								<input type="email" name="email" class="input" value="email" />
-								<input type="password" name="password" class="input" value="password" />
-								<a class="button login" href="#">login</a>
-							</form>
-						</div>
+					<li class="home">
+						<a class="home button" href="/home">Home</a>
+					</li>
+					<li class="calendar">
+						<a class="calendar button" href="/calendar">Calendar</a>
+					</li>
+					<li class="class active">
+						<a class="class button" href="/class">Class</a>
+					</li>
+					<li class="logout">
+						<a class="logout button" href="#">logout</a>
 					</li>
 				</ul>
 			</div>
 		</div>
-		<div class="{$body['css']} body">
+		<div class="class body">
 			<div class="body-inner">
 				{$body['block']}
 			</div>

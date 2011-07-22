@@ -44,6 +44,12 @@ abstract class Controller {
 	protected $model;
 
 	/**
+	 * Default home page
+	 */
+	const PAGE_DEFAULT = '/welcome';
+	const PAGE_HOME = '/home';
+
+	/**
 	 * Hold the data to be returned to client
 	 */
 	protected $output;
@@ -56,14 +62,57 @@ abstract class Controller {
 
 	/**
 	 * Implement Controller::beforeAction()
+	 * 
+	 * This is a stub!
 	 */
 	public function beforeAction() {
-		//$this->oauth2->verifyAccessToken();
 
 	}
 
 	/**
+	 * Redirect unknown user 
+	 *
+	 * @param string $url
+	 *  url to redirect to, default to home
+	 */
+	public function redirectUnknownUser($url = self::PAGE_DEFAULT) {
+		// if the user id is still missing...
+		if(!$this->isUserLoggedIn()) {
+			header('Location: '. $url);
+		}
+
+	}
+
+	/**
+	 * Check if user is logged in
+	 *
+	 * @return mixed
+	 *  return the user id or boolean false
+	 */
+	public function isUserLoggedIn() {
+		$user_id = Session::Get('user_id');
+		// get the cookie and revive the session if session is dead.
+		if (empty($user_id)) {
+			$signature = Cookie::Get(UserLoginFormModel::LOGIN_COOKIE);
+			if (!empty($signature)) {
+				global $config;
+				$user_cookie_dao = new UserCookieDAO(new DB($config->db['sys']));
+				$user_cookie_dao->read(array('signature' => $signature));
+				$user_id = $user_cookie_dao->user_id;
+				if (!empty($user_id)){
+					Session::Set('user_id', $user_id);
+				}
+			}
+		}
+
+		return empty($user_id) ? false : $user_id;
+	}
+	
+
+	/**
 	 * Implement ControllerInterface::afterAction()
+	 *
+	 * This is a stub!
 	 */
 	public function afterAction() {
 	}

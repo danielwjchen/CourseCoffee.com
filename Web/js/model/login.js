@@ -1,12 +1,8 @@
 /**
- * Handle user registraion
+ * @file
+ * Log in user
  */
 window.login = {
-	/**
-	 * Initialize the user login form
-	 */
-	'init': function () {
-	},
 	/**
 	 * Set error messages
 	 */

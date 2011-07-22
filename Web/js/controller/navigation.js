@@ -6,8 +6,9 @@ $(document).ready(function() {
 		var target = $(this);
 		if (target.hasClass('login')) {
 			login.submit();
+		} else if (target.hasClass('logout')) {
+			logout.submit();
 		}
 	});
 	
 });
-

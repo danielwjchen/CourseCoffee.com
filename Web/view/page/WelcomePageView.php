@@ -53,6 +53,12 @@ class WelcomePageView extends PageView implements PageViewInterface {
 		</div>
 		<div class="{$body['css']} body">
 			<div class="body-inner">
+				<div class="logo-slogan">
+					<div class="content">
+						<img src="images/logo.png" class="logo" />
+						<p class="slogan">Life is hectic. Have a coffee over it.</p>
+					</div>
+				</div>
 				{$body['block']}
 			</div>
 		</div>

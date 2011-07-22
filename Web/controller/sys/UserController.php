@@ -28,6 +28,13 @@ class UserController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Override Controller::beforeAction()
+	 */
+	public function beforeAction() {
+
+	}
+
+	/**
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
@@ -87,6 +94,11 @@ class UserController extends Controller implements ControllerInterface {
 	 * Log out a user
 	 */
 	public function logoutUser() {
+		$logout = new UserLogoutModel();
+		$user_id = Session::Get('user_id');
+		$result = $logout->terminate($user_id);
+		$json_view = new JSONView($result);
+		$json_view->render();
 	}
 
 }

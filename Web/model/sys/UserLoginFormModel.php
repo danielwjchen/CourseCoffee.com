@@ -31,15 +31,10 @@ class UserLoginFormModel extends FormModel {
 	 * Failed to login
 	 */
 	const EVENT_FAILED_TO_LOGIN = 'Failed login attempt';
-
 	const EVENT_FORM_EMPTY = 'An empty user login submission is made. How is this possible?';
-
 	const EVENT_FAILED_PASSWORD = 'The password provided does not match the email';
-
 	const EVENT_FORM_EXPIRED = 'User login form expired. Please try again.';
-
 	const EVENT_EXCEEDED_MAX_ATTEMP = 'User exceeded max login attempt';
-
 	const EVENT_NEW_LOGIN = 'User Logged in';
 
 	/**
@@ -162,6 +157,7 @@ class UserLoginFormModel extends FormModel {
 				'user_id' => $this->user_dao->id,
 				'signature' => $signature, 
 			));
+			Session::Set('user_id', $this->user_dao->id);
 			Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
 			return array(
 				'user_id' => $this->user_dao->id,

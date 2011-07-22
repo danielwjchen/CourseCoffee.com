@@ -1,4 +1,5 @@
 /**
+ * @file
  * Handle user registraion
  */
 window.register = {
