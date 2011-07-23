@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- DW6 -->
+<head>
+<!-- Copyright 2005 Macromedia, Inc. All rights reserved. -->
+<title>Business Ethics Syllabus</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" href="file:///C|/Program%20Files/Macromedia/Dreamweaver%208/Configuration/BuiltIn/StarterPages/mm_health_nutr.css" type="text/css" />
+<script language="JavaScript" type="text/javascript">
+//--------------- LOCALIZEABLE GLOBALS ---------------
+var d=new Date();
+var monthname=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+//Ensure correct for language. English is "January 1, 2004"
+var TODAY = monthname[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+//---------------   END LOCALIZEABLE   ---------------
+</script>
+<style type="text/css">
+<!--
+.style1 {font-size: 18px}
+.style2 {color: #D5EDB3}
+.style6 {
+	font-size: 24px;
+	color: #990000;
+}
+.style7 {font-size: 24px; }
+.style8 {font-size: 16px}
+.style9 {color: #336600}
+.style10 {font-size: 12px}
+.style11 {
+	font-size: 14px;
+	font-weight: bold;
+}
+-->
+</style>
+</head>
+<body bgcolor="#F4FFE4">
+<table width="83%" height="870" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#D5EDB3">
+    <td colspan="2" rowspan="2"><img src="e-Learning Lab.jpg" alt="ethicssyllabus" width="313" height="172" /></td>
+    <td width="1028" height="50" id="logo" valign="bottom" align="center" nowrap="nowrap"><p><strong>Business Ethics </strong></p>    </td>
+    <td width="91">&nbsp;</td>
+  </tr>
+
+  <tr bgcolor="#D5EDB3">
+    <td height="51" id="tagline" valign="top" align="center"><p class="style8">Taught by</p>
+      <p class="style7"><Person>Kay McLennan</Person>, Ph.D.</p>
+    <p class="style7">&nbsp;  </p></td>
+	<td width="91">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td colspan="4" bgcolor="#5C743D"><img src="file:///C|/Program%20Files/Macromedia/Dreamweaver%208/Configuration/BuiltIn/StarterPages/mm_spacer.gif" alt="" width="1" height="2" border="0" /></td>
+  </tr>
+
+  <tr>
+    <td colspan="4" bgcolor="#99CC66" background="file:///C|/Program%20Files/Macromedia/Dreamweaver%208/Configuration/BuiltIn/StarterPages/mm_dashed_line.gif"><img src="file:///C|/Program%20Files/Macromedia/Dreamweaver%208/Configuration/BuiltIn/StarterPages/mm_dashed_line.gif" alt="line decor" width="4" height="3" border="0" /></td>
+  </tr>
+
+  <tr bgcolor="#99CC66">
+  <td><div align="right"><a href="Course Syllabi.html"><strong>BACK&nbsp;&nbsp;::</strong></a></div></td>
+  	<td colspan="3" id="dateformat" height="20">&nbsp;&nbsp;
+    <script language="JavaScript" type="text/javascript">
+      document.write(TODAY);	</script>	</td>
+  </tr>
+
+  <tr>
+    <td colspan="4" bgcolor="#99CC66" background="file:///C|/Program%20Files/Macromedia/Dreamweaver%208/Configuration/BuiltIn/StarterPages/mm_dashed_line.gif"><img src="file:///C|/Program%20Files/Macromedia/Dreamweaver%208/Configuration/BuiltIn/StarterPages/mm_dashed_line.gif" alt="line decor" width="4" height="3" border="0" /></td>
+  </tr>
+
+  <tr>
+    <td colspan="4" bgcolor="#5C743D"><img src="file:///C|/Program%20Files/Macromedia/Dreamweaver%208/Configuration/BuiltIn/StarterPages/mm_spacer.gif" alt="" width="1" height="2" border="0" /></td>
+  </tr>
+ <tr>
+    <td width="190">&nbsp;</td>
+    <td colspan="2" valign="top">&nbsp;
+      <div align="center"><br />
+        <p class="style1"><span class="style2"><span class="style6">Syllabus: Business Ethics (BSMT-3380-10)</span></span></p>
+        <p class="style1"><img src="Business Ethics Syllabus Picture.jpg" alt="business ethics syllabus picture" width="1083" height="199" /><br />
+        </p>
+      </div>
+      <table width="1088" height="4152" border="0" cellpadding="2" cellspacing="0">
+        <tr>
+          <td width="1084" class="pageName style9">Instructor &amp; Course Information </td>
+        </tr>
+        <tr>
+          <td class="bodyText"><p align="left" class="style10"> Instructor:<strong>&nbsp; <Person>Kay L. McLennan</Person>, Ph.D., Professor  of Practice, Business Studies</strong><br />
+e-Mail &amp; Voice Mail:<strong>&nbsp; <a href="mailto:kmclenna@tulane.edu">kmclenna@tulane.edu</a> &amp; 504.862.<Date>8000</Date> x1360</strong><br />
+Office  Hours:&nbsp; <strong>Wednesdays (by appointment at the SCS Elmwood Campus)</strong><br />
+ Course:<strong>&nbsp;&nbsp; The online version of the Business Ethics course  is a highly participative  asynchronous  Internet-based course.&nbsp; The course site &ndash;  with all of the course materials  and discussion forums -- is accessed by logging into the myTulane Blackboard platform (at  http://mytulane.blackboard.com)</strong></p>	      </td>
+		</tr>
+        <tr>
+          <td class="bodyText"><span class="pageName style9">Required Textbook &amp; Other Course Materials </span></td>
+        </tr>
+        <tr>
+          <td height="166" class="bodyText"><p class="style10">Please keep in mind that it is your responsibility to procure a copy of  the assigned textbook before the <br />
+              first day of classes. </p>
+<p class="style10">More specifically, the required  textbook (and other required reading) includes:</p>
+            <ol>
+              <li class="style10"><Person>Ferrell, O.C.</Person>, Fraedrich, <Person>John</Person>, and <Person>Ferrell</Person>,  <Person>Linda</Person>&nbsp; (<Date>2010</Date>).&nbsp; <u>Business Ethics, Ethical Decision Making  &amp; Cases, 8th Edition</u>.&nbsp; <Location>Boston</Location>,  MA: Prentice Hall.&nbsp; ISBN:&nbsp; 978-1-4390-4223-6</li>
+              <li class="style10">Course site lectures and articles (see the &ldquo;e-Lectures  &amp; Assignments&rdquo; course site page for reading assignments and the &ldquo;In the  News&rdquo; course site page to find the [optional] news-related articles).</li>
+              <li class="style10">Movie clips for selected case studies (see &ldquo;e-Lectures  &amp; Assignments&quot; course site page).</li>
+          </ol><p class="style10">&nbsp;</p>          </td>
+        </tr>
+        <tr>
+          <td class="bodyText"><span class="pageName style9">Course Topic Outline &amp; Assignments </span></td>
+        </tr>
+        <tr>
+          <td height="1969" class="style10"><p align="left" class="style11"><u>Module One:&nbsp; Introduction to  the Study of Ethics</u></p>
+            <p><strong><em>Textbook Reading Assignment:</em></strong></p>
+            <p><Person>Ferrell</Person>, etc. &ndash; Chapters 1 and 2</p>
+            <ul>
+              <li>The Importance of  Business Ethics (starting on page 2)</li>
+              <li>Stakeholder  Relationships, Social Responsibility, and Corporate Governance (starting on  page 28)</li>
+            </ul>
+            <p><strong><em>Textbook Cases:</em></strong></p>
+            <ul>
+              <li>&ldquo;Wal-Mart:&nbsp; The Challenge of Managing Relationships with  Stakeholders&rdquo; (starting on page 292)</li>
+              <li>&ldquo;The Fall of Enron:&nbsp; A Stakeholder Failure&rdquo; (starting on page 318)</li>
+              <li>&ldquo;PETCO Develops  Successful Stakeholder Relationships&rdquo; (starting on page 422)</li>
+            </ul>
+            <p><strong><em>Video Clip Cases</em></strong> (see link to video clips in our Blackboard course site)<strong>:</strong></p>
+            <ul>
+              <li>&ldquo;Making the  Numbers&rdquo;</li>
+              <li>&ldquo;The New Belgium  Brewery Story&rdquo;</li>
+              <li>&ldquo;CharityAmerica.com&rdquo;</li>
+            </ul>
+            <p><strong><em>Work Due: </em></strong></p>
+            <ul>
+              <li><strong>Post <u>essays</u></strong><strong> </strong>(with the  essay questions located in the &ldquo;Assignments &amp; Lectures&rdquo; icon); and </li>
+            </ul>
+            <ul>
+              <li><strong>Post <u>discussion threads</u></strong><strong> </strong>(on your group discussion board) due on three (3) different days.</li>
+            </ul>
+            <p align="left" class="style11"><u>Module Two:&nbsp; Issues &amp;  Institutionalism</u></p>
+            <p><strong><em>Textbook Reading Assignment:</em></strong></p>
+            <p><Person>Ferrell</Person>, etc. &ndash; Chapters 3 and 4</p>
+            <ul>
+              <li>Emerging Business  Ethics Issues (starting on page 56)</li>
+              <li>The Institutionalization  of Business Ethics (starting on page 88)</li>
+            </ul>
+            <p><strong><em>Textbook Cases:</em></strong></p>
+            <ul>
+              <li>&ldquo;The Coca-Cola  Company Struggles with Ethical Crises&rdquo; (starting on page 308)</li>
+              <li>&ldquo;<Person>Martha  Stewart</Person>:&nbsp; A <Person>Brand</Person> in Crisis&rdquo; (starting on  page 343)</li>
+              <li>&ldquo;Arthur  Andersen:&nbsp; Questionable Accounting  Practices&rdquo; (starting on page 359)</li>
+              <li>&ldquo;Sunbeam  Corporation:&nbsp; &lsquo;Chainsaw <Person>Al</Person>&rsquo; and Greed&rdquo;  (starting on page 369)</li>
+              <li>&ldquo;Microsoft:  Antitrust Battles&rdquo; (starting on page 398)</li>
+              <li>&ldquo;Starbucks&rsquo;  Mission:&nbsp; Responsibility and Growth&rdquo;  (starting on page 441)</li>
+              <li>&ldquo;Home Depot  Implements Stakeholder Orientation&rdquo; (starting on page 448)</li>
+            </ul>
+            <p><strong><em>Video Clip Cases </em></strong>(see link to video clips in our Blackboard course  site)<strong>:</strong></p>
+            <ul>
+              <li>&ldquo;The Stonyfield  Story&rdquo; </li>
+              <li>&ldquo;Recycling Pays  at Kodak&rdquo;</li>
+              <li>&ldquo;Home Depot&rsquo;s  Social Responsibility Agenda&rdquo;</li>
+              <li>&ldquo;Social  Responsibility at Starbucks&rdquo;</li>
+            </ul>
+            <p><strong><em>Work Due: </em></strong></p>
+            <ul>
+              <li><strong>Post <u>essays</u></strong><strong> </strong>(with the  essay questions located in the &ldquo;Assignments &amp; Lectures&rdquo; icon<strong>);</strong></li>
+              <li><strong>Post <u>discussion threads</u></strong> (on your group discussion board) due on three (3) different days<strong>; and</strong></li>
+              <li><strong>Take the online <u>midterm exam</u></strong>.</li>
+            </ul>
+<p align="left" class="style11"><u>Module Three:&nbsp; The  Decision-Making Process</u></p>
+            <p><strong><em>Textbook Reading Assignment:</em></strong></p>
+            <p><Person>Ferrell</Person>, etc. &ndash; Chapters 5, 6, and 7</p>
+            <ul>
+              <li>Ethical  Decision-Making and Ethical Leadership (starting on page 120)</li>
+              <li>Individual  Factors:&nbsp; Moral Philosophies (starting on  page 144)</li>
+              <li>Organizational  Factors:&nbsp; The Role of Ethical Culture and  Relationships (starting on page 172)</li>
+            </ul>
+            <p><strong><em>Textbook Cases:</em></strong></p>
+            <ul>
+              <li>&ldquo;Tyco  International:&nbsp; Leadership Crisis&rdquo; (starting  on page 333)</li>
+              <li>&ldquo;Verizon:&nbsp; The Legacy of WorldCom and MCI&rdquo; (starting on  page 351)</li>
+              <li>&ldquo;Firestone:&nbsp; A Reputation Blowout&rdquo; (starting on page 389)</li>
+              <li>&ldquo;The Healthcare  Company:&nbsp; Learning from Past Mistakes?&rdquo;  (starting on page 415)</li>
+            </ul>
+            <p><strong><em>Video Clip Cases:</em></strong></p>
+            <ul>
+              <li>&ldquo;HM Reality Series:&nbsp; Managing Equality in the Workplace&rdquo; </li>
+              <li>&ldquo;Diversity at the  New England Aquarium&rdquo;</li>
+              <li>&ldquo;<Person>Alex</Person> and  <Person>Melinda</Person>&rdquo;</li>
+            </ul>
+            <p><strong><em>Work Due: </em></strong></p>
+            <ul>
+              <li><strong>Post <u>essays</u></strong><strong> </strong>(with the  essay questions located in the &ldquo;Assignments &amp; Lectures&rdquo; icon); and </li>
+            </ul>
+            <ul>
+              <li><strong>Post <u>discussion threads</u></strong> (on your group discussion board) due on three (3) different days<strong>.</strong></li>
+            </ul>
+            <p align="left" class="style11"><u>Module Four:&nbsp; Implementing Business  Ethics in a Global Economy</u></p>
+            <p><strong><em>Textbook Reading Assignment:</em></strong></p>
+            <p><Person>Ferrell</Person>, etc. &ndash; Chapters 8, 9, and 10</p>
+            <ul>
+              <li>Developing an  Effective Ethics Program (starting on page 204)</li>
+              <li>Implementing and  Auditing an Ethics Program (starting on page 230)</li>
+              <li>Business Ethics  in a Global Economy (starting on page 260)</li>
+            </ul>
+            <p><strong><em>Textbook Cases:</em></strong></p>
+            <ul>
+              <li>&ldquo;Global  Crossing:&nbsp; Inflated Sales Lead to  Bankruptcy&rdquo; (starting on page 380)</li>
+              <li>&ldquo;Nike:&nbsp; From Sweatshops to Leadership in Employment  Practices (starting on page 409)</li>
+              <li>&ldquo;Texas Instruments  Creates a Model Ethics and Compliance Program (starting on page 431)</li>
+              <li>&ldquo;New Belgium  Brewing:&nbsp; Ethical and Environmental  Responsibility&rdquo; (starting on page 455)</li>
+            </ul>
+            <p><strong><em>Video Clip Cases:</em></strong></p>
+            <ul>
+              <li>&ldquo;OXFAM:&nbsp; Managing Social Responsibility Globally with  OXFAM International&rdquo; </li>
+              <li>&ldquo;Vail Resorts,  Inc.&rdquo;</li>
+              <li>&ldquo;The Ethics of  Outsourcing&rdquo;</li>
+              <li>&ldquo;Ethics and  Success in Business&rdquo;</li>
+            </ul>
+            <p><strong><em>Work Due: </em></strong></p>
+            <ul>
+              <li><strong>Post <u>essays</u></strong><strong> </strong>(with the  essay questions located in the &ldquo;Assignments &amp; Lectures&rdquo; icon<strong>);</strong></li>
+            </ul>
+            <ul>
+              <li><strong>Post <u>discussion threads</u></strong> (on your group discussion board) due on three (3) different days<strong>; and </strong></li>
+            </ul>
+            <ul>
+              <li><strong>Take  the online <u>fina</u></strong><u><strong>l</strong></u>. </li>
+            </ul>          </td>
+        </tr>
+        <tr>
+          <td class="bodyText"><span class="pageName style9">Learning Outcomes &amp; Cognitive Development Objectives </span></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><p class="style10">After completing the requirements of this course,  students should be able to:</p>
+            <ul>
+              <li class="style10">Understand the  techniques of moral reasoning and argumentation that are needed to analyze  moral issues in business;</li>
+              <li class="style10">Analyze the  presuppositions of business&mdash;both moral presuppositions and the presuppositions from a moral point of view;</li>
+              <li class="style10">Evaluate the  individual actions in economic and business transactions within a variety of  moral frameworks;</li>
+              <li class="style10">Apply general  ethical principles to particular cases or practices in business;</li>
+              <li class="style10">Critically  evaluate the morality of the American free-enterprise system;</li>
+              <li class="style10">Critically  evaluate the comparative morality of various different types of economic  systems;</li>
+              <li class="style10">Describe morally  praiseworthy and exemplary actions of either individuals in business or particular firms; </li>
+              <li class="style10">Describe morally  reprehensible actions of either individuals in business or particular firms; </li>
+              <li class="style10">Understand the  current and pressing moral issues in business from workers&rsquo; rights to legitimate  computer usage on the job; and</li>
+              <li class="style10">Discuss the  ethical issues inherent in the rapid changes in business, including information  technology and environmental degradation.&nbsp; </li>
+            </ul>
+            <p class="style10">In terms of the cognitive learning objectives to be  attained for each topic area studied (see &ldquo;Course Topic Outline&rdquo; below),  students will:</p>
+            <ul>
+              <li class="style10">Gather <u>knowledge</u> (or facts or theories) about each topic area from the readings, instructor  lecture notes, and e-discussions with classmates and the  instructor; </li>
+              <li class="style10">Demonstrate <u>comprehension</u> [or seeing relationships, concepts, principles, and abstractions beyond simply  remembering material (read:&nbsp; translating,  interpreting and estimating future trends)] through essay answers, e-discussions with  classmates and instructor, and the final exam; and</li>
+              <li class="style10">Understand the <u>application</u> (or the ability to use learned material in new and concrete situations,  including the application of rules, methods, concepts, principles, laws and  theories) to specific issues and challenges in business ethics.<strong>&nbsp;&nbsp;&nbsp; </strong> </li>
+            </ul>          </td>
+        </tr>
+        <tr>
+          <td class="bodyText"><span class="pageName style9">Required Student Participation</span></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><p class="style10">Learning is best accomplished when students are  provided with experiential opportunities.&nbsp;  Accordingly, class members are expected to log into the class site at  least three times a week (please note that the Blackboard software keeps track  of when you enter the class site) as well as post assigned essays, 
+contribute substantive comments during all four of the  module discussion periods, and take the final 
+exam within the specified time frames.&nbsp; As a general rule of thumb, students are  expected to respond to a combination of the comments on their work and the  essay postings of the other students in their group (given a required minimum  number of threads &ndash; typically equal to a minimum of 15 threads -- per <br />
+module).&nbsp; In  addition, during each discussion period, students must spread out their  comments -- via their 5 [minimum of 15] thread contributions -- on three  different days.&nbsp; For example,  contributing 5 threads on one day during the discussion period, 6 threads on  another day during the discussion period, and 4 threads 
+on&nbsp; another day  during the discussion period will satisfy the minimum discussion component  requirement.&nbsp; Note:&nbsp; The minimum level of discussion component  contributions is just that -- a minimum.&nbsp;  Please feel 
+free to contribute to the discussion component beyond  the minimum level required.&nbsp; </p>
+          <p class="style10"><u>No discussion threads posted after the discussion  period ends will count towards your discussion component score.</u></p></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><span class="pageName style9"> Grading </span></td>
+        </tr>
+        <tr>
+          <td height="793" class="bodyText"><p class="style10">The final grade in the course will be made up of  grades on essay submissions, group discussions, <br />
+            and the midterm and final exams.&nbsp; The calculation of your final grade has the  following components: &nbsp;<br />
+            essay submissions = 30 percent of the final grade;  group discussion participation = 30 percent of the final <br />
+            grade; the midterm exam = 20 percent of the final grade;  and the final exam (that will only cover the 2nd half of the course) = 20  percent of the final grade.</p>
+<p class="style10">With a potential of earning a total of 1,000 points in the  course, the following point ranges (and accompanying grades) will be used.</p>
+            <table border="1" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10"><strong>Point Range</strong></p></td>
+                <td width="295" valign="top"><p align="center" class="style10"><strong>Grade</strong></p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">934-1,000</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">A</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">900-933</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">A-</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">866-899</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">B+</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">832-865</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">B</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">800-831</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">B-</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">766-799</p></td>
+                <td width="295" valign="top"><p align="center" class="style10"><Person>C</Person>+</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">732-765</p></td>
+                <td width="295" valign="top"><p align="center" class="style10"><Person>C</Person></p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">700-731</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">C-</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">666-699</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">D+</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">632-665</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">D</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">600-631</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">D-</p></td>
+              </tr>
+              <tr>
+                <td width="295" valign="top"><p align="center" class="style10">599 &amp; below</p></td>
+                <td width="295" valign="top"><p align="center" class="style10">F</p></td>
+              </tr>
+            </table>
+            <p>&nbsp;              </p>
+            <p><span class="style10">Further, the following grading component criteria will be  used.</span></p>
+            <ul>
+              <li>
+                <p class="style10">The essays assigned during each of the four modules  are worth 18.75 points each (and taken together, &nbsp;&nbsp;&nbsp;&nbsp;the essay assignments in the course total 300  points).&nbsp; The specific grading  subcomponents for each essay include: 1) demonstrating a mastery of the subject  material; 2) meeting the assigned deadline (20 percent of the points are  deducted for late work); and 3) crafting a well-written, grammatically correct  composition that adheres to the length guidelines -- including the guidelines  to repeat the question at <br />
+                the start of each essay reply and <u>provide a  reference list at the end of each essay</u>.&nbsp;<strong>Note: While it is understood that  almost every class member is already involved in a demand career, it is the  responsibility of each class member to arrange their schedule to meet the  published deadlines in the course. &nbsp;Also, <u>business commitments (including travel) will not excuse late work</u>.&nbsp; If you have a  demanding job or travel commitments, it will be your responsibility to work  ahead in </strong><br />
+                <strong>the course so  that you will be able to meet the deadlines specified.</strong> </p>
+              </li>
+              <li><span class="style10">Participation in group discussions (in your  individual groups) during the four different discussion periods will account  for 300 points of the 1,000 points in the course.&nbsp; In other words, the discussion component is  worth as much as the essay component and the discussion component makes up such  a large share of the total points in the course that it is not possible to earn  a good grade (or earn more than a C- in the course) if you do not fully  participate in the discussion component.&nbsp;  Further, your discussion participation will be graded on the following  factors.&nbsp;
+                </span>
+                <ol>
+                  <li class="style10">Providing [a minimum number of] substantive comments --  equal to 15 threads for each module -- that include relevant personal or real  world examples to back up claims and 
+                assertions; and</li>
+                  <li class="style10">Post comments on THREE (3) different days during each  of the four discussion periods. </li>
+                </ol>
+              </li>
+            </ul>
+            <blockquote>
+              <p class="style10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Note:&nbsp; Responding to the  substantive comments class members make on your essays -- provided your  comments back are substantive -- will count towards the minimum of 15 threads.</p>
+            
+              <p class="style10"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Again, you must post comments on three  different days during the discussion period.</strong></p>
+            </blockquote>
+            <ul>
+              <li class="style10">              The midterm exam will be worth 200 points and  the final exam (only covering the second half of the course) will be worth 200  points. For each assessment, students will take a timed (randomly
+
+                      generated) online test on the major concepts in the  course.&nbsp; </li>
+            </ul><blockquote>
+              <p>&nbsp;</p>
+          </blockquote></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><span class="pageName style9">Make-Up Work Policies</span></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><p class="style10">Given the asynchronous nature of this course, the  expectation is that students will be able to meet all deadlines for completing  reading assignments, posting essay submissions and discussing group members&rsquo;  submissions.&nbsp; Tardy postings will  compromise the quality of group discussions and accordingly are  unacceptable.&nbsp; In turn, only  extraordinary or emergency circumstances will merit consideration for a  deadline extension and will have to be evaluated by the instructor on a case-by-case  basis.&nbsp; Also, please 
+          e-mail the instructor as soon as possible to explain  any anticipated or missed deadlines.</p></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><span class="pageName style9">Honor Code </span></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><p class="style10">All academic assignments in this course are conducted  under the provisions of the Tulane University 
+            Honor Code.&nbsp; In  particular, while students will collaborate during group discussions of the  material and their work, when it comes to assembling their initial essay  responses and taking module exams, students 
+          are expected to work independently.&nbsp; The complete Honor Code is available online  at: <a href="http://college.tulane.edu/code.htm">http://college.tulane.edu/code.htm</a>. 
+Also, all Honor Code Board meetings will take place in <Location>New Orleans</Location>.&nbsp; In  turn, if a student wishes to appear before the Honor Board (to counter an  allegation of a violation of the Honor Code), the student must keep in mind  that they will need to do so in <Location>New Orleans</Location>.&nbsp; Further, if a student waives  the right to appear in person before the Honor Board (in <Location>New Orleans</Location>), written  statements will be accepted.</p></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><span class="pageName style9">Student Disability Accommodations </span></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><p class="style10">Any student with a disability in need of course or  examination accommodations should request accommodations through the  University&rsquo;s Office of Disability Services located in the Mechanical  Engineering Building.&nbsp; Please do this as  soon as possible.&nbsp; In turn, please let me  know you are eligible 
+          for accommodation (through an e-mail correspondence)  and provide a copy of your approved accommodation form from ODS to me (as well  as to each professor in whose course you wish to receive accommodations).&nbsp; I am committed to working with the Office of  Disability Services to ensure that all approved accommodations are  provided.&nbsp; However, if you do not deliver  the approved accommodation form, I will not know you have been approved to  receive accommodations and will have no basis for providing those  accommodations.</p></td>
+        </tr>
+        <tr>
+          <td class="bodyText"><div align="center"><img src="Locals.jpg" width="658" height="140" /></div></td>
+        </tr>
+    </table>	</td>
+    <td width="91">&nbsp;</td>
+  </tr>
+
+ <tr>
+    <td width="190">&nbsp;</td>
+    <td width="145">&nbsp;</td>
+    <td width="1028">&nbsp;</td>
+	<td width="91">&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>
