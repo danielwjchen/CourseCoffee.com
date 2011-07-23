@@ -37,7 +37,7 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 			)
 		";
 
-		parent::create($sql, $params);
+		return $this->db->insert($sql, $params);
 	}
 
 	/**

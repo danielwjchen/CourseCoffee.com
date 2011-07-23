@@ -35,7 +35,7 @@ class UserController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Implement ControllerInterface::afterAction()
+	 * Override Controller::beforeAction()
 	 */
 	public function afterAction() {
 	}
@@ -45,10 +45,12 @@ class UserController extends Controller implements ControllerInterface {
 	 */
 	public function registerUser() {
 		$user_register_form = new UserRegisterFormModel();
-		$email = Input::Post('email', FILTER_SANITIZE_EMAIL);
+
+		$email    = Input::Post('email', FILTER_SANITIZE_EMAIL);
 		$password = Input::Post('password');
-		$confirm = Input::Post('confirm');
-		$token = Input::Post('token');
+		$confirm  = Input::Post('confirm');
+		$token    = Input::Post('token');
+
 		$result = $user_register_form->processForm(
 			$email, 
 			$password, 
@@ -82,9 +84,11 @@ class UserController extends Controller implements ControllerInterface {
 	 */
 	public function loginUser() {
 		$login_form = new UserLoginFormModel();
-		$email = Input::Post('email', FILTER_SANITIZE_EMAIL);
+
+		$email    = Input::Post('email', FILTER_SANITIZE_EMAIL);
 		$password = Input::Post('password');
-		$token = Input::Post('token');
+		$token    = Input::Post('token');
+
 		$result = $login_form->processForm($email, $password, $token);
 		$json_view = new JSONView($result);
 		$json_view->render();

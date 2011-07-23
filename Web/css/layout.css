@@ -99,13 +99,6 @@
 	padding:3px 8px;
 }
 
-.details-header .active a,
-.details-header .active a:active,
-.details-header .active a:hover,
-.details-header .active a:focus{
-	color:black;
-}
-
 
 .details-body{
 	clear:both;

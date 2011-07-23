@@ -47,7 +47,7 @@ class UserSessionDAO extends DAO implements DAOInterface{
 
 		} elseif (isset($params['session'])) {
 			$params = array('session' => $params['session']);
-			$sql .= "`session = :session";
+			$sql .= "session = :session";
 
 		} else {
 			throw new Exception('unknown user_session identifier');

@@ -14,9 +14,10 @@ class HomePageView extends PageView implements PageViewInterface {
 		$this->addJS('model/login.js');
 		$this->addJS('model/logout.js');
 		$this->addJS('model/registration.js');
-		$this->addJS('controller/welcome.js');
+		$this->addJS('model/task.js');
+		$this->addJS('controller/home.js');
 		$this->addJS('controller/navigation.js');
-		$this->addCSS('welcome.css');
+		$this->addCSS('home.css');
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
-
 /**
+ * @file
  * Represent a date
  */
 class DateDAO extends DAO implements DAOInterface{

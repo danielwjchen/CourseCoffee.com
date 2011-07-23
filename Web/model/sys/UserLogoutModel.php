@@ -25,8 +25,8 @@ class UserLogoutModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_dao = new UserDAO($this->db);
-		$this->user_cookie_dao = new UserCookieDAO($this->db);
+		$this->user_dao = new UserDAO($this->sys_db);
+		$this->user_cookie_dao = new UserCookieDAO($this->sys_db);
 	}
 
 	/**

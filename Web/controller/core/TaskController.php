@@ -5,6 +5,8 @@
  */
 
 class TaskController extends Controller implements ControllerInterface {
+
+	private $json_view;
 	
 	/**
 	 * Extend Controller::__construct()
@@ -18,21 +20,54 @@ class TaskController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'task/add' => 'createTask',
-			'task/update'   => 'updateTask',
-			'task/remove'   => 'removeTask',
-			'task/search' => 'searchTask',
-			'task/detail' => 'getTaskDetail',
-			'user/list-task'  => 'getTaskBelongToUser',
+			'task/add'                 => 'createTask',
+			'task/update'              => 'updateTask',
+			'task/remove'              => 'removeTask',
+			'task/search'              => 'searchTask',
+			'task/detail'              => 'getTaskDetail',
+			'user/list-task'           => 'getTaskBelongToUser',
 			'course-section/list-task' => 'getTaskBelongToClass',
-			'calendar/list-task' => 'getTaskBelongToDate',
+			'calendar/list-task'       => 'getTaskBelongToDate',
 		);
+	}
+
+	/**
+	 * Override Controller::beforeAction()
+	 */
+	public function beforeAction() {
+		$this->redirectUnknownUser();
+	}
+
+	/**
+	 * Implement ControllerInterface::afterAction()
+	 */
+	public function afterAction() {
+		$this->json_view->setHeader(PageView::HTML_HEADER);
+		echo $this->json_view->render();
 	}
 
 	/**
 	 * Create a new task
 	 */
 	public function createTask() {
+		$create_form = new TaskCreateFormModel();
+
+		$user_id     = Session::Get('user_id');
+		$token   = Input::Post('token');
+		$objective   = Input::Post('objective');
+		$due_date    = Input::Post('due_date');
+		$description = Input::Post('description');
+		$quest_id    = Input::Post('quest_id');
+
+		$result = $create_form->processForm(
+			$token,
+			$user_id, 
+			$objective, 
+			$due_date, 
+			$description, 
+			$quest_id
+		);
+		$this->json_view = new JSONView($result);
 	}
 
 	/**

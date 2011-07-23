@@ -1,6 +1,6 @@
 <?php
-
 /**
+ * @file
  * Represent a quest
  */
 class QuestDAO extends DAO implements DAOInterface{

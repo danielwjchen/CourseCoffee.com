@@ -48,6 +48,120 @@
 	font-size: 18px;
 	color: #333333;
 }
+/**
+ * Define styles for task form
+ */
+.task-create-form-wrapper{
+	float: left;
+	margin-left: 200px;
+	width: 725px;
+}
+.task-create-form{
+}
+.task-create-form .row{
+	clear: both;
+	float: left;
+	padding: 5px 0;
+}
+.task-create-form label{
+}
+.task-create-form input{
+	color: #787474;
+	font-weight: bold;
+	float: left;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	padding: 0 5px;
+	margin: 0;
+	height: 26px;
+	line-height: 20px;
+	font-size: 16px;
+}
+.task-create-form label{
+	width: 60px;
+	float: left;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 26px;
+	height: 26px;
+	color: #333333;
+}
+.task-create-form input.objective{
+	width: 685px;
+}
+.task-create-form input.due_date{
+	width: 500px;
+}
+.task-create-form input.course-section{
+	width: 625px;
+}
+.task-create-form textarea{
+	font-family: Sans-Serif;
+	width: 685px;
+	color: #787474;
+	font-weight: bold;
+	float: left;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	padding: 0 5px;
+	margin: 0;
+	line-height: 16px;
+	font-size: 16px;
+}
+.task-create-form legend{
+	font-weight: bold;
+	font-size: 18px;
+	color: #333333;
+}
+.task-create-form fieldset{
+	border: 1px solid #5e5b5b;
+	border-radius: 4px;
+	-moz-box-shadow: 1px 3px #5e5b5b;
+	-webkit-box-shadow: 1px 1px 3px #5e5b5b;
+	box-shadow: 1px 1px 3px #5e5b5b;
+}
+.task-create-form .required{
+	border: 1px 1px 0 1px;
+}
+.task-create-form .optional{
+	border: 0 1px 0 1px;
+	border-radius:  0 0 4px 4px;
+}
+.task-create-form a.button{
+	float: left;
+	clear: both;
+	color: white;
+	margin: 5px 0;
+	display: block;
+	border: 1px solid #ff8400;
+	border-radius: 4px;
+	font-size: 20px;
+	height: 26px;
+	line-height: 26px;
+	text-align: center;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 0 6px #8a4c0a;
+	-moz-text-shadow: 0 0 6px #8a4c0a;
+	-webkit-text-shadow: 0 0 6px #8a4c0a;
+	background: #ff8400;
+	background-image: -moz-linear-gradient(#ff8400, #d06e06);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
+}
+.task-create-form a.button:hover{
+	text-shadow: 0 0 3px #fff;
+	-moz-text-shadow: 0 0 3px #fff;
+	-webkit-text-shadow: 0 0 3px #fff;
+}
+.task-create-form a.button.show-detail{
+	width: 100px;
+	margin: 0 0 0 25px;
+	clear: none;
+	font-size: 16px;
+}
+.task-create-form a.button.submit{
+	width: 685px;
+}
 
 /**
  * Define styles for panels

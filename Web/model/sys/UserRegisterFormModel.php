@@ -96,7 +96,7 @@ class UserRegisterFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_dao = new UserDAO($this->db);
+		$this->user_dao = new UserDAO($this->sys_db);
 		$this->form_name = 'user_register_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;

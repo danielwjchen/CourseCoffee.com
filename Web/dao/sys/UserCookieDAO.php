@@ -47,7 +47,7 @@ class UserCookieDAO extends DAO implements DAOInterface{
 
 		} elseif (isset($params['signature'])) {
 			$params = array('signature' => $params['signature']);
-			$sql .= "`signature = :signature";
+			$sql .= "signature = :signature";
 
 		} else {
 			throw new Exception('unknown user_cookie identifier');

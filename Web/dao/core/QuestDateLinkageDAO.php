@@ -1,8 +1,6 @@
 <?php
-
-require_once DAO_PATH . '/abstract/LinkageDAO.php';
-
 /**
+ * @file
  * Represent a linkage between a quest and a date
  */
 class QuestDateLinkageDAO extends LinkageDAO{

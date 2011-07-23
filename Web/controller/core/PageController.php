@@ -59,7 +59,11 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getHomePage() {
 		$this->redirectUnknownUser();
-		$this->page_view = new HomePageView();
+		$create_form = new TaskCreateFormModel();
+		$block_content['form']['task_token'] = $create_form->initializeFormToken();
+		$block = new HomeBlockView($block_content);
+		$page_content['body']['block'] = $block->render();
+		$this->page_view = new HomePageView($page_content);
 	}
 
 	/**

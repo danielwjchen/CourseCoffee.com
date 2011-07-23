@@ -10,15 +10,18 @@ interface DAOInterface {
 	/**
 	 * Create an object in database
 	 *
-	 * @params $params
+	 * @params array $params
 	 *  an associative array of params that defines the new object
+	 *
+	 * @return mixed
+	 *  the id of the record created or false on failure
 	 */
 	public function create($params) ;
 
 	/**
 	 * Read an object in database
 	 *
-	 * @param $params
+	 * @param array $params
 	 *  an associative array of params to be executed with the SQL query
 	 */
 	public function read($params) ;
@@ -30,9 +33,6 @@ interface DAOInterface {
 
 	/**
 	 * Destroy the object in database
-	 *
-	 * @param string $params
-	 *  a value that identifies the object
 	 */
 	public function destroy() ;
 }
@@ -48,6 +48,11 @@ abstract class DAO{
 	 * It also stores values in an associative array
 	 */
 	protected $attr;
+
+	/**
+	 * keep a list of records constructed from database
+	 */
+	protected $list;
 
 	/**
 	 * Database connection object
@@ -135,12 +140,15 @@ abstract class DAO{
 	 *  name of thattribute
 	 *
 	 * @return $result
-	 *  the value of the attribute
+	 *  the value of the attribute or list records found
 	 */
 	public function __get($name) {
 		$result = null;
 
-		if ($name == 'attribute') {
+		if ($name == 'list') {
+			$result = $this->list;
+
+		} elseif ($name == 'attribute') {
 			$result = $this->attr;
 
 		} elseif (isset($this->attr[$name])) {
@@ -157,7 +165,8 @@ abstract class DAO{
 	/**
 	 * Set the value of the object's attribute
 	 *
-	 * WARNING! this operation won't alter the value in table unless save() is run
+	 * WARNING! this operation won't alter the value in table unless save() is 
+	 * run. Also note that it only works with attributes
 	 */
 	public function __set($name, $value) {
 

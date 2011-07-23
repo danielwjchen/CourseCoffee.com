@@ -76,7 +76,6 @@ abstract class Controller {
 	 *  url to redirect to, default to home
 	 */
 	public function redirectUnknownUser($url = self::PAGE_DEFAULT) {
-		// if the user id is still missing...
 		if(!$this->isUserLoggedIn()) {
 			header('Location: '. $url);
 		}

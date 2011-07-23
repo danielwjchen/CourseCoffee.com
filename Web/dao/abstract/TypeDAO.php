@@ -23,7 +23,7 @@ abstract class TypeDAO extends DAO implements DAOInterface{
 	 */
 	public function create($params) {
 		$sql = "INSERT INTO `{$this->type}` (`name`)	VALUE (:name)";
-		$this->db->insert($sql, $params);
+		return $this->db->insert($sql, $params);
 	}
 
 	/**

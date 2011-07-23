@@ -51,7 +51,6 @@ abstract class PageView extends View {
 		));
 		$this->addJS('lib/jquery-1.4.4.min.js');
 		$this->addJS('main.js');
-		$this->addCSS('elements.css');
 		$this->addCSS('layout.css');
 		$this->addCSS('main.css');
 		$this->addCSS('navigation.css');

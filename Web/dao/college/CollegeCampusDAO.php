@@ -1,8 +1,6 @@
 <?php
-
-require_once DAO_PATH . 'core/LocationDAO.php';
-
 /**
+ * @file
  * Represent a college campus 
  *
  * Attributes:
@@ -68,7 +66,7 @@ class CollegeCampusDAO extends LocationDAO{
 	 */
 	public function create($params) {
 		$params['type'] = 'college_campus';
-		$this->db->insert($params);
+		parent::create($params);
 		$this->findCollege($params);
     $this->linkage->create(array(
       'affiliation_id' => $this->college->id, 

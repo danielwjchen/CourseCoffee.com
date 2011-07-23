@@ -3,7 +3,6 @@
  * @file
  * Handle user login
  */
-
 class UserLoginFormModel extends FormModel {
 
 	/**
@@ -16,6 +15,8 @@ class UserLoginFormModel extends FormModel {
 	  * Failed to login
 		*/
 	const ERROR_FAILED_TO_LOGIN = 'The email and password do not match';
+	const ERROR_FORM_EXPIRED = 'User login form expired. Please try again.';
+	const ERROR_FORM_EMPTY = 'The email and password fields cannot be empty';
 
 	/**
 	 * @} End of error_messages
@@ -33,7 +34,7 @@ class UserLoginFormModel extends FormModel {
 	const EVENT_FAILED_TO_LOGIN = 'Failed login attempt';
 	const EVENT_FORM_EMPTY = 'An empty user login submission is made. How is this possible?';
 	const EVENT_FAILED_PASSWORD = 'The password provided does not match the email';
-	const EVENT_FORM_EXPIRED = 'User login form expired. Please try again.';
+	const EVENT_FORM_EXPIRED = 'User login form expired.';
 	const EVENT_EXCEEDED_MAX_ATTEMP = 'User exceeded max login attempt';
 	const EVENT_NEW_LOGIN = 'User Logged in';
 
@@ -67,8 +68,8 @@ class UserLoginFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_dao = new UserDAO($this->db);
-		$this->user_cookie_dao = new UserCookieDAO($this->db);
+		$this->user_dao = new UserDAO($this->sys_db);
+		$this->user_cookie_dao = new UserCookieDAO($this->sys_db);
 		$this->form_name = 'user_login_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
@@ -107,7 +108,7 @@ class UserLoginFormModel extends FormModel {
 				'email' => null,
 				'password' => null,
 				'token' => $token,
-				'error' => self::EVENT_FORM_EXPIRED
+				'error' => self::ERROR_FORM_EXPIRED
 			);
 		}
 
@@ -119,7 +120,7 @@ class UserLoginFormModel extends FormModel {
 				'email' => null,
 				'password' => null,
 				'token' => $token,
-				'error' => self::EVENT_FORM_EMPTY
+				'error' => self::ERROR_FORM_EMPTY
 			);
 		}
 
