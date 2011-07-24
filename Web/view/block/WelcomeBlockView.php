@@ -6,8 +6,8 @@
 class WelcomeBlockView extends BlockView{
 	public function render() {
 		return <<<HTML
-<div class="dialog hybrid">
-	<div class="content">
+<div class="dialog horizontal">
+	<div class="dialog-inner">
 		<div class="search-form">
 			<form id="search">
 				<input name="search" class="field" type="text" />
@@ -20,6 +20,13 @@ class WelcomeBlockView extends BlockView{
 				<a class="button upload" href="#">upload</a>
 			</form>
 		</div>
+	</div>
+	<div class="progress">
+		<ul>
+			<li class="step-1 highlight"><h3>Step 1</h3> find your class</li>
+			<li class="step-2"><h3>Step 2</h3> create an account</li>
+			<li class="step-3"><h3>Step 3</h3> invite your classmates!</li>
+		</ul>
 	</div>
 </div>
 HTML;

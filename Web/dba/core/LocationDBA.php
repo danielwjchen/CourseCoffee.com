@@ -1,6 +1,27 @@
 <?php
+/**
+ * @file
+ * Create table schema for Location and populate default types
+ */
 
 class LocationDBA implements DBAInterface{
+	/**
+	 * Populate database
+	 */
+	public function script() {
+		return array(
+			"INSERT INTO location_type (name) VALUES 
+				('" . LocationType::CAMPUS . "'), 
+				('" . LocationType::BUILDING . "'),
+				('" . LocationType::CITY . "')",
+		);
+	}
+
+	/**
+	 * Create table schema
+	 *
+	 * @return array
+	 */
 	public function schema() {
 		return array(
 			'location' => array(

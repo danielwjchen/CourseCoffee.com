@@ -2,7 +2,7 @@ $P.ready(function() {
 	window.navigation = $('#navigation-menu');
 
 	// hide/show the default input
-	blurInput(navigation);
+	blurInput('#user-login-form');
 
 	navigation.delegate('a.button', 'click', function(e) {
 		var target = $(this);

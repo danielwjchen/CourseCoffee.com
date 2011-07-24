@@ -244,35 +244,54 @@ class DBAInvoker{
 
 		$dba_schema = call_user_func($dba_request . '::schema');
 		$dba_record  = self::$db['sys']->fetch(
-			'SELECT `schema` FROM DBA
-				WHERE `request` = :request',
+			'SELECT * FROM DBA WHERE request = :request',
 			array('request' => $dba_request)
 		);
 
-		$dba_encoded = json_encode($dba_schema);
+		$encoded_schema = json_encode($dba_schema);
 
 		$sql = '';
 		if (!isset($dba_record['schema'])) {
 			self::Create($dba_schema);
 			$sql = '
-				INSERT INTO DBA (`request`, `schema`, `timestamp`)
-				VALUES (:request, :schema, UNIX_TIMESTAMP())
+				INSERT INTO DBA (`request`, `schema`, `script`, `timestamp`)
+				VALUES (:request, :schema, :script, UNIX_TIMESTAMP())
 			';
 			
-		} elseif ($dba_record['schema'] !== $dba_encoded) {
+		} elseif ($dba_record['schema'] !== $encoded_schema) {
 			self::Alter($dba_schema, $dba_record);
 			$sql = '
 				UPDATE DBA SET
 					`schema` = :schema,
+					`script` = :script,
 					`timestamp` = UNIX_TIMESTAMP()
 				WHERE `request` = :request
 			';
 		}
 
+		$encoded_script = '';
+		if (method_exists($dba_request, 'script')) {
+			$dba_sql = call_user_func($dba_request . '::script');
+			$encoded_script = json_encode($dba_sql);
+			foreach($dba_sql as $sql) {
+				self::Perform($sql);
+			}
+		}
+
 		self::$db['sys']->perform($sql, array(
-			'schema' => $dba_encoded,
+			'schema'  => $encoded_schema,
+			'script'  => $encoded_script,
 			'request' => $dba_request,
 		));
+	}
+
+	/**
+	 * Perform SQL script
+	 *
+	 * @param string $dba_sql
+	 */
+	public static function Perform($dba_sql, $db_name = 'core') {
+		self::$db[$db_name]->perform($dba_sql);
 	}
 
 	/**
@@ -285,7 +304,7 @@ class DBAInvoker{
 	 *
 	 * @return bool $result
 	 */
-	static function Create($dba_schema, $db_name = 'core') {
+	public static function Create($dba_schema, $db_name = 'core') {
 
 		foreach ($dba_schema as $name => $table) {
 			$dba_sql = 'CREATE TABLE ' . $name . '(';

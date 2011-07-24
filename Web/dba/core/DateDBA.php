@@ -1,6 +1,28 @@
 <?php
+/**
+ * @file
+ * Create table schema for date and populate default types
+ */
 
 class DateDBA implements DBAInterface{
+
+	/**
+	 * Populate database
+	 */
+	public function script() {
+		return array(
+			"INSERT INTO date_type (name) VALUES 
+				('" . DateType::END_DATE. "'), 
+				('" . DateType::BEGIN_DATE. "'),
+				('" . DateType::CHECKPOINT. "')"
+		);
+	}
+
+	/**
+	 * Create table schema
+	 *
+	 * @return array
+	 */
 	public function schema() {
 		return array(
 			'date' => array(

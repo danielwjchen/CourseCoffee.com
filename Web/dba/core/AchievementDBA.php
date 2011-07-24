@@ -1,6 +1,27 @@
 <?php
+/**
+ * @file
+ * Create table schema for Statistic and populate default types
+ */
 
 class AchievementDBA implements DBAInterface{
+	/**
+	 * Populate database
+	 */
+	public function script() {
+		return array(
+			"INSERT INTO achievement_type (name) VALUES 
+				('" . AchievementType::HIGHEST_KARMA. "'), 
+				('" . AchievementType::MOST_COMMENT . "'),
+				('" . AchievementType::MOST_BEST_REPLY . "')",
+		);
+	}
+
+	/**
+	 * Create table schema
+	 *
+	 * @return array
+	 */
 	public function schema() {
 		return array(
 			'achievement' => array(

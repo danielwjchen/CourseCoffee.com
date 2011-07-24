@@ -1,6 +1,29 @@
 <?php
+/**
+ * @file
+ * Create table schema for Statistic and populate default types
+ */
 
 class StatisticDBA implements DBAInterface{
+	/**
+	 * Populate database
+	 */
+	public function script() {
+		return array(
+			"INSERT INTO statistic_type (name) VALUES 
+				('" . StatisticType::BEST_REPLY . "'), 
+				('" . StatisticType::COMMENT_COUNT . "'),
+				('" . StatisticType::VISIT . "'),
+				('" . StatisticType::KARMA . "'),
+				('" . StatisticType::LIKE . "')",
+		);
+	}
+
+	/**
+	 * Create table schema
+	 *
+	 * @return array
+	 */
 	public function schema() {
 		return array(
 			'statistic' => array(

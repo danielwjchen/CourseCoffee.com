@@ -1,6 +1,38 @@
 <?php
+/**
+ * @file
+ * Create table schema for Quest and populate default types
+ */
 
 class QuestDBA implements DBAInterface{
+
+	/**
+	 * Populate database
+	 */
+	public function script() {
+		return array(
+			"INSERT INTO quest_type (name) VALUES 
+				('" . QuestType::TASK . "'), 
+				('" . QuestType::COLLEGE_SUBJECT . "'),
+				('" . QuestType::COLLEGE_COURSE . "'),
+				('" . QuestType::COLLEGE_SECTION . "'),
+				('" . QuestType::COLLEGE_EXAM . "'),
+				('" . QuestType::COLLEGE_READING . "'),
+				('" . QuestType::COLLEGE_LAB . "'),
+				('" . QuestType::COLLEGE_ESSAY . "'),
+				('" . QuestType::COLLEGE_QUIZ . "')",
+			"INSERT INTO quest_attribute_type (name) VALUES 
+				('" . QuestAttributeType::COLLEGE_SESSION_NUM . "'), 
+				('" . QuestAttributeType::COLLEGE_COURSE_NUM . "'),
+				('" . QuestAttributeType::COLLEGE_SUBJECT_ABBR . "')"
+		);
+	}
+
+	/**
+	 * Create table schema
+	 *
+	 * @return array
+	 */
 	public function schema() {
 		return array(
 			'quest' => array(

@@ -12,6 +12,7 @@ define('TEMPLATE_PATH', ROOT_PATH . '/template');
 
 require_once INCLUDES_PATH . '/Autoload.php';
 require_once INCLUDES_PATH . '/Config.php';
+require_once INCLUDES_PATH . '/Settings.php';
 require_once INCLUDES_PATH . '/Session.php';
 require_once INCLUDES_PATH . '/DB.php';
 require_once INCLUDES_PATH . '/DBAInvoker.php';

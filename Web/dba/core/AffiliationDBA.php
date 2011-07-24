@@ -1,6 +1,29 @@
 <?php
+/**
+ * @file
+ * Create table schema for Affiliation and populate default types
+ */
 
 class AffiliationDBA implements DBAInterface{
+
+	/**
+	 * Populate database
+	 */
+	public function script() {
+		return array(
+			"INSERT INTO affiliation_type (name) VALUES 
+				('" . AffiliationType::COLLEGE . "'), 
+				('" . AffiliationType::STUDY_GROUP . "'),
+				('" . AffiliationType::COLLEGE_FRATERNITY . "'),
+				('" . AffiliationType::COLLEGE_SORORITY . "')",
+		);
+	}
+
+	/**
+	 * Create table schema
+	 *
+	 * @return array
+	 */
 	public function schema() {
 		return array(
 			'affiliation' => array(

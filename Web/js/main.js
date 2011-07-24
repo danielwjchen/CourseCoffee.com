@@ -1,6 +1,6 @@
 window.$P = $(document);
 window.updatePageHeight = function() {
-	var newHeight = body.outerHeight(true) + header.outerHeight(true) + 150;
+	var newHeight = $("div.body").outerHeight(true) + $(".header").outerHeight(true) + 150;
 	newHeight = (newHeight > 800) ? newHeight : 800;
 	if ($('.container').height() < newHeight) {
 		$('.container').height(newHeight);
@@ -15,7 +15,7 @@ window.updatePageHeight = function() {
  */
 window.blurInput = function(region) {
 	this.inputs = $(':input', region);
-	$(':input', body).each(function(index){
+	$(':input', region).each(function(index){
 		$(this).attr('default', $(this).val());
 	})
 	inputs.focus(function(e) {
@@ -34,13 +34,5 @@ window.blurInput = function(region) {
 $P.ready(function() {
 	window.body = $("div.body");
 	window.header = $(".header");
-	$(".login .action").click(function() {
-		body.removeClass('welcome');
-		body.addClass('home');
-		navigation.load('navigation.php');
-		body.load('home.php', function() {
-			updatePageHeight();
-		});
-	});
 
 });

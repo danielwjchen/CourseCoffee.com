@@ -61,15 +61,13 @@ class DB{
 				return false;
 				
 			} 
-
-			if (count($result) == 1) {
-				$result = $sth->fetchAll(PDO::FETCH_ASSOC);
-				return empty($result) ? null : $result[0];
-
-			} else {
-				return $result;
-
+			while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+				$rows[] = $row;
 			}
+
+			$rows = count($rows) > 1 ? $rows : $rows[0];
+
+			return empty($rows) ? null : $rows;
 
 		} catch (PDOException $e) {
 			echo 'Fail to fetch: ' . $e->getMessage();

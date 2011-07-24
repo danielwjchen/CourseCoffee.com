@@ -25,6 +25,10 @@ class SystemDBA implements DBAInterface {
 						'not null' => TRUE,
 						'description' => 'the schema array encoded in json string',
 					),
+					'script' => array(
+						'type' => 'text',
+						'description' => 'the requested sql script',
+					),
 					'timestamp' => array(
 						'type' => 'int',
 						'not null' => TRUE,

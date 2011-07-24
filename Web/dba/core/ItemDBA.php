@@ -1,6 +1,31 @@
 <?php
+/**
+ * @file
+ * Create table schema for Item and populate default types
+ */
 
 class ItemDBA implements DBAInterface{
+	/**
+	 * Populate database
+	 */
+	public function script() {
+		return array(
+			"INSERT INTO item_type (name) VALUES 
+				('" . ItemType::BOOK . "'), 
+				('" . ItemType::LAB_MATERIAL . "'),
+				('" . ItemType::LAB_EQUIPMENT . "')",
+			"INSERT INTO item_attribute_type (name) VALUES 
+				('" . ItemAttributeType::ISBN. "'), 
+				('" . ItemAttributeType::WEIGHT . "'),
+				('" . ItemAttributeType::DIMENSION . "')",
+		);
+	}
+
+	/**
+	 * Create table schema
+	 *
+	 * @return array
+	 */
 	public function schema() {
 		return array(
 			'item' => array(

@@ -1,6 +1,27 @@
 <?php
+/**
+ * @file
+ * Create table schema for Item and populate default types
+ */
 
 class MerchantDBA implements DBAInterface{
+	/**
+	 * Populate database
+	 */
+	public function script() {
+		return array(
+			"INSERT INTO merchant_type (name) VALUES 
+				('" . MerchantType::RETAIL_ONLINE . "'), 
+				('" . MerchantType::RETAIL_LOCAL . "'),
+				('" . MerchantType::RESALE . "')",
+		);
+	}
+
+	/**
+	 * Create table schema
+	 *
+	 * @return array
+	 */
 	public function schema() {
 		return array(
 			'merchant' => array(

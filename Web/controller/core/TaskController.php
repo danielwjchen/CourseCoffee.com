@@ -98,6 +98,10 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get tasks belong to a user
 	 */
 	public function getTaskBelongToUser() {
+		$user_id = Session::Get('user_id');
+		$list_model = new TaskListModel();
+		$result = $list_model->fetchList($user_id);
+		$this->json_view = new JSONView($result);
 	}
 
 	/**

@@ -22,9 +22,10 @@
 	float: left;
 }
 .welcome .logo-slogan .slogan{
-	line-height: 140px;
-	height: 140px;
-	font-size: 20px;
+	line-height: 30px;
+	height: 90px;
+	padding: 50px 0 0px;
+	font-size: 30px;
 	font-weight: bold;
 	color: white;
 	text-shadow: 0 0 6px #000;
@@ -36,7 +37,7 @@
 	background: #f6f5f4;
 	width: 598px;
 	margin: 250px auto 0;
-	height: 68px;
+	min-height: 153px;
 	border: 1px solid #f6f5f4;
 	border-radius: 8px;
 	-moz-box-shadow: 2px 2px #003d01;
@@ -46,7 +47,7 @@
 	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
 }
-.welcome .dialog .content{
+.welcome .dialog-inner{
 	margin: 10px;
 	width: 578px;
 }
@@ -175,29 +176,29 @@
 }
 
 /**
- * hybrid template specific 
+ * horizontal template specific 
  *
  * this template shows both the search and upload forms
  */
-.welcome .dialog.hybrid .search-form{
+.welcome .dialog.horizontal .search-form{
 	width: 260px;
 }
-.welcome .dialog.hybrid .search-form input{
+.welcome .dialog.horizontal .search-form input{
 	width: 198px;
 }
-.welcome .dialog.hybrid .search-form .button{
+.welcome .dialog.horizontal .search-form .button{
 	width: 58px;
 }
-.welcome .dialog.hybrid .upload-form{
+.welcome .dialog.horizontal .upload-form{
 }
-.welcome .dialog.hybrid .upload-form .description{
+.welcome .dialog.horizontal .upload-form .description{
 	padding: 10px 15px 0;
 	font-size: 14px;
 	line-height: 14px;
 	width: 128px;
 	height: 26px;
 }
-.welcome .dialog.hybrid .upload-form .button{
+.welcome .dialog.horizontal .upload-form .button{
 	float: left;
 	width: 150px;
 }
@@ -240,4 +241,46 @@
 	clear: both;
 	width: 200px;
 	margin: 20px auto;
+}
+
+/**
+ * progress
+ */
+.progress{
+	position: absolute;
+	left: -1px;
+	bottom: -1px;
+	width: 601px;
+	color: white;
+}
+.progress ul,
+.progress li{
+	list-style: none;
+	float: left;
+	display: block;
+	border: 0 solid;
+}
+.progress li{
+	width: 180px; 
+	padding: 10px;
+	height: 55px;
+	background: #9bc1f1;
+	font-size: 16px;
+	font-weight: bold;
+}
+.progress h3{
+	padding: 0;
+	margin: 0;
+	font-size: 16px;
+}
+.progress .step-1{
+	border-radius: 0 0 0 8px;
+}
+.progress .step-2{
+}
+.progress .step-3{
+	border-radius: 0 0 8px 0;
+}
+.progress .highlight{
+	background: #5b8bd9;
 }
