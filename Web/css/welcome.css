@@ -1,29 +1,99 @@
 /**
  * @file
- * Define CSS for the welcome body
+ * Define CSS for the /welcome
+ *
+ * Define styles for header
  */
-.welcome.body{
-	position: relative;
-}
 .welcome .body-inner{
-	position: relative;
+  margin: 0 auto;
+  width: 960px;
 }
-/* log-sloggan */
-.welcome .logo-slogan{
-	height: 200px;
-	margin: 50px auto -250px;
-	width: 778px;
+
+/**
+ * Define styles for top panel
+ */
+.welcome .panel-top{
+	float: left;
+	clear: both;
+	width: 960px;
 }
-.welcome .logo-slogan .content{
-	margin: 10px;
-	width: 778px;
+/**
+ * Define styles for log and slogan 
+ */
+.welcome .logo{
+	float: left;
+  width: 459px;
+  margin: 30px -459px 20px 0;
 }
-.welcome .logo-slogan .logo{
+/**
+ * Define styles for login
+ */
+.welcome .user-login{
+	float: left;
+	text-align: left;
+  margin: 0 -960px -50px 480px;
+	width: 480px;
+  height: 45px;
+	background: #313131;
+	background-image: -moz-linear-gradient(#313131, #5e5b5b);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
+  border: #313131 1px solid;
+  border-radius: 0 0 4px 4px;
+}
+.welcome .user-login .error{
+	color: white;
+	float: left;
+	width: 200px;
+	margin-right: -200px;
+	text-align: left;
+}
+.welcome .user-login .error p{
+	margin: 0;
+	padding: 0 5px;
+}
+.welcome .user-login a{
+	color: white;
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	padding: 8px 12px;
+	display: block;
+}
+.welcome .user-login a:hover{
+	background: #5c5c5c;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #444444;
+	-webkit-box-shadow: 2px 2px 5px #444444;
+	box-shadow: 2px 2px 5px #444444;
+}
+.welcome .user-login .login-form{
+  padding-top: 3px;
+	float: left;
+	width: 480px;
+	margin-left: 80px;
+}
+.welcome .user-login input{
+	color: #787474;
+	font-size: 18px;
+	line-height: 18px;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	margin: 5px;
+	width: 138px;
+	float: left;
+	padding: 0 4px;
+}
+.welcome .user-login .button{
 	float: left;
 }
-.welcome .logo-slogan .slogan{
+.welcome .slogan{
+  float: left;
+  width: 480px;
+  margin: 70px -960px 20px 480px;
+  text-align: left;
 	line-height: 30px;
-	height: 90px;
 	padding: 50px 0 0px;
 	font-size: 30px;
 	font-weight: bold;
@@ -32,57 +102,59 @@
 	-moz-text-shadow: 0 0 6px #000;
 	-webkit-text-shadow: 0 0 6px #000;
 }
-/* dialog */
-.welcome .dialog{
-	background: #f6f5f4;
-	width: 598px;
-	margin: 250px auto 0;
-	min-height: 153px;
-	border: 1px solid #f6f5f4;
-	border-radius: 8px;
-	-moz-box-shadow: 2px 2px #003d01;
-	-webkit-box-shadow: 2px 2px 5px #003d01;
-	box-shadow: 2px 2px 5px #003d01;
-	background: white;
-	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+/**
+ * Define styles for panel-01
+ */
+.welcome .panel-01{
+  font-size: 20px;
+	font-weight: bold;
+	color: white;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
 }
-.welcome .dialog-inner{
-	margin: 10px;
-	width: 578px;
+.welcome .panel-01 .panel-inner{
+}
+.welcome .panel-01 h2{
+  font-size: 48px;
+}
+.welcome .panel-01 ul,
+.welcome .panel-01 li{
+  font-size: 20px;
+  list-style: none;
+}
+.welcome .panel-01 ul{
+  margin: 40px auto;
+}
+.welcome .panel-01 li{
+  padding: 10px 0 10px 40px;
+}
+.welcome .panel-01 a{
+  text-decoration: none;
+  color: white;
+}
+.welcome .panel-01 a:hover{
+	text-shadow: 0 0 3px #fff;
+	-moz-text-shadow: 0 0 3px #fff;
+	-webkit-text-shadow: 0 0 3px #fff;
 }
 
 /**
- * Form elements
+ * Define styles for panel-02
  */
-.welcome .dialog .error{
+.welcome .panel-02{
+}
+.welcome .panel-02 .panel-inner{
+  height: 529px;
+  background: url('../images/syllabus-icon.png') 0 0 no-repeat;
+}
+.welcome .panel-02 .error{
 	color: red;
 	font-size: 16px;
 	font-weight: bold;
 	text-align: center;
 }
-.welcome .dialog input{
-	color: #787474;
-	font-weight: bold;
-	float: left;
-	border: 1px solid #457319;
-	border-radius: 4px;
-	padding: 0 5px;
-	margin: 0;
-	height: 48px;
-	line-height: 30px;
-	font-size: 30px;
-}
-.welcome .dialog .description{
-	text-align: center;
-	color: #2e2e2e;
-	font-weight: bold;
-	float: left;
-	text-shadow: 0 0 1px #787474;
-	-moz-text-shadow: 0 0 1px #787474;
-	-webkit-text-shadow: 0 0 1px #787474;
-}
-.welcome .dialog .button{
+.welcome .panel-02 .button{
 	color: white;
 	display: block;
 	border: 1px solid #ff8400;
@@ -100,107 +172,17 @@
 	background-image: -moz-linear-gradient(#ff8400, #d06e06);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
 }
-.welcome .dialog .button:hover{
+.welcome .button:hover{
 	text-shadow: 0 0 3px #fff;
 	-moz-text-shadow: 0 0 3px #fff;
 	-webkit-text-shadow: 0 0 3px #fff;
 }
-
 /**
- * attributes shared by search forms
- *
- * This defines the borders and colors. Each template needs to define their own
- * dimensions.
+ * Define styles for upload
  */
-.welcome .dialog .search-form{
-	float: left;
-}
-.welcome .dialog .search-form input{
-	border-radius: 4px 0 0 4px;
-}
-.welcome .dialog .search-form .button{
-	float: left;
-	border-radius: 0 4px 4px 0;
-}
-.welcome .dialog .search-form .button:hover{
-	text-shadow: 0 0 3px #fff;
-	-moz-text-shadow: 0 0 3px #fff;
-	-webkit-text-shadow: 0 0 3px #fff;
-}
-
-/**
- * attributes shared by upload forms
- *
- * This defines the borders and colors. Each template needs to define their own
- * dimensions.
- */
-.welcome .dialog .upload-form{
-	float: left;
-}
-.welcome .dialog .upload-form .description{
-}
-.welcome .dialog .upload-form .button{
-}
-
-/**
- * search template specific 
- *
- * this template shows only the search field
- */
-.welcome .dialog.search .search-form{
-	width: 578px;
-}
-.welcome .dialog.search .search-form input{
-	width: 370px;
-}
-.welcome .dialog.search .search-form .button{
-	width: 203px;
-}
-
-/**
- * upload template specific 
- *
- * this template shows only the upload field
- */
-.welcome .dialog.upload .upload-form{
-	width: 578px;
-}
-.welcome .dialog.upload .upload-form .description{
-	font-size: 20px;
-	width: 398px;
-	line-height: 46px;
-	height: 46px;
-}
-.welcome .dialog.upload .upload-form .button{
-	width: 178px;
-}
-
-/**
- * horizontal template specific 
- *
- * this template shows both the search and upload forms
- */
-.welcome .dialog.horizontal .search-form{
-	width: 260px;
-}
-.welcome .dialog.horizontal .search-form input{
-	width: 198px;
-}
-.welcome .dialog.horizontal .search-form .button{
-	width: 58px;
-}
-.welcome .dialog.horizontal .upload-form{
-}
-.welcome .dialog.horizontal .upload-form .description{
-	padding: 10px 15px 0;
-	font-size: 14px;
-	line-height: 14px;
-	width: 128px;
-	height: 26px;
-}
-.welcome .dialog.horizontal .upload-form .button{
-	float: left;
-	width: 150px;
+.welcome .upload-form .button{
+  margin: 220px auto;
+  width: 200px;
 }
 
 /**
@@ -243,44 +225,3 @@
 	margin: 20px auto;
 }
 
-/**
- * progress
- */
-.progress{
-	position: absolute;
-	left: -1px;
-	bottom: -1px;
-	width: 601px;
-	color: white;
-}
-.progress ul,
-.progress li{
-	list-style: none;
-	float: left;
-	display: block;
-	border: 0 solid;
-}
-.progress li{
-	width: 180px; 
-	padding: 10px;
-	height: 55px;
-	background: #9bc1f1;
-	font-size: 16px;
-	font-weight: bold;
-}
-.progress h3{
-	padding: 0;
-	margin: 0;
-	font-size: 16px;
-}
-.progress .step-1{
-	border-radius: 0 0 0 8px;
-}
-.progress .step-2{
-}
-.progress .step-3{
-	border-radius: 0 0 8px 0;
-}
-.progress .highlight{
-	background: #5b8bd9;
-}

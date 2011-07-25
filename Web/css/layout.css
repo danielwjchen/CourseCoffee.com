@@ -10,15 +10,12 @@
 /** header **/
 .header{
 }
-
 .header-inner{
 }
-
 
 /** body **/
 .body{
 	clear:both;
-	float:left;
 }
 
 .tabs ul,

@@ -11,7 +11,7 @@ $config = new Config(array(
 			'driver' => 'mysql',
 			'host' => 'localhost',
 			'user' => 'root',
-			'password' => 'bTaEaFaTl2aBl',
+			'password' => 'jzK76L',
 			'port' => '3306',
 		),
 		'core' => array(
@@ -19,7 +19,7 @@ $config = new Config(array(
 			'driver' => 'mysql',
 			'host' => 'localhost',
 			'user' => 'root',
-			'password' => 'bTaEaFaTl2aBl',
+			'password' => 'jzK76L',
 			'port' => '3306',
 		),
 	),

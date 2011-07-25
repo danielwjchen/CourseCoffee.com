@@ -1,11 +1,4 @@
 window.$P = $(document);
-window.updatePageHeight = function() {
-	var newHeight = $("div.body").outerHeight(true) + $(".header").outerHeight(true) + 150;
-	newHeight = (newHeight > 800) ? newHeight : 800;
-	if ($('.container').height() < newHeight) {
-		$('.container').height(newHeight);
-	}
-};
 
 /**
  * Dynamically hide/show the default input value
@@ -32,7 +25,13 @@ window.blurInput = function(region) {
 
 
 $P.ready(function() {
-	window.body = $("div.body");
+  window.updatePageHeight = function() {
+    var newHeight = $(".body").outerHeight(true) + $(".header").outerHeight(true) + 150;
+    newHeight = (newHeight > 800) ? newHeight : 800;
+    if ($('.container').height() < newHeight) {
+      $('.container').height(newHeight);
+    }
+  };
+	window.body = $(".body");
 	window.header = $(".header");
-
 });

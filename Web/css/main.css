@@ -1,12 +1,14 @@
+* {
+  margin:0;
+  padding:0;
+}
 body,
 html{
 	padding: 0;
 	margin: 0;
+  height: 100%;
 }
 body{
-	background: #457319;
-	background-image: -moz-linear-gradient(#9cc24c, #457319);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#9cc24c), to(#457319)); 
 	font-family: Sans-Serif;
 }
 
@@ -40,12 +42,21 @@ dt{
 	display: none;
 }
 /**
+ * Define styles for sticky footer
+ */
+.container{
+  min-height: 100%;
+}
+.container-inner{
+  overflow:auto;
+  padding-bottom: 150px;
+	background: #457319;
+	background-image: -moz-linear-gradient(#9cc24c, #457319);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#9cc24c), to(#457319)); 
+}
+/**
  * Define styles for header, body, and footer sections
  */
- .container{
-	height: 100%;
-	position: relative;
- }
 .header,
 .body,
 .footer{
@@ -77,10 +88,7 @@ dt{
 /** 
  * Define styles for the body section
  */
-.home.body,
-.calendar.body,
-.class.body{
-	margin: 50px 0;
+ .body {
 }
 .home .body-inner,
 .calendar .body-inner,
@@ -111,6 +119,8 @@ dt{
 	width: 958px;
 	clear: both
 }
+.panel-top .panel-inner{
+}
 .panel-01,
 .panel-02,
 .panel-03{
@@ -119,8 +129,16 @@ dt{
 	position: relative;
 	padding: 5px;
 }
+.panel-01 .panel-inner,
+.panel-02 .panel-inner,
+.panel-03 .panel-inner{
+	padding: 5px;
+	width: 459px;
+}
+
 .panel-01{
 	margin-right: -479px;
+  clear: left;
 }
 .panel-02{
 	margin-left: 479px;
@@ -129,10 +147,6 @@ dt{
 .panel-03{
 	margin-left: 958px;
 	margin-right: -1437px;
-}
-.panel-inner{
-	padding: 5px;
-	width: 459px;
 }
 
 /**
@@ -241,14 +255,15 @@ dt{
  * Define styles for footer 
  */
 .footer{
-	position: absolute;
+	position: relative;
+  clear: both;
 	bottom: 0;
 	height: 150px;
+  margin-top: -150px;
 	background: #313131;
 	background-image: -moz-linear-gradient(#313131, #5e5b5b);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
 }
 .footer-inner{
-	margin-top: -150px;
 	width: 100%;
 }
