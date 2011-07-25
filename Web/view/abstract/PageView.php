@@ -49,6 +49,10 @@ abstract class PageView extends View {
 			'http-equiv' => 'content-type',
 			'content' => 'text/html;charset=UTF-8',
 		));
+		$this->addMeta(array(
+			'http-equiv' => 'Pragma',
+			'content' => 'no-cache'
+		));
 		$this->addJS('lib/jquery-1.4.4.min.js');
 		$this->addJS('main.js');
 		$this->addCSS('layout.css');

@@ -125,9 +125,14 @@
 .task-create-form fieldset{
 	border: 1px solid #5e5b5b;
 	border-radius: 4px;
+	/**
+	 * This is commented out because firefox does not know how to render fieldset
+	 * box-shadow correctly.
+	 *
 	-moz-box-shadow: 1px 3px #5e5b5b;
 	-webkit-box-shadow: 1px 1px 3px #5e5b5b;
 	box-shadow: 1px 1px 3px #5e5b5b;
+	*/
 }
 .task-create-form .required{
 	border: 1px 1px 0 1px;

@@ -30,10 +30,12 @@ abstract class FormModel extends Model {
 	 *  a token generated and will expire in a period of time
 	 */
 	public function initializeFormToken() {
+		error_log(print_r($_SESSION,true));
 		$timestamp = time();
 		$token = Crypto::Encrypt($this->form_name . $timestamp);
 		Session::Set($this->form_name, $token);
 		Session::Set($this->form_name . '_expire', $timestamp + $this->expire);
+		Session::Set($this->form_name . '_tries', 0);
 		return $token;
 	}
 
@@ -51,6 +53,22 @@ abstract class FormModel extends Model {
 	}
 
 	/**
+	 * Increment submission attempt
+	 */
+	protected function incrementTries() {
+		$tries = Session::Get($this->form_name . '_tries');
+		$tries++;
+		Session::Set($this->form_name . '_tries', $tries);
+	}
+
+	/**
+	 * Check number of attempted submission
+	 */
+	protected function hasExceededMaxTries() {
+		return Session::Get($this->form_name . '_tries') > $this->max_try;
+	}
+
+	/**
 	 * Unset the token for the form 
 	 *
 	 * This function should be called when the form is successfully submitted
@@ -58,6 +76,7 @@ abstract class FormModel extends Model {
 	protected function unsetFormToken() {
 		Session::Del($this->form_name);
 		Session::Del($this->form_name . '_expire');
+		Session::Del($this->form_name . '_tries');
 	}
 
 	/**

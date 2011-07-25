@@ -9,7 +9,6 @@ $P.ready(function() {
 	var userTaskOption = $('#user-list-task-option');
 	var agendaPanel = $('.panel-01 .panel-inner');
 	task.getTaskBelongToUser(userTaskOption, agendaPanel);
-	updatePageHeight();
 	blurInput(body);
 	$('input.objective').live('click', function(e) {
 		$('.additional').removeClass('hidden');

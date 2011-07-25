@@ -7,7 +7,7 @@ window.login = {
 	 * Set error messages
 	 */
 	'error' : function(message) {
-		var error = $('.error');
+		var error = $('.login.error');
 		error.html('<p>' + message + '</p>');
 		error.removeClass('hidden');
 	},
@@ -21,7 +21,7 @@ window.login = {
 		}
 		var formData = $('#user-login-form').serialize();
 		$.ajax({
-			url: 'user/login',
+			url: '?q=user/login',
 			type: 'POST',
 			cache: false,
 			data: formData,

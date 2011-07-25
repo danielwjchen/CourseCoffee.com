@@ -4,6 +4,9 @@
  *
  * Define styles for header
  */
+.body {
+	margin: 0;
+}
 .welcome .body-inner{
   margin: 0 auto;
   width: 960px;
@@ -40,12 +43,16 @@
   border: #313131 1px solid;
   border-radius: 0 0 4px 4px;
 }
-.welcome .user-login .error{
+.welcome .login.error{
 	color: white;
-	float: left;
-	width: 200px;
-	margin-right: -200px;
-	text-align: left;
+	position: absolute;
+	top: 50px;
+	left: 480px;
+	width: 480px;
+	text-align: center;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
 }
 .welcome .user-login .error p{
 	margin: 0;

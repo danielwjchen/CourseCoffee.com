@@ -88,16 +88,13 @@ dt{
 /** 
  * Define styles for the body section
  */
- .body {
+.body {
+	margin: 75px 0;
 }
-.home .body-inner,
-.calendar .body-inner,
-.class .body-inner{
+.body-inner{
 	width: 960px;
 }
-.home .content,
-.calendar .content,
-.class .content{
+.content{
 	float: left;
 	background: #f6f5f4;
 	width: 958px;

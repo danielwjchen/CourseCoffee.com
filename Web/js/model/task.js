@@ -78,7 +78,6 @@ window.task = {
 
 					html += "</ul></div></div>";
 					region.html(html);
-					updatePageHeight();
 				}
 			}
 		});

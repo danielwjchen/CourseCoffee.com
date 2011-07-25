@@ -15,8 +15,9 @@ class UserLoginFormModel extends FormModel {
 	  * Failed to login
 		*/
 	const ERROR_FAILED_TO_LOGIN = 'The email and password do not match';
-	const ERROR_FORM_EXPIRED = 'User login form expired. Please try again.';
-	const ERROR_FORM_EMPTY = 'The email and password fields cannot be empty';
+	const ERROR_FORM_EXPIRED    = 'User login form expired. Please try again.';
+	const ERROR_FORM_EMPTY      = 'The email and password fields cannot be empty';
+	const ERROR_MAX_TRY         = 'Too many failed login attempts';
 
 	/**
 	 * @} End of error_messages
@@ -31,12 +32,13 @@ class UserLoginFormModel extends FormModel {
 	/**
 	 * Failed to login
 	 */
-	const EVENT_FAILED_TO_LOGIN = 'Failed login attempt';
-	const EVENT_FORM_EMPTY = 'An empty user login submission is made. How is this possible?';
-	const EVENT_FAILED_PASSWORD = 'The password provided does not match the email';
-	const EVENT_FORM_EXPIRED = 'User login form expired.';
+	const EVENT_FAILED_TO_LOGIN     = 'Failed login attempt';
+	const EVENT_FORM_EMPTY          = 'An empty user login submission is made. How is this possible?';
+	const EVENT_FAILED_PASSWORD     = 'The password provided does not match the email';
+	const EVENT_FORM_EXPIRED        = 'User login form expired.';
 	const EVENT_EXCEEDED_MAX_ATTEMP = 'User exceeded max login attempt';
-	const EVENT_NEW_LOGIN = 'User Logged in';
+	const EVENT_NEW_LOGIN           = 'User Logged in';
+	const EVENT_MAX_TRY             = 'User exceede max login attempts';
 
 	/**
 	 * @} End of even_messages
@@ -100,15 +102,28 @@ class UserLoginFormModel extends FormModel {
 	 *   - redirect
 	 */
 	public function processForm($email, $password, $token) {
+		$this->incrementTries();
 		// if the form token has expired
 		if (!$this->validateFormToken($token)) {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_FORM_EXPIRED);
 			return array(
-				'email' => null,
+				'email'    => null,
 				'password' => null,
-				'token' => $token,
-				'error' => self::ERROR_FORM_EXPIRED
+				'token'    => $token,
+				'error'    => self::ERROR_FORM_EXPIRED
+			);
+		}
+
+		// if user retried to many times..
+		if ($this->hasExceededMaxTries()) {
+			$token = $this->initializeFormToken();
+			Logger::write(self::EVENT_MAX_TRY);
+			return array(
+				'email'    => null,
+				'password' => null,
+				'token'    => $token,
+				'error'    => self::ERROR_MAX_TRY
 			);
 		}
 
@@ -117,10 +132,10 @@ class UserLoginFormModel extends FormModel {
 		if (empty($email) || empty($password)) {
 			Logger::write(self::EVENT_FORM_EMPTY, Logger::SEVERITY_HIGH);
 			return array(
-				'email' => null,
+				'email'    => null,
 				'password' => null,
-				'token' => $token,
-				'error' => self::ERROR_FORM_EMPTY
+				'token'    => $token,
+				'error'    => self::ERROR_FORM_EMPTY
 			);
 		}
 
@@ -132,19 +147,19 @@ class UserLoginFormModel extends FormModel {
 		if ($this->user_dao->id === null) {
 			Logger::write(self::EVENT_FAILED_TO_LOGIN, Logger::SEVERITY_LOW);
 			return array(
-				'email' => $email,
+				'email'    => $email,
 				'password' => $password,
-				'token' => $token,
-				'error' => self::ERROR_FAILED_TO_LOGIN,
+				'token'    => $token,
+				'error'    => self::ERROR_FAILED_TO_LOGIN,
 			);
 		// if the password doesn't match... we log this event
 		} elseif ($this->user_dao->password !== $encrypted_password) {
 			Logger::write(self::EVENT_FAILED_PASSWORD, Logger::SEVERITY_HIGH);
 			return array(
-				'email' => $email,
+				'email'    => $email,
 				'password' => $password,
-				'token' => $token,
-				'error' => self::ERROR_FAILED_TO_LOGIN,
+				'token'    => $token,
+				'error'    => self::ERROR_FAILED_TO_LOGIN,
 			);
 		} else {
 			Logger::write(self::EVENT_NEW_LOGIN);
@@ -155,13 +170,13 @@ class UserLoginFormModel extends FormModel {
 			// browsers
 			$signature = Crypto::encrypt($email . $password);
 			$this->user_cookie_dao->create(array(
-				'user_id' => $this->user_dao->id,
+				'user_id'   => $this->user_dao->id,
 				'signature' => $signature, 
 			));
 			Session::Set('user_id', $this->user_dao->id);
 			Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
 			return array(
-				'user_id' => $this->user_dao->id,
+				'user_id'  => $this->user_dao->id,
 				'redirect' => self::REDIRECT,
 			);
 		}

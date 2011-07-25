@@ -1,15 +1,33 @@
 /**
- * @file
- * Handle user registraion
+ * Handle Document upload and process request
  */
-window.register = {
+window.doc = {
 	/**
-	 * Initialize the user registration form
+	 * Initialize the upload process
 	 */
-	'init': function () {
-		$.get('?q=user/register', function(data) {
-			$('.body').html(register.form('', '', '', data.token, ''));
+	'init' : function() {
+		doc.form = $('doc-upload-form');
+		$('body', $P).append('<div class="dialog-mesh">' + 
+			'<div class="upload dialog">' + 
+				'<div class="dialog-inner">' + 
+				'<h2>Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)</h2>' +
+				'</div>' + 
+			'</div>' + 
+		'<div>');
+		$('.dialog-inner', $P).live('click', function(e) {
+			e.stopPropagation();
 		});
+		$('.dialog-mesh', $P).live('click', function(e) {
+			if ($(e.currentTarget).hasClass('dialog-mesh')) {
+				doc.cancel();
+			}
+		});
+	},
+	/**
+	 * Cancel the process
+	 */
+	'cancel' : function() {
+		$('.dialog-mesh', $P).remove();
 	},
 	/**
 	 * Generate the HTML form for user registration
@@ -46,42 +64,5 @@ window.register = {
 				'<a href="#" class="button register">Join</a>' +
 			'</form>' +
 		'</div>';
-	},
-	/**
-	 * Set error messages
-	 */
-	'error' : function(message) {
-		var error = $('.error');
-		error.html('<p>' + message + '</p>');
-		error.removeClass('hidden');
-		$('.dialog').height(364);
-	},
-	/**
-	 * submit the user registration form
-	 */
-	'submit' : function() {
-		if ($('input[name=email]').val() == '' || $('input[name=password]').val() == '' || $('input[name=confirm]').val() == '') {
-			register.error('You have empty fileds. Please try again.');
-			return ;
-		}
-		var formData = $('#user-registration-form').serialize();
-		$.ajax({
-			url: '?q=user/register',
-			type: 'POST',
-			cache: false,
-			data: formData,
-			success: function(response) {
-				if (response.error) {
-					register.error(response.error);
-				} 
-				if (response.token) {
-					$('input[name=token]').attr('value', response.token);
-				}
-				if (response.redirect) {
-					window.location = response.redirect;
-				}
-			}
-		});
 	}
-	};
-
+};

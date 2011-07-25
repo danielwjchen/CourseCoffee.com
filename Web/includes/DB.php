@@ -61,11 +61,14 @@ class DB{
 				return false;
 				
 			} 
+			$rows = array();
 			while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
 				$rows[] = $row;
 			}
 
-			$rows = count($rows) > 1 ? $rows : $rows[0];
+			// we truncated the result if rows were fetched and there is only one row 
+			// or records
+			$rows = isset($rows[0]) && count($rows) == 1 ? $rows[0] : $rows;
 
 			return empty($rows) ? null : $rows;
 

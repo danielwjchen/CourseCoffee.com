@@ -8,15 +8,17 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	/**
 	 * Extend PageView::__construct().
 	 */
-	function __construct($content = null) {
-		parent::__construct($content);
+	function __construct($content) {
 		$this->content['body']['css'] = 'welcome';
+		$this->content['login_token'] = $content['login_token'];
+		parent::__construct($content);
 		$this->setPageTitle('welcome');
 		$this->addJS('model/login.js');
 		$this->addJS('model/registration.js');
+		$this->addJS('model/doc.js');
 		$this->addJS('controller/welcome.js');
-		$this->addJS('controller/navigation.js');
 		$this->addCSS('welcome.css');
+		$this->addCSS('dialog.css');
 	}
 
 	/**
@@ -41,16 +43,16 @@ class WelcomePageView extends PageView implements PageViewInterface {
               <div class="panel-inner">
                 <img src="images/logo.png" class="logo" />
                 <div class="user-login">
-                  <div class="error hidden"></div>
                   <div class="login-form">
                     <form id="user-login-form" name="user-login" action="user/login" method="post">
-                      <input type="hidden" name="token" value="{$header['block']['login_token']}" />
+                      <input type="hidden" name="token" value="{$login_token}" />
                       <input type="email" name="email" class="input" value="email" />
                       <input type="password" name="password" class="input" value="password" />
                       <a class="button login" href="#">login</a>
                     </form>
                   </div>
                 </div>
+								<div class="login error hidden"></div>
                 <p class="slogan">School is hectic. Instantly organize!</p>
               </div>
             </div>
@@ -68,7 +70,8 @@ class WelcomePageView extends PageView implements PageViewInterface {
           <div class="panel-02">
             <div class="panel-inner">
               <div class="upload-form">
-                <form id="upload">
+                <form id="doc-upload-form" enctype="multipart/form-data" name="doc-upload" action="doc/process" method="post">
+									<input type="hidden" name="token" value="{$file_token}" />
                   <a class="button upload" href="#">upload</a>
                 </form>
               </div>
@@ -80,6 +83,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	</div>
   <div class="footer">
     <div class="footer-inner">
+			{$footer['block']}
     </div>
   </div>
 	</body>

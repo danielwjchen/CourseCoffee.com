@@ -1,17 +1,22 @@
-$(document).ready(function() {
+/**
+ * @file
+ * Manage user events and their corresponding javascript actions on welcome 
+ * page
+ */
+$P.ready(function() {
 	window.welcome = $('.welcome');
+	blurInput(welcome);
 
 	welcome.delegate('a.button', 'click', function(e) {
 		e.preventDefault();
-		updatePageHeight();
 		var target = $(this);
-		if (target.hasClass('register')) {
+		if (target.hasClass('login')) {
+			login.submit();
+		} else if (target.hasClass('register')) {
 			register.submit();
 		} else if (target.hasClass('upload')) {
-			register.init();
+			doc.init();
 		} else if (target.hasClass('enroll')) {
 		}
-	});
-		welcome.delegate('a.register', 'click', function(e) {
 	});
 });

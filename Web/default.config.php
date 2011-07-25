@@ -31,4 +31,11 @@ $config = new Config(array(
 			'port' => '3306',
 		),
 	),
+	/**
+	 * Define the Facebook app
+	 */
+	'facebooky' => array(
+		'app_key' => '',
+		'app_secret' => '',
+	),
 ));

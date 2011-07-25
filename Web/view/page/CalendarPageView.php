@@ -34,35 +34,36 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		{$css}
 	</head>
 	<body>
-	<div class="container">
-		<div class="header">
-			<div class="header-inner">
-				<ul id="navigation-menu">
-					<li class="home">
-						<a class="home button" href="/home">Home</a>
-					</li>
-					<li class="calendar active">
-						<a class="calendar button" href="/calendar">Calendar</a>
-					</li>
-					<li class="class">
-						<a class="class button" href="/class">Class</a>
-					</li>
-					<li class="logout">
-						<a class="logout button" href="#">logout</a>
-					</li>
-				</ul>
+	<div class="calendar container">
+		<div class="container-inner">
+			<div class="header">
+				<div class="header-inner">
+					<ul id="navigation-menu">
+						<li class="home">
+							<a class="home button" href="/home">Home</a>
+						</li>
+						<li class="calendar active">
+							<a class="calendar button" href="/calendar">Calendar</a>
+						</li>
+						<li class="class">
+							<a class="class button" href="/class">Class</a>
+						</li>
+						<li class="logout">
+							<a class="logout button" href="#">logout</a>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>
-		<div class="calendar body">
-			<div class="body-inner">
-				{$body['block']}
+			<div class="calendar body">
+				<div class="body-inner">
+					{$body['block']}
+				</div>
 			</div>
 		</div>
 		<div class="footer">
 			<div class="footer-inner">
 			</div>
 		</div>
-	</div>
 	</body>
 </html>
 HTML;

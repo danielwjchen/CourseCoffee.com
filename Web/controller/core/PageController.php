@@ -13,11 +13,11 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'welcome' => 'getWelcomePage',
-			'home' => 'getHomePage',
-			'calendar' => 'getCalendarPage',
-			'class' => 'getClassPage',
-			'page-not-found' => 'get404Page',
+			'welcome'         => 'getWelcomePage',
+			'home'            => 'getHomePage',
+			'calendar'        => 'getCalendarPage',
+			'class'           => 'getClassPage',
+			'page-not-found'  => 'get404Page',
 			'all-system-down' => 'get500Page',
 		);
 	}
@@ -44,14 +44,16 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getWelcomePage() {
 		if ($this->isUserLoggedIn()) {
-			header('Location: '. self::PAGE_HOME);
+			header('Location: ' . self::PAGE_HOME);
 		}
-		$block_content = '';
-		$block = new WelcomeBlockView($block_content);
-		$page_content['body']['block'] = $block->render();
-		$login_model = new UserLoginFormModel();
-		$page_content['header']['block']['login_token'] = $login_model->initializeFormToken();
-		$this->page_view = new WelcomePageView($page_content);
+		$login_form    = new UserLoginFormModel();
+		$register_form = new UserRegisterFormModel();
+		$file_form   = new FileFormModel();
+		$this->page_view = new WelcomePageView(array(
+			'login_token'    => $login_form->initializeFormToken(),
+			'register_token' => $register_form->initializeFormToken(),
+			'file_token'     => $file_form->initializeFormToken()
+		));
 	}
 
 	/**
