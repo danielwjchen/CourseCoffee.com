@@ -27,7 +27,8 @@ abstract class View {
 	 *  a string that indicates the type of header to be set
 	 */
 	public function setHeader($type) {
-		header($type);
 		header('Cache-Control: no-cache, must-revalidate');
+    header('HTTP/1.1 200 OK');
+		header($type);
 	}
 }
