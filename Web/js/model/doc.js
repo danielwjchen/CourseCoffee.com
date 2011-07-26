@@ -7,7 +7,8 @@ window.doc = {
 	 */
 	'init' : function() {
 		doc.form = $('doc-upload-form');
-		$('body', $P).append('<div class="dialog-mesh">' + 
+		$('body', $P).append('<div class="dialog-mesh"></div>' + 
+		'<div class="dialog-wrapper">' + 
 			'<div class="upload dialog">' + 
 				'<div class="dialog-inner">' + 
 				'<h2>Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)</h2>' +
@@ -17,10 +18,8 @@ window.doc = {
 		$('.dialog-inner', $P).live('click', function(e) {
 			e.stopPropagation();
 		});
-		$('.dialog-mesh', $P).live('click', function(e) {
-			if ($(e.currentTarget).hasClass('dialog-mesh')) {
-				doc.cancel();
-			}
+		$('.dialog-wrapper', $P).live('click', function(e) {
+			doc.cancel();
 		});
 	},
 	/**
@@ -28,6 +27,7 @@ window.doc = {
 	 */
 	'cancel' : function() {
 		$('.dialog-mesh', $P).remove();
+		$('.dialog-wrapper', $P).remove();
 	},
 	/**
 	 * Generate the HTML form for user registration
