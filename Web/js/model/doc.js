@@ -7,27 +7,14 @@ window.doc = {
 	 */
 	'init' : function() {
 		doc.form = $('doc-upload-form');
-		$('body', $P).append('<div class="dialog-mesh"></div>' + 
-		'<div class="dialog-wrapper">' + 
-			'<div class="upload dialog">' + 
-				'<div class="dialog-inner">' + 
-				'<h2>Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)</h2>' +
-				'</div>' + 
-			'</div>' + 
-		'<div>');
-		$('.dialog-inner', $P).live('click', function(e) {
-			e.stopPropagation();
-		});
-		$('.dialog-wrapper', $P).live('click', function(e) {
-			doc.cancel();
-		});
+		content = '<h2>Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)</h2>';
+		dialog.open('upload', content);
 	},
 	/**
 	 * Cancel the process
 	 */
 	'cancel' : function() {
-		$('.dialog-mesh', $P).remove();
-		$('.dialog-wrapper', $P).remove();
+		display.close();
 	},
 	/**
 	 * Generate the HTML form for user registration
