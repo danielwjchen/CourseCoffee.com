@@ -81,8 +81,8 @@ class File {
 
 	/**
 	 * Default directory for uploaded files
-	 */
 	const DEFAULT_PATH = ROOT_PATH . '/files';
+	 */
 
 	/**
 	 * Check that the directory exists and is writable.
@@ -253,7 +253,7 @@ class File {
 		$filename = $new_filename .'.'. $final_extension;
 
 		if ($original != $filename) {
-			Logger:Write(self::EVENT_FILE_RENAMED):
+			Logger:Write(self::EVENT_FILE_RENAMED);
 		}
 
 		return $filename;
