@@ -30,7 +30,6 @@ abstract class FormModel extends Model {
 	 *  a token generated and will expire in a period of time
 	 */
 	public function initializeFormToken() {
-		error_log(print_r($_SESSION,true));
 		$timestamp = time();
 		$token = Crypto::Encrypt($this->form_name . $timestamp);
 		Session::Set($this->form_name, $token);

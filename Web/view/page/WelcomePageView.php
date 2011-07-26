@@ -9,8 +9,9 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	 * Extend PageView::__construct().
 	 */
 	function __construct($content) {
-		$this->content['body']['css'] = 'welcome';
 		$this->content['login_token'] = $content['login_token'];
+		$this->content['register_token'] = $content['register_token'];
+		$this->content['file_token'] = $content['file_token'];
 		parent::__construct($content);
 		$this->setPageTitle('welcome');
 		$this->addJS('model/login.js');
@@ -70,10 +71,13 @@ class WelcomePageView extends PageView implements PageViewInterface {
           <div class="panel-02">
             <div class="panel-inner">
               <div class="upload-form">
-                <form id="doc-upload-form" enctype="multipart/form-data" name="doc-upload" action="doc/process" method="post">
+                <form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc/upload" method="post">
 									<input type="hidden" name="token" value="{$file_token}" />
-                  <a class="button upload" href="#">upload</a>
+									<input type="file" name="document" />
+									<div class="error hidden"></div>
+									<a class="button submit" href="#">submit</a>
                 </form>
+								<a class="button upload" href="#">upload</a>
               </div>
             </div>
           </div>

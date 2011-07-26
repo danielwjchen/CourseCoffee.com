@@ -69,7 +69,10 @@ class UserCookieDAO extends DAO implements DAOInterface{
 				`signature` = :signature
 			WHERE `id` = :id
 		";
-		$this->db->perform($sql);
+		$this->db->perform($sql, array(
+			'user_id' => $this->attr['user_id'], 
+			'signature' => $this->attr['signature']
+		));
 
 	}
 

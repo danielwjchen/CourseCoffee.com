@@ -76,7 +76,10 @@ class UserDAO extends DAO implements DAOInterface{
 				`password` = :password
 			WHERE `id` = :id
 		";
-		$this->db->perform($sql);
+		$this->db->perform($sql, array(
+			'account' => $this->attr['account'], 
+			'password' => $this->attr['password']
+		));
 
 	}
 

@@ -80,11 +80,6 @@ class File {
 	 */
 
 	/**
-	 * Default directory for uploaded files
-	const DEFAULT_PATH = ROOT_PATH . '/files';
-	 */
-
-	/**
 	 * Check that the directory exists and is writable.
 	 *
 	 * Directories need to have execute permissions to be considered a directory by
@@ -201,64 +196,6 @@ class File {
 		return $files;
 	}
 
-
-	/**
-	 * Modify a filename as needed for security purposes.
-	 *
-	 * Munging a file name prevents unknown file extensions from masking exploit
-	 * files. When web servers such as Apache decide how to process a URL request,
-	 * they use the file extension. If the extension is not recognized, Apache
-	 * skips that extension and uses the previous file extension. For example, if
-	 * the file being requested is exploit.php.pps, and Apache does not recognize
-	 * the '.pps' extension, it treats the file as PHP and executes it. To make
-	 * this file name safe for Apache and prevent it from executing as PHP, the
-	 * .php extension is "munged" into .php_, making the safe file name
-	 * exploit.php_.pps.
-	 *
-	 * Specifically, this function adds an underscore to all extensions that are
-	 * between 2 and 5 characters in length, internal to the file name, and not
-	 * included in $extensions.
-	 *
-	 * @param $filename
-	 *   File name to modify.
-	 * @param $extensions
-	 *   A space-separated list of extensions that should not be altered.
-	 *
-	 * @return
-	 *   The potentially modified $filename.
-	 */
-	public static function mungeFileName($filename, $extensions) {
-		$original = $filename;
-
-		$whitelist = array_unique(explode(' ', trim($extensions)));
-
-		// Split the filename up by periods. The first part becomes the basename
-		// the last part the final extension.
-		$filename_parts = explode('.', $filename);
-		$new_filename = array_shift($filename_parts); // Remove file basename.
-		$final_extension = array_pop($filename_parts); // Remove final extension.
-
-		// Loop through the middle parts of the name and add an underscore to the
-		// end of each section that could be a file extension but isn't in the list
-		// of allowed extensions.
-		foreach ($filename_parts as $filename_part) {
-			$new_filename .= '.'. $filename_part;
-			if (
-				!in_array($filename_part, $whitelist) && 
-				preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)
-			) {
-				$new_filename .= '_';
-			}
-		}
-		$filename = $new_filename .'.'. $final_extension;
-
-		if ($original != $filename) {
-			Logger:Write(self::EVENT_FILE_RENAMED);
-		}
-
-		return $filename;
-	}
-
 	/**
 	 * Saves a file upload to a new location. The source file is validated as a
 	 * proper upload and handled as such.
@@ -269,13 +206,6 @@ class File {
 	 *
 	 * @param $source
 	 *   A string specifying the name of the upload field to save.
-	 * @param $validators
-	 *   An optional, associative array of callback functions used to validate the
-	 *   file. The keys are function names and the values arrays of callback
-	 *   parameters which will be passed in after the file object. The
-	 *   functions should return an array of error messages; an empty array
-	 *   indicates that the file passed validation. The functions will be called in
-	 *   the order specified.
 	 * @param $dest
 	 *   A string containing the directory $source should be copied to. If this is
 	 *   not provided or is not writable, the default directory will be used.
@@ -284,13 +214,19 @@ class File {
 	 *   destination directory should overwritten. A false value will generate a
 	 *   new, unique filename in the destination directory.
 	 * @return
-	 *   An object containing the file information, or 0 in the event of an error.
+	 *  An associative array that has two different results.
+	 *  On success:
+	 *   - name
+	 *   - encoded
+	 *   - size
+	 *   - path
+	 *   - mime
+	 *   - timestamp
+	 *  On faie:
+	 *   - error
 	 */
-	public static function saveUpload($source, $validators = array(), $dest = FALSE, $replace = self::EXISTS_RENAME) {
+	public static function SaveUpload($source, $dest = FALSE, $replace = self::EXISTS_RENAME) {
 		static $upload_cache;
-
-		// Add in our check of the the file name length.
-		$validators['file_validate_name_length'] = array();
 
 		// Return cached objects without processing since the file will have
 		// already been processed and the paths in _FILES will be invalid.
@@ -299,77 +235,50 @@ class File {
 		}
 
 		// If a file was uploaded, process it.
-		if (isset($_FILES['files']) && $_FILES['files']['name'][$source] && is_uploaded_file($_FILES['files']['tmp_name'][$source])) {
+		if (isset($_FILES[$source]) && $_FILES[$source]['name'] && is_uploaded_file($_FILES[$source]['tmp_name'])) {
 			// Check for file upload errors and return FALSE if a
 			// lower level system error occurred.
-			switch ($_FILES['files']['error'][$source]) {
+			switch ($_FILES[$source]['error']) {
 				// @see http://php.net/manual/en/features.file-upload.errors.php
 				case UPLOAD_ERR_OK:
 					break;
 
 				case UPLOAD_ERR_INI_SIZE:
 				case UPLOAD_ERR_FORM_SIZE:
-					Logger::Write(EVENT_EXCEED_MAX_SIZE);
-					return 0;
+					Logger::Write(self::EVENT_EXCEED_MAX_SIZE);
+					return array('error' => self::ERROR_EXCEED_MAX_SIZE);
 
 				case UPLOAD_ERR_PARTIAL:
 				case UPLOAD_ERR_NO_FILE:
 				// Unknown error
 				default:
-					Logger::Write(EVENT_FAIL, SEVERITY_LOW);
-					return 0;
+					Logger::Write(self::EVENT_FAIL, Logger::SEVERITY_LOW);
+					return array('error' => self::ERROR_FAIL);
 			}
 
 			// Begin building file object.
-			$file['filename'] = self::mungeFileName(trim(basename($_FILES['files']['name'][$source]), '.'), $extensions);
-			$file['filepath'] = $_FILES['files']['tmp_name'][$source];
-			$file['filemime'] = self::getMimeType($file->filename);
-
-			// If the destination is not provided, or is not writable, then use the
-			// temporary directory.
-			if (empty($dest) || file_check_path($dest) === FALSE) {
-				$dest = file_directory_temp();
-			}
-
-			$file['source'] = $source;
-			$file['filesize'] = $_FILES['files']['size'][$source];
-
-			// Call the validation functions.
-			$errors = array();
-			foreach ($validators as $function => $args) {
-				array_unshift($args, $file);
-				// Make sure $file is passed around by reference.
-				$args[0] = &$file;
-				$errors = array_merge($errors, call_user_func_array($function, $args));
-			}
-
-			// Rename potentially executable files, to help prevent exploits.
-			if (preg_match('/\.(php|pl|py|cgi|asp|js)$/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
-				$file['filemime'] = 'text/plain';
-				$file['filepath'] .= '.txt';
-				$file['filename'] .= '.txt';
-				// As the file may be named example.php.txt, we need to munge again to
-				// convert to example.php_.txt, then create the correct destination.
-				$file['filename'] = self::mungeFileName($file->filename, $extensions);
-			}
+			$file['name']    = $_FILES[$source]['name'];
+			$file['size']    = $_FILES[$source]['size'];
+			$file['encoded'] = preg_replace('/\W/', '-', Crypto::Encrypt($file['name'] . time()));
+			$file['path']    = FILE_PATH . '/' . $file['encoded'];
+			$file['mime']    = self::getMimeType($_FILES[$source]['name']);
 
 			// Move uploaded files from PHP's upload_tmp_dir
 			// This overcomes open_basedir restrictions for future file operations.
-			$file['filepath'] = $file['destination'];
-			if (!move_uploaded_file($_FILES['files']['tmp_name'][$source], $file->filepath)) {
-				Logger:Write(EVENT_FAIL, SEVERITY_LOW);
-				return 0;
+			if (!move_uploaded_file($_FILES[$source]['tmp_name'], $file['path'])) {
+				Logger::Write(self::EVENT_FAIL, Logger::SEVERITY_LOW);
+				return array('error' => self::ERROR_FAIL);
 			}
 
 			// If we made it this far it's safe to record this file in the database.
 			$file['timestamp'] = time();
-			drupal_write_record('files', $file);
 
 			// Add file to the cache.
 			$upload_cache[$source] = $file;
 			return $file;
 		}
-		return 0;
+		Logger::Write(self::EVENT_FAIL, Logger::SEVERITY_LOW);
+		return array('error' => self::ERROR_FAIL);
 	}
 
 	/**

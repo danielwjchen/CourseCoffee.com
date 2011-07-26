@@ -29,9 +29,6 @@ class UserLoginFormModel extends FormModel {
 	 * Log messges to track events
 	 */
 	
-	/**
-	 * Failed to login
-	 */
 	const EVENT_FAILED_TO_LOGIN     = 'Failed login attempt';
 	const EVENT_FORM_EMPTY          = 'An empty user login submission is made. How is this possible?';
 	const EVENT_FAILED_PASSWORD     = 'The password provided does not match the email';

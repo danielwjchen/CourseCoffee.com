@@ -69,7 +69,10 @@ class UserSessionDAO extends DAO implements DAOInterface{
 				`session` = :session
 			WHERE `id` = :id
 		";
-		$this->db->perform($sql);
+		$this->db->perform($sql, array(
+			'user_id' => $this->attr['user_id'], 
+			'session' => $this->attr['session']
+		));
 
 	}
 

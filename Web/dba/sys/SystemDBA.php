@@ -58,6 +58,55 @@ class SystemDBA implements DBAInterface {
 				),
 				'primary' => array('id'),
 			),
+			'file' => array(
+				'description' => 'keep track of uploaded files',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'description' => 'the primary key',
+					),
+					'user_id' => array(
+						'type' => 'int',
+						'not null' => TRUE,
+						'description' => 'the primary key that identifies the user that uploaded the file',
+					),
+					'name' => array(
+						'type' => 'varchar',
+						'length' => '255',
+						'not null' => TRUE,
+						'description' => 'name of the file',
+					),
+					'path' => array(
+						'type' => 'varchar',
+						'length' => '255',
+						'not null' => TRUE,
+						'description' => 'file path',
+					),
+					'mime' => array(
+						'type' => 'varchar',
+						'length' => '255',
+						'not null' => TRUE,
+						'description' => 'file mime type',
+					),
+					'size' => array(
+						'type' => 'int',
+						'not null' => TRUE,
+						'description' => 'file size',
+					),
+					'timestamp' => array(
+						'type' => 'int',
+						'not null' => TRUE,
+						'description' => 'the timestamp when the file is uploaded',
+					),
+				),
+				'primary' => array('id'),
+				'unique' => array(
+					'path' => array('path'),
+				),
+				'index' => array(
+					'user_id' => array('user_id'),
+				),
+			),
 			'autoload' => array(
 				'description' => 'register a class and the file path',
 				'column' => array(

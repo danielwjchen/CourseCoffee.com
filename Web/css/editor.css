@@ -1,0 +1,60 @@
+/**
+ * Define styles for the document editor page
+ */
+#table_syl{
+	border-style:dashed;
+	border-width:2px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+}
+#table_title{
+	font:Tahoma, Geneva, sans-serif;
+	font-size:18px;
+	color:#F60;
+	text-align:center;
+}
+#table_content{
+	font-family:Tahoma, Geneva, sans-serif;
+	font-size:14px;
+}
+
+#parsed_data{
+	position:absolute;
+	width:500px;
+}
+
+.date_label{
+	color:#900;
+	background-color:#993;
+}
+
+#tool_box{
+	position:absolute;
+	background-color:#9F0;
+}
+
+.schedule_elem{
+	border-style:dashed;
+	border-width:1px;
+	font-size:14px;
+}
+
+.sch_content{
+	font-family:Verdana, Geneva, sans-serif;
+	text-align:left;
+	width:500px;
+	white-space: normal;
+	font-size:12px;
+}
+.del_date_label{
+	font-size:30px;
+	background-color:#F90;
+	cursor:pointer;
+}
+.sch_edit{
+}
+
+.btn{
+	background-color:#960;
+	color:#9F0;
+}

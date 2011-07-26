@@ -24,7 +24,7 @@ class HomePageView extends PageView implements PageViewInterface {
 	public function render() {
 		extract($this->content);
 		return <<<HTML
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>{$page['title']}</title>
 		{$meta}

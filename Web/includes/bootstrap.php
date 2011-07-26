@@ -8,7 +8,7 @@ define('CONTROLLER_PATH', ROOT_PATH . '/controller');
 define('MODEL_PATH', ROOT_PATH . '/model');
 define('VIEW_PATH', ROOT_PATH . '/view');
 define('LIB_PATH', ROOT_PATH . '/lib');
-define('TEMPLATE_PATH', ROOT_PATH . '/template');
+define('FILE_PATH', ROOT_PATH . '/files');
 
 require_once INCLUDES_PATH . '/Autoload.php';
 require_once INCLUDES_PATH . '/Config.php';
