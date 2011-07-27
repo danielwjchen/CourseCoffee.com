@@ -15,7 +15,7 @@ class JSONView extends View{
 	 */
 	public function render() {
 		$this->setHeader(self::JSON_HEADER);
-    print str_replace(
+    return str_replace(
 			array('<', '>', '&'), 
 			array('\u003c', '\u003e', '\u0026'), 
 			json_encode($this->content, JSON_FORCE_OBJECT)

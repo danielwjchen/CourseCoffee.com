@@ -18,12 +18,12 @@ class UserController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'user/register' => 'registerUser',
-			'user/update'   => 'updateUser',
-			'user/remove'   => 'removeUser',
-			'user/profile'  => 'getUserProfile',
-			'user/login'    => 'loginUser',
-			'user/logout'   => 'logoutUser',
+			'user-register' => 'registerUser',
+			'user-update'   => 'updateUser',
+			'user-remove'   => 'removeUser',
+			'user-profile'  => 'getUserProfile',
+			'user-login'    => 'loginUser',
+			'user-logout'   => 'logoutUser',
 		);
 	}
 
@@ -46,19 +46,26 @@ class UserController extends Controller implements ControllerInterface {
 	public function registerUser() {
 		$user_register_form = new UserRegisterFormModel();
 
-		$email    = Input::Post('email', FILTER_SANITIZE_EMAIL);
-		$password = Input::Post('password');
-		$confirm  = Input::Post('confirm');
-		$token    = Input::Post('token');
+		$token = Input::Post('token');
+		if (empty($token)) {
+			$page = new UserRegisterPageView(array(
+				'register_token' => $user_register_form->initializeFormToken(),
+			));
+			echo $page->render();
+		} else {
+			$email    = Input::Post('email', FILTER_SANITIZE_EMAIL);
+			$password = Input::Post('password');
+			$confirm  = Input::Post('confirm');
 
-		$result = $user_register_form->processForm(
-			$email, 
-			$password, 
-			$confirm, 
-			$token
-		);
-		$json_view = new JSONView($result);
-		$json_view->render();
+			$result = $user_register_form->processForm(
+				$email, 
+				$password, 
+				$confirm, 
+				$token
+			);
+			$json = new JSONView($result);
+			echo $json->render();
+		}
 	}
 
 	/**
@@ -90,8 +97,8 @@ class UserController extends Controller implements ControllerInterface {
 		$token    = Input::Post('token');
 
 		$result = $login_form->processForm($email, $password, $token);
-		$json_view = new JSONView($result);
-		$json_view->render();
+		$json = new JSONView($result);
+		echo $json->render();
 	}
 
 	/**
@@ -101,8 +108,8 @@ class UserController extends Controller implements ControllerInterface {
 		$logout = new UserLogoutModel();
 		$user_id = Session::Get('user_id');
 		$result = $logout->terminate($user_id);
-		$json_view = new JSONView($result);
-		$json_view->render();
+		$json = new JSONView($result);
+		echo $json->render();
 	}
 
 }

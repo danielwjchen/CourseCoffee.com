@@ -6,7 +6,7 @@
 
 class TaskController extends Controller implements ControllerInterface {
 
-	private $json_view;
+	private $json;
 	
 	/**
 	 * Extend Controller::__construct()
@@ -20,14 +20,14 @@ class TaskController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'task/add'                 => 'createTask',
-			'task/update'              => 'updateTask',
-			'task/remove'              => 'removeTask',
-			'task/search'              => 'searchTask',
-			'task/detail'              => 'getTaskDetail',
-			'user/list-task'           => 'getTaskBelongToUser',
-			'course-section/list-task' => 'getTaskBelongToClass',
-			'calendar/list-task'       => 'getTaskBelongToDate',
+			'task-add'                 => 'createTask',
+			'task-update'              => 'updateTask',
+			'task-remove'              => 'removeTask',
+			'task-search'              => 'searchTask',
+			'task-detail'              => 'getTaskDetail',
+			'user-list-task'           => 'getTaskBelongToUser',
+			'class-list-task' => 'getTaskBelongToClass',
+			'calendar-list-task'       => 'getTaskBelongToDate',
 		);
 	}
 
@@ -42,8 +42,8 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
-		$this->json_view->setHeader(PageView::HTML_HEADER);
-		echo $this->json_view->render();
+		$this->json->setHeader(PageView::HTML_HEADER);
+		echo $this->json->render();
 	}
 
 	/**
@@ -67,7 +67,7 @@ class TaskController extends Controller implements ControllerInterface {
 			$description, 
 			$quest_id
 		);
-		$this->json_view = new JSONView($result);
+		$this->json = new JSONView($result);
 	}
 
 	/**
@@ -101,7 +101,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$user_id = Session::Get('user_id');
 		$list_model = new TaskListModel();
 		$result = $list_model->fetchList($user_id);
-		$this->json_view = new JSONView($result);
+		$this->json = new JSONView($result);
 	}
 
 	/**

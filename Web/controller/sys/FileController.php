@@ -17,10 +17,10 @@ class FileController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'file/upload'   => 'uploadFile',
-			'file/download' => 'downloadFile',
-			'file/remove'   => 'removeFile',
-			'file/rename'   => 'renameFile',
+			'file-upload'   => 'uploadFile',
+			'file-download' => 'downloadFile',
+			'file-remove'   => 'removeFile',
+			'file-rename'   => 'renameFile',
 		);
 	}
 

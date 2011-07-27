@@ -6,7 +6,7 @@
 
 class PageController extends Controller implements ControllerInterface {
 
-	private $page_view;
+	private $page;
 
 	/**
 	 * Implement ControllerInterface::path()
@@ -33,8 +33,8 @@ class PageController extends Controller implements ControllerInterface {
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
-		$this->page_view->setHeader(PageView::HTML_HEADER);
-		echo $this->page_view->render();
+		$this->page->setHeader(PageView::HTML_HEADER);
+		echo $this->page->render();
 	}
 
 	/**
@@ -49,7 +49,7 @@ class PageController extends Controller implements ControllerInterface {
 		$login_form    = new UserLoginFormModel();
 		$register_form = new UserRegisterFormModel();
 		$file_form   = new FileFormModel();
-		$this->page_view = new WelcomePageView(array(
+		$this->page = new WelcomePageView(array(
 			'login_token'    => $login_form->initializeFormToken(),
 			'register_token' => $register_form->initializeFormToken(),
 			'file_token'     => $file_form->initializeFormToken()
@@ -65,7 +65,7 @@ class PageController extends Controller implements ControllerInterface {
 		$block_content['form']['task_token'] = $create_form->initializeFormToken();
 		$block = new HomeBlockView($block_content);
 		$page_content['body']['block'] = $block->render();
-		$this->page_view = new HomePageView($page_content);
+		$this->page = new HomePageView($page_content);
 	}
 
 	/**
@@ -73,7 +73,7 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getCalendarPage() {
 		$this->redirectUnknownUser();
-		$this->page_view = new CalendarPageView();
+		$this->page = new CalendarPageView();
 	}
 
 	/**
@@ -81,20 +81,20 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getClassPage() {
 		$this->redirectUnknownUser();
-		$this->page_view = new ClassPageView();
+		$this->page = new ClassPageView();
 	}
 
 	/**
 	 * Get the 404 page
 	 */
 	public function get404Page() {
-		$this->page_view = new NotFoundPageView();
+		$this->page = new NotFoundPageView();
 	}
 
 	/**
 	 * Get the 500 page
 	 */
 	public function get500Page() {
-		$this->page_view = new InternalErrorPageView();
+		$this->page = new InternalErrorPageView();
 	}
 }

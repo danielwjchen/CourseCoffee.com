@@ -22,7 +22,7 @@ window.task = {
 		}
 		var formData = $('#new-task-form').serialize();
 		$.ajax({
-			url: 'task/add',
+			url: '?q=task-add',
 			type: 'POST',
 			cache: false,
 			data: formData,
@@ -59,7 +59,7 @@ window.task = {
 	'getTaskBelongToUser': function(option, region) {
 		var formData = option.serialize();
 		$.ajax({
-			url: 'user/list-task',
+			url: '?q=user-list-task',
 			type: 'POST',
 			cache: false,
 			data: formData,

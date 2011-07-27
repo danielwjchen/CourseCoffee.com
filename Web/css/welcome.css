@@ -5,6 +5,7 @@
  * Define styles for header
  */
 .body {
+	/* override default */
 	margin: 0;
 }
 .welcome .body-inner{
@@ -195,45 +196,5 @@
 .welcome .upload-form .button{
   margin: 220px auto;
   width: 200px;
-}
-
-/**
- * user registration form specific
- */
-.welcome .dialog.user-registration {
-	height: 300px;
-}
-.welcome .dialog.user-registration .row{
-	height: 44px;
-	margin: 0 auto;
-	padding: 10px 0;
-	clear: both;
-}
-.welcome .dialog.user-registration .title{
-	float: left;
-	width: 239px;
-	padding: 0 10px;
-	text-align: right;
-}
-.welcome .dialog.user-registration .field{
-	float: left;
-	width: 263px;
-}
-.welcome .dialog.user-registration label,
-.welcome .dialog.user-registration input{
-	height: 34px;
-	line-height: 34px;
-}
-.welcome .dialog.user-registration label{
-	font-size: 24px;
-}
-.welcome .dialog.user-registration input{
-	font-size: 20px;
-	width: 263px;
-}
-.welcome .dialog.user-registration .button{
-	clear: both;
-	width: 200px;
-	margin: 20px auto;
 }
 

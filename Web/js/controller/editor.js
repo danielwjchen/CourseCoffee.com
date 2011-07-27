@@ -276,14 +276,15 @@ $(document).ready(function(){
 	}
 	/************   main **************/
 	init();
-	result_g="";
+	result_g = "";
 	var processorData = $('#processor-dorm').serialize();
 	$.ajax({
 		url: '?q=doc/process',
 		type: 'Post',
 		cache: false,
 		data: processorData,
-		success: function(result){	 
+		success: function(response){	 
+		result = response.content;
 		result = $.trim(result) // result: raw syllabus
 		result_g=result
 		max_hit_number=0
@@ -307,29 +308,37 @@ $(document).ready(function(){
 				if (prev_idx==-1){ // if prev_idx not set, set it to current idx i
 					prev_idx=i;
 				}
-			} else { // non-date token
-				if (prev_idx != -1 && (i - prev_idx) >0 ) {// consider token n-gram with n>1
-					date_temp = "";
-					for (j=prev_idx; j<i-1; j++){
-						date_temp = date_temp + word[j] + delim[j+1]
-					}
-					date_temp = date_temp + word[j];
-					debug_info = debug_info + date_temp + "\n"
-					ret = parse_date(date_temp);
-					match_pos=ret[0]; match_str=ret[1]; str_before=ret[2]; str_after=ret[3];
-					if(match_str == ""){  //not a valid date
-						content = content + date_temp.replace(/(\n|\r)/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
-					} else{ // Is a valid dat
-						if(sch_temp !=null){
+			// non-date token
+			} else {
+
+					// consider token n-gram with n>1
+					if (prev_idx != -1 && (i - prev_idx) >0 ) {
+						date_temp = "";
+						for (j=prev_idx; j<i-1; j++){
+							date_temp = date_temp + word[j] + delim[j+1]
+						}
+						date_temp = date_temp + word[j];
+						debug_info = debug_info + date_temp + "\n"
+						ret = parse_date(date_temp);
+						match_pos=ret[0]; match_str=ret[1]; str_before=ret[2]; str_after=ret[3];
+
+					//not a valid date
+					if(match_str == ""){  
+						content += date_temp.replace(/(\n|\r)/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+
+					// Is a valid dat
+					} else {
+						sch_temp = sch(prev_idx, i, "");
+						if (sch_temp !=null) {
 							schedule_list.push(sch_temp);
-							content = content + str_before +get_date_label_html(sch_temp.id, match_str) + str_after + delim[j+1].replace(/(\n|\r)/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+							content += str_before +get_date_label_html(sch_temp.id, match_str) + str_after + delim[j+1].replace(/(\n|\r)/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
 						}
 					}
 				}
-				content = content + word[i] + delim[i+1].replace(/(\n|\r)/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+				content += word[i] + delim[i+1].replace(/(\n|\r)/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
 				prev_idx=-1;
 			}
-		}//  finish processing raw syllabus
+		}// finish processing raw syllabus
 		$("#orig_syl").html(content.replace(/(\n|\r)/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"));
 		create_schedule();
 		show_schedule();

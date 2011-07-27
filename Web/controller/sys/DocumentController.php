@@ -17,9 +17,9 @@ class DocumentController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'doc/edit'    => 'editDocument',
-			'doc/upload'  => 'uploadDocument',
-			'doc/process' => 'processDocument',
+			'doc-edit'    => 'editDocument',
+			'doc-upload'  => 'uploadDocument',
+			'doc-process' => 'processDocument',
 		);
 	}
 
@@ -55,9 +55,11 @@ class DocumentController extends Controller implements ControllerInterface {
 	 */
 	public function processDocument() {
 		$processor = new DocumentProcessorFormModel();
+		$token    = Input::Post('token');
 		$document = Input::Post('document');
-		$result = $processor->processDocument($document);
-		echo $result;
+		$result = $processor->processDocument($document, $token);
+		$json = new JSONView($result);
+		echo $json->render();
 	}
 
 	/**

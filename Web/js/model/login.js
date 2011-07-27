@@ -21,7 +21,7 @@ window.login = {
 		}
 		var formData = $('#user-login-form').serialize();
 		$.ajax({
-			url: '?q=user/login',
+			url: '?q=user-login',
 			type: 'POST',
 			cache: false,
 			data: formData,

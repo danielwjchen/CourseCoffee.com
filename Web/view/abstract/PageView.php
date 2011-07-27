@@ -89,7 +89,7 @@ abstract class PageView extends View {
 		switch ($option) {
 			case 'file':
 				$this->content['js'] .= <<<JS
-<script type="text/javascript" src="js/{$js}"></script>
+<script type="text/javascript" src="/js/{$js}"></script>
 JS;
 				break;
 			case 'external':
@@ -118,7 +118,7 @@ JS;
 		switch ($option) {
 			case 'internal':
 				$this->content['css'] .= <<<CSS
-<link rel="stylesheet" type="text/css" href="css/{$css}" />
+<link rel="stylesheet" type="text/css" href="/css/{$css}" />
 CSS;
 				break;
 			case  'external':
