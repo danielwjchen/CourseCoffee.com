@@ -71,7 +71,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
           <div class="panel-02">
             <div class="panel-inner">
               <div class="upload-form">
-                <form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc/upload" method="post">
+                <form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
 									<input type="hidden" name="token" value="{$file_token}" />
 									<input type="file" name="document" />
 									<div class="error hidden"></div>

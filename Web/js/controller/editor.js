@@ -279,7 +279,7 @@ $(document).ready(function(){
 	result_g = "";
 	var processorData = $('#processor-dorm').serialize();
 	$.ajax({
-		url: '?q=doc/process',
+		url: '?q=doc-process',
 		type: 'Post',
 		cache: false,
 		data: processorData,

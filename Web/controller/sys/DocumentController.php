@@ -47,7 +47,7 @@ class DocumentController extends Controller implements ControllerInterface {
 		$filename = 'document';
 		// process form and save the file
 		$result = $file_form->processForm($user_id, $token, $filename);
-		header('Location: ?q=doc/edit&document=' . $result['encoded']  );
+		header('Location: ?q=doc-edit&document=' . $result['encoded']  );
 	}
 
 	/**
