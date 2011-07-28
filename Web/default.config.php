@@ -23,7 +23,7 @@ $config = new Config(array(
 		 * Define a database connection for core database
 		 */
 		'core' => array(
-			'name' => 'exmple_core',
+			'name' => 'example_core',
 			'driver' => 'mysql',
 			'host' => 'localhost',
 			'user' => 'username',

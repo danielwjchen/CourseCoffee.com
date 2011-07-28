@@ -9,14 +9,17 @@ class TaskDAO extends DAO implements DAOInterface{
 	 * Access to quest record
 	 */
 	private $quest;
+
 	/**
 	 * Access to date record
 	 */
 	private $date;
+
 	/**
 	 * Access to quest_date_linkage
 	 */
 	private $quest_date_linkage;
+
 	/**
 	 * Access to quest_linkage
 	 */
@@ -79,13 +82,6 @@ class TaskDAO extends DAO implements DAOInterface{
 
 	/**
 	 * Extend DAO::read()
-	 *
-	 * @param array $params
-	 *   - id: optional, this will get a particular record
-	 *   - range: optional, this will get a list of tasks based on range
-	 *      - begin_date: optional
-	 *       - end_date: optional
-	 *   - user_id: optional this will get a list of tasks belong to user
 	 */
 	public function read($params) {
 		$sql = "
@@ -111,13 +107,18 @@ class TaskDAO extends DAO implements DAOInterface{
 				ON ql.location_id = l.id
 			LEFT JOIN quest_linkage q_linkage
 				ON q_linkage.child_id = q.id
+			%s
 		";
+		if (isset($params['limit'])) {
+			$sql .= "LIMIT {$params['offset']}, {$params['count']}";
+		}
+
 		$data = array();
 
 		// get a particular item
 		if (isset($params['id'])) {
-			$sql .= "q.id = :id";
-			$data = $this->db->fetch(array('id' => $params['id']));
+			$sql = sprintf($sql, "WHERE q.id = :id");
+			$data = $this->db->fetch($sql, array('id' => $params['id']));
 			return $this->updateAttrribute($data);
 
 		// get tasks in arange
@@ -127,11 +128,12 @@ class TaskDAO extends DAO implements DAOInterface{
 				isset($params['range']['begin_date']) && 
 				isset($params['range']['end_date'])) 
 			{
-				$sql .= "
+				$where_clause = "
 					WHERE q.user_id = :user_id
 					AND qd.timestamp >= : begin_date
 					AND qd.timestamp <= :end_date
 				";
+				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['user_id'],
 					'begin_date' => $params['range']['begin_date'],
@@ -139,20 +141,22 @@ class TaskDAO extends DAO implements DAOInterface{
 				));
 			// all tasks due before
 			} elseif (isset($params['range']['end_date'])) {
-				$sql .= "
+				$where_clause = "
 					WHERE q.user_id = :user_id
 					AND qd.timestamp <= :end_date
 				";
+				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['range']['user_id'],
 					'end_date' => $params['range']['end_date'],
 				));
 			// all tasks due after
 			} elseif (isset($params['range']['begin_date'])) {
-				$sql .= "
+				$where_clause = "
 					WHERE q.user_id = :user_id
 					AND qd.timestamp >= :begin_date
 				";
+				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['user_id'],
 					'begin_date' => $params['begin_date'],
@@ -163,7 +167,8 @@ class TaskDAO extends DAO implements DAOInterface{
 
 		// get all tasks belong to user
 		} elseif (isset($params['user_id'])) {
-				$sql .= "WHERE q.user_id = :user_id";
+				$where_clause = "WHERE q.user_id = :user_id";
+				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['user_id'],
 				));

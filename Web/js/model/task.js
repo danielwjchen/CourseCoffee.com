@@ -49,6 +49,26 @@ window.task = {
 		});
 	},
 	/**
+	 * Get list item in a HTML
+	 *
+	 * @param objective
+	 * @param dueDate
+	 * @param location
+	 * @param description
+	 *
+	 * @return
+	 */
+	'getListItem': function(objective, dueDate, location, description) {
+		var html = "<li><dl>";
+		html += "<dt>" + objective + "</dt>";
+		html += "<dd class='due_date'>" + dueDate + "</dd>";
+		html += location != null ? "<dd class='location'>" + location + "</dd>" : "";
+		html += description != null ? "<dd class='description'>" + description + "</dd>" : "";
+			
+		html += "</dl></li>";
+		return html;
+	},
+	/**
 	 * Get tasks belong to a user
 	 *
 	 * @params option
@@ -66,14 +86,23 @@ window.task = {
 			success: function(response) {
 				if (response.success) {
 					var html = "<div class='task'><div class='task-inner'><ul>";
-					for (i in response.list) {
-						html += "<li><dl>";
-						html += "<dt>" + response.list[i]['objective'] + "</dt>";
-						html += "<dd class='due_date'>" + response.list[i]['due_date'] + "</dd>";
-						html += response.list[i]['location'] != null ? "<dd class='location'>" + response.list[i]['location'] + "</dd>" : "";
-						html += response.list[i]['description'] != null ? "<dd class='description'>" + response.list[i]['description'] + "</dd>" : "";
-							
-						html += "</dl></li>";
+					// if there is only one single item.
+					if (response.list['id'] != undefined) {
+						html += task.getListItem(response.list['objective'], 
+							response.list['due_date'],
+							response.list['location'],
+							response.list['description']
+						);
+					} else {
+						for (i in response.list) {
+							html += task.getListItem(response.list[i]['objective'], 
+								response.list[i]['due_date'],
+								response.list[i]['location'],
+								response.list[i]['description']
+							);
+								
+							html += "</dl></li>";
+						}
 					}
 
 					html += "</ul></div></div>";

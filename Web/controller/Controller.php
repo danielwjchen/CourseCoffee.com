@@ -77,7 +77,8 @@ abstract class Controller {
 	 */
 	public function redirectUnknownUser($url = self::PAGE_DEFAULT) {
 		if(!$this->isUserLoggedIn()) {
-			header('Location: '. $url);
+			header('Location: ' . $url);
+			exit();
 		}
 
 	}
@@ -104,7 +105,7 @@ abstract class Controller {
 			}
 		}
 
-		return empty($user_id) ? false : $user_id;
+		return $user_id == '' ? false : $user_id;
 	}
 	
 

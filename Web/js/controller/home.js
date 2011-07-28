@@ -3,6 +3,17 @@
  * Handle event inputs on /home and lazy load contents to reduce load time
  */
 $P.ready(function() {
+/**
+ * Initilize the date-time selector
+ */
+	$('#time-picker').datetime({  
+		duration: '15',  
+		showTime: true,  
+		constrainInput: false,  
+		stepMinutes: 1,  
+		stepHours: 1,  
+		time24h: false  
+	});  
 	/**
 	 * Load tasks
 	 */
@@ -24,8 +35,10 @@ $P.ready(function() {
 				$('.optional').addClass('hidden');
 				target.text('more detail');
 			}
-		}
-		if (target.hasClass('submit')) {
+
+		} else if (target.hasClass('upload')) {
+			doc.init();
+		} else if (target.hasClass('submit')) {
 			task.submit();
 			task.getTaskBelongToUser(userTaskOption, agendaPanel);
 
