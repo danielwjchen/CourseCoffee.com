@@ -1,0 +1,17 @@
+/**
+ * Define styles for task list
+ */
+.task {
+	min-height: 400px;
+}
+.task .task-inner{
+}
+.task .no-task{
+}
+.task ul,
+.task ul li{
+	list-style: none;
+}
+.task ul li{
+	margin-bottom: 15px;
+}

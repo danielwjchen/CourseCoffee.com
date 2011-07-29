@@ -49,7 +49,7 @@ class TaskCreateFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->task_dao = new TaskDAO($this->core_db);
+		$this->task_dao = new TaskDAO($this->db);
 		$this->form_name = 'task_creation_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
@@ -72,6 +72,9 @@ class TaskCreateFormModel extends FormModel {
 				'error' => self::ERROR_FORM_EXPIRED
 			);
 		}
+
+		$this->unsetFormToken();
+		$token = $this->initializeFormToken();
 		$due_date = strtotime($due_date);
 		$record_id = $this->task_dao->create(array(
 			'user_id'     => $user_id,
@@ -82,7 +85,8 @@ class TaskCreateFormModel extends FormModel {
 		));
 		return array(
 			'quest_id' => $record_id,
-			'success' => true,
+			'token'    => $token,
+			'success'  => true,
 		);
 	}
 }

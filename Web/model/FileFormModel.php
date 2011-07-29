@@ -45,7 +45,7 @@ class FileFormModel extends FormModel{
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->file_dao = new FileDAO($this->sys_db);
+		$this->file_dao = new FileDAO($this->db);
 		$this->form_name = 'file_upload_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
@@ -59,6 +59,7 @@ class FileFormModel extends FormModel{
 	 * @param string $user_id
 	 * @param string $token
 	 * @param string $filename
+	 * @oaram string $type
 	 *
 	 * @return array
 	 *  An associative array that has two different results.
@@ -71,7 +72,7 @@ class FileFormModel extends FormModel{
 	 *  On faie:
 	 *   - error
 	 */
-	public function processForm($user_id, $token, $filename) {
+	public function processForm($user_id, $token, $filename, $type) {
 		$this->incrementTries();
 		// if the form token has expired
 		if (!$this->validateFormToken($token)) {
@@ -83,9 +84,11 @@ class FileFormModel extends FormModel{
 			);
 		}
 
+		$this->unsetFormToken();
 		$result = File::SaveUpload($filename);
 		if (!isset($result['error'])) {
 			$result['user_id'] = $user_id;
+			$result['type']    = $type;
 			$this->file_dao->create($result);
 		}
 

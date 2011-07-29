@@ -14,7 +14,7 @@ class TaskListModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->task_dao = new TaskDAO($this->core_db);
+		$this->task_dao = new TaskDAO($this->db);
 	}
 
 	/**

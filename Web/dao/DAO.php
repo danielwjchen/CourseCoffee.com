@@ -85,7 +85,7 @@ abstract class DAO{
 	 *
 	 * @
 	 */
-	protected function updateAttrribute($data) {
+	protected function updateAttribute($data) {
 		if (!empty($data)) {
 			foreach ($this->attr as $key => $value) {
 				$this->attr[$key] = isset($data[$key]) ? $data[$key] : null;

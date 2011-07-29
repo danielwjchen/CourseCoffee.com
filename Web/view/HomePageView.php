@@ -21,15 +21,10 @@ class HomePageView extends PageView implements PageViewInterface {
 		$this->addJS('model/doc.js');
 		$this->addJS('controller/home.js');
 		$this->addJS('controller/navigation.js');
+		$this->addJS('timer.js');
 		$this->addCSS('dialog.css');
+		$this->addCSS('task.css');
 		$this->addCSS('home.css');
-	}
-
-	/**
-	 * Implement View::getHeader()
-	 */
-	protected function getHeader() {
-    header(self::STATUS_OK);
 	}
 
 	/**
@@ -65,15 +60,12 @@ class HomePageView extends PageView implements PageViewInterface {
 						<div class="panel-inner">
 							<div class="profile">
 								<img src="images/default-profile.png" />
-								<div class="name">Joe Smith</div>
-								<div class="school">Michigan State University</div>
-								<div class="achievement">
-									<div><span class="karma">+100 </span><strong>karma</strong></div>
-								</div>
+								<div class="name">{$first_name} {$last_name}</div>
+								<div class="school">{$college}</div>
 							</div>
 							<div class="upload-form">
 								<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
-									<input type="hidden" name="token" value="{$file_token}" />
+									<input type="hidden" name="token" />
 									<input type="file" name="document" />
 									<div class="error hidden"></div>
 									<a class="button submit" href="#">submit</a>
@@ -84,7 +76,7 @@ class HomePageView extends PageView implements PageViewInterface {
 								<form id="new-task-form" class="task-create-form" action="task/create" method="post">
 									<fieldset class="required">
 										<legend>NEW to-do</legend>
-										<input type="hidden" name="token" value="{$form['task_token']}" />
+										<input type="hidden" name="token" />
 										<div class="required">
 											<div class="row">
 												<input type="text" name="objective" class="objective" value="reading due in the morning, etc" maxlength="72"/>

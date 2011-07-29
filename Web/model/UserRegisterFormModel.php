@@ -3,7 +3,6 @@
  * @file
  * Handle user registration
  */
-
 class UserRegisterFormModel extends FormModel {
 
 	/**
@@ -11,30 +10,10 @@ class UserRegisterFormModel extends FormModel {
 	 * @{
    * Error messages for the user when an error is encountered
 	 */
-
-	/**
-	 * Failed to create record in database
-	 */
-	const ERROR_FAILED_TO_CREATE = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
-
-	/**
-	 * Form has expired
-	 */
-	const ERROR_FORM_EXPIRED = 'The form has expire. Please try again.';
-
-	/**
-	 * Form fields empty
-	 */
-	const ERROR_FORM_EMPTY = 'You have empty fileds. Please try again.';
-
-	/**
-	 * The email is already taken
-	 */
-	const ERROR_EMAIL_TAKEN = 'An account is already registered with this emaill address. Please try again.';
-
-	/**
-	 * The password and password confirmation don't match
-	 */
+	const ERROR_FAILED_TO_CREATE   = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
+	const ERROR_FORM_EXPIRED       = 'The form has expire. Please try again.';
+	const ERROR_FORM_EMPTY         = 'You have empty fileds. Please try again.';
+	const ERROR_EMAIL_TAKEN        = 'An account is already registered with this emaill address. Please try again.';
 	const ERROR_PASSWORD_NOT_MATCH = 'The password and confirmation do not match. Please try again.';
 	
 	/**
@@ -46,39 +25,15 @@ class UserRegisterFormModel extends FormModel {
 	 * @{
 	 * Log messges to track events
 	 */
-
-	/**
-	 * Failed to create record in database
-	 */
 	const EVENT_FAILED_TO_CREATE = 'Failed to create user';
-
-  /**
-	 * New attempt to register 
-	 */
-	const EVENT_NEW_ATTEMPT = 'New user attempt to register';
-
+	const EVENT_NEW_ATTEMPT      = 'New user attempt to register';
+	const EVENT_FORM_EMPTY       = 'An empty user registration submission is made. How is this possible?';
+	const EVENT_NEW_USER         = 'New user registered';
+	const EVENT_FORM_EXPIRED     = 'User registration form expired';
+	const EVENT_EMAIL_TAKEN      = 'Attempt to register with an existing email account';
+	const EVENT_UNKNOWN_SCHOOL   = 'Attempt to register with a unknown school. Record created';
 	/**
-	 * Form fields empty
-	 */
-	const EVENT_FORM_EMPTY = 'An empty user registration submission is made. How is this possible?';
-
-	/**
-	 * New user is created
-	 */
-	const EVENT_NEW_USER = 'New user registered';
-
-	/**
-	 * Form has expired
-	 */
-	const EVENT_FORM_EXPIRED = 'User registration form expired';
-
-	/**
-	 * The email is already taken
-	 */
-	const EVENT_EMAIL_TAKEN = 'Attempt to register with an existing email account';
-
-	/**
-	 * @} End of even_messages
+	 * @} End of event_messages
 	 */
 
 	/**
@@ -87,16 +42,31 @@ class UserRegisterFormModel extends FormModel {
 	const REDIRECT = '/home';
 
 	/**
-	 * Access to user record
+	 * @defgroup 'dao
+	 * @{
+	 * Access to database records
 	 */
 	private $user_dao;
+	private $person_dao;
+	private $affiliation_linkage_dao;
+	private $affiliation_dao;
+	private $facebook_linkage_dao;
+	/**
+	 * @} End of "dao"
+	 */
 
 	/**
 	 * Extend Model::__construct()
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_dao = new UserDAO($this->sys_db);
+		$this->user_dao                = new UserDAO($this->db);
+		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->db);
+
+		$this->person_dao              = new PersonDAO($this->db);
+		$this->affiliation_linkage_dao = new UserAffiliationLinkageDAO($this->db);
+		$this->affiliation_dao         = new AffiliationDAO($this->db);
+
 		$this->form_name = 'user_register_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
@@ -107,6 +77,14 @@ class UserRegisterFormModel extends FormModel {
 	/**
 	 * Process the user registration request 
 	 *
+	 * @param string $fisrt_name
+	 *  user's first name
+	 * @param string $last_name
+	 *  user's last name
+	 * @param string $school
+	 *  user's school
+	 * @param string $fb_uid
+	 *  a facebook user id, this is optional
 	 * @param string $email
 	 *  a string of email address to be user as account
 	 * @param string $password
@@ -127,43 +105,64 @@ class UserRegisterFormModel extends FormModel {
 	 *  on success, the method returnd the newly created user id and a redirect 
 	 *  URL as listed below:
 	 *   - user_id
+	 *   - email
+	 *   - password
 	 *   - redirect
 	 */
-	public function processForm($email, $password, $confirm, $token) {
+	public function processForm($first_name, $last_name, $school, $fb_uid, $email, $password, $confirm, $token) {
 		// if the form is new
 		if (empty($token)) {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_NEW_ATTEMPT);
 			return array(
-				'email' => null,
-				'password' => null,
-				'confirm' => null,
-				'token' => $token,
-				'error' => null,
+				'first_name' => null,
+				'last_name'  => null,
+				'school'     => null,
+				'fb_uid'     => null,
+				'email'      => null,
+				'password'   => null,
+				'confirm'    => null,
+				'token'      => $token,
+				'error'      => null,
 			);
+		} 
 		// if the form token has expired
-		} elseif (!$this->validateFormToken($token)) {
+		if (!$this->validateFormToken($token)) {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_FORM_EXPIRED);
 			return array(
-				'email' => null,
-				'password' => null,
-				'confirm' => null,
-				'token' => $token,
-				'error' => self::ERROR_FORM_EXPIRED
+				'first_name' => null,
+				'last_name'  => null,
+				'school'     => null,
+				'fb_uid'     => null,
+				'email'      => null,
+				'password'   => null,
+				'confirm'    => null,
+				'token'      => $token,
+				'error'      => self::ERROR_FORM_EXPIRED
 			);
 		}
 
 		// if there are empty fields... consider it interesting as the 
 		// javascript is supposed to catch this.
-		if (empty($email) || empty($password) || empty($confirm)) {
+		if (
+			empty($first_name) ||
+			empty($last_name) ||
+			empty($school) ||
+			empty($email) || 
+			empty($password)
+		) {
 			Logger::write(self::EVENT_FORM_EMPTY, Logger::SEVERITY_HIGH);
 			return array(
-				'email' => null,
-				'password' => null,
-				'confirm' => null,
-				'token' => $token,
-				'error' => self::ERROR_FORM_EMPTY
+				'first_name' => null,
+				'last_name'  => null,
+				'school'     => null,
+				'fb_uid'     => null,
+				'email'      => null,
+				'password'   => null,
+				'confirm'    => null,
+				'token'      => $token,
+				'error'      => self::ERROR_FORM_EMPTY
 			);
 		}
 
@@ -172,22 +171,30 @@ class UserRegisterFormModel extends FormModel {
 		if (!empty($this->user_dao->password)) {
 			Logger::write(self::EVENT_EMAIL_TAKEN);
 			return array(
-				'email' => $email,
-				'password' => $password,
-				'confirm' => $confirm,
-				'token' => $token,
-				'error' => self::ERROR_EMAIL_TAKEN,
+				'first_name' => $first_name,
+				'last_name'  => $last_name,
+				'school'     => $school,
+				'fb_uid'     => $fb_uid,
+				'email'      => $email,
+				'password'   => $password,
+				'confirm'    => $confirm,
+				'token'      => $token,
+				'error'      => self::ERROR_EMAIL_TAKEN,
 			);
 		}
 
 		// check if the password and confirmation match
 		if ($password !== $confirm) {
 			return array(
-				'email' => $email,
-				'password' => $password,
-				'confirm' => $confirm,
-				'token' => $token,
-				'error' => self::ERROR_PASSWORD_NOT_MATCH,
+				'first_name' => $first_name,
+				'last_name'  => $last_name,
+				'school'     => $school,
+				'fb_uid'     => $fb_uid,
+				'email'      => $email,
+				'password'   => $password,
+				'confirm'    => $confirm,
+				'token'      => $token,
+				'error'      => self::ERROR_PASSWORD_NOT_MATCH,
 			);
 		}
 
@@ -198,24 +205,58 @@ class UserRegisterFormModel extends FormModel {
 			'password' => $encrypted_password,
 		));
 
+		$this->person_dao->create(array(
+			'user_id'    => $user_id,
+			'first_name' => $first_name,
+			'last_name'  => $last_name,
+		));
+
+		// try to find the school and create it on failure
+		$this->affiliation_dao->read(array('name' => $school));
+		$school_id = $this->affiliation_dao->id;
+		if (empty($school_id)) {
+			Logger::Write(self::EVENT_UNKNOWN_SCHOOL);
+			$school_id = $this->affiliation_dao->create(array(
+				'name' => $school,
+				'type' => AffiliationType::COLLEGE,
+				'url' => '',
+			));
+		}
+		$this->affiliation_linkage_dao->create(array(
+			'user_id'        => $user_id,
+			'affiliation_id' => $school_id,
+		));
+
+		// if the user is registering via facebook
+		if (!empty($fb_uid)) {
+			$this->facebook_linkage_dao->create(array(
+				'user_id' => $user_id,
+				'fb_uid'  => $fb_uid
+			));
+		}
+
 		// for some crazy reason, the system failed to create an record and return
 		// the primary key
 		if (empty($user_id)) {
 			Logger::write(self::EVENT_FAILED_TO_CREATE, Logger::SEVERITY_LOW);
 			return array(
-				'email' => $email,
-				'password' => $password,
-				'confirm' => $confirm,
-				'token' => $token,
-				'error' => self::ERROR_FAILED_TO_CREATE,
+				'first_name' => $first_name,
+				'last_name'  => $last_name,
+				'school'     => $school,
+				'fb_uid'     => $fb_uid,
+				'email'      => $email,
+				'password'   => $password,
+				'confirm'    => $confirm,
+				'token'      => $token,
+				'error'      => self::ERROR_FAILED_TO_CREATE,
 			);
 		} else {
-			Session::Set('user_id', $this->user_dao->id);
-			Cookie::Set(UserLoginFormModel::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
 			Logger::write(self::EVENT_NEW_USER);
 			$this->unsetFormToken();
 			return array(
-				'user_id' => $user_id,
+				'user_id'  => $user_id,
+				'email'    => $email,
+				'password' => $password,
 				'redirect' => self::REDIRECT,
 			);
 		}

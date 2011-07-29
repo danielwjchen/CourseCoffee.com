@@ -172,8 +172,8 @@ class DBAInvoker{
 	 *  an array of key clause SQL queries
 	 */
 	static private function alter_key($type, $schema_new, $schema_old) {
-		$dba_sql = array();
-		$add_sql = array();
+		$dba_sql  = array();
+		$add_sql  = array();
 		$drop_sql = array();
 		$sql_key = strtoupper($type);
 		$sql_key = $sql_key == 'PRIMARY' ? $sql_key .' KEY' : $sql_key;
@@ -225,8 +225,7 @@ class DBAInvoker{
 	 *  an associative array that defines the database configuration
 	 */
 	static function Init(array $config_db) {
-		self::$db['sys'] = new DB($config_db['sys']);
-		self::$db['core'] = new DB($config_db['core']);
+		self::$db = new DB($config_db);
 	}
 
 	/**
@@ -243,7 +242,7 @@ class DBAInvoker{
 		require_once($dba_path);
 
 		$dba_schema = call_user_func($dba_request . '::schema');
-		$dba_record  = self::$db['sys']->fetch(
+		$dba_record  = self::$db->fetch(
 			'SELECT * FROM DBA WHERE request = :request',
 			array('request' => $dba_request)
 		);
@@ -278,7 +277,7 @@ class DBAInvoker{
 			}
 		}
 
-		self::$db['sys']->perform($sql, array(
+		self::$db->perform($sql, array(
 			'schema'  => $encoded_schema,
 			'script'  => $encoded_script,
 			'request' => $dba_request,
@@ -290,8 +289,8 @@ class DBAInvoker{
 	 *
 	 * @param string $dba_sql
 	 */
-	public static function Perform($dba_sql, $db_name = 'core') {
-		self::$db[$db_name]->perform($dba_sql);
+	public static function Perform($dba_sql) {
+		self::$db->perform($dba_sql);
 	}
 
 	/**
@@ -299,12 +298,10 @@ class DBAInvoker{
 	 *
 	 * @param array $dba_schema
 	 *  An associative array that mirrors the table sctructure
-	 * @param string $db_name
-	 *  name of the database to perform the operation
 	 *
 	 * @return bool $result
 	 */
-	public static function Create($dba_schema, $db_name = 'core') {
+	public static function Create($dba_schema) {
 
 		foreach ($dba_schema as $name => $table) {
 			$dba_sql = 'CREATE TABLE ' . $name . '(';
@@ -339,7 +336,7 @@ class DBAInvoker{
 			
 			$dba_sql .= implode(', ', $keys) .')';
 
-			self::$db[$db_name]->perform($dba_sql);
+			self::$db->perform($dba_sql);
 
 		}
 
@@ -397,7 +394,7 @@ class DBAInvoker{
 
 			$sql = 'ALTER TABLE ' . $schema_new[$table] . ' ' .	implode(', ', $dba_sql);
 
-			self::$db['core']->perform($sql);
+			self::$db->perform($sql);
 		}
 	}
 

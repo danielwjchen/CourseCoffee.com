@@ -3,9 +3,9 @@
  * Handle event inputs on /home and lazy load contents to reduce load time
  */
 $P.ready(function() {
-/**
- * Initilize the date-time selector
- */
+	/**
+	 * Initilize the date-time selector
+	 */
 	$('#time-picker').datetime({  
 		duration: '15',  
 		showTime: true,  
@@ -14,9 +14,11 @@ $P.ready(function() {
 		stepHours: 1,  
 		time24h: false  
 	});  
+
 	/**
 	 * Load tasks
 	 */
+	task.init();
 	var userTaskOption = $('#user-list-task-option');
 	var agendaPanel = $('.panel-01 .panel-inner');
 	task.getTaskBelongToUser(userTaskOption, agendaPanel);

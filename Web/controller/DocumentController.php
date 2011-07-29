@@ -17,6 +17,7 @@ class DocumentController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
+			'doc-init'    => 'issueDocToken',
 			'doc-upload'  => 'uploadDocument',
 			'doc-process' => 'processDocument',
 		);
@@ -29,11 +30,21 @@ class DocumentController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Override Controller::beforeAction()
+	 * Override Controller::afterAction()
 	 */
 	public function afterAction() {
+		echo $this->json->render();
 	}
 
+	/**
+	 * Issue a file token
+	 */
+	public function issueDocToken() {
+		$file = new FileFormModel();
+		$this->json = new JSONView(array(
+			'token' => $file->initializeFormToken(),
+		));
+	}
 	/**
 	 * Upload a document
 	 */
@@ -45,8 +56,8 @@ class DocumentController extends Controller implements ControllerInterface {
 		$user_id  = empty($user_id) ? 1 : $user_id;
 		$filename = 'document';
 		// process form and save the file
-		$result = $file_form->processForm($user_id, $token, $filename);
-		header('Location: ?q=doc-edit&document=' . $result['encoded']);
+		$result = $file_form->processForm($user_id, $token, $filename, FileType::SYLLABUS);
+		$this->redirect('/doc-edit&document=' . $result['encoded']);
 	}
 
 	/**
@@ -57,8 +68,7 @@ class DocumentController extends Controller implements ControllerInterface {
 		$token    = Input::Post('token');
 		$document = Input::Post('document');
 		$result = $processor->processDocument($document, $token);
-		$json = new JSONView($result);
-		echo $json->render();
+		$this->json = new JSONView($result);
 	}
 
 }

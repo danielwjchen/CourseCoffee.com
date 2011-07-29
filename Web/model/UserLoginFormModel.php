@@ -52,14 +52,15 @@ class UserLoginFormModel extends FormModel {
 	const LOGIN_COOKIE = 'lc';
 
 	/**
-	 * Access to user record
+	 * @defgroup dao
+	 * @{
 	 */
 	private $user_dao;
-
-	/**
-	 * Access to user cookie record
-	 */
 	private $user_cookie_dao;
+	private $facebook_linkage_dao;
+	/**
+	 * @} End of "dao"
+	 */
 
 
 	/**
@@ -67,8 +68,10 @@ class UserLoginFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_dao = new UserDAO($this->sys_db);
-		$this->user_cookie_dao = new UserCookieDAO($this->sys_db);
+		$this->user_dao             = new UserDAO($this->db);
+		$this->user_cookie_dao      = new UserCookieDAO($this->db);
+		$this->facebook_linkage_dao = new UserFacebookLinkageDAO($this->db);
+
 		$this->form_name = 'user_login_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
@@ -129,10 +132,10 @@ class UserLoginFormModel extends FormModel {
 		if (empty($email) || empty($password)) {
 			Logger::write(self::EVENT_FORM_EMPTY, Logger::SEVERITY_HIGH);
 			return array(
-				'email'    => null,
-				'password' => null,
-				'token'    => $token,
-				'error'    => self::ERROR_FORM_EMPTY
+				'email'      => null,
+				'password'   => null,
+				'token'      => $token,
+				'error'      => self::ERROR_FORM_EMPTY
 			);
 		}
 
@@ -161,23 +164,40 @@ class UserLoginFormModel extends FormModel {
 		} else {
 			Logger::write(self::EVENT_NEW_LOGIN);
 			$this->unsetFormToken();
-			// we drop a cookie so we can automatically log in when the user comes 
-			// back. Why are we not using user's id? because if the user changes his
-			// password, this will force him to re-login when accessing from other 
-			// browsers
-			$signature = Crypto::encrypt($email . $password);
-			$this->user_cookie_dao->create(array(
-				'user_id'   => $this->user_dao->id,
-				'signature' => $signature, 
-			));
-			Session::Set('user_id', $this->user_dao->id);
-			Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
+			$this->startUserSession($this->user_dao->id, $email, $password);
 			return array(
 				'user_id'  => $this->user_dao->id,
 				'redirect' => self::REDIRECT,
 			);
 		}
 
+	}
+
+	/**
+	 * Start user session
+	 *
+	 * we drop a cookie so we can automatically log in when the user comes 
+	 * back. Why are we not using user's id? because if the user changes his
+	 * password, this will force him to re-login when accessing from other 
+	 * browsers
+	 *
+	 * @param string $user_id
+	 *  the user's id
+	 * @param string $email
+	 *  a string of email address to be user as account
+	 * @param string $password
+	 *  a string to identifer the user as the owner of the account
+	 */
+	public function startUserSession($user_id, $email, $password) {
+		$signature = Crypto::encrypt($email . $password);
+		$this->user_cookie_dao->create(array(
+			'user_id'   => $user_id,
+			'signature' => $signature, 
+		));
+		Session::Set('user_id', $user_id);
+		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
+		Session::Set('user_id', $user_id);
+		Cookie::Set(UserLoginFormModel::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
 	}
 
 }

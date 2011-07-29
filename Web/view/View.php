@@ -60,11 +60,8 @@ abstract class View {
 
 	/**
 	 * Set HTTP Header
-	 *
-	 * @param string $type
-	 *  a string that indicates the type of header to be set
 	 */
-	public function setHeader($type) {
+	public function setHeader() {
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 		header('Cache-Control: no-store, no-cache, must-revalidate');

@@ -20,14 +20,15 @@ class TaskController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'task-add'                 => 'createTask',
-			'task-update'              => 'updateTask',
-			'task-remove'              => 'removeTask',
-			'task-search'              => 'searchTask',
-			'task-detail'              => 'getTaskDetail',
-			'user-list-task'           => 'getTaskBelongToUser',
-			'class-list-task' => 'getTaskBelongToClass',
-			'calendar-list-task'       => 'getTaskBelongToDate',
+			'task-init'          => 'issueTaskToken',
+			'task-add'           => 'createTask',
+			'task-update'        => 'updateTask',
+			'task-remove'        => 'removeTask',
+			'task-search'        => 'searchTask',
+			'task-detail'        => 'getTaskDetail',
+			'user-list-task'     => 'getTaskBelongToUser',
+			'class-list-task'    => 'getTaskBelongToClass',
+			'calendar-list-task' => 'getTaskBelongToDate',
 		);
 	}
 
@@ -47,19 +48,29 @@ class TaskController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Issue a task token
+	 */
+	public function issueTaskToken() {
+		$task = new TaskCreateFormModel();
+		$this->json = new JSONView(array(
+			'token' => $task->initializeFormToken(),
+		));
+	}
+
+	/**
 	 * Create a new task
 	 */
 	public function createTask() {
-		$create_form = new TaskCreateFormModel();
+		$task = new TaskCreateFormModel();
 
 		$user_id     = Session::Get('user_id');
-		$token   = Input::Post('token');
+		$token       = Input::Post('token');
 		$objective   = Input::Post('objective');
 		$due_date    = Input::Post('due_date');
 		$description = Input::Post('description');
 		$quest_id    = Input::Post('quest_id');
 
-		$result = $create_form->processForm(
+		$result = $task->processForm(
 			$token,
 			$user_id, 
 			$objective, 

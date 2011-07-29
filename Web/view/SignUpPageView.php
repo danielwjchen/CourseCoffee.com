@@ -48,6 +48,30 @@ class SignUpPageView extends PageView implements PageViewInterface {
 						<div class="row error hidden"></div> 
 						<div class="row"> 
 							<div class="title"> 
+								<label for="first-name">first name: </label> 
+							</div> 
+							<div class="field"> 
+								<input type="text" name="first-name" /> 
+							</div> 
+						</div> 
+						<div class="row"> 
+							<div class="title"> 
+								<label for="last-name">last name: </label> 
+							</div> 
+							<div class="field"> 
+								<input type="text" name="last-name" /> 
+							</div> 
+						</div> 
+						<div class="row"> 
+							<div class="title"> 
+								<label for="school">school: </label> 
+							</div> 
+							<div class="field"> 
+								<input type="text" name="school" /> 
+							</div> 
+						</div> 
+						<div class="row"> 
+							<div class="title"> 
 								<label for="user-account">email: </label> 
 							</div> 
 							<div class="field"> 

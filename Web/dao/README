@@ -1,0 +1,10 @@
+== README ==
+This directory contains classes serve as the "Model" in the Model-view-controller 
+(MVC) software architecture concept. All model classes are child classes of Model,
+which is defined in Model.php.
+
+== Base classes ==
+ - DAO
+ - TypeDAO
+ - LinkageDAO
+ - AttributeDAO

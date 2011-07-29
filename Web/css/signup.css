@@ -17,6 +17,10 @@
 	padding: 10px 0;
 	clear: both;
 }
+.sign-up #user-register-form .error{
+	color: red;
+	text-align :center;
+}
 .sign-up #user-register-form .title{
 	float: left;
 	width: 175px;

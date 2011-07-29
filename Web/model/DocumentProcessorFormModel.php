@@ -45,7 +45,7 @@ class DocumentProcessorFormModel extends FormModel{
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->file_dao = new FileDAO($this->sys_db);
+		$this->file_dao = new FileDAO($this->db);
 		// form submission is limite to 5 times
 		$this->max_try = 5;
 		// form expires in three hours
@@ -90,6 +90,7 @@ class DocumentProcessorFormModel extends FormModel{
 			);
 		}
 		$result = implode("\n", $output);
+		$result = htmlentities($result, ENT_QUOTES, 'UTF-8');
 		return array(
 			'content' => $result
 		);

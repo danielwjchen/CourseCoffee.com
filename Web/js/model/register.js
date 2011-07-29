@@ -56,31 +56,44 @@ window.register = {
 		error.removeClass('hidden');
 	},
 	/**
+	 * Validate the form fields
+	 */
+	'validate' : function() {
+		var error = true;
+		$(':input').each(function(i){
+			if ($(this).val() == '') {
+				register.error('You have empty fileds. Please try again.');
+				error = false;
+				return;
+			}
+		});
+		
+		return error;
+	},
+	/**
 	 * submit the user registration form
 	 */
 	'submit' : function() {
-		if ($('input[name=email]').val() == '' || $('input[name=password]').val() == '' || $('input[name=confirm]').val() == '') {
-			register.error('You have empty fileds. Please try again.');
-			return ;
-		}
 		var formData = $('#user-register-form').serialize();
-		$.ajax({
-			url: '?q=user-register',
-			type: 'POST',
-			cache: false,
-			data: formData,
-			success: function(response) {
-				if (response.error) {
-					register.error(response.error);
-				} 
-				if (response.token) {
-					$('input[name=token]').attr('value', response.token);
+		if (register.validate()) {
+			$.ajax({
+				url: '?q=user-register',
+				type: 'POST',
+				cache: false,
+				data: formData,
+				success: function(response) {
+					if (response.error) {
+						register.error(response.error);
+					} 
+					if (response.token) {
+						$('input[name=token]').attr('value', response.token);
+					}
+					if (response.redirect) {
+						window.location = response.redirect;
+					}
 				}
-				if (response.redirect) {
-					window.location = response.redirect;
-				}
-			}
-		});
+			});
+		}
 	}
-	};
+};
 

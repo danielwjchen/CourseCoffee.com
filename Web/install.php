@@ -11,10 +11,10 @@ require_once __DIR__ . '/config.php';
 /**
  * Populate database with tables
  */
-require_once DBA_PATH . '/sys/SystemDBA.php';
+require_once DBA_PATH . '/SystemDBA.php';
 DBAInvoker::Init($config->db);
-DBAInvoker::Create(SystemDBA::schema(), 'sys');
-$core_dbas = File::ScanDirectory(DBA_PATH . '/core', '/DBA\.php$/');
+DBAInvoker::Create(SystemDBA::schema());
+$core_dbas = File::ScanDirectory(DBA_PATH, '/DBA\.php$/');
 foreach ($core_dbas as $path => $dba) {
 	try {
 		DBAInvoker::Request($dba->name, $dba->uri);
@@ -26,17 +26,17 @@ foreach ($core_dbas as $path => $dba) {
 /**
  * Build paths for autoloading
  */
-Autoload::Init($config->db['sys']);
+Autoload::Init($config->db);
 Autoload::Build();
 
 /**
  * Build URI maps for routing
  */
-Router::Init($config->db['sys']);
+Router::Init($config->db);
 Router::Build();
 
 /**
  * Generate salt for encryptions
  */
-Crypto::Init($config->db['sys']);
+Crypto::Init($config->db);
 Crypto::Build();

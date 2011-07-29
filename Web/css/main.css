@@ -90,6 +90,7 @@ dt{
  */
 .body {
 	margin: 75px 0;
+	min-height: 600px;
 }
 .body-inner{
 	width: 960px;

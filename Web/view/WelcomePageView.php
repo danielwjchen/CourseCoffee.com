@@ -55,6 +55,10 @@ class WelcomePageView extends PageView implements PageViewInterface {
 								<li>Collaborate with your classmates on facebook</li>
 						 </ul>
 							 <a href="#">Help: where do I access my electronic syllabi?</a>
+							 <div class="sign-up-shortcut">
+									<p>or... you can always just</p>
+									<a href="/sign-up" class="button sign-up">sign up</a>
+							 </div>
 						</div>
 					</div>
 				<div class="panel-02">

@@ -147,10 +147,23 @@ class StatisticType {
  * Default achievement type
  */
 class AchievementType{
-	const HIGHEST_KARMA = 'highest_karma';
-	const MOST_COMMENT = 'most_comment';
+	const HIGHEST_KARMA   = 'highest_karma';
+	const MOST_COMMENT    = 'most_comment';
 	const MOST_BEST_REPLY = 'most_best_reply';
 }
 /**
  * @{ End of "defgroup achievement"
+ */
+
+/**
+ * @defgroup file
+ *
+ * Default file type
+ */
+class FileType{
+	const PROFILE_IMAGE = 'profile_image';
+	const SYLLABUS      = 'syllabus';
+}
+/**
+ * @{ End of "defgroup file"
  */

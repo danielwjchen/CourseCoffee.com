@@ -5,7 +5,6 @@
  */
 $P.ready(function() {
 	window.signUp = $('.sign-up');
-	blurInput(signUp);
 
 	signUp.delegate('a.button', 'click', function(e) {
 		e.preventDefault();

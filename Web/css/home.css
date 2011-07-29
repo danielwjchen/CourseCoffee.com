@@ -13,12 +13,13 @@
 	float: left;
 	clear: both;
 	width: 960px;
+	min-height: 200px;
 }
 /**
  * Define styles for profile
  */
 .home .profile{
-	height: 200px;
+	height: 100px;
 }
 .home .profile img{
 	position: absolute;

@@ -77,10 +77,20 @@ abstract class Controller {
 	 */
 	public function redirectUnknownUser($url = self::PAGE_DEFAULT) {
 		if(!$this->isUserLoggedIn()) {
-			header('Location: ' . $url);
-			exit();
+			$this->redirect($url);
 		}
 
+	}
+
+	/**
+	 * Handle page reedirection
+	 *
+	 * @param string $url
+	 *  url of the page to redirect to
+	 */
+	protected function redirect($url) {
+		header('Location: ' . $url);
+		exit();
 	}
 
 	/**
@@ -96,7 +106,7 @@ abstract class Controller {
 			$signature = Cookie::Get(UserLoginFormModel::LOGIN_COOKIE);
 			if (!empty($signature)) {
 				global $config;
-				$user_cookie_dao = new UserCookieDAO(new DB($config->db['sys']));
+				$user_cookie_dao = new UserCookieDAO(new DB($config->db));
 				$user_cookie_dao->read(array('signature' => $signature));
 				$user_id = $user_cookie_dao->user_id;
 				if (!empty($user_id)){

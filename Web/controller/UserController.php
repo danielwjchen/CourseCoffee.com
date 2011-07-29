@@ -44,19 +44,37 @@ class UserController extends Controller implements ControllerInterface {
 	 * Register a new user
 	 */
 	public function registerUser() {
-		$token    = Input::Post('token');
-		$email    = Input::Post('email', FILTER_SANITIZE_EMAIL);
-		$password = Input::Post('password');
-		$confirm  = Input::Post('confirm');
+		$first_name = Input::Post('first-name');
+		$last_name  = Input::Post('last-name');
+		$school     = Input::Post('school');
+		$fb_uid     = Input::Post('fb_uid');
+		$token      = Input::Post('token');
+		$email      = Input::Post('email', FILTER_SANITIZE_EMAIL);
+		$password   = Input::Post('password');
+		$confirm    = Input::Post('confirm');
 
 		$user_register_form = new UserRegisterFormModel();
 
 		$result = $user_register_form->processForm(
+			$first_name,
+			$last_name,
+			$school,
+			$fb_uid,
 			$email, 
 			$password, 
 			$confirm, 
 			$token
 		);
+		// if a user_id is generated, that means we have a new user and we start a 
+		// nwe user session
+		if (isset($result['user_id'])) {
+			$user_login = new UserLoginFormModel();
+			$user_login->startUserSession(
+				$result['user_id'], 
+				$result['email'], 
+				$result['password']
+			);
+		}
 		$json = new JSONView($result);
 		echo $json->render();
 	}

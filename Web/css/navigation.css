@@ -18,7 +18,7 @@
 #navigation-menu li.active{
 	background: url('../images/plus.png') 12px 15px no-repeat;
 }
-#navigation-menu li a{
+#navigation-menu .button{
 	color: white;
 	font-size: 18px;
 	line-height: 18px;
@@ -28,7 +28,7 @@
 	padding: 8px 12px;
 	display: block;
 }
-#navigation-menu a:hover{
+#navigation-menu .button:hover{
 	background: #5c5c5c;
 	border-radius: 8px;
 	-moz-box-shadow: 2px 2px #444444;

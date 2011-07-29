@@ -8,6 +8,15 @@ window.doc = {
 	'init' : function() {
 		var form = $('#doc-upload-form-skeleton').clone();
 		form.attr('id', 'doc-upload-form');
+		$.ajax({
+			url: '?q=doc-init',
+			type: 'POST',
+			success: function(response) {
+				if (response.token) {
+					$('input[name=token]', form).attr('value', response.token);
+				} 
+			}
+		});
 		content = '<h2>Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)</h2>';
 		dialog.open('upload', content);
 		form.appendTo('.dialog-inner');

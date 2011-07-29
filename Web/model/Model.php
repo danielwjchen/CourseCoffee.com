@@ -14,15 +14,13 @@ abstract class Model {
 	/**
 	 * Manage database access
 	 */
-	protected $sys_db;
-	protected $core_db;
+	protected $db;
 
 	/**
 	 * Construct the model object
 	 */
 	function __construct() {
 		global $config;
-		$this->sys_db = new DB($config->db['sys']);
-		$this->core_db = new DB($config->db['core']);
+		$this->db = new DB($config->db);
 	}
 }

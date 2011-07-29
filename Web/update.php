@@ -24,11 +24,11 @@ foreach ($dbas as $path => $dba) {
 /**
  * Rebuild paths for autoloading
  */
-Autoload::Init($config->db['sys']);
+Autoload::Init($config->db);
 Autoload::Build();
 
 /**
  * Rebuild URI maps for routing
  */
-Router::Init($config->db['sys']);
+Router::Init($config->db);
 Router::Build();
