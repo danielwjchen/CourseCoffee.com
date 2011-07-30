@@ -83,7 +83,9 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getCalendarPage() {
 		$this->redirectUnknownUser();
-		$this->page = new CalendarPageView();
+		$this->page = new CalendarPageView(array(
+			'timestamp' => time(),
+		));
 	}
 
 	/**

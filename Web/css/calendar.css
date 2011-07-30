@@ -1,41 +1,70 @@
 /**
  * @file
- * Define styles for calendar body
+ * Define styles for calendar page
  */
-.calendar .panel-top{
-	position: absolute;
-	top: -35px;
-	left: 25px;
+.calendar .panel-01,
+.calendar .panel-02{
+	padding-bottom: 50px;
 }
-.calendar .panel-top .panel-inner{
-	position: relative;
+.calendar .single-day.calendar-display{
+	width: 100%;
+	float; left;
 }
-.calendar ul.calendar-list,
-.calendar ul.calendar-list li{
-	list-style: none;
+.calendar .calendar-display .row{
+	float; left;
+	height: 49px;
+	clear: both;
+	border-bottom: 1px solid #DBE1E6;
+	overflow: hidden;
 }
-.calendar ul.calendar-list{
-	width: 800px;
+.calendar .calendar-display .col.odd,
+.calendar .calendar-display .row.odd{
+	background: none repeat scroll 0 0 #E0F8E0;
 }
-.calendar ul.calendar-list li{
+/**
+ * Define styles for the hour interval colunn
+ */
+.calendar .calendar-display .hour-interval{
+	margin-top: 19px;
+	border-top: 1px solid #DBE1E6;
+}
+.calendar .calendar-display .hour-interval .row{
+	width: 30px;
+}
+.calendar .calendar-display .hour-notation{
+	font-size: 10px;
+	margin-right: 3px;
+	text-align: right;
+}
+/**
+ * Define styles for day interval columns
+ */
+.calendar .calendar-display .day-interval .label{
+	height: 19px;
+	text-align: center;
+}
+.calendar .calendar-display .day-interval .row{
+	border-left: 1px solid #DBE1E6;
+}
+.calendar .calendar-display .col{
 	float: left;
-	padding: 2px 10px;
-	margin: 0 5px;
+}
+/**
+ * Define styles for month calendar
+ */
+.calendar .month .month-label {
+	text-align: center;
+	font-size: 14px;
 	font-weight: bold;
-	font-size: 18px;
-	color: #fefefe;
-	text-shadow: 0 0 4px #787474;
-	-moz-text-shadow: 0 0 4px #787474;
-	-webkit-text-shadow: 0 0 4px #787474;
 }
-.calendar ul.calendar-list li.active{
-	color: #333333;
-	float: left;
-	background: #fefefe;
-	border: solid #fefefe;
-	border: 1px 1px 0 1px;
-	border-radius: 8px 8px 0 0;
-	text-shadow: 0 0 2px #787474;
-	-moz-text-shadow: 0 0 2px #787474;
-	-webkit-text-shadow: 0 0 2px #787474;
+.calendar .month .col{
+	width: 64px;
+	height: 49px;
+	text-align: center;
+	border-right: 1px solid #DBE1E6;
+}
+.calendar .month .week-day-interval{
+	height: 20px;
+	font-size: 10px;
+	font-weight: bold;
 }

@@ -1,0 +1,57 @@
+/**
+ * @file
+ * Define styles for calendar and class pages which utilize panels to display
+ * information
+ */
+.panel-menu{
+	position: absolute;
+	top: -32px;
+	left: 25px;
+}
+.panel-menu .panel-menu-inner{
+	position: relative;
+}
+.panel-menu ul,
+.panel-meu ul li{
+	list-style: none;
+}
+.panel-menu ul{
+	width: 960px;
+	float: left;
+}
+.panel-menu li{
+}
+.panel-menu ul li a{
+	float: left;
+	padding: 2px 10px;
+	margin: 0 5px;
+	font-weight: bold;
+	font-size: 18px;
+	text-decoration: none;
+	color: #fefefe;
+	text-shadow: 0 0 4px #787474;
+	-moz-text-shadow: 0 0 4px #787474;
+	-webkit-text-shadow: 0 0 4px #787474;
+}
+.panel-menu ul li a:hover{
+	text-shadow: 0 0 1px #fefefe;
+	-moz-text-shadow: 0 0 1px #fefefe;
+	-webkit-text-shadow: 0 0 1px #fefefe;
+}
+.panel-menu ul li a.active{
+	color: #333333;
+	background: #fefefe;
+	border: solid #fefefe;
+	border: 1px 1px 0 1px;
+	top: -1px;
+	padding: 0 8px 4px;
+	border-radius: 8px 8px 0 0;
+	text-shadow: 0 0 1px #787474;
+	-moz-text-shadow: 0 0 1px #787474;
+	-webkit-text-shadow: 0 0 1px #787474;
+}
+.panel-menu ul li a.active:hover{
+	text-shadow: 0 0 3px #787474;
+	-moz-text-shadow: 0 0 3px #787474;
+	-webkit-text-shadow: 0 0 3px #787474;
+}

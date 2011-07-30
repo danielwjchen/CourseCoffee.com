@@ -12,8 +12,10 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		parent::__construct($content);
 		$this->setPageTitle('calendar');
 		$this->addJS('model/logout.js');
+		$this->addJS('model/calendar.js');
 		$this->addJS('controller/calendar.js');
 		$this->addJS('controller/navigation.js');
+		$this->addCSS('panel.css');
 		$this->addCSS('calendar.css');
 	}
 
@@ -53,7 +55,32 @@ class CalendarPageView extends PageView implements PageViewInterface {
 			</div>
 			<div class="calendar body">
 				<div class="body-inner">
-					{$body['block']}
+					<div class="content">
+						<div class="calendar panel-menu">
+							<div class="panel-menu-inner">
+								<form name="calendar-option" id="calendar-option-menu">
+									<input type="hidden" name="type" value="today" />
+									<input type="hidden" name="timestamp" value="{$timestamp}" />
+								</form>
+								<ul>
+									<li><a href="#" class="option today active">today</a></li>
+									<li><a href="#" class="option customized">4-day</a></li>
+									<li><a href="#" class="option week">week</a></li>
+									<li><a href="#" class="option month">month</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="panel-01">
+							<div class="panel-inner">
+								<div class="calendar-display">
+								</div>
+							</div>
+						</div>
+						<div class="panel-02">
+							<div class="panel-inner">
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
