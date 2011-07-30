@@ -1,29 +1,72 @@
 == README v0.2 ==
-To install an environment, 
+This document explains how everything works. If you are new to this project,
+you really should read this, with caution and care.
+
+== Coding Conventions ==
+1. file names
+    - there shall be no space, number, hyphen, or any character other than 
+		  those in the alphabet. The first letter letter in every word shall be
+			capitalized, including the first work, e.g. UserDao.php, UserModel.php.
+2. Special words
+    - words such as 'Controller', 'Modell', 'View' are reserved by the system,
+		  this also includes the obvious.
 
 == Install ==
-1. Copy the ./default.config.php and rename it ./config.php
-2. Change the values to your configuration
-3. Run ./install.php 
-4. Change the permission to /files to public writable to allow uploads
+To install an environment, follow the instructions below.
+
+1. Create a mysql database.
+2. Copy the ./default.config.php and rename it ./config.php
+3. Change the values to your configuration
+4. Run ./install.php 
+5. Change the permission to /files to public writable to allow uploads
 
 == Structure ==
+This system organizes itself by files. Follow the convention carefully.
+
  - includes/
-   core files of the system. handles important 
+		core files of the system. handles important functions such as caching, 
+		database abstraction, file administration, e.t.c.
+
  - dao/
+   implementation of DAO pattern.
+
  - dba/
+   store extensions to the DBA system to keep a record of database schemas and 
+	 fix-up scripts.
+
  - model/
+ 	 implementations of the Model component in the MVC architecture
+
  - view/
+ 	 implementations of the View component in the MVC architecture
+
  - controller/
+ 	 implementations of the Controller component in the MVC architecture
+
  - files/
    default directory for uploaded files
+
+ - js/
+ 	 stores the JavaScript component of the system
+
+ - css/ 
+   stores the CSS stylesheets to give the webiste a unique design
+
+ - image/
+ 	 store images used in the system to give the webiste a unique design
+
  - libs/
    third party libraries, e.g. facebook, Google.
+
  - index.php
    this script is responsible for handle requests from the interweb.
+
  - update.php
    this script re-compiles file path for file inclusion and URL mapping. It 
 	 needs to be run everytime where there is a change in file path or path mapping.
+
  - install.php
    this script populates the database and must be run to install a environment.
-
+ 
+ - .htaccess
+ 	 the apache configuration file. it uses rewrite rules to enable clean-url.
