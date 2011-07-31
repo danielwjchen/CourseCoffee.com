@@ -3,9 +3,7 @@
  * Handle event inputs on /home and lazy load contents to reduce load time
  */
 $P.ready(function() {
-	/**
-	 * Initilize the date-time selector
-	 */
+	// Initilize the date-time selector
 	$('#time-picker').datetime({  
 		duration: '15',  
 		showTime: true,  
@@ -15,17 +13,18 @@ $P.ready(function() {
 		time24h: false  
 	});  
 
-	/**
-	 * Load tasks
-	 */
+	// Load tasks
 	task.init();
 	var userTaskOption = $('#user-list-task-option');
 	var agendaPanel = $('.panel-01 .panel-inner');
 	task.getTaskBelongToUser(userTaskOption, agendaPanel);
-	blurInput(body);
+
+	// toggle task creation form
 	$('input.objective').live('click', function(e) {
 		$('.additional').removeClass('hidden');
 	});
+	blurInput(body);
+
 	body.delegate('a.button', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);

@@ -15,3 +15,7 @@
 .task ul li{
 	margin-bottom: 15px;
 }
+.task .due_date{
+	color: #777777;
+	text-align: right;
+}

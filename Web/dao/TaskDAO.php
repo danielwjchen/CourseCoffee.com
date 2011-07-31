@@ -113,6 +113,8 @@ class TaskDAO extends DAO implements DAOInterface{
 			$sql .= "LIMIT {$params['offset']}, {$params['count']}";
 		}
 
+		$sql .= "ORDER BY due_date DESC";
+
 		$data = array();
 
 		// get a particular item

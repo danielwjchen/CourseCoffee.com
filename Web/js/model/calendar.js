@@ -5,10 +5,18 @@
 window.calendar = {
 	'init' : function(type, timestamp) {
 		switch (type) {
+			case 'this month':
+				calendar.getMonthCalendar(timestamp);
+				break;
+			case 'this week':
+				calendar.getDayCalendar(timestamp, 7);
+				break;
+			default:
 			case 'today':
 				calendar.getDayCalendar(timestamp, 1);
 				break;
 		}
+		calendar.update();
 	},
 	/**
 	 * Get the calendar using day as an interval
@@ -20,19 +28,27 @@ window.calendar = {
 	 */
 	'getDayCalendar' : function(timestamp, number) {
 		range = calendar.calculateDayRange(timestamp, number);
-		data = calendar.update();
-		calendar.displayDay(range, data);
+		calendar.displayDay(range);
 	},
 	/**
-	 * Get the calendar for a month
+	 * Get the calendar using week as an interval
 	 *
 	 * @param string timestamp
 	 *  UNIX timestamp
 	 */
-	'getMonth' : function(timestamp) {
+	'getWeekCalendar' : function(timestamp) {
+		range = calendar.calculateWeekRange(timestamp);
+		calendar.displayDay(range);
+	},
+	/**
+	 * Get the calendar using month as an interval
+	 *
+	 * @param string timestamp
+	 *  UNIX timestamp
+	 */
+	'getMonthCalendar' : function(timestamp) {
 		range = calendar.calculateMonthRange(timestamp);
-		data = calendar.update();
-		calendar.displayMonth(range, data);
+		calendar.displayMonth(range);
 	},
 	/**
 	 * Convert a data object to UNIX timestamp
@@ -69,6 +85,27 @@ window.calendar = {
 		return range;
 	},
 	/**
+	 * Caluculate the beginning and ending UNIX timestamps for a given week range
+	 *
+	 * @param string timestamp
+	 *  UNIX timestamp of the beginning date
+	 *
+	 * @return object
+	 *  an object with two UNIX timestamps as attributes
+	 *   - begin
+	 *   - end
+	 */
+	'calculateWeekRange' : function(timestamp) {
+		var date  = new Date(timestamp * 1000);
+		var range = {};
+		date.setHours(0, 0, 0, 0);
+		date.setTime(date.getTime() - ((date.getDay() * 86400) * 1000));
+		range.begin = calendar.toTimestamp(date);
+		date.setTime(date.getTime() + 7 *86400 * 1000);
+		range.end = calendar.toTimestamp(date);
+		return range;
+	},
+	/**
 	 * Caluculate the beginning and ending UNIX timestamps for a given moneth range
 	 *
 	 * @param string timestamp
@@ -99,22 +136,21 @@ window.calendar = {
 		return range;
 	},
 	'update' : function() {
+		console.log(task.list);
 	},
 	/**
-	 * Display calendar for multiple days
+	 * Display calendar in day interval
 	 *
 	 * @param object range
 	 *  an object with two UNIX timestamps as attributes
 	 *   - begin
 	 *   - end
-	 * @param object data
-	 *  a list of events to be listed on the calendar
 	 */
-	'displayDay': function(range, data) {
+	'displayDay': function(range) {
 		var date = new Date();
 		var currentMonth = '';
 		var currentDate  = '';
-		var html = '<div class="calendar-display-inner">' +
+		var html = '<div class="day calendar-display-inner">' +
 			'<div class="col hour-interval">';
 		for (i = 0; i < 24; i++) {
 			notation = (i < 12) ? ' am' : ' pm'; 
@@ -133,7 +169,7 @@ window.calendar = {
 			'</div>';
 			for (var j = i; j < i + 86400; j += 3600) {
 				rowType = ((j / 3600) % 2 == 0) ? 'even' : 'odd';
-				html += '<div class="row ' + rowType + ' event"></div>';
+				html += '<div id="'+ j + '.' + (j + 3600) + '" class="row ' + rowType + ' event"></div>';
 			}
 			html += '</div>';
 		}
@@ -146,16 +182,14 @@ window.calendar = {
 		$('.calendar-display .day-interval .row').width(rowWidth);
 	},
 	/**
-	 * Display calendar for multiple months
+	 * Display calendar in month interval
 	 *
 	 * @param object range
 	 *  an object with two UNIX timestamps as attributes
 	 *   - begin
 	 *   - end
-	 * @param object data
-	 *  a list of events to be listed on the calendar
 	 */
-	'displayMonth' : function(range, data) {
+	'displayMonth' : function(range) {
 		var weekArray  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 		var monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'];
 		var html = '<div class="month calendar-display-inner">' + 
@@ -183,7 +217,9 @@ window.calendar = {
 		for (var k = range.begin; k <= range.end; k += 86400) {
 			curDate = new Date(k * 1000);
 			colType = (curDate.getDate() % 2 == 0) ? 'even' : 'odd';
-			html += '<div class="day col ' + colType + '"></div>';
+			html += '<div id="' + k + '.' + (k + 86400) + '" class="day col ' + colType + '">' + 
+				'<span class="day-label">' + curDate.getDate() + '</span>' + 
+			'</div>';
 			html += curDate.getDay() == 6 ? '</div><div class="week row">' : '';
 		}
 

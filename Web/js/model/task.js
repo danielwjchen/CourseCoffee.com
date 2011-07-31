@@ -99,6 +99,8 @@ window.task = {
 				if (response.success) {
 					var html = '';
 
+					task.list = response.list;
+
 					// if user has nothing to do
 					if (response.list == null) {
 						html = "<div class='task'>" + 

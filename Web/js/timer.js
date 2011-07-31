@@ -20,24 +20,41 @@ $.fn.translateTime = function() {
 			return '';
 		}
 	}
+	/**
+	 * Set the message
+	 *
+	 * @param string
+	 */
+	setMessage = function(region, string) {
+		currTimestamp  = Math.floor(currentDate.getTime() / 1000);
+		dueTimestamp = parseInt($(this).attr('id'));
+		message = dueTimestamp >= currTimestamp ? 'due in %s ' : 'was due %s ago';
+		message = message.replace(/%s\s/, string);
+		$(region).text(message);
+	}
+
+	// time offsets
+	var yearOffset   = 365*24*60*60;
+	var monthOffset  = 30*24*60*60;
+	var weekOffset   = 7*24*60*60;
+	var dayOffset    = 24*60*60;
+	var hourOffset   = 60*60;
+	var minuteOffset = 60;
 
 	var currentDate = new Date()
 	var currTimestamp  = Math.floor(currentDate.getTime() / 1000);
-	var yearOffset = 365*24*60*60;
-	var monthOffset = 30*24*60*60;
-	var weekOffset = 7*24*60*60;
-	var dayOffset = 24*60*60;
-	var hourOffset = 60*60;
-	var minuteOffset = 60;
 	var dueTimestamp = parseInt($(this).attr('id'));
 	var timeDiff = Math.abs(dueTimestamp - currTimestamp);
-	var message = dueTimestamp >= currTimestamp ? 'due in %s ' : 'was due %s ago';
 	var string = '';
 
 	var offsetCount = 0;
 	offsetCount = calCount(yearOffset, timeDiff);
 	string = string + calOffset(offsetCount, 'year');
 	timeDiff = timeDiff  - offsetCount * yearOffset;
+	if (string != '') {
+		setMessage(this, string);
+		return ;
+	}
 
 	offsetCount = calCount(monthOffset, timeDiff);
 	string = string + calOffset(offsetCount, 'month');
@@ -46,6 +63,10 @@ $.fn.translateTime = function() {
 	offsetCount = calCount(weekOffset, timeDiff);
 	string = string + calOffset(offsetCount, 'week');
 	timeDiff = timeDiff  - offsetCount * weekOffset;
+	if (string != '') {
+		setMessage(this, string);
+		return ;
+	}
 
 	offsetCount = calCount(dayOffset, timeDiff);
 	string = string + calOffset(offsetCount, 'day');
@@ -63,6 +84,7 @@ $.fn.translateTime = function() {
 		string = 'less than a minute';
 	}
 
-	message = message.replace(/%s\s/, string);
-	$(this).text(message);
+	setMessage(this, string);
+	return ;
+
 };
