@@ -20,15 +20,17 @@ $.fn.translateTime = function() {
 			return '';
 		}
 	}
+
 	/**
 	 * Set the message
 	 *
+	 * @param region
 	 * @param string
 	 */
 	setMessage = function(region, string) {
-		currTimestamp  = Math.floor(currentDate.getTime() / 1000);
-		dueTimestamp = parseInt($(this).attr('id'));
-		message = dueTimestamp >= currTimestamp ? 'due in %s ' : 'was due %s ago';
+		currTimestamp  = Math.floor((new Date()).getTime() / 1000);
+		dueTimestamp = parseInt($(region).attr('id'));
+		message = dueTimestamp >= currTimestamp ? 'due in over %s ' : 'was due over %s ago';
 		message = message.replace(/%s\s/, string);
 		$(region).text(message);
 	}
@@ -46,6 +48,7 @@ $.fn.translateTime = function() {
 	var dueTimestamp = parseInt($(this).attr('id'));
 	var timeDiff = Math.abs(dueTimestamp - currTimestamp);
 	var string = '';
+		
 
 	var offsetCount = 0;
 	offsetCount = calCount(yearOffset, timeDiff);
@@ -70,15 +73,19 @@ $.fn.translateTime = function() {
 
 	offsetCount = calCount(dayOffset, timeDiff);
 	string = string + calOffset(offsetCount, 'day');
-	timeDiff = timeDiff  - offsetCount * dayOffset;
+	timeDiff = timeDiff - offsetCount * dayOffset;
+	if (string != '') {
+		setMessage(this, string);
+		return ;
+	}
 
 	offsetCount = calCount(hourOffset, timeDiff);
 	string = string + calOffset(offsetCount, 'hour');
-	timeDiff = timeDiff  - offsetCount * hourOffset;
+	timeDiff = timeDiff - offsetCount * hourOffset;
 
 	offsetCount = calCount(minuteOffset, timeDiff);
 	string = string + calOffset(offsetCount, 'minute');
-	timeDiff = timeDiff  - offsetCount * minuteOffset;
+	timeDiff = timeDiff - offsetCount * minuteOffset;
 	
 	if (string == '') {
 		string = 'less than a minute';

@@ -265,3 +265,11 @@ dt{
 .footer-inner{
 	width: 100%;
 }
+
+/**
+ * Define style for day-time selector
+ */
+.ui-datetime{
+	font-size: 10px;
+	top: 30px;
+}

@@ -162,7 +162,6 @@
 	float; left;
 	height: 49px;
 	clear: both;
-	border-bottom: 1px solid #DBE1E6;
 	overflow: hidden;
 }
 .calendar .calendar-display .col{
@@ -172,9 +171,16 @@
 .calendar .calendar-display .row.odd{
 	background: none repeat scroll 0 0 #E0F8E0;
 }
+.calendar .calendar-display .event{
+	float: right;
+	font-size: 10px;
+}
 /**
  * Define styles for day calendar
  */
+.calendar .day .row{
+	border-bottom: 1px solid #DBE1E6;
+}
 .calendar .day .hour-interval{
 	margin-top: 19px;
 	border-top: 1px solid #DBE1E6;
@@ -183,7 +189,7 @@
 	width: 30px;
 }
 .calendar .day .hour-notation{
-	font-size: 10px;
+	font-size: 8px;
 	margin-right: 3px;
 	text-align: right;
 }
@@ -204,11 +210,21 @@
 	font-size: 14px;
 	font-weight: bold;
 }
+.calendar .month .label.col{
+	height: 19px;
+}
+.calendar .month .week-day-interval.row {
+	height: 20px;
+}
+.calendar .month .row {
+	height: 50px;
+}
 .calendar .month .col{
 	width: 64px;
 	height: 49px;
 	text-align: center;
 	border-right: 1px solid #DBE1E6;
+	border-bottom: 1px solid #DBE1E6;
 }
 .calendar .month .day-label {
 	float: left;
@@ -220,6 +236,12 @@
 	font-size: 10px;
 	font-weight: bold;
 }
+.calendar .month .has-event {
+	background: #F8DA94!important;
+}
+.calendar .month .event {
+	text-align: right;
+}
 
 /**
  * Define styles for task list
@@ -228,3 +250,4 @@
 	clear: both;
 	width: 459px;
 }
+

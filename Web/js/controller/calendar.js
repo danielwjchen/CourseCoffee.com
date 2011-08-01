@@ -1,6 +1,11 @@
 /**
  * @file
  * Handle event inputs on /calendar and lazy load contents to reduce load time
+ *
+ * @see js/model/task.js
+ * @see js/model/calendar.js
+ * @see js/model/doc.js
+ *
  */
 $P.ready(function() {
 	panelMenu = $('.panel-menu');
@@ -9,7 +14,6 @@ $P.ready(function() {
 	task.init();
 	var userTaskOption = $('#user-list-task-option');
 	var agendaPanel = $('.panel-02 .panel-inner .task-list');
-	task.getTaskBelongToUser(userTaskOption, agendaPanel);
 
 	// Initialize calendars
 	timestamp = $('input[name=timestamp]', panelMenu).val();
@@ -24,21 +28,26 @@ $P.ready(function() {
 		target.addClass('active');
 
 		if (target.hasClass('today')) {
-			calendar.getDayCalendar(timestamp, 1);
+			range = calendar.getDayCalendar(timestamp, 1);
+			calendar.setCalendarOption(range);
+			calendar.populate();
 
 		} else if (target.hasClass('customized')) {
 			// we might have customizable calendar view in the future, but for now 
 			// it's hard-coded to 4
-			calendar.getDayCalendar(timestamp, 4);
-			calendar.update();
+			range = calendar.getDayCalendar(timestamp, 4);
+			calendar.setCalendarOption(range);
+			calendar.populate();
 
 		} else if (target.hasClass('week')) {
-			calendar.getWeekCalendar(timestamp);
-			calendar.update();
+			range = calendar.getWeekCalendar(timestamp);
+			calendar.setCalendarOption(range);
+			calendar.populate();
 
 		} else if (target.hasClass('month')) {
-			calendar.getMonthCalendar(timestamp);
-			calendar.update();
+			range = calendar.getMonthCalendar(timestamp);
+			calendar.setCalendarOption(range);
+			calendar.populate();
 		}
 
 	});
@@ -78,7 +87,7 @@ $P.ready(function() {
 			doc.init();
 		} else if (target.hasClass('submit')) {
 			task.submit();
-			task.getTaskBelongToUser(userTaskOption, agendaPanel);
+			setTimeout("calendar.populate()", 2000);
 
 		}
 	});

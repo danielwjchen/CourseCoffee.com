@@ -97,6 +97,7 @@ class TaskDAO extends DAO implements DAOInterface{
 			FROM quest q
 			INNER JOIN quest_type qt
 				ON q.type_id = qt.id
+				AND qt.name = :type_name
 			INNER JOIN quest_date_linkage qd_linkage
 				ON qd_linkage.quest_id = q.id
 			INNER JOIN date qd
@@ -113,14 +114,17 @@ class TaskDAO extends DAO implements DAOInterface{
 			$sql .= "LIMIT {$params['offset']}, {$params['count']}";
 		}
 
-		$sql .= "ORDER BY due_date DESC";
+		$sql .= "ORDER BY due_date ASC";
 
 		$data = array();
 
 		// get a particular item
 		if (isset($params['id'])) {
 			$sql = sprintf($sql, "WHERE q.id = :id");
-			$data = $this->db->fetch($sql, array('id' => $params['id']));
+			$data = $this->db->fetch($sql, array(
+				'id' => $params['id'],
+				'type_name' => QuestType::TASK,
+			));
 			return $this->updateAttribute($data);
 
 		// get tasks in arange
@@ -130,16 +134,18 @@ class TaskDAO extends DAO implements DAOInterface{
 				isset($params['range']['begin_date']) && 
 				isset($params['range']['end_date'])) 
 			{
+				error_log( $params['range']['end_date']);
 				$where_clause = "
 					WHERE q.user_id = :user_id
-					AND qd.timestamp >= : begin_date
-					AND qd.timestamp <= :end_date
+						AND qd.timestamp >= :begin_date
+						AND qd.timestamp <= :end_date
 				";
 				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['user_id'],
 					'begin_date' => $params['range']['begin_date'],
 					'end_date' => $params['range']['end_date'],
+					'type_name' => QuestType::TASK,
 				));
 			// all tasks due before
 			} elseif (isset($params['range']['end_date'])) {
@@ -151,6 +157,7 @@ class TaskDAO extends DAO implements DAOInterface{
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['range']['user_id'],
 					'end_date' => $params['range']['end_date'],
+					'type_name' => QuestType::TASK,
 				));
 			// all tasks due after
 			} elseif (isset($params['range']['begin_date'])) {
@@ -162,6 +169,7 @@ class TaskDAO extends DAO implements DAOInterface{
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['user_id'],
 					'begin_date' => $params['begin_date'],
+					'type_name' => QuestType::TASK,
 				));
 			} else {
 				throw new Exception("unknown task identifier - " . print_r($params, true));
@@ -173,11 +181,13 @@ class TaskDAO extends DAO implements DAOInterface{
 				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['user_id'],
+					'type_name' => QuestType::TASK,
 				));
 		} else {
 			throw new Exception("unknown task identifier - " . print_r($params, true));
 
 		}
+		error_log(print_r($params['range'], true));
 
 		$this->list = $data;
 		return empty($data);

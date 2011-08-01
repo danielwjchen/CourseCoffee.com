@@ -1,22 +1,48 @@
 /**
  * @file
  * Create calendar of events
+ *
+ * @see js/model/taskjs
  */
 window.calendar = {
 	'init' : function(type, timestamp) {
+
+		/**
+		 * a helper/private function to save range to calendar option
+		 *
+		 * @param object range
+		 */
+		saveCalendarRange = function(range) {
+			$('input[name=begin]', calendar.option).val(range.begin);
+			$('input[name=end]', calendar.option).val(range.end);
+		};
+
 		switch (type) {
 			case 'this month':
-				calendar.getMonthCalendar(timestamp);
+				calendar.range = calendar.getMonthCalendar(timestamp);
+				calendar.type  = 'month';
 				break;
 			case 'this week':
-				calendar.getDayCalendar(timestamp, 7);
+				calendar.range = calendar.getDayCalendar(timestamp, 7);
+				calendar.type  = 'day';
 				break;
 			default:
 			case 'today':
-				calendar.getDayCalendar(timestamp, 1);
+				calendar.range = calendar.getDayCalendar(timestamp, 1);
+				calendar.type  = 'day';
 				break;
 		}
-		calendar.update();
+		calendar.option = $('#calendar-option-menu');
+		saveCalendarRange(calendar.range);
+		calendar.taskPanel = $('.panel-02 .panel-inner .task-list');
+		calendar.populate();
+	},
+	/**
+	 * Set the calendar options
+	 */
+	'setCalendarOption' : function(range) {
+		$('input[name=begin]', calendar.option).val(range.begin);
+		$('input[name=end]', calendar.option).val(range.end);
 	},
 	/**
 	 * Get the calendar using day as an interval
@@ -25,30 +51,42 @@ window.calendar = {
 	 *  UNIX timestamp
 	 * @param string number
 	 *  number of days
+	 *
+	 * @return object range
 	 */
 	'getDayCalendar' : function(timestamp, number) {
 		range = calendar.calculateDayRange(timestamp, number);
+		calendar.type  = 'day';
 		calendar.displayDay(range);
+		return range;
 	},
 	/**
 	 * Get the calendar using week as an interval
 	 *
 	 * @param string timestamp
 	 *  UNIX timestamp
+	 *
+	 * @return object range
 	 */
 	'getWeekCalendar' : function(timestamp) {
 		range = calendar.calculateWeekRange(timestamp);
+		calendar.type  = 'day';
 		calendar.displayDay(range);
+		return range;
 	},
 	/**
 	 * Get the calendar using month as an interval
 	 *
 	 * @param string timestamp
 	 *  UNIX timestamp
+	 *
+	 * @return object range
 	 */
 	'getMonthCalendar' : function(timestamp) {
 		range = calendar.calculateMonthRange(timestamp);
+		calendar.type  = 'month';
 		calendar.displayMonth(range);
+		return range;
 	},
 	/**
 	 * Convert a data object to UNIX timestamp
@@ -135,8 +173,59 @@ window.calendar = {
 		range.end  = calendar.toTimestamp(new Date(date.getFullYear(), date.getMonth(), 0));
 		return range;
 	},
-	'update' : function() {
-		console.log(task.list);
+	/**
+	 * Populate task list and calendar
+	 *
+	 * It also clears out the timeslot before populating it.
+	 */
+	'populate' : function() {
+		/**
+		 * Wrap event in a <span>
+		 */
+		wrap = function(text) {
+			return '<span class="event">' + text + '</span>';
+		}
+		/**
+		 * A hash function to map a event to a timeslot on the calendar.
+		 */
+		findTimeInterval = function(item) {
+			date = new Date(item['due_date'] * 1000);
+			date.setMinutes(0, 0, 0);
+			if (calendar.type == 'day') {
+				begin = date.getTime() / 1000;
+				end = (date.setHours(date.getHours() + 1))/ 1000;
+			} else if (calendar.type == 'month') {
+				date.setHours(0, 0, 0, 0);
+				begin = date.getTime() / 1000;
+				end = (date.setTime(date.getTime() + 86400000))/ 1000;
+			}
+			// JQuery is having trouble selecting newly created elements, that's why
+			console.log(begin + '.' + end);
+			timeslot = $(document.getElementById(begin + '.' + end), $('.calendar-display'));
+			timeslot.html('');
+			timeslot.html(timeslot.html() + wrap(item['objective']));
+			timeslot.addClass('has-event');
+		};
+
+		$.ajax({
+			url: '?q=calendar-list-task',
+			type: 'POST',
+			cache: false,
+			data: calendar.option.serialize(),
+			success: function(response) {
+				if (response.success) {
+					task.generateList(response.list, calendar.taskPanel);
+					if (response.list['id'] != undefined) {
+						findTimeInterval(response.list);
+					} else {
+						for (i in response.list) {
+							findTimeInterval(response.list[i]);
+
+						}
+					}
+				}
+			}
+		});
 	},
 	/**
 	 * Display calendar in day interval

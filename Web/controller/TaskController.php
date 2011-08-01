@@ -111,7 +111,7 @@ class TaskController extends Controller implements ControllerInterface {
 	public function getTaskBelongToUser() {
 		$user_id = Session::Get('user_id');
 		$list_model = new TaskListModel();
-		$result = $list_model->fetchList($user_id);
+		$result = $list_model->fetchUserList($user_id);
 		$this->json = new JSONView($result);
 	}
 
@@ -124,7 +124,14 @@ class TaskController extends Controller implements ControllerInterface {
 	/**
 	 * Get task belong to a time period
 	 */
-	public function getTaskkBelongToDate() {
+	public function getTaskBelongToDate() {
+		$user_id  = Session::Get('user_id');
+		$begin    = Input::Post('begin');
+		$end      = Input::Post('end');
+		$paginate = Input::Post('paginate');
+		$list_model = new TaskListModel();
+		$result = $list_model->fetchCalendarList($user_id, $begin, $end);
+		$this->json = new JSONView($result);
 	}
 
 }

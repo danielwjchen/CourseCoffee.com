@@ -97,46 +97,53 @@ window.task = {
 			data: formData,
 			success: function(response) {
 				if (response.success) {
-					var html = '';
-
-					task.list = response.list;
-
-					// if user has nothing to do
-					if (response.list == null) {
-						html = "<div class='task'>" + 
-							"<div class='task-inner'>" + 
-								"<h3 class='no-task'>hmmm..... you don't have anything to do at the moment. hooray?</h3>" + 
-							"</div>" + 
-						"</div>";
-					} else {
-						html = "<div class='task'><div class='task-inner'><ul>";
-						// if there is only one single item.
-						if (response.list['id'] != undefined) {
-							html += task.getListItem(response.list['objective'], 
-								response.list['due_date'],
-								response.list['location'],
-								response.list['description']
-							);
-						} else {
-							for (i in response.list) {
-								html += task.getListItem(response.list[i]['objective'], 
-									response.list[i]['due_date'],
-									response.list[i]['location'],
-									response.list[i]['description']
-								);
-									
-								html += "</dl></li>";
-							}
-						}
-
-						html += "</ul></div></div>";
-					}
-					region.html(html);
-					$('.count-down', region).each(function(i) {
-						$(this).translateTime();
-					});
+					task.generateList(response.list, region);
 				}
 			}
+		});
+	},
+	/**
+	 * Generate a list of task
+	 *
+	 * @param object list
+	 *  a JSON list retrieved from the server
+	 * @param region
+	 *  a region to update the content
+	 */
+	'generateList' : function(list, region) {
+		// if user has nothing to do
+		if (list == null) {
+			html = "<div class='task'>" + 
+				"<div class='task-inner'>" + 
+					"<h3 class='no-task'>hmmm..... you don't have anything to do at the moment. hooray?</h3>" + 
+				"</div>" + 
+			"</div>";
+		} else {
+			html = "<div class='task'><div class='task-inner'><ul>";
+			// if there is only one single item.
+			if (list['id'] != undefined) {
+				html += task.getListItem(list['objective'], 
+					list['due_date'],
+					list['location'],
+					list['description']
+				);
+			} else {
+				for (i in list) {
+					html += task.getListItem(list[i]['objective'], 
+						list[i]['due_date'],
+						list[i]['location'],
+						list[i]['description']
+					);
+						
+					html += "</dl></li>";
+				}
+			}
+
+			html += "</ul></div></div>";
+		}
+		region.html(html);
+		$('.count-down', region).each(function(i) {
+			$(this).translateTime();
 		});
 	},
 	/**

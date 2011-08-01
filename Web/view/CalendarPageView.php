@@ -71,6 +71,8 @@ class CalendarPageView extends PageView implements PageViewInterface {
 								<form name="calendar-option" id="calendar-option-menu">
 									<input type="hidden" name="type" value="today" />
 									<input type="hidden" name="timestamp" value="{$timestamp}" />
+									<input type="hidden" name="begin" />
+									<input type="hidden" name="end" />
 								</form>
 								<ul>
 									<li><a href="#" class="option today active">today</a></li>

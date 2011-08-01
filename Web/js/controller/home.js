@@ -1,6 +1,8 @@
 /**
  * @file
  * Handle event inputs on /home and lazy load contents to reduce load time
+ *
+ * @see js/model/task.js
  */
 $P.ready(function() {
 	// Initilize the date-time selector
