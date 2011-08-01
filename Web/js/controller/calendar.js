@@ -15,6 +15,9 @@ $P.ready(function() {
 	var userTaskOption = $('#user-list-task-option');
 	var agendaPanel = $('.panel-02 .panel-inner .task-list');
 
+	// Apply scrollbar to the calendar 
+	$('.calendar-display').scrollBar();
+
 	// Initialize calendars
 	timestamp = $('input[name=timestamp]', panelMenu).val();
 	displayType= $('input[name=type]', panelMenu).val();
@@ -26,6 +29,7 @@ $P.ready(function() {
 		target = $(this);
 		$('.option', panelMenu).removeClass('active');
 		target.addClass('active');
+		agendaPanel.empty();
 
 		if (target.hasClass('today')) {
 			range = calendar.getDayCalendar(timestamp, 1);

@@ -5,6 +5,11 @@
  */
 class TaskListModel extends Model {
 	/**
+	 * Number of records to fetch
+	 */
+	const COUNT = 10;
+
+	/**
 	 * Access to task record
 	 */
 	private $task_dao;
@@ -25,8 +30,14 @@ class TaskListModel extends Model {
 	 *
 	 * @return array
 	 */
-	public function fetchUserList($user_id, $paginate = 5) {
-		$this->task_dao->read(array('user_id' => $user_id));
+	public function fetchUserList($user_id, $paginate) {
+		$this->task_dao->read(array(
+			'user_id' => $user_id,
+			'limit'   => array(
+				'offset' => $paginate * self::COUNT,
+				'count'  => self::COUNT,
+			),
+		));
 		$record_list = $this->task_dao->list;
 		return array(
 			'success' => true,

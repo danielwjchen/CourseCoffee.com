@@ -179,6 +179,7 @@ window.calendar = {
 	 * It also clears out the timeslot before populating it.
 	 */
 	'populate' : function() {
+		calendar.taskPanel.addClass('loading');
 		/**
 		 * Wrap event in a <span>
 		 */
@@ -200,7 +201,6 @@ window.calendar = {
 				end = (date.setTime(date.getTime() + 86400000))/ 1000;
 			}
 			// JQuery is having trouble selecting newly created elements, that's why
-			console.log(begin + '.' + end);
 			timeslot = $(document.getElementById(begin + '.' + end), $('.calendar-display'));
 			timeslot.html('');
 			timeslot.html(timeslot.html() + wrap(item['objective']));
@@ -213,6 +213,7 @@ window.calendar = {
 			cache: false,
 			data: calendar.option.serialize(),
 			success: function(response) {
+				calendar.taskPanel.removeClass('loading');
 				if (response.success) {
 					task.generateList(response.list, calendar.taskPanel);
 					if (response.list['id'] != undefined) {
@@ -267,7 +268,7 @@ window.calendar = {
 		$('.calendar-display').html(html);
 
 		// adjust row width according to content
-		var rowWidth = ($('.calendar-display').width()  - 45)/ ((range.end - range.begin) / 86400);
+		var rowWidth = ($('.calendar-display').width()  - 38)/ ((range.end - range.begin) / 86400);
 		$('.calendar-display .day-interval .row').width(rowWidth);
 	},
 	/**

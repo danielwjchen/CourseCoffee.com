@@ -19,6 +19,7 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		$this->addJS('model/logout.js');
 		$this->addJS('model/task.js');
 		$this->addJS('model/doc.js');
+		$this->addJS('model/scrollbar.js');
 		$this->addJS('timer.js');
 		$this->addJS('model/calendar.js');
 		$this->addJS('controller/calendar.js');

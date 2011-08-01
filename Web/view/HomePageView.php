@@ -109,6 +109,7 @@ class HomePageView extends PageView implements PageViewInterface {
 					<div class="panel-01 panel-class">
 						<h1>To-dos</h1>
 						<form id="user-list-task-option" action="user/list-task" method="post">
+							<input type="hidden" name="paginate" value="0" />
 						</form>
 						<div class="panel-inner">
 						</div>

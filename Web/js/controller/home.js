@@ -18,7 +18,9 @@ $P.ready(function() {
 	// Load tasks
 	task.init();
 	var userTaskOption = $('#user-list-task-option');
+	$('input[name=paginate]', userTaskOption).val(0);
 	var agendaPanel = $('.panel-01 .panel-inner');
+	agendaPanel.after('<a href="#" class="button more">more</a>');
 	task.getTaskBelongToUser(userTaskOption, agendaPanel);
 
 	// toggle task creation form
@@ -42,9 +44,13 @@ $P.ready(function() {
 		} else if (target.hasClass('upload')) {
 			doc.init();
 		} else if (target.hasClass('submit')) {
-			task.submit();
+			task.submit(agendaPanel);
+			agendaPanel.empty('');
+			task.loading();
 			task.getTaskBelongToUser(userTaskOption, agendaPanel);
-
+		} else if (target.hasClass('more')) {
+			task.incrementPaginate(userTaskOption);
+			task.getTaskBelongToUser(userTaskOption, agendaPanel);
 		}
 	});
 });

@@ -109,12 +109,13 @@ class TaskDAO extends DAO implements DAOInterface{
 			LEFT JOIN quest_linkage q_linkage
 				ON q_linkage.child_id = q.id
 			%s
+			ORDER BY due_date ASC
 		";
 		if (isset($params['limit'])) {
-			$sql .= "LIMIT {$params['offset']}, {$params['count']}";
+			$sql .= "
+				LIMIT {$params['limit']['offset']}, {$params['limit']['count']} 
+			";
 		}
-
-		$sql .= "ORDER BY due_date ASC";
 
 		$data = array();
 
@@ -187,7 +188,6 @@ class TaskDAO extends DAO implements DAOInterface{
 			throw new Exception("unknown task identifier - " . print_r($params, true));
 
 		}
-		error_log(print_r($params['range'], true));
 
 		$this->list = $data;
 		return empty($data);

@@ -148,53 +148,18 @@ dt{
 }
 
 /**
- * @file
- * Define styles for calendars
+ * Degine styles for loading
  */
-.calendars{
+.loading {
+	background: url('../images/loading.gif') center center no-repeat;
 }
-.calendars .month{
-	font-weight: bold;
-	font-size: 20px;
-	color: #333333;
-}
-.calendars .week{
-	font-weight: bold;
-	font-size: 16px;
-	color: #333333;
-}
-.calendars tr{
-	text-align:center;
-}
-.calendars td{
-	width: 67px;
-}
-.calendars a{
-	color:white;
-	text-decoration:none;
-}
-.calendars a:hover{
-	color: #54FFFF;
-}
-.calendars .active-orange{
-	background: #ff8000;
-}
-.calendars .active-blue{
-	background: #7eb8ed;
-}
-
-/**
- * Define styles for task panel
- */
-.tasks ul,
-.tasks li{
-}
-.tasks a{
-}
-.tasks dt{
-	font-weight: bold;
-	font-size: 18px;
-	color: #333333;
+.button.disabled {
+	background: #868c8f !important;
+	border: #868c8f !important;
+	color: #b3b5b7 !important;
+	text-shadow: none !important;
+	pointer-events: none;
+	cursor: default;
 }
 
 /**
@@ -273,3 +238,42 @@ dt{
 	font-size: 10px;
 	top: 30px;
 }
+
+/**
+ * Define style for scrollable regions
+ */
+.scrollable {
+	overflow: hidden;
+	height: 400px;
+	width: 459px;
+	position: relative;
+}
+.scrollable-inner {
+	overflow: auto;
+	width: 459px;
+	height: 400px;
+}
+/**
+ * @to-do
+ * Disabled due lack of time to implement javascript scroll bar
+.scrollable .scroll-bar {
+	width: 8px;
+	height: 75px;
+	display: block;
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	background: #2395d6;
+	border: 1px #2395d6 solid;
+	border-radius: 8px;
+	box-shadow: 0 0 1px 1px #2395d6;
+	filter: alpha(opacity=20);
+	opacity: 0.2;
+}
+.scrollable .scroll-bar:hover {
+	width: 13px;
+	border-radius: 8px;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+*/

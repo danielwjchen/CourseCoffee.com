@@ -21,6 +21,11 @@ window.task = {
 	'error': function(message) {
 	},
 	/**
+	 * show loading meter
+	 */
+	'loading' : function(region) {
+	},
+	/**
 	 * submit new task
 	 */
 	'submit': function() {
@@ -61,6 +66,16 @@ window.task = {
 		});
 	},
 	/**
+	 * Increment the paginate value
+	 *
+	 * @params option
+	 *  a form of options to be serializd
+	 */
+	'incrementPaginate' : function(option) {
+		paginate = $('input[name=paginate]', option);
+		paginate.val(parseInt(paginate.val()) + 1);
+	},
+	/**
 	 * Get list item in a HTML
 	 *
 	 * @param objective
@@ -89,6 +104,7 @@ window.task = {
 	 *  a region to update the content
 	 */
 	'getTaskBelongToUser': function(option, region) {
+		region.addClass('loading');
 		var formData = option.serialize();
 		$.ajax({
 			url: '?q=user-list-task',
@@ -96,6 +112,7 @@ window.task = {
 			cache: false,
 			data: formData,
 			success: function(response) {
+				region.removeClass('loading');
 				if (response.success) {
 					task.generateList(response.list, region);
 				}
@@ -113,13 +130,10 @@ window.task = {
 	'generateList' : function(list, region) {
 		// if user has nothing to do
 		if (list == null) {
-			html = "<div class='task'>" + 
-				"<div class='task-inner'>" + 
-					"<h3 class='no-task'>hmmm..... you don't have anything to do at the moment. hooray?</h3>" + 
-				"</div>" + 
-			"</div>";
+			html = "<h3 class='no-task'>hmmm..... you don't have anything to do at the moment. hooray?</h3>";
+			$('.button.more').addClass('disabled');
 		} else {
-			html = "<div class='task'><div class='task-inner'><ul>";
+			html = '';
 			// if there is only one single item.
 			if (list['id'] != undefined) {
 				html += task.getListItem(list['objective'], 
@@ -134,14 +148,20 @@ window.task = {
 						list[i]['location'],
 						list[i]['description']
 					);
-						
-					html += "</dl></li>";
 				}
 			}
 
-			html += "</ul></div></div>";
 		}
-		region.html(html);
+		hasTask = $('.task li');
+
+		if (hasTask.length == 0) {
+			html = "<div class='task'><div class='task-inner'><ul>" +
+				html +
+			"<ul></div></div>" ;
+			region.html(html);
+		} else {
+			$('li:last', region).after(html);
+		}
 		$('.count-down', region).each(function(i) {
 			$(this).translateTime();
 		});
