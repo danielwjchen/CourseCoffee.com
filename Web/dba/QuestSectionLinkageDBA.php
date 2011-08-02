@@ -1,10 +1,13 @@
 <?php
-
-class QuestAffiliationLinkageDBA implements DBAInterface{
+/**
+ * @file
+ * Create one-to-many mapping among quests and college classes.
+ */
+class QuestSectionLinkageDBA implements DBAInterface{
 	public function schema() {
 		return array(
-			'quest_affiliation_linkage' => array(
-				'description' => 'provide a many-to-many mapping among quests and affiliations',
+			'quest_section_linkage' => array(
+				'description' => 'provide a many-to-many mapping among quests and sections',
 				'column' => array(
 					'id' => array(
 						'type' => 'serial',
@@ -19,22 +22,22 @@ class QuestAffiliationLinkageDBA implements DBAInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies a quest',
 					),
-					'affiliation_id' => array(
+					'section_id' => array(
 						'type' => 'int',
 						'unsigned' => TRUE,
 						'not null' => TRUE,
 						'default' => 0,
-						'description' => 'the primary key that identifies a affiliation',
+						'description' => 'the primary key that identifies a section',
 					),
 				),
 				'primary' => array('id'),
 				'index' => array(
-					'quest_affiliation_relation' => array(
+					'quest_section_relation' => array(
 						'quest_id',
-						'affiliation_id',
+						'section_id',
 					),
 					'quest_id' => array('quest_id'),
-					'affiliation_id' => array('affiliation_id'),
+					'section_id' => array('section_id'),
 				),
 			),
 		);

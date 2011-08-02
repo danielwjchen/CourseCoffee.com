@@ -13,18 +13,13 @@ class QuestDBA implements DBAInterface{
 		return array(
 			"INSERT INTO quest_type (name) VALUES 
 				('" . QuestType::TASK . "'), 
-				('" . QuestType::COLLEGE_SUBJECT . "'),
-				('" . QuestType::COLLEGE_COURSE . "'),
-				('" . QuestType::COLLEGE_SECTION . "'),
 				('" . QuestType::COLLEGE_EXAM . "'),
 				('" . QuestType::COLLEGE_READING . "'),
 				('" . QuestType::COLLEGE_LAB . "'),
 				('" . QuestType::COLLEGE_ESSAY . "'),
 				('" . QuestType::COLLEGE_QUIZ . "')",
 			"INSERT INTO quest_attribute_type (name) VALUES 
-				('" . QuestAttributeType::COLLEGE_SESSION_NUM . "'), 
-				('" . QuestAttributeType::COLLEGE_COURSE_NUM . "'),
-				('" . QuestAttributeType::COLLEGE_SUBJECT_ABBR . "')"
+				('" . QuestAttributeType::STATUS. "')"
 		);
 	}
 

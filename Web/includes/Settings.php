@@ -11,29 +11,39 @@
  * Default quest types
  */
 class QuestType {
-	const TASK            = 'task';
-	const COLLEGE_SUBJECT = 'college_subject';
-	const COLLEGE_COURSE  = 'college_course';
-	const COLLEGE_SECTION = 'college_section';
-	const COLLEGE_EXAM    = 'college_exam';
-	const COLLEGE_READING = 'college_reading';
-	const COLLEGE_LAB     = 'college_lab';
-	const COLLEGE_ESSAY   = 'college_essay';
-	const COLLEGE_QUIZ    = 'college_quiz';
+	const TASK             = 'task';
+	const COLLEGE_EXAM     = 'college_exam';
+	const COLLEGE_READING  = 'college_reading';
+	const COLLEGE_LAB      = 'college_lab';
+	const COLLEGE_ESSAY    = 'college_essay';
+	const COLLEGE_QUIZ     = 'college_quiz';
 }
 
 /**
  * Default quest attribute types
  */
 class QuestAttributeType {
-	const COLLEGE_SESSION_NUM  = 'college_session_num';
-	const COLLEGE_COURSE_NUM   = 'college_course_num';
-	const COLLEGE_SUBJECT_ABBR = 'college_subject_abbr';
+	const STATUS = 'status';
 }
 
 /**
  * @} End of "defgroup quest"
  */
+class SectionType {
+	const HONOR      = 'honor';
+	const HYBRID     = 'hybrid';
+	const OFF_CAMPUS = 'off_campus';
+	const ON_CAMPUS  = 'on_campus';
+	const ONLINE     = 'online';
+}
+class SessionType {
+	const ARRANGED   = 'arranged';
+	const LAB        = 'lab';
+	const LECTURE    = 'lecture';
+	const ONLINE     = 'online';
+	const SEMINAR    = 'seminar';
+	const RECITATION = 'recitation';
+}
 
 /**
  * @defgroup date
@@ -74,24 +84,6 @@ class ItemAttributeType {
 
 /**
  * @} End of "defgroup item"
- */
-
-
-/**
- * @defgroup affiliation
- * @{
- *
- * Default affiliation type
- */
-class AffiliationType {
-	const COLLEGE            = 'college';
-	const STUDY_GROUP        = 'study_group';
-	const COLLEGE_FRATERNITY = 'college_fraternity';
-	const COLLEGE_SORORITY   = 'college_sorority';
-}
-
-/**
- * @} End of "defgroup affiliation"
  */
 
 /**
