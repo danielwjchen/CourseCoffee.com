@@ -48,6 +48,7 @@ abstract class PageView extends View implements ViewInterface {
 			'data' => 'no-cache'
 		));
 		$this->addJQuery();
+                $this->addDateLib(); /* add by Cheng */
 		$this->addJS('main.js');
 		$this->addCSS('layout.css');
 		$this->addCSS('main.css');
@@ -117,6 +118,13 @@ abstract class PageView extends View implements ViewInterface {
 	protected function addJQuery() {
 		$this->addJS('lib/jquery-1.6.2.js');
 	}
+        
+        /**
+        * Add Date Processing Library, edited by Cheng
+        */
+        protected function addDateLib(){
+                $this->addJS('lib/date.js');
+        }
 
 	/**
 	 * Add JQuery UI
