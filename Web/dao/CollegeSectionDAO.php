@@ -1,158 +1,179 @@
 <?php
 /**
  * @file
- * Represents a section of a college course
- *
- * This is actually a composite of several DAOs
- * 
+ * Represent college section records in database
  */
 class CollegeSectionDAO extends DAO implements DAOInterface{
 
-	protected $college_course;
-
-	protected $quest;
-	protected $quest_linkage;
-	protected $quest_affiliation_linkage;
-	
 	/**
 	 * Extend DAO::__construct().
 	 */
 	function __construct($db, $params = NULL) {
 		$attr = array(
-			'id',
-			'college',
-			'college_id',
-			'subject',
+			'institution_id',
+			'institution',
 			'subject_id',
-			'course',
+			'subject_title',
+			'subject_abbr',
 			'course_id',
-			'abbr',
-			'num',
-			'section',
-			'description',
+			'course_title',
+			'course_num',
+			'section_id',
+			'section_num',
 		);
-
-		$this->college_course  = new CollegeCourseDAO($db);
-		$this->quest_linkage = new QuestLinkageDAO($db);
-		$this->quest = new QuestDAO($db);
-		$this->quest_affiliation_linkage = new QuestAffiliationLinkageDAO($db);
-
 		parent::__construct($db, $attr, $params);
 
 	}
 
 	/**
-	 * Override DAO::create()
+	 * Extend DAO::create().
 	 */
 	public function create($params) {
-		if ((!isset($params['college']) && !isset($params['college_id'])) ||
-				(!isset($params['subject']) && !isset($params['subject_id']) && !isset($params['abbr'])) ||
-				(!isset($params['course']) && !isset($params['course_id']) && !isset($params['num'])) ||
-				!isset($params['section']) ||
-				!isset($params['description'])
-		) {
-			throw new Exception('incomplete college section params - ' . print_r($params, true));
-			return false;
+		if (!isset($params['course_id']) || !isset($params['num'])) {
+			throw new Exception('incomplete college section pramas - ' . print_r($params, true));
+			return ;
 
-		} else {
-
-			$this->college_course->read($params);
-			$params['description'] = isset($params['description']) ? $params['description'] : null;
-
-			$quest_id = $this->quest->create(array(
-				'objective' => $params['section'],
-				'user_id' => 1, //user_id stands for admin
-				'type' => 'college_section',
-				'description' => $params['description'],
+		}else{
+			return $this->db->insert("
+				INSERT INTO `section` (`course_id`, `num`)
+				VALUES (:course_id, :num)",
+			array(
+				'course_id' => $params['course_id'], 
+				'num' => $params['num']
 			));
-
-			// link this course to the subject it studies
-			$this->quest_linkage->create(array(
-				'parent_id' => $this->college_course->id,
-				'child_id' => $quest_id,
-			));
-
-			// link this course to the college that offers it
-			$this->quest_affiliation_linkage->create(array(
-				'affiliation_id' => $this->college_course->college_id,
-				'quest_id' => $quest_id,
-			));
-
-			return $quest_id;
 
 		}
-		
+
 	}
 
 	/**
-	 * Override DAO::read()
+	 * Extend DAO::read().
+	 *
+	 * @param array $params
+	 *  - id
+	 *  - course_id
+	 *  - section_num
+	 *  - like
+	 *     - subject_abbr
+	 *     - course_num
+	 *     - section_num
 	 */
 	public function read($params) {
-		if (
-			!(isset($params['college_id']) || isset($params['college'])) &&
-			!(isset($params['subject_id']) || isset($params['subject']) || isset($params['abbr'])) &&
-			!(isset($params['course_id']) || isset($params['course']) || isset($params['num'])) &&
-			!(isset($params['id']) || isset($params['section']))
-		) {
-			throw new Exception('unknow college section identifier - ' . print_r($params, true));
-			return false;
+		$sql = "
+			SELECT 
+				s.course_id,
+				s.id AS section_id,
+				c.num AS course_num,
+				c.title AS course_title,
+				sbt.abbr AS subject_abbr,
+				sbt.title AS subject_num
+			FROM `section` s
+			INNER JOIN course c
+				ON s.course_id = c.id
+			INNER JOIN subject sbt
+				ON c._subject_id = sbt.id
+		";
+		$sql_params = array();
+		
+		if (isset($params['id'])) {
+			$sql_params = array('id' => $params['id']);
+			$sql .= "WHERE s.`id` = :id";
 
-		} else {
-			$quest_id = null;
-			if (isset($params['id'])) {
-				$quest_id = isset($params['id']) ? $params['id'] : null;
-				unset($params['id']);
+		} elseif (isset($params['course_id']) && isset($params['section_num'])) {
+			$sql_params = array(
+				'course_id' => $params['course_id'],
+				'num' => $params['num'],
+			);
+			$sql .= "WHERE s.`course_id` = :course_id AND s.`num` = :section_num";
 
-			}
+		// get all sections below to a course
+		} elseif (isset($params['course_id'])) {
+			$sql_params = array('course_id' => $params['course_id']);
+			$sql .= "WHERE s.`course_id` = :course_id";
+			$this->list = $this->db->fetch($sql, $sql_params);
+			return empty($data);
 
-			$course_result = $this->college_course->read($params);
-			$quest_result = $this->quest->read(array(
-				'id' => $quest_id,
-				'objective' => $params['section'],
-				'type' => 'college_section',
-			));
+		// match string pattern
+		} elseif (isset($params['like'])) {
 
-			if ($course_result && $quest_result) {
-				$this->attr['college'] = $this->college_course->college;
-				$this->attr['college_id'] = $this->college_course->college_id;
-				$this->attr['subject_id'] = $this->college_course->subject_id;
-				$this->attr['subject'] = $this->college_course->subject;
-				$this->attr['course_id'] = $this->college_course->id;
-				$this->attr['course'] = $this->college_course->title;
-				$this->attr['abbr'] = $this->college_course->abbr;
-				$this->attr['num'] = $this->college_course->num;
-				$this->attr['id'] = $this->quest->id;
-				$this->attr['section'] = $this->quest->objective;
-				$this->attr['description'] = $this->quest->description;
+			if (
+				isset($params['like']['subject_abbr']) &&
+				isset($params['like']['course_num']) &&
+				isset($params['like']['section_num'])
+			) {
+				$sql .= "
+					WHERE sbt.abbr LIKE :subject_abbr
+						AND c.num LIKE :course_num
+						AND s.num LIKE :section_num
+				";
 
-				return true;
+				$sql_params = array(
+					'subject_abbr' => '%' . $params['like']['subject_abbr'] . '%',
+					'course_num'   => '%' . $params['like']['course_num'] . '%',
+					'section_num'  => '%' . $params['like']['section_num'] . '%',
+				);
+
+			} elseif (
+				isset($params['like']['subject_abbr']) &&
+				isset($params['like']['course_num']) 
+			){
+				$sql .= "
+					WHERE sbt.abbr LIKE :subject_abbr
+						AND c.num LIKE :course_num
+				";
+
+				$sql_params = array(
+					'subject_abbr' => '%' . $params['like']['subject_abbr'] . '%',
+					'course_num'   => '%' . $params['like']['course_num'] . '%',
+				);
+
+			} elseif (isset($params['like']['subject_abbr'])) {
+				$sql .= "	WHERE sbt.abbr LIKE :subject_abbr";
+				$sql_params = array(
+					'subject_abbr' => '%' . $params['like']['subject_abbr'] . '%'
+				);
 
 			} else {
-				return false;
-
+				throw new Exception('unknown section pattern');
 			}
 
+			$this->list = $this->db->fetch($sql, $sql_params);
+			return empty($data);
+
+
+		} else {
+			throw new Exception('unknown section identifier');
+
+		}
+
+		$data = $this->db->fetch($sql, $sql_params);
+		return $this->updateAttribute($data);
+
 	}
 
 	/**
-	 * Override DAO::update()
+	 * Extend DAO::update()
 	 */
 	public function update() {
-		$this->quest->objective = $this->attr['section'];
-		$this->quest->user_id = 1;
-		$this->quest->description = $this->attr['description'];
-		$this->quest->update();
+		$sql = "
+			UPDATE `section` SET
+				`course_id` = :course_id,
+				`num` = :num
+			WHERE `id` = :id
+		";
+		$this->db->perform($sql, array(
+			'course_id' => $this->attr['course_id'], 
+			'num' => $this->attr['num']
+		));
 
 	}
 
 	/**
-	 * Overrid DAO::destroy()
+	 * Extend DAO::destroy().
 	 */
 	public function destroy() {
-		$this->quest_affiliation_linkage->destroy();
-		$this->quest_linkage->destroy();
-		$this->quest->destroy();
+		$sql = "DELETE FROM `section` WHERE `id` = :id";
+		$this->db->perform($sql, array('id' => $this->attr['id']));
 
 	}
-
 }

@@ -30,6 +30,7 @@ interface DAOInterface {
 	 *   - limit: optional
 	 *      - offset
 	 *      - count
+	 *   - like: optional, this would perform string matching
 	 */
 	public function read($params) ;
 

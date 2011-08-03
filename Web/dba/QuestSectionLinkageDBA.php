@@ -1,13 +1,14 @@
 <?php
 /**
  * @file
- * Create one-to-many mapping among quests and college classes.
+ * Define linkages among quest and sections
  */
+
 class QuestSectionLinkageDBA implements DBAInterface{
 	public function schema() {
 		return array(
 			'quest_section_linkage' => array(
-				'description' => 'provide a many-to-many mapping among quests and sections',
+				'description' => 'provide a many-to-many mapping among quests and people',
 				'column' => array(
 					'id' => array(
 						'type' => 'serial',
@@ -32,10 +33,7 @@ class QuestSectionLinkageDBA implements DBAInterface{
 				),
 				'primary' => array('id'),
 				'index' => array(
-					'quest_section_relation' => array(
-						'quest_id',
-						'section_id',
-					),
+					'quest_section_relation' => array('quest_id', 'section_id'),
 					'quest_id' => array('quest_id'),
 					'section_id' => array('section_id'),
 				),

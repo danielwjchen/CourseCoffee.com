@@ -62,8 +62,8 @@ class UserDBA implements DBAInterface{
 					'signature' => array('signature'),
 				),
 			),
-			'user_affiliation_linkage' => array(
-				'description' => 'provide a one-to-many mapping among user and affiliation',
+			'user_section_linkage' => array(
+				'description' => 'provide a one-to-many mapping among user and section',
 				'column' => array(
 					'id' => array(
 						'type' => 'serial',
@@ -78,19 +78,50 @@ class UserDBA implements DBAInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies a user',
 					),
-					'affiliation_id' => array(
+					'section_id' => array(
 						'type' => 'int',
 						'unsigned' => TRUE,
 						'not null' => TRUE,
 						'default' => 0,
-						'description' => 'the primary key that identifies a affiliation ',
+						'description' => 'the primary key that identifies a section ',
 					),
 				),
 				'primary' => array('id'),
 				'index' => array(
-					'user_affiliation_relation' => array('user_id', 'affiliation_id'),
+					'user_section_relation' => array('user_id', 'section_id'),
 					'user_id' => array('user_id'),
-					'affiliation_id' => array('affiliation_id'),
+					'section_id' => array('section_id'),
+				),
+			),
+			'user_institution_linkage' => array(
+				'description' => 'provide a one-to-many mapping among user and institution',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'description' => 'the primary key that identifies a linkage',
+					),
+					'user_id' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a user',
+					),
+					'institution_id' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a institution ',
+					),
+				),
+				'primary' => array('id'),
+				'index' => array(
+					'user_institution_relation' => array('user_id', 'institution_id'),
+					'user_id' => array('user_id'),
+					'institution_id' => array('institution_id'),
 				),
 			),
 			'user_facebook_linkage' => array(

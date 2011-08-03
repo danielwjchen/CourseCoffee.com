@@ -7,8 +7,8 @@ class UserProfileDAO extends DAO implements DAOInterface{
 
 	private $user_dao;
 	private $person_dao;
-	private $affiliation_linkage_dao;
-	private $college_dao;
+	private $institution_linkage_dao;
+	private $institution_dao;
 	private $facebook_linkage_dao;
 	private $file_dao;
 
@@ -19,8 +19,8 @@ class UserProfileDAO extends DAO implements DAOInterface{
 		$attr = array(
 			'id',
 			'fb_uid',
-			'college',
-			'college_id',
+			'institution',
+			'institution_id',
 			'first_name',
 			'last_name',
 			'email',
@@ -29,8 +29,8 @@ class UserProfileDAO extends DAO implements DAOInterface{
 
 		$this->user_dao                = new UserDAO($db);
 		$this->person_dao              = new PersonDAO($db);
-		$this->affiliation_linkage_dao = new UserAffiliationLinkageDAO($db);
-		$this->college_dao             = new CollegeDAO($db);
+		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($db);
+		$this->institution_dao         = new InstitutionDAO($db);
 		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($db);
 		$this->file_dao                = new FileDAO($db);
 
@@ -45,8 +45,8 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	 *   - last_name
 	 *   - email
 	 *   - password
-	 *   - college
-	 *   - college_id
+	 *   - institution
+	 *   - institution_id
 	 *   - fb_uid
 	 *
 	 * @return string $user_id
@@ -64,9 +64,9 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			'last_name'  => $params['last_name'],
 		));
 		
-		$this->college_dao->read(array('name' => $params['college']));
-		$this->affiliation_linkage_dao->create(array(
-			'affiliation_id' => $this->college_dao->id,
+		$this->institution_dao->read(array('name' => $params['institution']));
+		$this->institution_linkage_dao->create(array(
+			'institution_id' => $this->institution_dao->id,
 			'user_id'        => $user_id,
 		));
 
@@ -100,16 +100,16 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				u.password,
 				f.path,
 				f.mime,
-				ua_linkage.affiliation_id AS college_id,
-				a.name AS college,
+				ui_linkage.institution_id AS institution_id,
+				i.name AS institution,
 				uf_linkage.fb_uid
 			FROM `user` u
 			INNER JOIN `person` p
 				ON u.id = p.user_id
-			INNER JOIN `user_affiliation_linkage` ua_linkage
-				ON u.id = ua_linkage.user_id
-			INNER JOIN `affiliation` a
-				ON ua_linkage.affiliation_id = a.id
+			INNER JOIN `user_institution_linkage` ui_linkage
+				ON u.id = ui_linkage.user_id
+			INNER JOIN `institution` i
+				ON ui_linkage.institution_id = i.id
 			LEFT JOIN `user_facebook_linkage` uf_linkage
 				ON u.id = uf_linkage.user_id
 			LEFT JOIN `file` f
@@ -158,13 +158,13 @@ class UserProfileDAO extends DAO implements DAOInterface{
 		$this->person_dao->first_name = $this->attr['first_name'];
 		$this->person_dao->last_name  = $this->attr['last_name'];
 		$this->person_dao->update();
-		$this->affiliation_linkage_dao->read(array(
+		$this->institution_linkage_dao->read(array(
 			'user_id'        => $this->attr['id'],
-			'affiliation_id' => $this->att['college_id'],
+			'institution_id' => $this->att['institution_id'],
 		));
-		$this->college_dao->read(array('name' => $this->attr['college']));
-		$this->affiliation_linkage_dao->affiliation_id = $this->college_dao->id;
-		$this->affiliation_linkage_dao->update();
+		$this->institution_dao->read(array('name' => $this->attr['institution']));
+		$this->institution_linkage_dao->institution_id = $this->institution_dao->id;
+		$this->institution_linkage_dao->update();
 
 	}
 

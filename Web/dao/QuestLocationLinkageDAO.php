@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Represent a linkage between a quest and a affiliation
+ * Represent a linkage between quest and location
  */
 class QuestLocationLinkageDAO extends LinkageDAO{
 

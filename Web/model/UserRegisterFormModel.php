@@ -48,8 +48,8 @@ class UserRegisterFormModel extends FormModel {
 	 */
 	private $user_dao;
 	private $person_dao;
-	private $affiliation_linkage_dao;
-	private $affiliation_dao;
+	private $institution_linkage_dao;
+	private $institution_dao;
 	private $facebook_linkage_dao;
 	/**
 	 * @} End of "dao"
@@ -64,8 +64,8 @@ class UserRegisterFormModel extends FormModel {
 		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->db);
 
 		$this->person_dao              = new PersonDAO($this->db);
-		$this->affiliation_linkage_dao = new UserAffiliationLinkageDAO($this->db);
-		$this->affiliation_dao         = new AffiliationDAO($this->db);
+		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($this->db);
+		$this->institution_dao         = new InstitutionDAO($this->db);
 
 		$this->form_name = 'user_register_form';
 		// form submission is limite to 5 times
@@ -212,19 +212,19 @@ class UserRegisterFormModel extends FormModel {
 		));
 
 		// try to find the school and create it on failure
-		$this->affiliation_dao->read(array('name' => $school));
-		$school_id = $this->affiliation_dao->id;
+		$this->institution_dao->read(array('name' => $school));
+		$school_id = $this->institution_dao->id;
 		if (empty($school_id)) {
 			Logger::Write(self::EVENT_UNKNOWN_SCHOOL);
-			$school_id = $this->affiliation_dao->create(array(
+			$school_id = $this->institution_dao->create(array(
 				'name' => $school,
-				'type' => AffiliationType::COLLEGE,
+				'type' => InstitutionType::COLLEGE,
 				'url' => '',
 			));
 		}
-		$this->affiliation_linkage_dao->create(array(
+		$this->institution_linkage_dao->create(array(
 			'user_id'        => $user_id,
-			'affiliation_id' => $school_id,
+			'institution_id' => $school_id,
 		));
 
 		// if the user is registering via facebook

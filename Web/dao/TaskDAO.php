@@ -21,9 +21,9 @@ class TaskDAO extends DAO implements DAOInterface{
 	private $quest_date_linkage;
 
 	/**
-	 * Access to quest_linkage
+	 * Access to quest_section_linkage
 	 */
-	private $quest_linkage;
+	private $quest_section_linkage;
 
 	/**
 	 * Extend DAO::__construct().
@@ -32,7 +32,7 @@ class TaskDAO extends DAO implements DAOInterface{
 		$this->quest = new QuestDAO($db);
 		$this->date = new DateDAO($db);
 		$this->quest_date_linkage = new QuestDateLinkageDAO($db);
-		$this->quest_linkage = new QuestLinkageDAO($db);
+		$this->quest_section_linkage = new QuestSectionLinkageDAO($db);
 
 		$attr = array(
 			'id',
@@ -40,7 +40,7 @@ class TaskDAO extends DAO implements DAOInterface{
       'type_id',
 			'user_id',
 			'due_date',
-			'quest_id',
+			'section_id',
 			'objective',
 			'description',
 		);
@@ -53,7 +53,7 @@ class TaskDAO extends DAO implements DAOInterface{
 	 * Extend DAO::create()
 	 *
 	 * @param array $params
-	 *   - quest_id: optional, e.g. an id to identify the class this task 
+	 *   - section_id: optional, e.g. an id to identify the class this task 
 	 *     belongs to
 	 *   - user_id: required
 	 *   - due_date: required
@@ -62,22 +62,22 @@ class TaskDAO extends DAO implements DAOInterface{
 	 */
 	public function create($params) {
 		$params['type'] = QuestType::TASK;
-		$quest_id = $this->quest->create($params);
+		$section_id = $this->quest->create($params);
 		$date_id = $this->date->create(array(
 			'timestamp' => $params['due_date'],
 			'type' => 'end_date',
 		));
 		$this->quest_date_linkage->create(array(
-			'quest_id' => $quest_id,
+			'section_id' => $section_id,
 			'date_id' => $date_id,
 		));
-		if (isset($params['quest_id'])) {
-			$this->quest_linkage->create(array(
-				'parent_id' => $params['quest_id'],
-				'child_id' => $quest_id,
+		if (isset($params['section_id'])) {
+			$this->quest_section_linkage->create(array(
+				'parent_id' => $params['section_id'],
+				'child_id' => $section_id,
 			));
 		}
-		return $quest_id;
+		return $section_id;
 	}
 
 	/**
@@ -88,7 +88,7 @@ class TaskDAO extends DAO implements DAOInterface{
 			SELECT 
 				q.id,
 				q.user_id,
-				q_linkage.parent_id AS quest_id,
+				q_linkage.parent_id AS section_id,
 				qt.name AS type,
 				q.objective,
 				q.description,
@@ -99,15 +99,15 @@ class TaskDAO extends DAO implements DAOInterface{
 				ON q.type_id = qt.id
 				AND qt.name = :type_name
 			INNER JOIN quest_date_linkage qd_linkage
-				ON qd_linkage.quest_id = q.id
+				ON qd_linkage.section_id = q.id
 			INNER JOIN date qd
 				ON qd.id = qd_linkage.date_id
 			LEFT JOIN quest_location_linkage ql
-				ON q.id = ql.quest_id
+				ON q.id = ql.section_id
 			LEFT JOIN location l
 				ON ql.location_id = l.id
-			LEFT JOIN quest_linkage q_linkage
-				ON q_linkage.child_id = q.id
+			LEFT JOIN quest_section_linkage qs_linkage
+				ON qs_linkage.quest_id = q.id
 			%s
 			ORDER BY due_date ASC
 		";
