@@ -7,13 +7,6 @@
 class UserController extends Controller implements ControllerInterface {
 
 	/**
-	 * Extend Controller::__construct()
-	 */
-	function __construct() {
-		parent::__construct();
-	}
-
-	/**
 	 * Implement ControllerInterface::path()
 	 */
 	public static function path() {

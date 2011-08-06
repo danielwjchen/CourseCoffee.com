@@ -28,6 +28,15 @@ class SignUpPageView extends PageView implements PageViewInterface {
 	 */
 	public function getContent() {
 		extract($this->data);
+		$option = '';
+		foreach ($college_option as $key => $value) {
+			$option .= "<option value='{$key}'>{$value}</option>";
+		}
+		$school_select = <<<HTML
+<select name="school">
+	{$option}
+</select>
+HTML;
 		return <<<HTML
 <div class="sign-up container">
 	<div class="container-inner">
@@ -67,7 +76,7 @@ class SignUpPageView extends PageView implements PageViewInterface {
 								<label for="school">school: </label> 
 							</div> 
 							<div class="field"> 
-								<input type="text" name="school" /> 
+								{$school_select}
 							</div> 
 						</div> 
 						<div class="row"> 

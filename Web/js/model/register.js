@@ -77,7 +77,7 @@ window.register = {
 		var formData = $('#user-register-form').serialize();
 		if (register.validate()) {
 			$.ajax({
-				url: '?q=user-register',
+				url: 'user-register',
 				type: 'POST',
 				cache: false,
 				data: formData,

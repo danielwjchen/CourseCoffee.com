@@ -130,8 +130,8 @@ abstract class PageView extends View implements ViewInterface {
 	 * Add JQuery UI
 	 */
 	protected function addJQueryUI() {
-		$this->data['js'][]  = "/js/lib/jquery-ui/jquery-ui-1.8.6.custom.min.js";
-		$this->data['css'][] = "/js/lib/jquery-ui/themes/ui-lightness/jquery-ui-1.8.11.custom.css";
+		$this->data['js'][]  = "/js/lib/jquery-ui/jquery-ui-1.8.14.custom.min.js";
+		$this->data['css'][] = "/js/lib/jquery-ui/themes/smoothness/jquery-ui-1.8.14.custom.css";
 	}
 
 	/**

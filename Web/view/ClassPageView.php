@@ -12,6 +12,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 		parent::__construct($data);
 		$this->setPageTitle('class');
 		$this->addJS('model/logout.js');
+		$this->addJS('model/class-suggest.js');
 		$this->addJS('controller/class.js');
 		$this->addJS('controller/navigation.js');
 		$this->addCSS('class.css');
@@ -43,6 +44,14 @@ class ClassPageView extends PageView implements PageViewInterface {
 					</li>
 					<li class="class active">
 						<a class="class button" href="/class">Class</a>
+					</li>
+					<li class="class-suggest">
+						<div class="class-suggest-inner">
+							<form id="class-suggest-form" name="class-suggest" action="college-class-suggest" method="post">
+								<input type="text" name="string" id="suggest-input" value="e.g. CSE231001" />
+								<input type="hidden" id="section-id" name="section_id" />
+								<a class="button suggest" href="#">add</a>
+							</form>
 					</li>
 					<li class="logout">
 						<a class="logout button" href="#">logout</a>

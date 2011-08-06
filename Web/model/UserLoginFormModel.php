@@ -11,9 +11,6 @@ class UserLoginFormModel extends FormModel {
 	 * Error message for the user when an error is encountered
 	 */
 
-	 /**
-	  * Failed to login
-		*/
 	const ERROR_FAILED_TO_LOGIN = 'The email and password do not match';
 	const ERROR_FORM_EXPIRED    = 'User login form expired. Please try again.';
 	const ERROR_FORM_EMPTY      = 'The email and password fields cannot be empty';

@@ -20,6 +20,7 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		$this->addJS('model/task.js');
 		$this->addJS('model/doc.js');
 		$this->addJS('model/scrollbar.js');
+		$this->addJS('model/class-suggest.js');
 		$this->addJS('timer.js');
 		$this->addJS('model/calendar.js');
 		$this->addJS('controller/calendar.js');
@@ -57,6 +58,14 @@ class CalendarPageView extends PageView implements PageViewInterface {
 						</li>
 						<li class="class">
 							<a class="class button" href="/class">Class</a>
+						</li>
+						<li class="class-suggest">
+							<div class="class-suggest-inner">
+								<form id="class-suggest-form" name="class-suggest" action="college-class-suggest" method="post">
+									<input type="text" name="string" id="suggest-input" value="e.g. CSE231001" />
+									<input type="hidden" id="section-id" name="section_id" />
+									<a class="button suggest" href="#">add</a>
+								</form>
 						</li>
 						<li class="logout">
 							<a class="logout button" href="#">logout</a>

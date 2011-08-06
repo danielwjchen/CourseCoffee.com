@@ -95,3 +95,43 @@
 	text-align: center;
 	margin: 35px auto;
 }
+/**
+ * Define styles for enrollment dialog
+ */
+.enroll.dialog {
+	margin: 200px auto 0;
+	width: 480px;
+	height: 480px;
+	position: relative;
+}
+
+.enroll .dialog-inner {
+	float: left;
+	background: #f6f5f4;
+	width: 458px;
+	padding: 10px;
+	border: 1px solid #f6f5f4;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: white;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+	/* for IE */
+	filter: alpha(opacity=100);
+	/* CSS3 standard */
+	opacity: 1;
+}
+.enroll .error{
+	color: red;
+	text-align: center;
+	clear: both;
+	margin-bottom: 25px;
+}
+.enroll input[type=file] {
+	clear: both;
+	width: 458px;
+	text-align: center;
+	margin: 35px auto;
+}

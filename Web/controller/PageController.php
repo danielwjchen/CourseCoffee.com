@@ -73,8 +73,11 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getSignUpPage() {
 		$user_register = new UserRegisterFormModel();
+		$college       = new CollegeModel();
+		error_log('test - ' . print_r($college->getCollegeOption(), true));
 		$this->page = new SignUpPageView(array(
 			'register_token' => $user_register->initializeFormToken(),
+			'college_option' => $college->getCollegeOption(),
 		));
 	}
 

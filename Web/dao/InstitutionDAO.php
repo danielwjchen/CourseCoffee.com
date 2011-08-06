@@ -50,6 +50,8 @@ class InstitutionDAO extends DAO implements DAOInterface{
 
 	/**
 	 * Extend DAO::read()
+	 *
+	 * This differs from other DAOs as it fetches all the records
 	 */
 	public function read($params) {
 		$sql ="SELECT * FROM `institution`";
@@ -75,8 +77,8 @@ class InstitutionDAO extends DAO implements DAOInterface{
 			));
 
 		} else {
-			throw new Exception('unknown institution identifier');
-			return ;
+			$this->list = $this->db->fetch($sql);
+			return empty($this->list);
 
 		}
 		

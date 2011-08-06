@@ -32,7 +32,9 @@
 	width: 263px;
 }
 .sign-up #user-register-form label,
-.sign-up #user-register-form input{
+.sign-up #user-register-form select,
+.sign-up #user-register-form option,
+.sign-up #user-register-form input {
 	height: 34px;
 	line-height: 34px;
 }
@@ -40,8 +42,12 @@
 	font-size: 20px;
 }
 .sign-up #user-register-form input{
+	border: 1px solid #313131;
 	font-size: 20px;
 	width: 263px;
+}
+.sign-up #user-register-form select {
+	font-size: 18px;
 }
 .sign-up #user-register-form .button{
 	clear: both;

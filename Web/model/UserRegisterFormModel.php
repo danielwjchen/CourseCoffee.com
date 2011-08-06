@@ -81,7 +81,7 @@ class UserRegisterFormModel extends FormModel {
 	 *  user's first name
 	 * @param string $last_name
 	 *  user's last name
-	 * @param string $school
+	 * @param string $institution_id
 	 *  user's school
 	 * @param string $fb_uid
 	 *  a facebook user id, this is optional
@@ -109,21 +109,21 @@ class UserRegisterFormModel extends FormModel {
 	 *   - password
 	 *   - redirect
 	 */
-	public function processForm($first_name, $last_name, $school, $fb_uid, $email, $password, $confirm, $token) {
+	public function processForm($first_name, $last_name, $institution_id, $fb_uid, $email, $password, $confirm, $token) {
 		// if the form is new
 		if (empty($token)) {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_NEW_ATTEMPT);
 			return array(
-				'first_name' => null,
-				'last_name'  => null,
-				'school'     => null,
-				'fb_uid'     => null,
-				'email'      => null,
-				'password'   => null,
-				'confirm'    => null,
-				'token'      => $token,
-				'error'      => null,
+				'first_name'     => null,
+				'last_name'      => null,
+				'institution_id' => null,
+				'fb_uid'         => null,
+				'email'          => null,
+				'password'       => null,
+				'confirm'        => null,
+				'token'          => $token,
+				'error'          => null,
 			);
 		} 
 		// if the form token has expired
@@ -131,15 +131,15 @@ class UserRegisterFormModel extends FormModel {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_FORM_EXPIRED);
 			return array(
-				'first_name' => null,
-				'last_name'  => null,
-				'school'     => null,
-				'fb_uid'     => null,
-				'email'      => null,
-				'password'   => null,
-				'confirm'    => null,
-				'token'      => $token,
-				'error'      => self::ERROR_FORM_EXPIRED
+				'first_name'     => null,
+				'last_name'      => null,
+				'institution_id' => null,
+				'fb_uid'         => null,
+				'email'          => null,
+				'password'       => null,
+				'confirm'        => null,
+				'token'          => $token,
+				'error'          => self::ERROR_FORM_EXPIRED
 			);
 		}
 
@@ -148,21 +148,21 @@ class UserRegisterFormModel extends FormModel {
 		if (
 			empty($first_name) ||
 			empty($last_name) ||
-			empty($school) ||
+			empty($institution_id) ||
 			empty($email) || 
 			empty($password)
 		) {
 			Logger::write(self::EVENT_FORM_EMPTY, Logger::SEVERITY_HIGH);
 			return array(
-				'first_name' => null,
-				'last_name'  => null,
-				'school'     => null,
-				'fb_uid'     => null,
-				'email'      => null,
-				'password'   => null,
-				'confirm'    => null,
-				'token'      => $token,
-				'error'      => self::ERROR_FORM_EMPTY
+				'first_name'     => null,
+				'last_name'      => null,
+				'institution_id' => null,
+				'fb_uid'         => null,
+				'email'          => null,
+				'password'       => null,
+				'confirm'        => null,
+				'token'          => $token,
+				'error'          => self::ERROR_FORM_EMPTY
 			);
 		}
 
@@ -171,30 +171,30 @@ class UserRegisterFormModel extends FormModel {
 		if (!empty($this->user_dao->password)) {
 			Logger::write(self::EVENT_EMAIL_TAKEN);
 			return array(
-				'first_name' => $first_name,
-				'last_name'  => $last_name,
-				'school'     => $school,
-				'fb_uid'     => $fb_uid,
-				'email'      => $email,
-				'password'   => $password,
-				'confirm'    => $confirm,
-				'token'      => $token,
-				'error'      => self::ERROR_EMAIL_TAKEN,
+				'first_name'     => $first_name,
+				'last_name'      => $last_name,
+				'institution_id' => $institution_id,
+				'fb_uid'         => $fb_uid,
+				'email'          => $email,
+				'password'       => $password,
+				'confirm'        => $confirm,
+				'token'          => $token,
+				'error'          => self::ERROR_EMAIL_TAKEN,
 			);
 		}
 
 		// check if the password and confirmation match
 		if ($password !== $confirm) {
 			return array(
-				'first_name' => $first_name,
-				'last_name'  => $last_name,
-				'school'     => $school,
-				'fb_uid'     => $fb_uid,
-				'email'      => $email,
-				'password'   => $password,
-				'confirm'    => $confirm,
-				'token'      => $token,
-				'error'      => self::ERROR_PASSWORD_NOT_MATCH,
+				'first_name'     => $first_name,
+				'last_name'      => $last_name,
+				'institution_id' => $institution_id,
+				'fb_uid'         => $fb_uid,
+				'email'          => $email,
+				'password'       => $password,
+				'confirm'        => $confirm,
+				'token'          => $token,
+				'error'          => self::ERROR_PASSWORD_NOT_MATCH,
 			);
 		}
 
@@ -211,20 +211,9 @@ class UserRegisterFormModel extends FormModel {
 			'last_name'  => $last_name,
 		));
 
-		// try to find the school and create it on failure
-		$this->institution_dao->read(array('name' => $school));
-		$school_id = $this->institution_dao->id;
-		if (empty($school_id)) {
-			Logger::Write(self::EVENT_UNKNOWN_SCHOOL);
-			$school_id = $this->institution_dao->create(array(
-				'name' => $school,
-				'type' => InstitutionType::COLLEGE,
-				'url' => '',
-			));
-		}
 		$this->institution_linkage_dao->create(array(
 			'user_id'        => $user_id,
-			'institution_id' => $school_id,
+			'institution_id' => $institution_id,
 		));
 
 		// if the user is registering via facebook
@@ -240,15 +229,15 @@ class UserRegisterFormModel extends FormModel {
 		if (empty($user_id)) {
 			Logger::write(self::EVENT_FAILED_TO_CREATE, Logger::SEVERITY_LOW);
 			return array(
-				'first_name' => $first_name,
-				'last_name'  => $last_name,
-				'school'     => $school,
-				'fb_uid'     => $fb_uid,
-				'email'      => $email,
-				'password'   => $password,
-				'confirm'    => $confirm,
-				'token'      => $token,
-				'error'      => self::ERROR_FAILED_TO_CREATE,
+				'first_name'     => $first_name,
+				'last_name'      => $last_name,
+				'institution_id' => $institution_id,
+				'fb_uid'         => $fb_uid,
+				'email'          => $email,
+				'password'       => $password,
+				'confirm'        => $confirm,
+				'token'          => $token,
+				'error'          => self::ERROR_FAILED_TO_CREATE,
 			);
 		} else {
 			Logger::write(self::EVENT_NEW_USER);

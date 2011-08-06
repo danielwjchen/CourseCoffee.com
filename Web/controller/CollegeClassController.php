@@ -5,62 +5,109 @@
  */
 class CollegeClassController extends Controller implements ControllerInterface {
 
+	private $json;
+
 	/**
 	 * Implement ControllerInterface::path()
 	 */
 	public static function path() {
 		return array(
-			'college-class/add' => 'createClass',
-			'college-class/update'   => 'updateClass',
-			'college-class/remove'   => 'removeClass',
-			'college-class/search' => 'searchClass',
-			'college-class/detail' => 'getClassDetail',
-			'college-class/list' => 'getListOfClass',
-			'college-class/enroll' => 'addUserToClass',
+			'college-class-add'     => 'createClass',
+			'college-class-update'  => 'updateClass',
+			'college-class-remove'  => 'removeClass',
+			'college-class-detail'  => 'getClassDetail',
+			'college-class-list'    => 'getListOfClass',
+			'college-class-suggest' => 'suggestClass',
+			'college-class-enroll'  => 'enrollClass',
 		);
 	}
 
 	/**
+	 * Implement ControllerInterface::afterAction()
+	 */
+	public function afterAction() {
+		$this->json->setHeader(PageView::HTML_HEADER);
+		echo $this->json->render();
+	}
+
+	/**
 	 * Create a new class
+	 *
+	 * @to-do
 	 */
 	public function createClass() {
 	}
 
 	/**
 	 * Update class's information
+	 *
+	 * @to-do
 	 */
 	public function updateClass() {
 	}
 
 	/**
 	 * Remove a class
+	 *
+	 * @to-do
 	 */
 	public function removeClass() {
 	}
-
-	/**
-	 * Search for a class
-	 */
-	public function searchClass() {
-	}
-
 
 	/**
 	 * Get detail of a class()
 	 */
 	public function getClassDetail() {
 	}
+
 	/**
 	 * Get a list of class
 	 */
 	public function getListOfClass() {
 	}
 
+	/**
+	 * Suggest a list of classes based on user input
+	 */
+	public function suggestClass() {
+		/*
+		$institution_id = Input::Post('institution_id');
+		$year_id        = Input::Post('year_id');
+		$term_id        = Input::Post('term_id');
+		*/
+		$institution_id = 1;
+		$year_id        = 1;
+		$term_id        = 1;
+		$string         = Input::Post('term');
+
+		$class_suggestion = new ClassListModel();
+
+		$result = $class_suggestion->suggestClassList(
+			$institution_id,
+			$year_id,
+			$term_id,
+			$string
+		);
+
+		$this->json = new JSONView($result);
+	}
 
 	/**
 	 * Add a user to a class
 	 */
-	public function addUserToClass() {
+	public function enrollClass() {
+		$user_id = $this->isUserLoggedIn();
+		if ($user_id == false ) {
+			$this->json = new JSONView(array('redirect' => 'welcome'));
+
+		} else {
+
+			$section_id = Input::Post('section_id');
+			$enroll = new UserEnrollClassModel();
+			$result = $enroll->AddUserToClass($user_id, $section_id);
+			$this->json = new JSONView($result);
+		}
+
 	}
 
 }

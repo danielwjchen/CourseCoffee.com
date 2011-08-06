@@ -19,6 +19,7 @@ class HomePageView extends PageView implements PageViewInterface {
 		$this->addJS('model/logout.js');
 		$this->addJS('model/task.js');
 		$this->addJS('model/doc.js');
+		$this->addJS('model/class-suggest.js');
 		$this->addJS('controller/home.js');
 		$this->addJS('controller/navigation.js');
 		$this->addJS('timer.js');
@@ -47,6 +48,14 @@ class HomePageView extends PageView implements PageViewInterface {
 					<li class="class">
 						<a class="class button" href="/class">Class</a>
 					</li>
+					<li class="class-suggest">
+						<div class="class-suggest-inner">
+							<form id="class-suggest-form" name="class-suggest" action="college-class-suggest" method="post">
+								<input type="text" name="string" id="suggest-input" value="e.g. CSE231001" />
+								<input type="hidden" id="section-id" name="section_id" />
+								<a class="button suggest" href="#">add</a>
+							</form>
+					</li>
 					<li class="logout">
 						<a class="logout button" href="#">logout</a>
 					</li>
@@ -61,7 +70,7 @@ class HomePageView extends PageView implements PageViewInterface {
 							<div class="profile">
 								<img src="images/default-profile.png" />
 								<div class="name">{$first_name} {$last_name}</div>
-								<div class="school">{$college}</div>
+								<div class="school">{$institution}</div>
 							</div>
 							<div class="upload-form">
 								<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">

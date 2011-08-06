@@ -11,9 +11,12 @@ class NotFoundPageView extends PageView implements PageViewInterface {
 	function __construct($data) {
 		parent::__construct($data);
 		$this->setPageTitle('404 Page not found.');
+		$this->addJQuery();
+		$this->addJQueryUI();
 		$this->addJS('model/login.js');
 		$this->addJS('controller/not-found.js');
 		$this->addJS('controller/navigation.js');
+		$this->addJS('model/class-suggest.js');
 		$this->addCSS('not-found.css');
 	}
 
