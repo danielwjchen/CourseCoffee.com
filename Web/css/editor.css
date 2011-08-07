@@ -1,60 +1,108 @@
-/**
- * Define styles for the document editor page
- */
 #table_syl{
-	border-style:dashed;
-	border-width:2px;
-	font-family:Verdana, Geneva, sans-serif;
+	border-right-style:dashed;
+	border-right-width:2px;
+	font-family:sans-serif;
 	font-size:12px;
-}
+	}
 #table_title{
 	font:Tahoma, Geneva, sans-serif;
 	font-size:18px;
 	color:#F60;
-	text-align:center;
-}
+	text-align:left;
+	border-bottom-style:solid;
+	border-bottom-width:2px;
+	}
 #table_content{
-	font-family:Tahoma, Geneva, sans-serif;
+	font-family:sans-serif;
 	font-size:14px;
 }
 
+body{
+	background-color:#FFF;
+	
+	}
+	
 #parsed_data{
 	position:absolute;
 	width:500px;
-}
+	}
 
 .date_label{
-	color:#900;
-	background-color:#993;
-}
+	color:#FFF;
+	background-color:#F60;
+	border-radius: 2px;
+	font-size:14px;
+	
+	}
 
 #tool_box{
 	position:absolute;
 	background-color:#9F0;
-}
+	border-radius: 8px;
+	font-family:sans-serif;
+	font-size:12px;
+	color:#313131;
+	}
+
+.tool_box_btn{
+	cursor:pointer;
+	border-radius: 2px;
+	text-align:center;
+	}
 
 .schedule_elem{
-	border-style:dashed;
-	border-width:1px;
 	font-size:14px;
-}
+	border-radius: 3px;
+	border-style:dashed;
+	border-width: 1px;
+	border-color:#09F;;
+	}
+
+.schedule_elem_title{
+	font-family: sans-serif;
+	font-size:14px;
+	color:#09F;
+	text-align:left;
+	border-bottom-style:solid;
+	border-bottom-width:2px;
+	}
 
 .sch_content{
-	font-family:Verdana, Geneva, sans-serif;
+	font-family:sans-serif;
 	text-align:left;
 	width:500px;
 	white-space: normal;
 	font-size:12px;
-}
+	
+	}
+
 .del_date_label{
-	font-size:30px;
-	background-color:#F90;
+	color:#F60;
+	background-color:#FFF;
+	border-radius: 4px;
+	
+	border-color:#F60;
+	border-width:2px;
+	border-style:solid;
+	font-size:18px;
 	cursor:pointer;
-}
-.sch_edit{
+	display: inline-block;
+  	width: 20px;
+	height:20px;
+	text-align:center;
 }
 
+.sch_edit{
+	
+	}
+
 .btn{
-	background-color:#960;
+	cursor:pointer;
+	font-size:14px;
+	font-family:sans-serif;
 	color:#9F0;
-}
+	border-bottom-style:solid;
+	border-bottom-width:2px;
+	height:100;
+	}
+	
