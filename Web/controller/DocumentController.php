@@ -57,7 +57,7 @@ class DocumentController extends Controller implements ControllerInterface {
 		$filename = 'document';
 		// process form and save the file
 		$result = $file_form->processForm($user_id, $token, $filename, FileType::SYLLABUS);
-		$this->redirect('/doc-edit&document=' . $result['encoded']);
+		$this->redirect('/doc-edit&doc-type=' . $result['mime'] . '&document=' . $result['encoded']);
 	}
 
 	/**
@@ -66,8 +66,9 @@ class DocumentController extends Controller implements ControllerInterface {
 	public function processDocument() {
 		$processor = new DocumentProcessorFormModel();
 		$token    = Input::Post('token');
+		$mime     = Input::Post('mime');
 		$document = Input::Post('document');
-		$result = $processor->processDocument($document, $token);
+		$result = $processor->processDocument($document, $mime, $token);
 		$this->json = new JSONView($result);
 	}
 

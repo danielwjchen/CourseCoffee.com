@@ -38,6 +38,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 				<div class="content">
 					<form id="processor-dorm" name="document-processor">
 						<input type="hidden" name="document" value="{$document}" />
+						<input type="hidden" name="mime" value="{$mime}" />
 						<input type="hidden" name="token" value="{$processor_token}" />
 					</form>
 					<div id="parsed_data">parsed_data</div>

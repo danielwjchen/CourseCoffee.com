@@ -125,9 +125,11 @@ class PageController extends Controller implements ControllerInterface {
 	public function getDocumentEditorPage() {
 		$processor = new DocumentProcessorFormModel();
 		$document = Input::Get('document');
+		$mime     = Input::Get('doc-type');
 		$this->page = new DocumentEditorPageView(array(
-			'document' => $document,
-			'processor_token'    => $processor->initializeFormToken(),
+			'document'        => $document,
+			'mime'            => $mime,
+			'processor_token' => $processor->initializeFormToken(),
 		));
 	}
 
