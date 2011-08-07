@@ -110,6 +110,13 @@ class QuestDBA implements DBAInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies a quest',
 					),
+					'user_id' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a user',
+					),
 					'type_id' => array(
 						'type' => 'int',
 						'unsigned' => TRUE,
@@ -126,6 +133,7 @@ class QuestDBA implements DBAInterface{
 				),
 				'primary' => array('id'),
 				'index' => array(
+					'user_id' => array('user_id'),
 					'quest_id' => array('quest_id'),
 					'type_id' => array('type_id'),
 					'value' => array('value'),

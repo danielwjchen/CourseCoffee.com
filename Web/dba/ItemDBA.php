@@ -37,6 +37,13 @@ class ItemDBA implements DBAInterface{
 						'not null' => TRUE,
 						'description' => 'the primary key that identifies a item',
 					),
+					'file_id' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies an image of the item, e.g. book cover.',
+					),
 					'type_id' => array(
 						'type' => 'int',
 						'signed' => TRUE,
@@ -133,6 +140,37 @@ class ItemDBA implements DBAInterface{
 				'primary' => array('id'),
 				'unique' => array(
 					'name' => array('name'),
+				),
+			),
+			'item_section_linkage' => array(
+				'description' => 'provide a many-to-many mapping among items and sections',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'description' => 'the primary key that identifies a linkage',
+					),
+					'item_id' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a item',
+					),
+					'section_id' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a section',
+					),
+				),
+				'primary' => array('id'),
+				'index' => array(
+					'item_section_relation' => array('item_id', 'section_id'),
+					'item_id' => array('item_id'),
+					'section_id' => array('section_id'),
 				),
 			),
 		);

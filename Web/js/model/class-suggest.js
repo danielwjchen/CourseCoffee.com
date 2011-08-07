@@ -21,9 +21,9 @@ window.ClassSuggest = function(formName) {
 			type: 'post',
 			data: form.serialize(),
 			success: function(response) {
-				if (response.content) {
+				if (response.message) {
 					console.log(response);
-					dialog.open('enroll', response.content);
+					dialog.open('enroll', response.message);
 				}
 				if (response.redirect) {
 					window.location = response.redirect;

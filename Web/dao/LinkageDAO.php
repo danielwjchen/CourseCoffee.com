@@ -75,7 +75,7 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 
 		}
 
-		$data = parent::read($sql, $params);
+		$data = $this->db->fetch($sql, $params);
 		return $this->updateAttribute($data);
 
 	}

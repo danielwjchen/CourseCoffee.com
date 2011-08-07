@@ -49,14 +49,17 @@ INSERT coursecoffee_dev.subject_term_linkage (term_id, subject_id)
 	FROM msucoursemash_production.subject_term_linkage
 ;
 
-INSERT INTO coursecoffee_dev.course (subject_id, num, title)
+INSERT INTO coursecoffee_dev.course (subject_id, num, title, description)
 	SELECT
 		msucoursemash_production.course.subject_id,
 		msucoursemash_production.course.num,
-		msucoursemash_production.node.title
+		msucoursemash_production.node.title,
+		msucoursemash_production.node_revisions.body
 	FROM msucoursemash_production.course
 	INNER JOIN msucoursemash_production.node
 		ON msucoursemash_production.course.nid = msucoursemash_production.node.nid
+	INNER JOIN msucoursemash_production.node_revisions
+		ON msucoursemash_production.course.nid = msucoursemash_production.node_revisions.nid
 ;
 
 INSERT INTO coursecoffee_dev.section (course_id, num, credit)

@@ -11,7 +11,8 @@ class UserEnrollClassModel extends Model {
 	 * Error message for the user when an error is encountered
 	 */
 
-	const ERROR_FAILED_ENROLL = 'The email and password do not match';
+	const ERROR_FAILED_ENROLL    = 'A system error was encountered. Please try again later';
+	const ERROR_ALREADY_ENROLLED = 'You already enrolled in this class';
 
 	/**
 	 * @} End of error_messages
@@ -25,6 +26,7 @@ class UserEnrollClassModel extends Model {
 	
 	const EVENT_NEW_ENROLL    = '';
 	const EVENT_REMOVE_ENROLL = '';
+	const EVENT_ALREADY_ENROLLED = 'User attempted to double enroll';
 
 	/**
 	 * @} End of even_messages
@@ -50,6 +52,19 @@ class UserEnrollClassModel extends Model {
 	 * @return bool
 	 */
 	public function AddUserToClass($user_id, $section_id) {
+		$is_enrolled = $this->linkage->read(array(
+			'user_id'    => $user_id,
+			'section_id' => $section_id,
+		));
+
+		if ($is_enrolled) {
+			Logger::Write(self::EVENT_ALREADY_ENROLLED);
+			return array(
+				'error' => true,
+				'message' => self::ERROR_ALREADY_ENROLLED,
+			);
+		}
+			
 		$linkage_id = $this->linkage->create(array(
 			'user_id'    => $user_id,
 			'section_id' => $section_id,
@@ -59,7 +74,7 @@ class UserEnrollClassModel extends Model {
 			Logger::Write(EVENT_NEW_ENROLL);
 			return array(
 				'success' => true,
-				'content' => 'You are now enrolled in this class!',
+				'message' => 'You are now enrolled in this class!',
 			);
 		} 
 

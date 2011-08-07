@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Represents a user_cookie cookie record in database
+ * Represent a user cookie record in database
  */
 class UserCookieDAO extends DAO implements DAOInterface{
 

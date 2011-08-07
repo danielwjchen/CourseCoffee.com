@@ -40,6 +40,11 @@ class CourseDBA implements DBAInterface{
 						'not null' => TRUE,
 						'description' => 'course number',
 					),
+					'description' => array(
+						'type' => 'text',
+						'not null' => TRUE,
+						'description' => 'a detailed description of the context of a quest',
+					),
 				),
 				'primary' => array('id'),
 				'index' => array(

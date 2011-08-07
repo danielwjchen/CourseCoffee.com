@@ -3,7 +3,7 @@
  * @file
  * Represent a linkage between user and class section
  */
-class UserClassLinkageDAO extends LinkageDAO{
+class UserClassLinkageDAO extends LinkageDAO {
 
 	/**
 	 * Extend LinkageDAO::__construct().
