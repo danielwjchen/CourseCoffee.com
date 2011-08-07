@@ -56,9 +56,11 @@ class DocumentProcessorFormModel extends FormModel{
 	 * Process the document
 	 *
 	 * @param string $doc
+	 * @param string $mime
+	 * @param string $token
 	 *  
 	 */
-	public function processDocument($doc, $token) {
+	public function processDocument($doc, $mime, $token) {
 		$this->incrementTries();
 		// if the form token has expired
 		if (!$this->validateFormToken($token)) {
@@ -82,7 +84,19 @@ class DocumentProcessorFormModel extends FormModel{
 		$doc = escapeshellcmd($doc);
 		$doc = escapeshellarg($doc);
 		$output = null;
-		exec('pdftotext ' . FILE_PATH . '/' . $doc . ' -  -layout', $output);
+		if (strpos($mime, 'pdf')) {
+			exec('pdftotext ' . FILE_PATH . '/' . $doc . ' -  -layout', $output);
+
+		} elseif (strpos($mime, 'word')) {
+			exec('catdoc ' . FILE_PATH . '/' . $doc, $output);
+
+		} elseif (strpos($mime, 'html')) {
+			exec('html2text ' . FILE_PATH . '/' . $doc, $output);
+
+		} elseif (strpos($mime, 'text')) {
+			exec('cat ' . FILE_PATH . '/' . $doc, $output);
+
+		}
 		if (empty($output)) {
 			Logger::write(self::EVENT_FAIL);
 			return array(

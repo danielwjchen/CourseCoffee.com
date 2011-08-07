@@ -1,6 +1,6 @@
 import pycurl
 import StringIO
-url = "http://www.spartanbook.com/textbooks_xml.asp?control=campus&campus=45&term=80"
+url = "http://www.spartanbook.com/textbooks_xml.asp?control=campus&campus=46&term=81"
 ##url="http://www.spartanbook.com/textbooks_xml.asp?control=department&dept=7629&term=80"
 ##url="http://www.spartanbook.com/textbooks_xml.asp?control=course&course=116751&term=80"
 ##url="http://www.spartanbook.com/textbooks_xml.asp?control=section&section=501080"

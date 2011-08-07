@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
             /*    global variables    */
             history_stack = [];
@@ -401,7 +400,6 @@ $(document).ready(function(){
 
             /************   main **************/
             init();
-
             var processorData = $('#processor-dorm').serialize();
             $.ajax({
 
@@ -410,6 +408,8 @@ $(document).ready(function(){
                     cache: false,
                     data: processorData,
                     success: function(response){
+                    result = response.content; 
+                    sucess: function(reponse){
                     result = response.content; 
                     content = ""
                     result = $.trim(result)                                 // result: raw syllabus
