@@ -50,9 +50,9 @@ class WelcomePageView extends PageView implements PageViewInterface {
 						<div class="panel-inner">
 							<h2>Upload your course syllabuses to</h2>
 							<ul>
-								<li>Automatically organize all your class assignments into one calendar</li>
-								<li>Instantly find the cheapest deals on your textbooks online</li>
-								<li>Collaborate with your classmates on facebook</li>
+								<li class="calendar">Automatically organize all your class assignments into one calendar</li>
+								<li class="text-book">Instantly find the cheapest deals on your textbooks online</li>
+								<li class="facebook">Collaborate with your classmates on facebook</li>
 						 </ul>
 							 <a href="#">Help: where do I access my electronic syllabi?</a>
 							 <div class="sign-up-shortcut">

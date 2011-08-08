@@ -93,7 +93,7 @@ class DocumentProcessorFormModel extends FormModel{
 		} elseif (strpos($mime, 'html')) {
 			exec('html2text ' . FILE_PATH . '/' . $doc, $output);
 
-		} elseif (strpos($mime, 'text')) {
+		} elseif (strpos($mime, 'plain')) {
 			exec('cat ' . FILE_PATH . '/' . $doc, $output);
 
 		}

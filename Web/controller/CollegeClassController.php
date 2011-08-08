@@ -19,6 +19,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			'college-class-list'    => 'getListOfClass',
 			'college-class-suggest' => 'suggestClass',
 			'college-class-enroll'  => 'enrollClass',
+			'college-class-reading' => 'getClassBookList',
 		);
 	}
 
@@ -80,7 +81,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 		$term_id        = 1;
 		$string         = Input::Post('term');
 
-		$class_suggestion = new ClassListModel();
+		$class_suggestion = new CollegeClassListModel();
 
 		$result = $class_suggestion->suggestClassList(
 			$institution_id,
@@ -108,6 +109,16 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			$this->json = new JSONView($result);
 		}
 
+	}
+
+	/**
+	 * Get book list for a class
+	 */
+	public function getClassBookList() {
+		$section_id = Input::Post('section_id');
+		$list = new BookSuggestModel();
+		$result = $list->getBookList($section_id);
+		$this->json = new JSONView($result);
 	}
 
 }

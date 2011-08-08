@@ -19,6 +19,7 @@ class HomePageView extends PageView implements PageViewInterface {
 		$this->addJS('model/logout.js');
 		$this->addJS('model/task.js');
 		$this->addJS('model/doc.js');
+		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');
 		$this->addJS('controller/home.js');
 		$this->addJS('controller/navigation.js');
@@ -26,6 +27,7 @@ class HomePageView extends PageView implements PageViewInterface {
 		$this->addCSS('dialog.css');
 		$this->addCSS('task.css');
 		$this->addCSS('home.css');
+		$this->addCSS('book-list.css');
 	}
 
 	/**

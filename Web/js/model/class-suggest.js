@@ -21,9 +21,16 @@ window.ClassSuggest = function(formName) {
 			type: 'post',
 			data: form.serialize(),
 			success: function(response) {
-				if (response.message) {
-					console.log(response);
-					dialog.open('enroll', response.message);
+				// get list of suggested reading on success
+				if (response.section_id) {
+					content = response.message + 
+						'<div class="suggested-reading">' +
+							'<h3>Suggested Reading</h3>' +
+							'<div id="book-list"></div>' +
+						'</div>';
+					dialog.open('enroll', content);
+					bookList = new BookSuggest('#book-list');
+					bookList.getBookList(response.section_id);
 				}
 				if (response.redirect) {
 					window.location = response.redirect;

@@ -12,14 +12,13 @@
 	
 //	include("cjCheggAPI.php");
 
-/*
 	$amazonSearch = new AmazonAPI();
 	$amazonSearch->searchBookKeyword("Introduction to Algorithms");
 
 	echo $amazonSearch->getLowestNewPrice();
 	echo $amazonSearch->getMarketPlaceLowestNewPrice();
 	echo $amazonSearch->getMarketPlaceLowestUsedPrice();
- */
+	echo $amazonSearch->getSmallImageLink();
 
 /*
 	$ecampusSearch = new eCampusAPI("0262033844");

@@ -20,6 +20,7 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		$this->addJS('model/task.js');
 		$this->addJS('model/doc.js');
 		$this->addJS('model/scrollbar.js');
+		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');
 		$this->addJS('timer.js');
 		$this->addJS('model/calendar.js');
@@ -29,6 +30,7 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		$this->addCSS('panel.css');
 		$this->addCSS('calendar.css');
 		$this->addCSS('task.css');
+		$this->addCSS('book-list.css');
 	}
 
 	/**

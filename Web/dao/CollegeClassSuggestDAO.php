@@ -6,7 +6,7 @@
  * NOTE: this is very different from other DAOs as it only does read but not 
  * create. This is also one of the example that DAO needs to be re-designed.
  */
-class ClassSuggestDAO extends DAO implements DAOInterface{
+class CollegeClassSuggestDAO extends DAO implements DAOInterface{
 
 	/**
 	 * Extend DAO::__construct().

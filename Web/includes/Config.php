@@ -20,20 +20,18 @@ class Config{
 		if (empty($config['db'])) {
 			throw new Exception('missing database(s)');
 		} else {
-			foreach ($config['db'] as $db) {
-				if (empty($db['name'])) {
-					throw new Exception('missing database name');
-				} elseif (empty($db['driver'])) {
-					throw new Exception('missing database driver');
-				} elseif (empty($db['host'])) {
-					throw new Exception('missing database host');
-				} elseif (empty($db['port'])) {
-					throw new Exception('missing database port');
-				} elseif (empty($db['user'])) {
-					throw new Exception('missing database user');
-				} else if (empty($db['password'])) {
-					throw new Exception('missing database password');
-				}
+			if (empty($config['db']['name'])) {
+				throw new Exception('missing database name');
+			} elseif (empty($config['db']['driver'])) {
+				throw new Exception('missing database driver');
+			} elseif (empty($config['db']['host'])) {
+				throw new Exception('missing database host');
+			} elseif (empty($config['db']['port'])) {
+				throw new Exception('missing database port');
+			} elseif (empty($config['db']['user'])) {
+				throw new Exception('missing database user');
+			} else if (empty($config['db']['password'])) {
+				throw new Exception('missing database password');
 			}
 		}
 

@@ -11,8 +11,10 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	function __construct($data) {
 		parent::__construct($data);
 		$this->setPageTitle('editor');
+		$this->addJS('model/book-suggest.js');
 		$this->addJS('controller/editor.js');
 		$this->addJS('lib/date.js');
+		$this->addCSS('book-list.css');
 		$this->addCSS('editor.css');
 	}
 

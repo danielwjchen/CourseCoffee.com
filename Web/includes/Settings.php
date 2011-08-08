@@ -62,31 +62,6 @@ class DateType {
  */
 
 /**
- * @defgroup item
- * @{
- *
- * Default item type
- */
-class ItemType {
-	const BOOK          = 'book';
-	const LAB_MATERIAL  = 'lab_material';
-	const LAB_EQUIPMENT = 'lab_equipment';
-}
-
-/**
- * Default item attribute type
- */
-class ItemAttributeType {
-	const ISBN      = 'isbn';
-	const WEIGHT    = 'weight';
-	const DIMENSION = 'dimension';
-}
-
-/**
- * @} End of "defgroup item"
- */
-
-/**
  * @defgroup location
  * @{
  *

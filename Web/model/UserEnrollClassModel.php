@@ -73,8 +73,8 @@ class UserEnrollClassModel extends Model {
 		if ($linkage_id != false) {
 			Logger::Write(EVENT_NEW_ENROLL);
 			return array(
-				'success' => true,
-				'message' => 'You are now enrolled in this class!',
+				'section_id' => $section_id,
+				'message'    => 'You are now enrolled in this class!',
 			);
 		} 
 

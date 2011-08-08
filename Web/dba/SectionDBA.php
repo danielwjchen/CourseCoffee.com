@@ -53,45 +53,17 @@ class SectionDBA implements DBAInterface{
 						'not null' => TRUE,
 						'description' => 'The section credit, e.g. a specific numeric value or a range of possiblity.',
 					),
+					'status' => array(
+						'type' => 'char',
+						'length' => 64,
+						'not null' => TRUE,
+						'description' => 'a status flag, e.g. HAS_SYLLABUS.',
+					),
 				),
 				'primary' => array('id'),
 				'index' => array(
 					'course_id' => array('course_id'),
 					'num' => array('num'),
-				),
-			),
-			'section_item_linkage' => array(
-				'description' => 'provide a many-to-many mapping among sections and items',
-				'column' => array(
-					'id' => array(
-						'type' => 'serial',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'description' => 'the primary key that identifies a linkage',
-					),
-					'section_id' => array(
-						'type' => 'int',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'default' => 0,
-						'description' => 'the primary key that identifies a section',
-					),
-					'item_id' => array(
-						'type' => 'int',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'default' => 0,
-						'description' => 'the primary key that identifies a item',
-					),
-				),
-				'primary' => array('id'),
-				'index' => array(
-					'section_item_relation' => array(
-						'section_id',
-						'item_id',
-					),
-					'section_id' => array('section_id'),
-					'item_id' => array('item_id'),
 				),
 			),
 		);

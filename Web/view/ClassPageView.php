@@ -10,12 +10,18 @@ class ClassPageView extends PageView implements PageViewInterface {
 	 */
 	function __construct($data) {
 		parent::__construct($data);
+		$this->addJQueryUI();
+		$this->addJQueryUIPlugin('datetime');
+
 		$this->setPageTitle('class');
 		$this->addJS('model/logout.js');
+		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');
 		$this->addJS('controller/class.js');
 		$this->addJS('controller/navigation.js');
+		$this->addCSS('dialog.css');
 		$this->addCSS('class.css');
+		$this->addCSS('book-list.css');
 	}
 
 	/**
@@ -61,7 +67,9 @@ class ClassPageView extends PageView implements PageViewInterface {
 		</div>
 		<div class="class body">
 			<div class="body-inner">
-				{$body['block']}
+				<div class="content">
+					{$body['block']}
+				</div>
 			</div>
 		</div>
 	</div>

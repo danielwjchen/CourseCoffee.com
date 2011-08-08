@@ -5,20 +5,13 @@
  *
  * This is not secured by token
  */
-class ClassListModel extends Model {
+class CollegeClassListModel extends Model {
 
 	/**
 	 * Access to class record
 	 */
-	private $class_dao;
+	private $class_list;
 
-	/**
-	 * Extend Model::__construct()
-	 */
-	function __construct() {
-		parent::__construct();
-		$this->class_dao = new ClassSuggestDAO($this->db);
-	}
 
 	/**
 	 * Suggest a list of class based on input
@@ -31,6 +24,7 @@ class ClassListModel extends Model {
 	 * @return array
 	 */
 	public function suggestClassList($institution_id, $year_id, $term_id, $string) {
+
 		$string = preg_replace('/[^a-zA-Z0-9]/i', '', $string);
 		preg_match('/^[a-z]{1,4}/i', $string, $matches);
 		$subject_abbr = $matches[0];
@@ -52,9 +46,13 @@ class ClassListModel extends Model {
 			'term_id'        => $term_id,
 		);
 
+		/**
+		 * debug stuff
+		 *
 		error_log('subject = ' . $string . ' - ' . $subject_abbr);
 		error_log('course = ' . $course_string . ' - ' . $course_num);
 		error_log('section = ' . $section_string . '-' . $section_num);
+		 */
 
 		if (!empty($subject_abbr)) {
 			$params['like']['subject_abbr'] = $subject_abbr;
@@ -72,19 +70,25 @@ class ClassListModel extends Model {
 		$params['limit']['offset'] = 0;
 		$params['limit']['count']  = 10;
 
-		$this->class_dao->read($params);
-		return $this->class_dao->list;
+		$this->class_list = new CollegeClassSuggestDAO($this->db);
+		$this->class_list->read($params);
+		return $this->class_list->list;
 	}
 
 	/**
 	 * Fetch a list of enrolled class for user
 	 *
 	 * @param string $user_id
-	 * @param int $paginate
 	 *
 	 * @return array
 	 */
-	public function fetchUserClassList($user_id, $paginate) {
+	public function fetchUserClassList($user_id) {
+		$this->class_list = new UserClassListDAO($this->db);
+		$this->class_list->read(array('user_id' => $user_id));
+
+		return array(
+			'content' => $this->class_list->list,
+		);
 	}
 
 }

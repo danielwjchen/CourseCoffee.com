@@ -26,8 +26,8 @@
  */
 .welcome .logo{
 	float: left;
-  width: 459px;
-  margin: 30px -459px 20px 0;
+  width: 392px;
+  margin: 30px -459px 20px 67px;
 }
 
 /**
@@ -146,18 +146,30 @@
 .welcome .panel-01 .panel-inner{
 }
 .welcome .panel-01 h2{
-  font-size: 48px;
+  font-size: 24px;
 }
 .welcome .panel-01 ul,
 .welcome .panel-01 li{
-  font-size: 20px;
+  font-size: 14px;
+	line-height: 20px;
   list-style: none;
 }
 .welcome .panel-01 ul{
+	width: 400px;
   margin: 40px auto;
 }
 .welcome .panel-01 li{
-  padding: 10px 0 10px 40px;
+  padding: 10px 0 10px 50px;
+	height: 40px;
+}
+.welcome .panel-01 li.calendar {
+	background: url('/images/calendar.png') left center no-repeat;
+}
+.welcome .panel-01 li.text-book {
+	background: url('/images/text-book.png') left center no-repeat;
+}
+.welcome .panel-01 li.facebook {
+	background: url('/images/facebook.png') left center no-repeat;
 }
 .welcome .panel-01 a{
   text-decoration: none;
