@@ -46,7 +46,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 					<div id="parsed_data">parsed_data</div>
 						<table width="460"  cellpadding="0" cellspacing="0" id="table_syl">
 							<tr>
-								<td height="30" id="table_title" width="500">Original Text</td>
+								<td height="30" id="table_title" width="460">Original Text</td>
 							</tr>
 							<tr>
 								<td width="460"><div id="orig_syl"></div></td>
