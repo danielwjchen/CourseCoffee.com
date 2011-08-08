@@ -208,7 +208,7 @@ class DocumentProcessorFormModel extends FormModel{
 			$class_list = new CollegeClassSuggestDAO($this->db);
 			$has_no_record = $class_list->read($params);
 			if (!$has_no_record) {
-				$course_code = $course_code_array[$i];
+				$course_code = strtoupper($course_code_array[$i]);
 				$list = $class_list->list;
 				for ($i = 0; $i < count($list); $i++) {
 					if (in_array($list[$i]['section_num'], $section_array)) {

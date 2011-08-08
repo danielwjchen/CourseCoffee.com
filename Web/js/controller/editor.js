@@ -575,6 +575,14 @@ $P.ready(function(){
 		});
 
 		console.log(form);
+		selectionForm = $('#class-selection-form-skeleton').clone();
+		selectionForm.attr('id', 'class-selection-form');
+		content = '<h2>Please confirm class information<h2>';
+		dialog.open('confirm-class', content);
+		console.log(selectionForm);
+		selectionForm.appendTo('.dialog-inner');
+		selectionForm.removeClass('hidden');
+		/**
 		$.ajax({
 			url: '/task-bulk-add',
 			type: 'post',
@@ -583,5 +591,6 @@ $P.ready(function(){
 			success: function(response) {
 			}
 		});
+		*/
 	});
 });
