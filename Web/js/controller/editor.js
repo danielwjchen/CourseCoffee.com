@@ -409,9 +409,7 @@ $(document).ready(function(){
                     data: processorData,
                     success: function(response){
                     result = response.content; 
-                    sucess: function(reponse){
-                    result = response.content; 
-                    content = ""
+		    console.log(result);
                     result = $.trim(result)                                 // result: raw syllabus
                     result = result.replace(/\r\n/gi, "\n")                 // replace \r\n with \n: \r\n is new line in window
                     result = result.replace(/\r/gi, "\n")                   // replace \r with \n: \r is new line in Mac OS 
@@ -419,7 +417,7 @@ $(document).ready(function(){
                     result_g = result
                     
                     reg_idx = get_reg_idx(result);
-                    console.log(reg_idx)
+                    //console.log(reg_idx)
                     if(reg_idx == -1){ //no valid pattern found
                             return;
                     }
