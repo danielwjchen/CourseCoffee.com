@@ -46,7 +46,7 @@
 				"Operation"   => "ItemSearch",
 				"Keywords"    => $keyword,
 				"SearchIndex" => "Books",
-				"ResponseGroup" => "Large"
+				"ResponseGroup" => "ItemAttributes,Images,Offers"
 			);
 
 			$xmlResponse = $this->queryAmazon($params);
@@ -60,7 +60,7 @@
 				"Operation"   => "ItemSearch",
 				"Title"    => $title,
 				"SearchIndex" => "Books",
-				"ResponseGroup" => "Large"
+				"ResponseGroup" => "ItemAttributes,Images,Offers"
 			);
 
 			$xmlResponse = $this->queryAmazon($params);
@@ -74,7 +74,7 @@
 				"Operation"   => "ItemSearch",
 				"Author"    => $author,
 				"SearchIndex" => "Books",
-				"ResponseGroup" => "Large"
+				"ResponseGroup" => "ItemAttributes,Images,Offers"
 			);
 
 			$xmlResponse = $this->queryAmazon($params);
@@ -88,7 +88,7 @@
 			$params = array(
 				"Operation"     => "ItemLookup",
 				"ItemId"        => $asin,
-				"ResponseGroup" => "Large"
+				"ResponseGroup" => "ItemAttributes,Images,Offers"
 			);
 
 			$xmlResponse = $this->queryAmazon($params);
@@ -103,9 +103,10 @@
 				"Operation"     => "ItemLookup",
 				"IdType"        => "ISBN",
 				"ItemId"        => $isbn,
-			   	"SearchIndex"   => "Books",
-				"ResponseGroup" => "Large"
+				"SearchIndex"   => "Books",
+				"ResponseGroup" => "ItemAttributes,Images,Offers"
 			);
+
 
 			$xmlResponse = $this->queryAmazon($params);
 
@@ -126,7 +127,19 @@
 
 		public function getAuthors(){
 			foreach($this->book->ItemAttributes->Author as $Author){
-				$Authors = $Authors . "   ,   " . $Author;
+				if (isset($Authors)){
+					$Authors = $Authors . "   ,   " . $Author;
+				}else{
+					$Authors = $Author;
+				}
+			}
+
+			foreach($this->book->ItemAttributes->Creator as $Author){
+				if (isset($Authors)){
+					$Authors = $Authors . "   ,   " . $Author;
+				}else{
+					$Authors = $Author;
+				}
 			}
 			return $Authors;
 		}

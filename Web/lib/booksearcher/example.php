@@ -9,16 +9,32 @@
 	include("BookRenterAPI.php");
 
 	include("ValoreBooksAPI.php");
+
+	include("KnetBooksAPI.php");
 	
 //	include("cjCheggAPI.php");
 
-	$amazonSearch = new AmazonAPI();
-	$amazonSearch->searchBookKeyword("Introduction to Algorithms");
+	$stime1=microtime(true); //获取程序开始执行的时间
+	$etime1=microtime(true);//获取程序执行结束的时间  
+	$total1=$etime1-$stime1;   //计算差值  
+	$str_total1 = var_export($total1, TRUE);  
+	if(substr_count($str_total1,"E")){  
+		$float_total1 = floatval(substr($str_total1,5));  
+		$total = $float_total1/100000;  
+		echo "The total encode time is $total1 ".'second';  
+	}
 
+/*
+	$amazonSearch = new AmazonAPI();
+
+	$amazonSearch->searchBookIsbn("0415991404");
+	echo $amazonSearch->getAuthors();
 	echo $amazonSearch->getLowestNewPrice();
 	echo $amazonSearch->getMarketPlaceLowestNewPrice();
 	echo $amazonSearch->getMarketPlaceLowestUsedPrice();
 	echo $amazonSearch->getSmallImageLink();
+*/
+
 
 /*
 	$ecampusSearch = new eCampusAPI("0262033844");
@@ -54,6 +70,19 @@
 	$tt = $search->getLowestRentalLink();
 	echo $tt;
  */
+
+
+/*
+ * knetbooks
+ */
+
+//	$search = new KnetBooksAPI("0262033848");
+//	$tt = $search->getLowestRentalPrice();
+//	$tt = $search->getLowestRentalLink();
+	echo $tt;
+
+
+
 /*
 	$search = new BarnesNobleAPI();
 	$result = $search->searchBookKeyword("Introduction to Algorithm");
