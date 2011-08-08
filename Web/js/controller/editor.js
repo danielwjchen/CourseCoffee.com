@@ -1,5 +1,4 @@
-$(document.ready(function()){
-
+$(document).ready(function(){
             /*    global variables    */
             history_stack = [];
             redo_stack = [];
@@ -408,10 +407,9 @@ $(document.ready(function()){
                     type: 'Post',
                     cache: false,
                     data: processorData,
-                    sucess: function(reponse){
+                    success: function(response){
                     result = response.content; 
-
-                    content = ""
+		    console.log(result);
                     result = $.trim(result)                                 // result: raw syllabus
                     result = result.replace(/\r\n/gi, "\n")                 // replace \r\n with \n: \r\n is new line in window
                     result = result.replace(/\r/gi, "\n")                   // replace \r with \n: \r is new line in Mac OS 
@@ -419,7 +417,7 @@ $(document.ready(function()){
                     result_g = result
                     
                     reg_idx = get_reg_idx(result);
-                    console.log(reg_idx)
+                    //console.log(reg_idx)
                     if(reg_idx == -1){ //no valid pattern found
                             return;
                     }
@@ -453,6 +451,7 @@ $(document.ready(function()){
                     max_len = 0
                     
                     for(i=0;i<schedule_list.length-1;i++){
+                            //console.log(start_pos,end_pos)
                             curr_day = schedule_list[i].date.getOrdinalNumber()
                             next_day = schedule_list[i+1].date.getOrdinalNumber()
                             
@@ -464,6 +463,7 @@ $(document.ready(function()){
                                             max_len = end_pos-start_pos
                                             start_pos_final = start_pos
                                             end_pos_final = end_pos
+                                            //console.log("break", start_pos_final, end_pos_final, max_len)
                                     }
                                     start_pos = i+1
                                     end_pos = i+2
@@ -472,18 +472,22 @@ $(document.ready(function()){
                     
                     if( (end_pos-start_pos) > max_len ) { max_len = end_pos-start_pos; start_pos_final = start_pos; end_pos_final = end_pos }
                     
+                    //console.log("smooth",start_pos_final, end_pos_final)
                     
                     /* filtration */ 
                     for(i=end_pos_final; i<schedule_list.length-1; i++){
                             for(j=i+1; j<schedule_list.length; j++){
                                     start_day = schedule_list[i].date.getOrdinalNumber()
                                     curr_day = schedule_list[j].date.getOrdinalNumber()
+                                    //console.log(i,j,schedule_list[i].match_str,schedule_list[j].match_str, start_day, curr_day)
                                     if( (curr_day-start_day) >= 0 && (curr_day-start_day) < 15){ 
                                             i=j
+                                            //console.log("con")
                                             continue
                                     }
                                     else{
                                             
+                                            //console.log("brk",j)
                                             schedule_list[j].date_label_deleted = true
                                             schedule_list[j-1].next = true
                                     }
@@ -494,11 +498,14 @@ $(document.ready(function()){
                             for(j=i-1; j>=0; j--){
                                     start_day = schedule_list[i].date.getOrdinalNumber()
                                     curr_day = schedule_list[j].date.getOrdinalNumber()
+                                    //console.log(i,j,schedule_list[i].match_str,schedule_list[j].match_str, start_day, curr_day, (start_day-curr_day), avg*3)
                                     if( (start_day-curr_day) >= 0 && (start_day-curr_day) < 15 ){
                                             i=j
+                                            //console.log("con")
                                             continue
                                     }
                                     else{
+                                            //console.log("brk",j)
                                             schedule_list[j].date_label_deleted = true
                                             if (j>0) {schedule_list[j-1].next = true}
                                     }
@@ -519,7 +526,6 @@ $(document.ready(function()){
                     t=$.extend(true, [], schedule_list);
                     history_stack.push(t)
                     update_date_label()
-                
 						   
                    }});          
 });
