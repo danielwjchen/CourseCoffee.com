@@ -38,10 +38,18 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 		<div class="body">
 			<div class="body-inner">
 				<div class="content">
-					<form id="processor-dorm" name="document-processor">
+					<form id="processor-form" name="document-processor">
 						<input type="hidden" name="document" value="{$document}" />
 						<input type="hidden" name="mime" value="{$mime}" />
 						<input type="hidden" name="token" value="{$processor_token}" />
+					</form>
+					<form id="class-selection-form-skeleton" class="hidden" name="class-selection">
+						<input type="hidden" id="institution-id" name="institution_id" />
+						<input type="hidden" id="year-id" name="year_id" />
+						<input type="hidden" id="section-id" name="section_id" />
+						<input type="text" id="suggest-input" name="string" />
+					</form>
+					<form id="task-creation-form" name="task-creation">
 					</form>
 					<div id="parsed_data">parsed_data</div>
 						<table width="460"  cellpadding="0" cellspacing="0" id="table_syl">
@@ -58,6 +66,9 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 									<td width="49" class="tool_box_btn" id="undo">undo</td>
 									<td width="49" class="tool_box_btn" id="redo">redo</td>
 									<td width="81" class="tool_box_btn" >new schedule</td>
+									<td width="80" class="tool_box_btn" >
+										<a id="create-task" href="#">submit</a>
+									</td>
 									<td width="279"></td>
 								</tr>
 							</table>

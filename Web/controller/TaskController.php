@@ -22,6 +22,7 @@ class TaskController extends Controller implements ControllerInterface {
 		return array(
 			'task-init'          => 'issueTaskToken',
 			'task-add'           => 'createTask',
+			'task-bulk-add'      => 'createMultipleTask',
 			'task-update'        => 'updateTask',
 			'task-remove'        => 'removeTask',
 			'task-search'        => 'searchTask',
@@ -36,7 +37,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Override Controller::beforeAction()
 	 */
 	public function beforeAction() {
-		$this->redirectUnknownUser();
+		//$this->redirectUnknownUser();
 	}
 
 	/**
@@ -58,7 +59,24 @@ class TaskController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Create a new task
+	 * Create new task
+	 */
+	public function createMultipleTask() {
+		$task_count = Input::Post('task_count');
+		$section_id = Input::Post('section_id');
+		for ($i = 0; $i < $task_count; $i++) {
+			$date      = Input::Post('date_' . $i);
+			$objective = Input::Post('objective_' . $i);
+			error_log($date . '-' . $objective);
+
+		}
+		$this->json = new JSONView(array(
+			'message' => 'asdfasdf',
+		));
+	}
+
+	/**
+	 * Create new task
 	 */
 	public function createTask() {
 		$task = new TaskCreateFormModel();

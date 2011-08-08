@@ -26,7 +26,7 @@ class CollegeClassListModel extends Model {
 	public function suggestClassList($institution_id, $year_id, $term_id, $string) {
 
 		$string = preg_replace('/[^a-zA-Z0-9]/i', '', $string);
-		preg_match('/^[a-z]{1,4}/i', $string, $matches);
+		preg_match('/^[a-z]{1,12}/i', $string, $matches);
 		$subject_abbr = $matches[0];
 
 		$course_string = str_replace($subject_abbr, '', $string);
@@ -64,7 +64,6 @@ class CollegeClassListModel extends Model {
 
 		if (!empty($section_num)) {
 			$params['like']['section_num'] = $section_num;
-			error_log('sadfsdf');
 		}
 
 		$params['limit']['offset'] = 0;
