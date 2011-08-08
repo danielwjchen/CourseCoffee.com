@@ -52,14 +52,19 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 								<td width="460"><div id="orig_syl"></div></td>
 							</tr>
 						</table>
-						<div id="tool_box">
+						<div id="tool_box" class="button">
 							<table width="460" height="30" cellpadding="0" cellspacing="0">
 								<tr>
 									<td width="49" class="tool_box_btn" id="undo">undo</td>
 									<td width="49" class="tool_box_btn" id="redo">redo</td>
-									<td width="81" class="tool_box_btn" >new schedule</td>
+									<td width="81" class="tool_box_btn" >new assignment</td>
 									<td width="279"></td>
 								</tr>
+                                                                <tr>
+                                                                </tr>
+                                                                <tr>
+                                                                </tr>
+
 							</table>
 						</div>
 					</div>

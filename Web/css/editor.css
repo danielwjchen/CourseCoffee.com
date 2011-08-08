@@ -62,18 +62,20 @@ body{
 	}
 
 #tool_box{
-	position:absolute;
+	position:fixed;
 	background-color:#9F0;
-	border-radius: 8px;
+	border-radius: 4px;
 	font-family:sans-serif;
-	font-size:12px;
+	font-size:8px;
 	color:#313131;
+        top: 100px;
 	}
 
 .tool_box_btn{
 	cursor:pointer;
 	border-radius: 2px;
 	text-align:center;
+	font-size:8px;
 	}
 
 .schedule_elem{

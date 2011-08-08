@@ -121,11 +121,14 @@ $(document).ready(function(){
             });
 
             $(".btn[id='del_sch']").live("click",function(){
+                alert("sadf")
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx(sid)
                     schedule_list[sch_idx].date_label_deleted == true
                     adjust_spacing();
             });
+
+
 
 
             $(".schedule_elem").live("mouseenter",function(){
@@ -209,7 +212,7 @@ $(document).ready(function(){
 
             $(window).scroll(function(){
                     adjust_parsed_data_pos();
-                    $("#tool_box").css("top", $(window).scrollTop() +"px")
+                    //$("#tool_box").css("top", $(window).scrollTop() +"px")
             });
 
 
