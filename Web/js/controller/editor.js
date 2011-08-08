@@ -7,6 +7,11 @@ $P.ready(function(){
             avg = 0 //average increasement
             reg_idx = -1;
             flag_week_format = 0;
+            
+
+            pre_text_orig = "";
+            pre_text_trunc = "";
+            flag_show_orig_pre_text = 0
 
             curr_date = new Date();
             curr_year = curr_date.getFullYear();
@@ -28,7 +33,8 @@ $P.ready(function(){
             schedule_list = []
             word = [];
             delim = [];
-            orig_html="";
+            orig_html = "";
+	    pre_text = ""; // text before real date
 
             /*       flags            */
             editing_flag = 0;
@@ -185,7 +191,21 @@ $P.ready(function(){
                     update_date_label();
                     editing_flag = 0
             });
+            
+            $("#toggle_pre_text").live("click", function(){
+                    if (flag_show_orig_pre_text == 0){ // currently showing truncated text
+                        $("#pre_text").html(pre_text_orig.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
+                        $("#pre_text").fadeTo("fast", 1);
+                        $(this).text("hide text")
+                    }
+                    else{
+                        $("#pre_text").html(pre_text_trunc.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
+                        $("#pre_text").fadeTo("fast", 0.2);
+                        $(this).text("show text")
+                    }
+                    flag_show_orig_pre_text = !flag_show_orig_pre_text ;
 
+            });
 
             $(window).scroll(function(){
                     adjust_parsed_data_pos();
@@ -208,7 +228,7 @@ $P.ready(function(){
             }
                                   
             function init(){
-                    $("#parsed_data").css("left" , $("#table_syl").position().left + $("#table_syl").width() + 20  );
+                    $("#parsed_data").css("left" , $("#table_syl").position().left + $("#table_syl").width()  );
                     $("#tool_box").css("left",  $("#parsed_data").position().left);
                     $("#orig_syl").text("Loading Syllabus...");  
             }
@@ -421,7 +441,11 @@ $P.ready(function(){
                     result = result.replace(/\r/gi, "\n")                   // replace \r with \n: \r is new line in Mac OS 
                     result = result.replace(/\n{3,}/gi, "\n\n")             // all multiple empty lines (>3) will become 2 empty lines
                     result_g = result
+                   
+
+
                     
+
                     reg_idx = get_reg_idx(result);
                     //console.log(reg_idx)
                     if(reg_idx == -1){ //no valid pattern found
@@ -485,15 +509,12 @@ $P.ready(function(){
                             for(j=i+1; j<schedule_list.length; j++){
                                     start_day = schedule_list[i].date.getOrdinalNumber()
                                     curr_day = schedule_list[j].date.getOrdinalNumber()
-                                    //console.log(i,j,schedule_list[i].match_str,schedule_list[j].match_str, start_day, curr_day)
                                     if( (curr_day-start_day) >= 0 && (curr_day-start_day) < 15){ 
                                             i=j
-                                            //console.log("con")
                                             continue
                                     }
                                     else{
                                             
-                                            //console.log("brk",j)
                                             schedule_list[j].date_label_deleted = true
                                             schedule_list[j-1].next = true
                                     }
@@ -504,22 +525,22 @@ $P.ready(function(){
                             for(j=i-1; j>=0; j--){
                                     start_day = schedule_list[i].date.getOrdinalNumber()
                                     curr_day = schedule_list[j].date.getOrdinalNumber()
-                                    //console.log(i,j,schedule_list[i].match_str,schedule_list[j].match_str, start_day, curr_day, (start_day-curr_day), avg*3)
                                     if( (start_day-curr_day) >= 0 && (start_day-curr_day) < 15 ){
                                             i=j
-                                            //console.log("con")
                                             continue
                                     }
                                     else{
-                                            //console.log("brk",j)
                                             schedule_list[j].date_label_deleted = true
                                             if (j>0) {schedule_list[j-1].next = true}
                                     }
                             }
                     }
-    
-                                    
-                    content = result_g.slice(0, pos_list[0][0])
+   		    pre_text_orig = result_g.slice(0, pos_list[0][0])
+                    pre_text_trunc_size = pre_text_orig.length > 200 ? 200 : pre_text_orig.length
+                    pre_text_trunc = pre_text_orig.slice(0, pre_text_trunc_size) + "...";
+                    pre_text = "<div class = 'button' id = 'toggle_pre_text' value = 'off'  >show text</div><div id = 'pre_text' >" + pre_text_trunc+ "</div>"
+                     
+                    content = pre_text
                     
                     for(i=0;i<schedule_list.length;i++){
                             content = content + get_date_label_html(schedule_list[i].id, schedule_list[i].match_str)
@@ -527,6 +548,8 @@ $P.ready(function(){
                     }
                     
                     $("#orig_syl").html(content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
+                    $("#pre_text").fadeTo("fast", 0.2);
+
                     show_schedule();
                     adjust_spacing();
                     t=$.extend(true, [], schedule_list);
