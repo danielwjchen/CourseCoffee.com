@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$P.ready(function(){
             /*    global variables    */
             history_stack = [];
             redo_stack = [];
@@ -423,16 +423,22 @@ $(document).ready(function(){
 
             /************   main **************/
             init();
-            var processorData = $('#processor-dorm').serialize();
+            var processorData = $('#processor-form').serialize();
             $.ajax({
 
-                    url: '?q=doc-process',
-                    type: 'Post',
-                    cache: false,
-                    data: processorData,
-                    success: function(response){
+									url: '?q=doc-process',
+									type: 'Post',
+									cache: false,
+									data: processorData,
+									success: function(response){
+										form = $('#class-selection-form-skeleton');
+										$('#institution-id', form).val(response.institution_id);
+										$('#year-id', form).val(response.year_id);
+										$('#section-id', form).val(response.year_id);
+										$('#suggest-input', form).val(response.course_code);
+
                     result = response.content; 
-		    console.log(result);
+										// console.log(result);
                     result = $.trim(result)                                 // result: raw syllabus
                     result = result.replace(/\r\n/gi, "\n")                 // replace \r\n with \n: \r\n is new line in window
                     result = result.replace(/\r/gi, "\n")                   // replace \r with \n: \r is new line in Mac OS 
@@ -554,4 +560,40 @@ $(document).ready(function(){
                     update_date_label()
 						   
                    }});          
+
+	/**
+	 * Create tasks from document
+	 */
+	$('#create-task').click(function(e) {
+		e.preventDefault();
+		form = $('#task-creation-form');
+		taskEle = $('.schedule_elem');
+		form.append('<input type="hidden" name="task_count" value="' + taskEle.length + '" />');
+
+		taskEle.each(function(index, value) {
+			date = $('.schedule_elem_title', value).text().replace('Date:', '') + '/2011';
+			objective = $('.sch_content', value).text();
+			form.append('<input type="hidden" name="date_' + index + '" value="' + date + '" />');
+			form.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
+		});
+
+		console.log(form);
+		selectionForm = $('#class-selection-form-skeleton').clone();
+		selectionForm.attr('id', 'class-selection-form');
+		content = '<h2>Please confirm class information<h2>';
+		dialog.open('confirm-class', content);
+		console.log(selectionForm);
+		selectionForm.appendTo('.dialog-inner');
+		selectionForm.removeClass('hidden');
+		/**
+		$.ajax({
+			url: '/task-bulk-add',
+			type: 'post',
+			cache: false,
+			data: form.serialize(),
+			success: function(response) {
+			}
+		});
+		*/
+	});
 });
