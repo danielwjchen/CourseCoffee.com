@@ -44,8 +44,8 @@ class BookSuggestModel extends Model {
 			$isbn = $record[$i]['isbn'];
 
 			$this->list = array(
-				$isbn   =>   $this->getSingleBookRankList($isbn);
-			)
+				$isbn   =>   $this->getSingleBookRankList($isbn)
+			);
 
 		}
 	}
@@ -121,28 +121,28 @@ class BookSuggestModel extends Model {
 			$new[$storename] = array(
 				'price'  => $price,
 				'link'   => $newlink[$storename]
-			)
+			);
 		}
 
 		foreach($usedprice as $storename => $price){
 			$used[$storename] = array(
 				'price'  => $price,
 				'link'   => $usedlink[$storename]
-			)
+			);
 		}
 
 		foreach($rentalprice as $storename => $price){
 			$rental[$storename] = array(
 				'price'  => $price,
 				'link'   => $rentallink[$storename]
-			)
+			);
 		}
 
 		$rankList = array(
 			'New'      =>     $new,
 			'Used'     =>     $used,
 			'Rental'   =>     $rental
-		)
+		);
 
 		return $rankList;
 	}
