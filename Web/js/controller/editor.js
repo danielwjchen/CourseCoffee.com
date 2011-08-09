@@ -127,23 +127,14 @@ $P.ready(function(){
 
 
             /**
-             *  delete schedule
+             *  delete schedule_elem (toggle)
              */
             $("a[id='toggle_del_sch']").live("click",function(e){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx(sid)
-                                       
-                    //show_schedule(); 
-                    //adjust_spacing();
-                    if(schedule_list[sch_idx].deleted == false){
-                        $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 0.2);
-                    }
-                    else{
-                        $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 1);
-                        
-                    } 
                     schedule_list[sch_idx].deleted = !schedule_list[sch_idx].deleted
+                    update_schedule();                   
                     history_stack.push( $.extend(true, [], schedule_list) );
             });
 
@@ -197,6 +188,7 @@ $P.ready(function(){
                     adjust_spacing();
                     adjust_parsed_data_pos();
                     update_date_label();
+                    update_schedule();                   
                     editing_flag = 0 
             });
 
@@ -337,11 +329,24 @@ $P.ready(function(){
                             }
                             schedule_lc = schedule_lc + get_sch_html(schedule_list[i_idx].id, schedule_list[i_idx].date, content_temp) 
                     }
-                    
-
-                                        
                     $("#parsed_data").html(schedule_lc)
                      
+            }
+
+            /**
+             *  update opacity info of schedule_elem based on 'deleted'
+             */ 
+            function update_schedule(){ 
+                    for(i=0; i<schedule_list.length; i++){
+                            sid = schedule_list[i].id
+                            if( schedule_list[i].deleted == true ){
+                                    $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 0.2)
+                            }
+                            else{
+                                    $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 1)
+                            }
+
+                    } 
             }
 
             function adjust_spacing(){
