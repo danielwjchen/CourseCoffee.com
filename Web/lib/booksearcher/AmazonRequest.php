@@ -54,7 +54,6 @@
 				return False; // no xml
 			}
 			else{
-				echo $response;
 				return $parsedXml;
 			}
 		}

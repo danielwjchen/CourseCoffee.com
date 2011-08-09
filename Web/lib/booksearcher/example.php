@@ -14,17 +14,17 @@
 	
 //	include("cjCheggAPI.php");
 
-	$stime1=microtime(true); //获取程序开始执行的时间
-	$etime1=microtime(true);//获取程序执行结束的时间  
-	$total1=$etime1-$stime1;   //计算差值  
-	$str_total1 = var_export($total1, TRUE);  
-	if(substr_count($str_total1,"E")){  
-		$float_total1 = floatval(substr($str_total1,5));  
-		$total = $float_total1/100000;  
-		echo "The total encode time is $total1 ".'second';  
+	$stime=microtime(true);
+	$etime=microtime(true);
+	$total=$etime-$stime;
+	$str_total = var_export($total, TRUE);  
+	if(substr_count($str_total,"E")){  
+		$float_total = floatval(substr($str_total,5));  
+		$total = $float_total/100000;  
+		echo "The total encode time is $total ".'second';  
 	}
 
-/*
+
 	$amazonSearch = new AmazonAPI();
 
 	$amazonSearch->searchBookIsbn("0415991404");
@@ -33,7 +33,7 @@
 	echo $amazonSearch->getMarketPlaceLowestNewPrice();
 	echo $amazonSearch->getMarketPlaceLowestUsedPrice();
 	echo $amazonSearch->getSmallImageLink();
-*/
+
 
 
 /*
@@ -79,7 +79,7 @@
 //	$search = new KnetBooksAPI("0262033848");
 //	$tt = $search->getLowestRentalPrice();
 //	$tt = $search->getLowestRentalLink();
-	echo $tt;
+//	echo $tt;
 
 
 
