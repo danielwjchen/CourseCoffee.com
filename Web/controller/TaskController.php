@@ -62,16 +62,19 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Create new task
 	 */
 	public function createMultipleTask() {
+		$task = new TaskCreateFormModel();
 		$task_count = Input::Post('task_count');
 		$section_id = Input::Post('section_id');
+		$user_id    = 1;// super user id
 		for ($i = 0; $i < $task_count; $i++) {
 			$date      = Input::Post('date_' . $i);
 			$objective = Input::Post('objective_' . $i);
-			error_log($date . '-' . $objective);
+			$task->processMultipleForm($user_id, $objective, $date, $section_id);
 
 		}
 		$this->json = new JSONView(array(
-			'message' => 'asdfasdf',
+			'section_id' => $section_id,
+			'message'    => 'Congradulation! The syllabus is now uploaded!'
 		));
 	}
 

@@ -431,7 +431,8 @@ $P.ready(function(){
 										form = $('#class-selection-form-skeleton');
 										$('#institution-id', form).val(response.institution_id);
 										$('#year-id', form).val(response.year_id);
-										$('#section-id', form).val(response.year_id);
+										$('#term-id', form).val(response.term_id);
+										$('#section-id', form).val(response.section_id);
 										$('#suggest-input', form).val(response.course_code);
 
                     result = response.content; 
@@ -574,23 +575,100 @@ $P.ready(function(){
 			form.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
 		});
 
-		console.log(form);
 		selectionForm = $('#class-selection-form-skeleton').clone();
 		selectionForm.attr('id', 'class-selection-form');
 		content = '<h2>Please confirm class information<h2>';
 		dialog.open('confirm-class', content);
-		console.log(selectionForm);
 		selectionForm.appendTo('.dialog-inner');
 		selectionForm.removeClass('hidden');
+
 		/**
-		$.ajax({
-			url: '/task-bulk-add',
-			type: 'post',
-			cache: false,
-			data: form.serialize(),
-			success: function(response) {
+		 * Class suggest
+		 */
+		$('#suggest-input', selectionForm).autocomplete({
+			source: function(request, response) {
+				$.ajax({
+					url: '?q=college-class-suggest',
+					type: 'post',
+					data: 'term=' + request.term + '&' + selectionForm.serialize(),
+					success: function(data) {
+						// we get a specific item, this is a hack and someone needs to fix it
+						if (data['subject_abbr'] != undefined) {
+							fixedData  = {
+								0 : {
+									'subject_abbr' : data['subject_abbr'],
+									'course_num' : data['course_num'],
+									'section_num' : data['section_num'],
+									'course_title' : data['course_title'],
+									'section_id' : data['section_id']
+								}
+							}
+							response( $.map(fixedData, function(item) {
+								return {
+									courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
+									title: item['course_title'],
+									section_id : item['section_id'],
+									value: item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num']
+								}
+							}));
+						} else {
+							response( $.map(data, function(item) {
+								if (item['section_num'] != undefined) {
+									return {
+										courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
+										title: item['course_title'],
+										section_id : item['section_id'],
+										value: item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num']
+									}
+								} else {
+									return {
+										courseCode : item['subject_abbr'] + ' ' + item['course_num'],
+										title: item['course_title'],
+										value: item['subject_abbr'] + ' ' + item['course_num']
+									}
+								}
+							}));
+						}
+					}
+				})
+			},
+			select: function(event, ui) {
+				if (ui.item.section_id != undefined) {
+					$('#section-id', selectionForm).val(ui.item.section_id);
+					$('.confirm', selectionForm).removeClass('disabled');
+					
+				}
 			}
+		}).data("autocomplete")._renderItem = function(ul, item) {
+			return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append('<a href="#">' +
+					'<span class="course-code">' + item.courseCode + '</span>' +
+					'<span class="course-title">' + item.title+ '</span>' + 
+				'</a>')
+				.appendTo( ul );
+		};
+		/**
+		 * Confirm task creation
+		 */
+		$('.confirm', selectionForm).live('click', function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: '/task-bulk-add',
+				type: 'post',
+				cache: false,
+				data: $('#task-creation-form').serialize() + '&section_id=' + $('#section-id', selectionForm).val(),
+				success: function(response) {
+					content = '<h3>' + response.message + '</h3>' + 
+						'<div class="book-list"></div>' +
+						'<a href="/sign-up?section_id=' + response.section_id + '" class="button sign-up">sign up</a>'
+					;
+					$('.dialog-inner').html(content);
+					bookList = new BookSuggest('.book-list');
+					bookList.getBookList(response.section_id);
+				}
+			});
 		});
-		*/
 	});
+
 });

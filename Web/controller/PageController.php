@@ -74,7 +74,6 @@ class PageController extends Controller implements ControllerInterface {
 	public function getSignUpPage() {
 		$user_register = new UserRegisterFormModel();
 		$college       = new CollegeModel();
-		error_log('test - ' . print_r($college->getCollegeOption(), true));
 		$this->page = new SignUpPageView(array(
 			'register_token' => $user_register->initializeFormToken(),
 			'college_option' => $college->getCollegeOption(),
@@ -124,11 +123,13 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getDocumentEditorPage() {
 		$processor = new DocumentProcessorFormModel();
+		$college   = new CollegeModel();
 		$document = Input::Get('document');
 		$mime     = Input::Get('doc-type');
 		$this->page = new DocumentEditorPageView(array(
 			'document'        => $document,
 			'mime'            => $mime,
+			'college_option' => $college->getCollegeOption(),
 			'processor_token' => $processor->initializeFormToken(),
 		));
 	}

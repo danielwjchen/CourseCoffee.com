@@ -11,6 +11,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	function __construct($data) {
 		parent::__construct($data);
 		$this->setPageTitle('editor');
+		$this->addJQueryUI();
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('controller/editor.js');
 		$this->addJS('lib/date.js');
@@ -24,6 +25,15 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	 */
 	public function getContent() {
 		extract($this->data);
+		$option = '';
+		foreach ($college_option as $key => $value) {
+			$option .= "<option value='{$key}'>{$value}</option>";
+		}
+		$school_select = <<<HTML
+<select name="institution_id">
+	{$option}
+</select>
+HTML;
 		return <<<HTML
 <div class="editor container">
 	<div class="container-inner">
@@ -45,10 +55,12 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 						<input type="hidden" name="token" value="{$processor_token}" />
 					</form>
 					<form id="class-selection-form-skeleton" class="hidden" name="class-selection">
-						<input type="hidden" id="institution-id" name="institution_id" />
+						{$school_select}
 						<input type="hidden" id="year-id" name="year_id" />
+						<input type="hidden" id="term-id" name="term_id" />
 						<input type="hidden" id="section-id" name="section_id" />
 						<input type="text" id="suggest-input" name="string" />
+						<a href="#" class="button confirm disabled">confirm</a>
 					</form>
 					<form id="task-creation-form" name="task-creation">
 					</form>

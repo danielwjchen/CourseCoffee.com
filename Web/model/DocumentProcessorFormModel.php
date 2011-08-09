@@ -200,7 +200,7 @@ class DocumentProcessorFormModel extends FormModel{
 			$params['like']['subject_abbr'] = $subject_abbr;
 			
 			$course_num = str_replace($subject_abbr, '', $course_code_array[$i]);
-			$params['like']['course_num'] = $course_num;
+			$params['like']['course_num'] = trim($course_num);
 
 			$params['limit']['offset'] = 0;
 			$params['limit']['count']  = 10;
@@ -210,6 +210,12 @@ class DocumentProcessorFormModel extends FormModel{
 			if (!$has_no_record) {
 				$course_code = strtoupper($course_code_array[$i]);
 				$list = $class_list->list;
+				if (isset($list['section_num'])) {
+					if (in_array($list[$i]['section_num'], $section_array)) {
+						$section_id = $list[$i]['section_id'];
+					}
+					break;
+				}
 				for ($i = 0; $i < count($list); $i++) {
 					if (in_array($list[$i]['section_num'], $section_array)) {
 						$section_id = $list[$i]['section_id'];
@@ -223,6 +229,10 @@ class DocumentProcessorFormModel extends FormModel{
 
 		$result = implode("\n", $output);
 		$result = htmlentities($result, ENT_QUOTES, 'UTF-8');
+		$result = str_replace("\n","[NEWLINE]", $result);
+		$result = utf8_encode(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $result));
+		$result = str_replace("[NEWLINE]", "\n", $result);
+		$result = iconv("UTF-8","UTF-8//IGNORE", $result);
 		return array(
 			'institution_id' => $params['institution_id'],
 			'year_id'        => $params['year_id'],
