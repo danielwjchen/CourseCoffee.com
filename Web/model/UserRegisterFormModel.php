@@ -11,8 +11,8 @@ class UserRegisterFormModel extends FormModel {
    * Error messages for the user when an error is encountered
 	 */
 	const ERROR_FAILED_TO_CREATE   = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
-	const ERROR_FORM_EXPIRED       = 'The form has expire. Please try again.';
-	const ERROR_FORM_EMPTY         = 'You have empty fileds. Please try again.';
+	const ERROR_FORM_EXPIRED       = 'The form has expired. Please try again.';
+	const ERROR_FORM_EMPTY         = 'You have empty fields. Please try again.';
 	const ERROR_EMAIL_TAKEN        = 'An account is already registered with this emaill address. Please try again.';
 	const ERROR_PASSWORD_NOT_MATCH = 'The password and confirmation do not match. Please try again.';
 	
