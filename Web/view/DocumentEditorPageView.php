@@ -66,7 +66,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 								<tr>
 									<td width="49" class="tool_box_btn" id="undo">undo</td>
 									<td width="49" class="tool_box_btn" id="redo">redo</td>
-									<td width="81" class="tool_box_btn" >new schedule</td>
+									<td width="81" class="tool_box_btn" id="new_assignment">new schedule</td>
 									<td width="80" class="tool_box_btn" >
 										<a id="create-task" href="#">submit</a>
 									</td>

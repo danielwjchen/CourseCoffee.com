@@ -25,9 +25,10 @@ $P.ready(function(){
             reg[4]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1} (january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[5]=/^[^0-9](0?[1-9]|1[0-2]){1}-(1[0-9]|2[0-9]|3[0-1]|0?[1-9]){1}(?=[^0-9])/gi
             reg[6]=/week\W+\d{1,2}/gi
-            
-            fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, / m /gi , / t /gi, / w /gi, / r /gi, / f /gi, / u /gi, / s /gi]
+            //reg[7]=/^([^0-9])(1[0-2]|0?[1-9]){1}/gi
 
+            fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, / m /gi , / t /gi, / w /gi, / r /gi, / f /gi, / u /gi, / s /gi]
+            
 
             
             schedule_list = []
@@ -76,7 +77,8 @@ $P.ready(function(){
 
             };
 
-            $(".del_date_label").live("click",function(){
+            $(".del_date_label").live("click",function(e){
+                    e.preventDefault();
                     id_temp = $(this).attr("sid")
                     for(i=0; i<schedule_list.length;i++){
                             if(schedule_list[i].id==id_temp) break;
@@ -107,24 +109,26 @@ $P.ready(function(){
             });
 
 
-            $(".btn[id='edit_sch']").live("click",function(){
+            $("a[id='edit_sch']").live("click",function(e){
+                    e.preventDefault();
                     if(editing_flag == 1) return;
                     
                     orig_sid=$(this).attr("sid")
                     orig_html = $(".sch_content[sid='"+orig_sid+"']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
                     orig_height = $(".sch_content[sid='"+orig_sid+"']").height()*0.8
                     orig_width = $(".sch_content[sid='"+orig_sid+"']").width()
-                    $(".sch_content[sid='"+orig_sid+"']").html("<textarea sid='"+orig_sid+"' style='width:"+"500"+"px; height:"+orig_height+"px'>"+orig_html+"</textarea>\
+                    $(".sch_content[sid='"+orig_sid+"']").html("<textarea sid='"+orig_sid+"' style='width:"+"490"+"px; height:"+orig_height+"px'>"+orig_html+"</textarea>\
                                              <input type='button' id='save_sch' sid='"+orig_sid+"' value='save'/><input type='button' id='cancel_sch' sid='"+orig_sid+"' value='cancel'/>")
                     editing_flag=1
                     adjust_spacing();
             });
 
-            $(".btn[id='del_sch']").live("click",function(){
-                alert("sadf")
+            $("a[id='toggle_del_sch']").live("click",function(e){
+                    e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx(sid)
-                    schedule_list[sch_idx].date_label_deleted == true
+                    schedule_list[sch_idx].date_label_deleted = !schedule_list[sch_idx].date_label_deleted
+                    show_schedule(); 
                     adjust_spacing();
             });
 
@@ -133,7 +137,7 @@ $P.ready(function(){
 
             $(".schedule_elem").live("mouseenter",function(){
                     id_temp = $(this).attr("sid")
-                    $("td[id]", this).html("<span class='btn'  sid='"+id_temp+"' id='edit_sch'>edit</span> <span class='btn'  sid='"+id_temp+"' id='del_sch'>delete</span>")
+                    $("td[id]", this).html("<a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_sch'>edit</a>")
                     adjust_spacing();
                     adjust_parsed_data_pos();
             });
@@ -194,7 +198,11 @@ $P.ready(function(){
                     update_date_label();
                     editing_flag = 0
             });
+		
+            $("#new_assignment").click(function(){
+                dialog.open('new_assignment', "<h2>Add New Assignment</h2>");
             
+            });
             $("#toggle_pre_text").live("click", function(){
                     if (flag_show_orig_pre_text == 0){ // currently showing truncated text
                         $("#pre_text").html(pre_text_orig.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
@@ -248,7 +256,7 @@ $P.ready(function(){
             }
 
             function get_date_label_html(date_id, date_content){
-                    return "<br><span class='date_label' sid='"+date_id+"'>" + "<span>" + date_content + "</span><span sid='"+date_id+"' class='del_date_label'> X</span></span>" 
+                    return "<br><span class='date_label' sid='"+date_id+"'>" + "<span>" + date_content + "</span><a href='#' sid='"+date_id+"' class='del_date_label'> X</a></span>" 
             }
 
             function update_date_label(){
@@ -267,11 +275,11 @@ $P.ready(function(){
             function get_sch_html(date_id, date_t, content){
                     if(flag_week_format != 1){
                             return '<div sid="'+date_id+'" class="schedule_elem" >\
-                                    <table width="500" border="0" cellpadding="0" cellspacing="0">\
+                                    <table width="490" border="0" cellpadding="0" cellspacing="0">\
                                     <tr>\
-                                      <td width="135" class="schedule_elem_title">Date:'+(date_t.getMonth()+1)+'/'+date_t.getDate()+'</td>\
-                                      <td width="200" id="editing_btn">&nbsp;</td>\
-                                      <td width="149">&nbsp;</td>\
+                                      <td width="400" class="schedule_elem_title">Date:'+(date_t.getMonth()+1)+'/'+date_t.getDate()+'</td>\
+                                      <td width="50" id="editing_btn">&nbsp;</td>\
+                                      <td width="40"  ><span class="sch_btn"  id="toggle_del_sch" >x</span></td>\
                                     </tr>\
                                     <tr>\
                                       <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
@@ -280,11 +288,11 @@ $P.ready(function(){
                     }
                     else{
                             return '<div sid="'+date_id+'" class="schedule_elem" >\
-                                    <table width="500" border="0" cellpadding="0" cellspacing="0">\
+                                    <table width="490" border="0" cellpadding="0" cellspacing="0">\
                                     <tr>\
-                                      <td width="135" class="schedule_elem_title">Date:'+get_sch_by_idx(date_id).match_str+'</td>\
-                                      <td width="200" id="editing_btn">&nbsp;</td>\
-                                      <td width="149">&nbsp;</td>\
+                                      <td width="400" class="schedule_elem_title">Date:'+get_sch_by_idx(date_id).match_str+'</td>\
+                                      <td width="50" id="editing_btn">&nbsp;</td>\
+                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">x</span></td>\
                                     </tr>\
                                     <tr>\
                                       <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
@@ -298,21 +306,27 @@ $P.ready(function(){
                     i_idx=0
 
                     for(i=0; i<schedule_list.length; i++){
-                            if(schedule_list[i].date_label_deleted==false){
-                                    i_idx=i
-                                    content_temp=schedule_list[i].content
-                                    if(schedule_list[i].next==true){
-                                            do{
-                                                    if(i<schedule_list.length-1){
-                                                            content_temp = content_temp+ schedule_list[i+1].match_str + schedule_list[i+1].content;
-                                                            i=i+1;
-                                                    }
-                                            }while(schedule_list[i].next == true)
-                                    }
-                                    schedule_lc = schedule_lc + get_sch_html(schedule_list[i_idx].id, schedule_list[i_idx].date, content_temp) 
-                                }
+                            i_idx=i
+                            content_temp=schedule_list[i].content
+                            if(schedule_list[i].next==true){
+                                    do{
+                                            if(i<schedule_list.length-1){
+                                                    content_temp = content_temp+ schedule_list[i+1].match_str + schedule_list[i+1].content;
+                                                    i=i+1;
+                                            }
+                                    }while(schedule_list[i].next == true)
+                            }
+                            schedule_lc = schedule_lc + get_sch_html(schedule_list[i_idx].id, schedule_list[i_idx].date, content_temp) 
                     }
+                    
 
+                    for(i=0; i<schedule_list.length; i++){
+                            if(schedule_list[i].deleted == true){
+                                    curr_id = schedule_list[i].id;
+                            }
+                            
+                    }
+                    
                     $("#parsed_data").html(schedule_lc)
             }
 
@@ -541,7 +555,7 @@ $P.ready(function(){
    		    pre_text_orig = result_g.slice(0, pos_list[0][0])
                     pre_text_trunc_size = pre_text_orig.length > 200 ? 200 : pre_text_orig.length
                     pre_text_trunc = pre_text_orig.slice(0, pre_text_trunc_size) + "...";
-                    pre_text = "<div class = 'button' id = 'toggle_pre_text' value = 'off'  >show text</div><div id = 'pre_text' >" + pre_text_trunc+ "</div>"
+                    pre_text = "<a href='#' class='button' id='toggle_pre_text' value='off'  >show text</a><div id='pre_text' >" + pre_text_trunc+ "</div>"
                      
                     content = pre_text
                     
