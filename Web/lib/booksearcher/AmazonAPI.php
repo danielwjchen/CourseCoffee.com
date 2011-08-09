@@ -182,14 +182,7 @@
 
 		//sth wrong with this function
 		public function getAllOfferPriceLink(){
-			//$sss = $this->book->OfferSummary;
-			$sss = (string)$this->book->itemlinks;
-
-			var_dump($sss);
-
-
 			foreach ($this->book->itemlinks as $link){
-				echo $link;
 				if($link->description == "All Offers"){
 					return $link->url;
 				};
