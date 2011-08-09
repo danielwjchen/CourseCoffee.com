@@ -6,7 +6,7 @@
 		private $result;
 
 		private $isbn;
-		private $link;
+		private $link = "http://www.shareasale.com/r.cfm?u=532647&b=96706&m=14293&urllink=www.bookrenter.com%2Fmodern-american-women-writers-0020820259-9780020820253";
 
 
 		//initial
@@ -102,7 +102,6 @@
 		}
 
 		public function getLowestNewLink(){
-			$this->link = $this->result->book->shareasale_url;
 			return $this->link;
 		}
 
@@ -115,7 +114,6 @@
 		}
 
 		public function getLowestUsedLink(){
-			$this->link = $this->result->book->shareasale_url;
 			return $this->link;
 		}
 
@@ -129,7 +127,6 @@
 		}
 
 		public function getLowestRentalLink(){
-			$this->link = $this->result->book->shareasale_url;
 			return $this->link;
 		}
 

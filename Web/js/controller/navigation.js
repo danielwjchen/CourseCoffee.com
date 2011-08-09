@@ -6,6 +6,9 @@ $P.ready(function() {
 	window.navigation = $('#navigation-menu');
 	classSuggest = new ClassSuggest('#class-suggest-form');
 
+	/**
+	 * Class suggest
+	 */
 	$('#suggest-input').autocomplete({
 		source: function(request, response) {
 			$.ajax({

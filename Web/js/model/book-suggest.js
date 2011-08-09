@@ -13,7 +13,7 @@ window.BookSuggest = function(regionName) {
 	this.getBookList = function(sectionId) {
 		region.addClass('loading');
 		$.ajax({
-			url: 'college-class-reading',
+			url: '/college-class-reading',
 			type: 'post',
 			data: 'section_id=' + sectionId,
 			success: function(response) {

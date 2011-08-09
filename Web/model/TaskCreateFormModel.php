@@ -57,7 +57,23 @@ class TaskCreateFormModel extends FormModel {
 		$this->expire = 3600;
 	}
 
-	public function processForm($token, $user_id, $objective, $due_date, $description ='', $quest_id = '') {
+	/**
+	 * Bulk create multiple tasks
+	 */
+	public function processMultipleForm($user_id, $objective, $due_date, $section_id ='', $description = '') {
+		$objective = preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $objective);
+		$record_id = $this->task_dao->create(array(
+			'user_id'     => $user_id,
+			'objective'   => $objective,
+			'due_date'    => $due_date,
+			'description' => $description,
+			'section_id'  => $section_id,
+		));
+
+	}
+
+
+	public function processForm($token, $user_id, $objective, $due_date, $description ='', $section_id = '') {
 		// if the form token has expired, this is more a study on user behavior. We 
 		// might want to change the expire to a higher value if this happens too
 		// often
@@ -81,7 +97,7 @@ class TaskCreateFormModel extends FormModel {
 			'objective'   => $objective,
 			'due_date'    => $due_date,
 			'description' => $description,
-			'quest_id'    => $quest_id,
+			'section_id'  => $section_id,
 		));
 		return array(
 			'quest_id' => $record_id,
