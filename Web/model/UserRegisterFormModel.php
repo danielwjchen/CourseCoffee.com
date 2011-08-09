@@ -167,8 +167,8 @@ class UserRegisterFormModel extends FormModel {
 		}
 
 		// check if the account is alread taken
-		$this->user_dao->read(array('account' => $email));
-		if (!empty($this->user_dao->password)) {
+		$has_record = $this->user_dao->read(array('account' => $email));
+		if ($has_record) {
 			Logger::write(self::EVENT_EMAIL_TAKEN);
 			return array(
 				'first_name'     => $first_name,

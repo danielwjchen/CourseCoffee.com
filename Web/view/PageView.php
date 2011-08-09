@@ -32,11 +32,9 @@ abstract class PageView extends View implements ViewInterface {
 	 */
 	function __construct($data) {
 		$this->data = $data;
-
-		 // JavaScript to be added to the page
-		$this->data['js'] = array();
-		 // CSS to be added to the page
-		$this->data['css'] = array();
+		$this->data['js']   = array();
+		$this->data['css']  = array();
+		$this->data['meta'] = '';
 		
 		$this->setPageTitle('CourseCoffee.com');
 		$this->addMeta(array(
@@ -61,7 +59,7 @@ abstract class PageView extends View implements ViewInterface {
 	 *  a string to be used as page title
 	 */
 	public function setPageTitle($title) {
-		$this->data['page']['title'] = 'CourseCoffee.com - ' . $title;
+		$this->data['title'] = 'CourseCoffee.com - ' . $title;
 	}
 	
 	/**

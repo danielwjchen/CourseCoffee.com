@@ -65,7 +65,7 @@ class TaskCreateFormModel extends FormModel {
 		$record_id = $this->task_dao->create(array(
 			'user_id'     => $user_id,
 			'objective'   => $objective,
-			'due_date'    => $due_date,
+			'due_date'    => strtotime($due_date),
 			'description' => $description,
 			'section_id'  => $section_id,
 		));

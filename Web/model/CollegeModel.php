@@ -31,7 +31,7 @@ class CollegeModel extends Model {
 	 * @return array
 	 */
 	public function getCollegeOption() {
-		$this->institution_dao->read();
+		$this->institution_dao->read(array('all' => true));
 		$records = $this->institution_dao->list;
 		$list = array();
 
