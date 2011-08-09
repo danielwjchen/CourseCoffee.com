@@ -123,11 +123,15 @@ $P.ready(function(){
                     adjust_spacing();
             });
 
+
+            /**
+             *  delete schedule
+             */
             $("a[id='toggle_del_sch']").live("click",function(e){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx(sid)
-                    schedule_list[sch_idx].date_label_deleted = !schedule_list[sch_idx].date_label_deleted
+                    schedule_list[sch_idx].deleted = !schedule_list[sch_idx].deleted
                     show_schedule(); 
                     adjust_spacing();
             });
@@ -273,13 +277,13 @@ $P.ready(function(){
             }
 
             function get_sch_html(date_id, date_t, content){
-                    if(flag_week_format != 1){
+                    if(flag_week_format != 1){  // not week format, i.e. not week 1,2,3,4,5
                             return '<div sid="'+date_id+'" class="schedule_elem" >\
                                     <table width="490" border="0" cellpadding="0" cellspacing="0">\
                                     <tr>\
                                       <td width="400" class="schedule_elem_title">Date:'+(date_t.getMonth()+1)+'/'+date_t.getDate()+'</td>\
                                       <td width="50" id="editing_btn">&nbsp;</td>\
-                                      <td width="40"  ><span class="sch_btn"  id="toggle_del_sch" >x</span></td>\
+                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
                                     </tr>\
                                     <tr>\
                                       <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
@@ -292,7 +296,7 @@ $P.ready(function(){
                                     <tr>\
                                       <td width="400" class="schedule_elem_title">Date:'+get_sch_by_idx(date_id).match_str+'</td>\
                                       <td width="50" id="editing_btn">&nbsp;</td>\
-                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">x</span></td>\
+                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
                                     </tr>\
                                     <tr>\
                                       <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
