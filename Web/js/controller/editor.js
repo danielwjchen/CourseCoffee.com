@@ -27,7 +27,7 @@ $P.ready(function(){
             reg[6]=/week\W+\d{1,2}/gi
             //reg[7]=/^([^0-9])(1[0-2]|0?[1-9]){1}/gi
 
-            fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, / m /gi , / t /gi, / w /gi, / r /gi, / f /gi, / u /gi, / s /gi]
+            fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, /m/gi , /t/gi, /w/gi, /r/gi, /f/gi]
             
 
             
@@ -76,7 +76,9 @@ $P.ready(function(){
                     return temp_sch;
 
             };
-
+            /**
+             * toggle date lable
+             */
             $(".del_date_label").live("click",function(e){
                     e.preventDefault();
                     id_temp = $(this).attr("sid")
@@ -131,9 +133,18 @@ $P.ready(function(){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx(sid)
+                                       
+                    //show_schedule(); 
+                    //adjust_spacing();
+                    if(schedule_list[sch_idx].deleted == false){
+                        $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 0.2);
+                    }
+                    else{
+                        $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 1);
+                        
+                    } 
                     schedule_list[sch_idx].deleted = !schedule_list[sch_idx].deleted
-                    show_schedule(); 
-                    adjust_spacing();
+                    history_stack.push( $.extend(true, [], schedule_list) );
             });
 
 
@@ -266,12 +277,14 @@ $P.ready(function(){
             function update_date_label(){
                     for(i=0;i<schedule_list.length;i++){
                             if(schedule_list[i].date_label_deleted == false){ //NOT date_label_deleted
-                                    $(".date_label[sid='"+schedule_list[i].id+"'] > span[sid='"+ schedule_list[i].id +"']").text("x")
+                                    $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("x")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 1)
+                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "none", "color": "#000000"})
                             }
                             else{ // date_label_deleted
-                                    $(".date_label[sid='"+schedule_list[i].id+"'] > span[sid='"+ schedule_list[i].id +"']").text("O")
+                                    $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("O")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 0.5)
+                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "line-through", "color": "#F60"})
                             }
                     }
             }
@@ -306,6 +319,8 @@ $P.ready(function(){
             }
 
             function show_schedule(){
+                    
+                    //$("#parsed_data").html("<h2>loading your assignments</h2>")
                     schedule_lc = "" //create schedule html
                     i_idx=0
 
@@ -324,14 +339,9 @@ $P.ready(function(){
                     }
                     
 
-                    for(i=0; i<schedule_list.length; i++){
-                            if(schedule_list[i].deleted == true){
-                                    curr_id = schedule_list[i].id;
-                            }
-                            
-                    }
-                    
+                                        
                     $("#parsed_data").html(schedule_lc)
+                     
             }
 
             function adjust_spacing(){
@@ -426,7 +436,7 @@ $P.ready(function(){
                                             inc_val.push(  (Date.parse(filtered_hits[n+1]).getOrdinalNumber()-Date.parse(filtered_hits[n]).getOrdinalNumber())  )												
                                     }
                                     //console.log(m, inc_val)
-                                    if(variance(inc_val) < min_var && inc_val.length > 6){
+                                    if(variance(inc_val) < min_var && inc_val.length > 2){ // min number of dates allowed
                                             min_var = variance(inc_val)
                                             reg_idx =m
                                             find_average(inc_val)
@@ -469,8 +479,8 @@ $P.ready(function(){
                     
 
                     reg_idx = get_reg_idx(result);
-                    //console.log(reg_idx)
                     if(reg_idx == -1){ //no valid pattern found
+                            dialog.open('new_assignment', "<h2>No date assignment found!</h2>");
                             return;
                     }
 
@@ -566,7 +576,7 @@ $P.ready(function(){
                     
                     for(i=0;i<schedule_list.length;i++){
                             content = content + get_date_label_html(schedule_list[i].id, schedule_list[i].match_str)
-                            content = content + result_g.slice(schedule_list[i].start_pos+schedule_list[i].match_str.length, schedule_list[i].end_pos)
+                            content = content + "<span class='orig_text_block' sid='" + schedule_list[i].id + "'>" + result_g.slice(schedule_list[i].start_pos+schedule_list[i].match_str.length, schedule_list[i].end_pos) + "</span>"
                     }
                     
                     $("#orig_syl").html(content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
@@ -578,7 +588,8 @@ $P.ready(function(){
                     history_stack.push(t)
                     update_date_label()
 						   
-                   }});          
+                   }});        
+        /*****************      end of main    *********************/  
 
 	/**
 	 * Create tasks from document
