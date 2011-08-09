@@ -229,10 +229,13 @@ class DocumentProcessorFormModel extends FormModel{
 
 		$result = implode("\n", $output);
 		$result = htmlentities($result, ENT_QUOTES, 'UTF-8');
-		$result = str_replace("\n","[NEWLINE]", $result);
-		$result = utf8_encode(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $result));
-		$result = str_replace("[NEWLINE]", "\n", $result);
-		$result = iconv("UTF-8","UTF-8//IGNORE", $result);
+
+		// This broke the covernsion!! 
+		// $result = str_replace("\n","[NEWLINE]", $result);
+		// $result = utf8_encode(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $result));
+		// $result = str_replace("[NEWLINE]", "\n", $result);
+		// $result = iconv("UTF-8","UTF-8//IGNORE", $result);
+
 		return array(
 			'institution_id' => $params['institution_id'],
 			'year_id'        => $params['year_id'],

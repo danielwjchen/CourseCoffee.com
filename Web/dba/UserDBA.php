@@ -36,10 +36,8 @@ class UserDBA implements DBAInterface{
 					),
 				),
 				'primary' => array('id'),
-				'index' => array(
-					'account' => array('account'),
-					'password' => array('password'),
-				),
+				'unique' => array('account' => array('account')),
+				'index' => array('password' => array('password')),
 			),
 			'user_cookie' => array(
 				'description' => "store user's cookie signature",

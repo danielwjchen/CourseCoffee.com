@@ -76,7 +76,7 @@ class InstitutionDAO extends DAO implements DAOInterface{
 				'uri' => $params['uri']
 			));
 
-		} else {
+		} elseif (isset($params['all'])) {
 			$this->list = $this->db->fetch($sql);
 			return empty($this->list);
 
