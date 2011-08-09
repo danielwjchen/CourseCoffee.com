@@ -91,7 +91,7 @@ class BookSuggestModel extends Model {
 			'eCampus'	=> $ecampusSearch->getLowestUsedPrice(),
 			'BookRenter'	=> $bookrenterSearch->getLowestUsedPrice(),
 			'AmazonMarket'  => $amazonSearch->getMarketPlaceLowestUsedPrice()
-		)
+		);
 		$usedlink = array(
 			'eCampus'	=> $ecampusSearch->getLowestUsedLink(),
 			'BookRenter'	=> $bookrenterSearch->getLowestUsedLink(),
