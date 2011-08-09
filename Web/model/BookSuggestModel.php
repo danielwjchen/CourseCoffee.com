@@ -90,13 +90,11 @@ class BookSuggestModel extends Model {
 		$usedprice = array(
 			'eCampus'	=> $ecampusSearch->getLowestUsedPrice(),
 			'BookRenter'	=> $bookrenterSearch->getLowestUsedPrice(),
-			'ValoreBooks'   => $valorebookSearch->getLowestUsedPrice(),
 			'AmazonMarket'  => $amazonSearch->getMarketPlaceLowestUsedPrice()		
 		);
 		$usedlink = array(
 			'eCampus'	=> $ecampusSearch->getLowestUsedLink(),
 			'BookRenter'	=> $bookrenterSearch->getLowestUsedLink(),
-			'ValoreBooks'   => $valorebookSearch->getLowestNewLink(),
 			'AmazonMarket'  => $amazonSearch->getLowestNewLink()
 		);
 
@@ -122,21 +120,21 @@ class BookSuggestModel extends Model {
 				'price'  => $price,
 				'link'   => $newlink[$storename]
 			);
-		}
+		};
 
 		foreach($usedprice as $storename => $price){
 			$used[$storename] = array(
 				'price'  => $price,
 				'link'   => $usedlink[$storename]
 			);
-		}
+		};
 
 		foreach($rentalprice as $storename => $price){
 			$rental[$storename] = array(
 				'price'  => $price,
 				'link'   => $rentallink[$storename]
 			);
-		}
+		};
 
 		$rankList = array(
 			'New'      =>     $new,
