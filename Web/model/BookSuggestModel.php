@@ -145,9 +145,16 @@ class BookSuggestModel extends Model {
 		};
 
 		$rankList = array(
-			'New'      =>     $new,
-			'Used'     =>     $used,
-			'Rental'   =>     $rental
+			'New'       =>     $new,
+			'Used'      =>     $used,
+			'Rental'    =>     $rental,
+			'Image'     =>     array(
+				'SmallURL'  => $amazonSearch->getSmallImageLink(),
+				'MediumURL' => $amazonSearch->getMediumImageLink(),
+				'Large'     => $amazonSearch->getLargeImageLink()
+			),
+			'Title'     =>     $amazonSearch->getTitle(),
+			'ListPrice' =>     $amazonSearch->getListPrice()
 		);
 
 		return $rankList;
