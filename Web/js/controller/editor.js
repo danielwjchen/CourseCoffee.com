@@ -27,7 +27,7 @@ $P.ready(function(){
             reg[6]=/week\W+\d{1,2}/gi
             //reg[7]=/^([^0-9])(1[0-2]|0?[1-9]){1}/gi
 
-            fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, / m /gi , / t /gi, / w /gi, / r /gi, / f /gi, / u /gi, / s /gi]
+            fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, /m/gi , /t/gi, /w/gi, /r/gi, /f/gi]
             
 
             
@@ -76,7 +76,9 @@ $P.ready(function(){
                     return temp_sch;
 
             };
-
+            /**
+             * toggle date lable
+             */
             $(".del_date_label").live("click",function(e){
                     e.preventDefault();
                     id_temp = $(this).attr("sid")
@@ -123,13 +125,17 @@ $P.ready(function(){
                     adjust_spacing();
             });
 
+
+            /**
+             *  delete schedule_elem (toggle)
+             */
             $("a[id='toggle_del_sch']").live("click",function(e){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx(sid)
-                    schedule_list[sch_idx].date_label_deleted = !schedule_list[sch_idx].date_label_deleted
-                    show_schedule(); 
-                    adjust_spacing();
+                    schedule_list[sch_idx].deleted = !schedule_list[sch_idx].deleted
+                    update_schedule();                   
+                    history_stack.push( $.extend(true, [], schedule_list) );
             });
 
 
@@ -182,6 +188,7 @@ $P.ready(function(){
                     adjust_spacing();
                     adjust_parsed_data_pos();
                     update_date_label();
+                    update_schedule();                   
                     editing_flag = 0 
             });
 
@@ -262,24 +269,26 @@ $P.ready(function(){
             function update_date_label(){
                     for(i=0;i<schedule_list.length;i++){
                             if(schedule_list[i].date_label_deleted == false){ //NOT date_label_deleted
-                                    $(".date_label[sid='"+schedule_list[i].id+"'] > span[sid='"+ schedule_list[i].id +"']").text("x")
+                                    $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("x")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 1)
+                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "none", "color": "#000000"})
                             }
                             else{ // date_label_deleted
-                                    $(".date_label[sid='"+schedule_list[i].id+"'] > span[sid='"+ schedule_list[i].id +"']").text("O")
+                                    $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("O")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 0.5)
+                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "line-through", "color": "#F60"})
                             }
                     }
             }
 
             function get_sch_html(date_id, date_t, content){
-                    if(flag_week_format != 1){
+                    if(flag_week_format != 1){  // not week format, i.e. not week 1,2,3,4,5
                             return '<div sid="'+date_id+'" class="schedule_elem" >\
                                     <table width="490" border="0" cellpadding="0" cellspacing="0">\
                                     <tr>\
                                       <td width="400" class="schedule_elem_title">Date:'+(date_t.getMonth()+1)+'/'+date_t.getDate()+'</td>\
                                       <td width="50" id="editing_btn">&nbsp;</td>\
-                                      <td width="40"  ><span class="sch_btn"  id="toggle_del_sch" >x</span></td>\
+                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
                                     </tr>\
                                     <tr>\
                                       <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
@@ -292,7 +301,7 @@ $P.ready(function(){
                                     <tr>\
                                       <td width="400" class="schedule_elem_title">Date:'+get_sch_by_idx(date_id).match_str+'</td>\
                                       <td width="50" id="editing_btn">&nbsp;</td>\
-                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">x</span></td>\
+                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
                                     </tr>\
                                     <tr>\
                                       <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
@@ -302,6 +311,8 @@ $P.ready(function(){
             }
 
             function show_schedule(){
+                    
+                    //$("#parsed_data").html("<h2>loading your assignments</h2>")
                     schedule_lc = "" //create schedule html
                     i_idx=0
 
@@ -318,16 +329,24 @@ $P.ready(function(){
                             }
                             schedule_lc = schedule_lc + get_sch_html(schedule_list[i_idx].id, schedule_list[i_idx].date, content_temp) 
                     }
-                    
-
-                    for(i=0; i<schedule_list.length; i++){
-                            if(schedule_list[i].deleted == true){
-                                    curr_id = schedule_list[i].id;
-                            }
-                            
-                    }
-                    
                     $("#parsed_data").html(schedule_lc)
+                     
+            }
+
+            /**
+             *  update opacity info of schedule_elem based on 'deleted'
+             */ 
+            function update_schedule(){ 
+                    for(i=0; i<schedule_list.length; i++){
+                            sid = schedule_list[i].id
+                            if( schedule_list[i].deleted == true ){
+                                    $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 0.2)
+                            }
+                            else{
+                                    $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 1)
+                            }
+
+                    } 
             }
 
             function adjust_spacing(){
@@ -422,7 +441,7 @@ $P.ready(function(){
                                             inc_val.push(  (Date.parse(filtered_hits[n+1]).getOrdinalNumber()-Date.parse(filtered_hits[n]).getOrdinalNumber())  )												
                                     }
                                     //console.log(m, inc_val)
-                                    if(variance(inc_val) < min_var && inc_val.length > 6){
+                                    if(variance(inc_val) < min_var && inc_val.length > 2){ // min number of dates allowed
                                             min_var = variance(inc_val)
                                             reg_idx =m
                                             find_average(inc_val)
@@ -465,8 +484,8 @@ $P.ready(function(){
                     
 
                     reg_idx = get_reg_idx(result);
-                    //console.log(reg_idx)
                     if(reg_idx == -1){ //no valid pattern found
+                            dialog.open('new_assignment', "<h2>No date assignment found!</h2>");
                             return;
                     }
 
@@ -562,7 +581,7 @@ $P.ready(function(){
                     
                     for(i=0;i<schedule_list.length;i++){
                             content = content + get_date_label_html(schedule_list[i].id, schedule_list[i].match_str)
-                            content = content + result_g.slice(schedule_list[i].start_pos+schedule_list[i].match_str.length, schedule_list[i].end_pos)
+                            content = content + "<span class='orig_text_block' sid='" + schedule_list[i].id + "'>" + result_g.slice(schedule_list[i].start_pos+schedule_list[i].match_str.length, schedule_list[i].end_pos) + "</span>"
                     }
                     
                     $("#orig_syl").html(content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
@@ -574,7 +593,8 @@ $P.ready(function(){
                     history_stack.push(t)
                     update_date_label()
 						   
-                   }});          
+                   }});        
+        /*****************      end of main    *********************/  
 
 	/**
 	 * Create tasks from document
