@@ -84,12 +84,12 @@ class BookSuggestModel extends Model {
 		);
 
 		$newlink = array(
-			'Amazon'	=> $amazonSearch->getLowestNewLink(),
-			'eCampus'	=> $ecampusSearch->getLowestNewLink(),
-			'BookRenter'	=> $bookrenterSearch->getLowestNewLink(),
-			'ValoreBooks'   => $valorebookSearch->getLowestNewLink(),
-			'AmazonMarket'  => $amazonSearch->getLowestNewLink(),
-			'eCampusMArket' => $ecampusSearch->getLowestMarketPlaceLink()
+			'Amazon'	=> (string)$amazonSearch->getLowestNewLink(),
+			'eCampus'	=> (string)$ecampusSearch->getLowestNewLink(),
+			'BookRenter'	=> (string)$bookrenterSearch->getLowestNewLink(),
+			'ValoreBooks'   => (string)$valorebookSearch->getLowestNewLink(),
+			'AmazonMarket'  => (string)$amazonSearch->getLowestNewLink(),
+			'eCampusMArket' => (string)$ecampusSearch->getLowestMarketPlaceLink()
 		);
 
 		//used
@@ -99,9 +99,9 @@ class BookSuggestModel extends Model {
 			'AmazonMarket'  => substr($amazonSearch->getMarketPlaceLowestUsedPrice(),1,strlen($amazonSearch->getMarketPlaceLowestUsedPrice()))		
 		);
 		$usedlink = array(
-			'eCampus'	=> $ecampusSearch->getLowestUsedLink(),
-			'BookRenter'	=> $bookrenterSearch->getLowestUsedLink(),
-			'AmazonMarket'  => $amazonSearch->getLowestNewLink()
+			'eCampus'	=> (string)$ecampusSearch->getLowestUsedLink(),
+			'BookRenter'	=> (string)$bookrenterSearch->getLowestUsedLink(),
+			'AmazonMarket'  => (string)$amazonSearch->getLowestNewLink()
 		);
 
 		//rental
@@ -110,37 +110,35 @@ class BookSuggestModel extends Model {
 			'BookRenter'	=> substr($bookrenterSearch->getLowestRentalPrice(),1,strlen($bookrenterSearch->getLowestRentalPrice()))			
 		);
 		$rentallink = array(
-			'eCampus'	=> $ecampusSearch->getLowestRentalLink(),
-			'BookRenter'	=> $bookrenterSearch->getLowestRentalLink()
+			'eCampus'	=> (string)$ecampusSearch->getLowestRentalLink(),
+			'BookRenter'	=> (string)$bookrenterSearch->getLowestRentalLink()
 		);
 
 		//begin sort
 		natsort($newprice);
 		natsort($usedprice);
 		natsort($rentalprice);
-
-		//return $newprice;
-		return $newprice;	
+	
 
 		//rank new book
 		foreach($newprice as $storename => $price){
 			$new[$storename] = array(
 				'price'  => $price,
-				'link'   => $newlink[$storename]
+				'link'   => (string)$newlink[$storename]
 			);
 		};
 
 		foreach($usedprice as $storename => $price){
 			$used[$storename] = array(
 				'price'  => $price,
-				'link'   => $usedlink[$storename]
+				'link'   => (string)$usedlink[$storename]
 			);
 		};
 
 		foreach($rentalprice as $storename => $price){
 			$rental[$storename] = array(
 				'price'  => $price,
-				'link'   => $rentallink[$storename]
+				'link'   => (string)$rentallink[$storename]
 			);
 		};
 
@@ -149,12 +147,12 @@ class BookSuggestModel extends Model {
 			'Used'      =>     $used,
 			'Rental'    =>     $rental,
 			'Image'     =>     array(
-				'SmallURL'  => $amazonSearch->getSmallImageLink(),
-				'MediumURL' => $amazonSearch->getMediumImageLink(),
-				'Large'     => $amazonSearch->getLargeImageLink()
+				'SmallURL'     => (string)$amazonSearch->getSmallImageLink(),
+				'MediumURL'    => (string)$amazonSearch->getMediumImageLink(),
+				'LargeURL'     => (string)$amazonSearch->getLargeImageLink()
 			),
-			'Title'     =>     $amazonSearch->getTitle(),
-			'ListPrice' =>     $amazonSearch->getListPrice()
+			'Title'     =>     (string)$amazonSearch->getTitle(),
+			'ListPrice' =>     substr($amazonSearch->getListPrice(),1,strlen($amazonSearch->getListPrice()))
 		);
 
 		return $rankList;
