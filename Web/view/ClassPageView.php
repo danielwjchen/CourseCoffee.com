@@ -102,7 +102,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 					<div class="panel-01">
 						<div class="panel-inner">
 							<h2 class="course-title"></h2>
-							<div class="book-display"></div>
+							<div id="class-book-list" class="book-list" ></div>
 						</div>
 					</div>
 					<div class="panel-02">

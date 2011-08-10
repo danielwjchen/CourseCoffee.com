@@ -69,18 +69,19 @@ class BookSuggestModel extends Model {
 			$title = (string)$this->amazonSearch->getTitle();
 			$image = (string)$this->amazonSearch->getSmallImageLink(); 
 
-			$this->list[] = array(
-				$title => array(
-					'image'  => $image,
-					'offers' => $this->getSingleBookRankList($isbn),
-				),
+			// debug
+			// error_log('image - ' . $image);
+
+			$this->list[$title] = array(
+				'image'  => $image,
+				'offers' => $this->getSingleBookRankList($isbn),
 			);
 		}
 
 		// debug
 		// error_log('book suggest result - ' . print_r($this->list, true));
 
-		return $this->list;
+		return array('list' => $this->list);
 	}
 
 
@@ -169,10 +170,10 @@ class BookSuggestModel extends Model {
 		};
 
 		$rankList = array(
-			'New'       => $new,
-			'Used'      => $used,
-			'Rental'    => $rental,
-			'ListPrice' => substr($this->amazonSearch->getListPrice(),1,strlen($this->amazonSearch->getListPrice()))
+			'new'       => $new,
+			'used'      => $used,
+			'rental'    => $rental,
+			'listPrice' => substr($this->amazonSearch->getListPrice(),1,strlen($this->amazonSearch->getListPrice()))
 		);
 
 		return $rankList;

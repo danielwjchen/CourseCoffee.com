@@ -1,6 +1,73 @@
 /**
- * Define styles for suggestd book list
+ * Define class for suggested reading
  */
-#book-list {
-	min-height: 100px;
+.book-list {
+ height: 400px;
+ overflow: auto;
+}
+.book-list ul,
+.book-list li {
+	list-style: none;
+	display: block;
+}
+.book-list li.book {
+	float: left;
+	clear: both;
+	width: 440px;
+	margin-bottom: 20px;
+}
+.book-list a {
+	text-decoration: none;
+	font-size: 12px;
+	color: #333333;
+	display: block;
+}
+.book-list a:hover {
+	text-decoration: underline;
+}
+.book-list .cover {
+	display: block;
+	float: left;
+	margin-right: -65px;
+}
+.book-list .info {
+	float: left;
+	margin-left: 65px;
+	width: 375px;
+	margin-right: -440px;
+	clear: right;
+}
+.book-list .title {
+	font-weight: bold;
+	font-size: 16px;
+	margin-bottom: 10px;
+	width: 375px;
+	margin-right: -375px;
+	display: block;
+}
+.book-list .offer {
+	float: left;
+	width: 375px;
+	margin-right: -375px;
+	clear: right;
+}
+.book-list .offer ul {
+	float: left;
+	width: 162px;
+	padding-right: 10px;
+}
+.book-list .offer li {
+	clear: both;
+	line-height: 16px;
+	height: 22px;
+}
+.book-list .offer .offer-type {
+	font-weight: bold;
+	font-size: 14px;
+}
+.book-list .offer .price {
+	color: #FF8400;
+	font-weight: bold;
+	font-size: 16px;
+	float: right;
 }

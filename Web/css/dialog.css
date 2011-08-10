@@ -99,7 +99,7 @@
  * Define styles for enrollment dialog
  */
 .enroll.dialog {
-	margin: 200px auto 0;
+	margin: 50px auto 0;
 	width: 480px;
 	height: 480px;
 	position: relative;
@@ -134,6 +134,10 @@
 	width: 458px;
 	text-align: center;
 	margin: 35px auto;
+}
+.enroll #book-list {
+	height: 450px!important;
+	overflow: auto;
 }
 
 /**

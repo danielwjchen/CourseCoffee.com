@@ -33,12 +33,12 @@ window.ClassSuggest = function(formName) {
 					content += '<h2>' + response.message + '</h2>' +
 						'<div class="suggested-reading">' +
 							'<h3>Suggested Reading</h3>' +
-							'<div id="book-list"></div>' +
+							'<div id="enroll-book-list" class="book-list"></div>' +
 						'</div>';
 
 					dialog.open('enroll', content);
 
-					bookList = new BookSuggest('#book-list');
+					bookList = new BookSuggest('#enroll-book-list');
 					bookList.getBookList(response.section_id);
 				}
 			}

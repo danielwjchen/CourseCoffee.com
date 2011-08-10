@@ -6,6 +6,39 @@ window.BookSuggest = function(regionName) {
 	region = $(regionName);
 
 	/**
+	 * Generate output for each offer type
+	 *
+	 * @param string type
+	 * @param object offer
+	 *
+	 * @return string html
+	 */
+	generateOfferOutput = function(type, offer) {
+
+		offerHtml = '<ul>';
+		offerHtml += '<li class="offer-type">' + type + '</li>';
+		vendorHtml = '';
+		$.each(offer, function(index, value) {
+			if (value['price']) {
+				vendorHtml += '<li><a href="' + value['link'] + '" target="_blank" >' +
+					'<span class="vendor">' + index + '</span>' +
+					'<span class="price">&#36;' + value['price'] + '</span>' +
+				'</a></li>';
+			}
+			// debug
+			// console.log(index);
+			// console.log(value);
+		});
+		if (vendorHtml == '') {
+			return '';
+		}
+
+		offerHtml += vendorHtml + '</ul>';
+
+		return offerHtml;
+	}
+
+	/**
 	 * Get list of books from different vendors
 	 *
 	 * @param sectionId
@@ -20,15 +53,19 @@ window.BookSuggest = function(regionName) {
 				region.removeClass('loading');
 				if (response.list) {
 					html = '<ul>';
-					$.each(response.list, function(index, value) {
-						amazonNew = value['amazon']['new']['0'] ? '<span class="buy-new">buy new: ' + value['amazon']['new']['0'] + '</span>' : null;
-						html += '<li>' +
-							'<img src="' + value['image']['0'] + '" class="cover">' +
-							'<span class="title">' + value['title']['0'] + '</span>' +
-							amazonNew +
+					$.each(response.list, function(title, value) {
+						newOffers     = generateOfferOutput('buy new', value['offers']['new']);
+						usedOffers    = generateOfferOutput('buy used', value['offers']['used']);
+						retanlOoffers = generateOfferOutput('rent', value['offers']['rental']);
+						html += '<li class="book">' +
+							'<img src="' + value['image'] + '" class="cover" />' +
+							'<div class="info">' +
+								'<span class="title">' + title  + '</span>' +
+								'<div class="offer">' + newOffers + usedOffers + retanlOoffers + '</div>' +
+							'</div>' +
 						'</li>';
-						console.log(index);
-						console.log(value);
+						// console.log(title);
+						// console.log(value);
 					});
 					html += '</ul>';
 
