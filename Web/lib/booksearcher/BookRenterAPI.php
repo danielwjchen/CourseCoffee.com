@@ -24,7 +24,6 @@
 
 			// send request
 			$response = @file_get_contents($request);
-			echo $response;
 			if ($response === False){
 				return False;
 			}
