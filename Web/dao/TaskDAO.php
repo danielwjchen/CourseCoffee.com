@@ -220,7 +220,7 @@ class TaskDAO extends DAO implements DAOInterface{
 		}
 
 		$this->list = $data;
-		return empty($data);
+		return !empty($data);
 	}
 
 	/**

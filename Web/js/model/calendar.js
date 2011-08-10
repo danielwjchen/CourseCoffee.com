@@ -216,9 +216,9 @@ window.calendar = {
 				calendar.taskPanel.removeClass('loading');
 				if (response.success) {
 					task.generateList(response.list, calendar.taskPanel);
-					if (response.list['id'] != undefined) {
+					if (response.list && response.list['id']) {
 						findTimeInterval(response.list);
-					} else {
+					} else if (response.list) {
 						for (i in response.list) {
 							findTimeInterval(response.list[i]);
 

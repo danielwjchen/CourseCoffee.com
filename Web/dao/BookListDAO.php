@@ -28,7 +28,7 @@ class BookListDAO extends DAO {
 			";
 			$sql_param = array('section_id' => $params['section_id']);
 			$this->list = $this->db->fetch($sql, $sql_param);
-			return empty($this->list);
+			return !empty($this->list);
 		} 
 
 		throw new Exception('unknow book identifier - ' . print_r($params, true));

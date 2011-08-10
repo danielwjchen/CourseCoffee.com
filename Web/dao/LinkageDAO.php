@@ -42,6 +42,10 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 
 	/**
 	 * Implement DAO::read()
+	 *
+	 * If only one column is returned, it would read the records as a list and 
+	 * return the record count.
+	 *
 	 */
 	public function read($params) {
 		$sql = "SELECT * FROM `{$this->linkage}` WHERE ";
@@ -61,13 +65,19 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 			$sql .= "{$this->column[0]} = :{$this->column[0]} 
 				AND {$this->column[1]} = :{$this->column[1]}";
 
+		// return list of record based on parent
 		} elseif (isset($params[$this->column[0]])) {
 			$params = array($this->column[0] => $params[$this->column[0]]);
 			$sql .= "{$this->column[0]} = :{$this->column[0]}";
+			$this->list = $this->db->fetch($sql, $params);
+			return count($this->list);
 
+		// return list of record based on child
 		} elseif (isset($params[$this->column[1]])) {
 			$params = array($this->column[1] => $params[$this->column[1]]);
 			$sql .= "{$this->column[1]} = :{$this->column[1]}";
+			$this->list = $this->db->fetch($sql, $params);
+			return count($this->list);
 
 		} else {
 			throw new Exception("unknown {$this->linkage} identifier - " . print_r($params, true));

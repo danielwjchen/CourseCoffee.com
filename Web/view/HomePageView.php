@@ -99,6 +99,7 @@ class HomePageView extends PageView implements PageViewInterface {
 												<input type="text" name="due_date" id="time-picker" class="due_date" />
 												<label for="course-section" class="title">Class: </label>
 												<input type="text" name="course-section" class="course-section"/>
+												<input type="hidden" name="section_id" />
 												<a href="#" class="button show-detail">more detail</a>
 											</div>
 											<div class="optional hidden">

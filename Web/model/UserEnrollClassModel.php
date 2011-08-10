@@ -11,8 +11,9 @@ class UserEnrollClassModel extends Model {
 	 * Error message for the user when an error is encountered
 	 */
 
-	const ERROR_FAILED_ENROLL    = 'A system error was encountered. Please try again later';
-	const ERROR_ALREADY_ENROLLED = 'You already enrolled in this class';
+	const ERROR_FAILED_ENROLL     = 'A system error was encountered. Please try again later';
+	const ERROR_ALREADY_ENROLLED  = 'You already enrolled in this class';
+	const ERROR_EXCEED_MAX_ENROLL = 'Slow down brainiac. We can only add you to six classes at a time';
 
 	/**
 	 * @} End of error_messages
@@ -24,9 +25,10 @@ class UserEnrollClassModel extends Model {
 	 * Log messges to track events
 	 */
 	
-	const EVENT_NEW_ENROLL    = '';
-	const EVENT_REMOVE_ENROLL = '';
-	const EVENT_ALREADY_ENROLLED = 'User attempted to double enroll';
+	const EVENT_NEW_ENROLL        = 'User enrolled in class';
+	const EVENT_REMOVE_ENROLL     = '';
+	const EVENT_ALREADY_ENROLLED  = 'User attempted to double enroll';
+	const EVENT_EXCEED_MAX_ENROLL = 'User reached enrollment limit';
 
 	/**
 	 * @} End of even_messages
@@ -34,6 +36,9 @@ class UserEnrollClassModel extends Model {
 
 	// access to records
 	private $linkage;
+
+	// enrollment limt
+	const ENROLLMENT_LIMIT = 6;
 
 	/**
 	 * Extend Model::__construct()
@@ -64,6 +69,20 @@ class UserEnrollClassModel extends Model {
 				'message' => self::ERROR_ALREADY_ENROLLED,
 			);
 		}
+
+
+		$current_class_count = $this->linkage->read(array('user_id' => $user_id));
+		//debug
+		error_log('enrollment count - ' . $current_class_count);
+
+		if ($current_class_count >= $this::ENROLLMENT_LIMIT) {
+			Logger::Write(self::EVENT_EXCEED_MAX_ENROLL);
+			return array(
+				'error' => true,
+				'message' => self::ERROR_EXCEED_MAX_ENROLL,
+			);
+		}
+
 			
 		$linkage_id = $this->linkage->create(array(
 			'user_id'    => $user_id,

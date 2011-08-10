@@ -53,11 +53,16 @@ class SectionDBA implements DBAInterface{
 						'not null' => TRUE,
 						'description' => 'The section credit, e.g. a specific numeric value or a range of possiblity.',
 					),
-					'status' => array(
+					'syllabus_status' => array(
 						'type' => 'char',
 						'length' => 64,
 						'not null' => TRUE,
 						'description' => 'a status flag, e.g. HAS_SYLLABUS.',
+					),
+					'syllabus_raw' => array(
+						'type' => 'text',
+						'not null' => TRUE,
+						'description' => 'the raw output generated from the document',
 					),
 				),
 				'primary' => array('id'),

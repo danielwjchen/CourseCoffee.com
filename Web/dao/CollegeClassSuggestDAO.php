@@ -6,7 +6,7 @@
  * NOTE: this is very different from other DAOs as it only does read but not 
  * create. This is also one of the example that DAO needs to be re-designed.
  */
-class CollegeClassSuggestDAO extends DAO implements DAOInterface{
+class CollegeClassSuggestDAO extends DAO {
 
 	/**
 	 * Extend DAO::__construct().
@@ -25,27 +25,6 @@ class CollegeClassSuggestDAO extends DAO implements DAOInterface{
 			'section_num',
 		);
 		parent::__construct($db, $attr, $params);
-
-	}
-
-	/**
-	 * Extend DAO::create().
-	 */
-	public function create($params) {
-		if (!isset($params['course_id']) || !isset($params['num'])) {
-			throw new Exception('incomplete college section pramas - ' . print_r($params, true));
-			return ;
-
-		}else{
-			return $this->db->insert("
-				INSERT INTO `section` (`course_id`, `num`)
-				VALUES (:course_id, :num)",
-			array(
-				'course_id' => $params['course_id'], 
-				'num' => $params['num']
-			));
-
-		}
 
 	}
 
@@ -184,7 +163,7 @@ class CollegeClassSuggestDAO extends DAO implements DAOInterface{
 			";
 			$sql_params = array('course_id' => $params['course_id']);
 			$this->list = $this->db->fetch($sql, $sql_params);
-			return empty($data);
+			return !empty($data);
 
 		// match string pattern
 		} elseif (isset($params['like'])) {
@@ -345,7 +324,7 @@ class CollegeClassSuggestDAO extends DAO implements DAOInterface{
 			}
 
 			$this->list = $this->db->fetch($sql, $sql_params);
-			return empty($this->list);
+			return !empty($this->list);
 
 
 		} else {
@@ -354,32 +333,6 @@ class CollegeClassSuggestDAO extends DAO implements DAOInterface{
 		}
 
 		return false;
-
-	}
-
-	/**
-	 * Extend DAO::update()
-	 */
-	public function update() {
-		$sql = "
-			UPDATE `section` SET
-				`course_id` = :course_id,
-				`num` = :num
-			WHERE `id` = :id
-		";
-		$this->db->perform($sql, array(
-			'course_id' => $this->attr['course_id'], 
-			'num' => $this->attr['num']
-		));
-
-	}
-
-	/**
-	 * Extend DAO::destroy().
-	 */
-	public function destroy() {
-		$sql = "DELETE FROM `section` WHERE `id` = :id";
-		$this->db->perform($sql, array('id' => $this->attr['id']));
 
 	}
 }

@@ -10,14 +10,9 @@ class TaskCreateFormModel extends FormModel {
 	 * @{
 	 * Error message for the user when an error is encountered
 	 */
-
-	 /**
-	  * Failed to create
-		*/
 	const ERROR_FAILED_TO_CREATE = 'All servers down!!11!one!!';
-	const ERROR_FORM_EMPTY = 'The email and password fields cannot be empty';
-	const ERROR_FORM_EXPIRED = 'The form hasexpired. Please try again.';
-
+	const ERROR_FORM_EMPTY       = 'The email and password fields cannot be empty';
+	const ERROR_FORM_EXPIRED     = 'The form hasexpired. Please try again.';
 	/**
 	 * @} End of error_messages
 	 */
@@ -27,13 +22,9 @@ class TaskCreateFormModel extends FormModel {
 	 * @{
 	 * Log messges to track events
 	 */
-	
-	/**
-	 * Failed to login
-	 */
 	const EVENT_FAILED_TO_CREATE = 'Failed create task';
-	const EVENT_FORM_EMPTY = 'An empty task form is submitted. How is this possible?';
-	const EVENT_FORM_EXPIRED = 'Task creation form expired.';
+	const EVENT_FORM_EMPTY       = 'An empty task form is submitted. How is this possible?';
+	const EVENT_FORM_EXPIRED     = 'Task creation form expired.';
 
 	/**
 	 * @} End of even_messages
@@ -91,11 +82,10 @@ class TaskCreateFormModel extends FormModel {
 
 		$this->unsetFormToken();
 		$token = $this->initializeFormToken();
-		$due_date = strtotime($due_date);
 		$record_id = $this->task_dao->create(array(
 			'user_id'     => $user_id,
 			'objective'   => $objective,
-			'due_date'    => $due_date,
+			'due_date'    => strtotime($due_date),
 			'description' => $description,
 			'section_id'  => $section_id,
 		));

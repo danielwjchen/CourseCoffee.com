@@ -97,12 +97,11 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 * Add a user to a class
 	 */
 	public function enrollClass() {
-		$user_id = $this->isUserLoggedIn();
+		$user_id = $this->getUserId();
 		if ($user_id == false ) {
 			$this->json = new JSONView(array('redirect' => 'welcome'));
 
 		} else {
-
 			$section_id = Input::Post('section_id');
 			$enroll = new UserEnrollClassModel();
 			$result = $enroll->AddUserToClass($user_id, $section_id);

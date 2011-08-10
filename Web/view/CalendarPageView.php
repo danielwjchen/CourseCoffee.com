@@ -12,7 +12,6 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		parent::__construct($content);
 		$this->setPageTitle('calendar');
 
-		// get date-time selector
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
@@ -129,6 +128,7 @@ class CalendarPageView extends PageView implements PageViewInterface {
 												<div class="row">
 													<label for="course-section" class="title">Class: </label>
 													<input type="text" name="course-section" class="course-section"/>
+													<input type="hidden" name="section_id" />
 													<a href="#" class="button show-detail">more detail</a>
 												</div>
 												<div class="optional hidden">

@@ -94,14 +94,13 @@ abstract class Controller {
 	}
 
 	/**
-	 * Check if user is logged in
+	 * Get user's id
 	 *
 	 * @return mixed
 	 *  return the user id or boolean false
 	 */
-	public function isUserLoggedIn() {
+	public function getUserId() {
 		$user_id = Session::Get('user_id');
-		// get the cookie and revive the session if session is dead.
 		if (empty($user_id)) {
 			$signature = Cookie::Get(UserLoginFormModel::LOGIN_COOKIE);
 			if (!empty($signature)) {
@@ -116,6 +115,45 @@ abstract class Controller {
 		}
 
 		return $user_id == '' ? false : $user_id;
+	}
+
+	/**
+	 * Get the id of user's institution
+	 * 
+	 * THIS IS A STUB!!!
+	 */
+	public function getUserInstitutionId() {
+		return 1;
+	}
+
+	/**
+	 * Get the id of user's current school yesr id
+	 *
+	 * THIS IS A STUB!!!
+	 */
+	public function getUserYearId() {
+		return 1;
+	}
+
+	/**
+	 * Get the id of user's current school term id
+	 *
+	 * THIS IS A STUB!!!
+	 */
+	public function getUserTermId() {
+		return 1;
+	}
+
+	/**
+	 * Check if user is logged in
+	 *
+	 * This is an alias of getUserID()
+	 *
+	 * @return mixed
+	 *  return the user id or boolean false
+	 */
+	public function isUserLoggedIn() {
+		return $this->getUserId();
 	}
 	
 

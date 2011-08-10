@@ -95,7 +95,16 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getClassPage() {
 		$this->redirectUnknownUser();
-		$this->page = new ClassPageView();
+
+		$user_id        = $this->getUserId();
+		$institution_id = $this->getUserInstitutionId();
+		$year_id        = $this->getUserYearId();
+		$term_id        = $this->getUserTermId();
+
+		$this->page = new ClassPageView(array());
+		$class_list = new CollegeClassListModel();
+		$user_class_list = $class_list->fetchUserClassList($user_id, $institution_id, $year_id, $term_id);
+		$this->page->buildClassList($user_class_list);
 	}
 
 	/**

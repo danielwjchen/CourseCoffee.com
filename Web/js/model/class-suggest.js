@@ -21,19 +21,25 @@ window.ClassSuggest = function(formName) {
 			type: 'post',
 			data: form.serialize(),
 			success: function(response) {
-				// get list of suggested reading on success
+				if (response.redirect) {
+					window.location = response.redirect;
+				}
+
+				if (response.error) {
+					content = '<h2 class="error">' + response.message + '</h2>';
+					dialog.open('enroll', content);
+				}
 				if (response.section_id) {
-					content = response.message + 
+					content += '<h2>' + response.message + '</h2>' +
 						'<div class="suggested-reading">' +
 							'<h3>Suggested Reading</h3>' +
 							'<div id="book-list"></div>' +
 						'</div>';
+
 					dialog.open('enroll', content);
+
 					bookList = new BookSuggest('#book-list');
 					bookList.getBookList(response.section_id);
-				}
-				if (response.redirect) {
-					window.location = response.redirect;
 				}
 			}
 		});

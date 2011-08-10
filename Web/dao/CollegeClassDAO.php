@@ -19,6 +19,7 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 			'course_title',
 			'section_id',
 			'section_num',
+			'syllabus_status',
 		);
 		parent::__construct($db, $attr, $params);
 
@@ -47,6 +48,7 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 			SELECT 
 				s.id AS section_id,
 				s.num AS section_num,
+				s.syllabus_status,
 				s.course_id,
 				c.num AS course_num,
 				c.title AS course_title,
@@ -101,7 +103,7 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 		}
 
 		$this->list = $this->db->fetch($sql, $sql_param);
-		return empty($this->list);
+		return !empty($this->list);
 	}
 
 	/**

@@ -8,19 +8,25 @@ class ClassPageView extends PageView implements PageViewInterface {
 	/**
 	 * Extend PageView::__construct().
 	 */
-	function __construct($data) {
-		parent::__construct($data);
+	function __construct($content = null) {
+		parent::__construct($content);
+		$this->setPageTitle('class');
+
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
-		$this->setPageTitle('class');
 		$this->addJS('model/logout.js');
+		$this->addJS('model/task.js');
+		$this->addJS('model/doc.js');
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');
+		$this->addJS('timer.js');
 		$this->addJS('controller/class.js');
 		$this->addJS('controller/navigation.js');
 		$this->addCSS('dialog.css');
 		$this->addCSS('class.css');
+		$this->addCSS('panel.css');
+		$this->addCSS('task.css');
 		$this->addCSS('book-list.css');
 	}
 
@@ -29,6 +35,20 @@ class ClassPageView extends PageView implements PageViewInterface {
 	 */
 	protected function getHeader() {
     header(self::STATUS_OK);
+	}
+
+	/**
+	 * Build Class list
+	 *
+	 * @param array $class_list
+	 */
+	public function buildClassList($class_list) {
+		$html = "<ul>";
+		foreach ($class_list as $id => $class_code) {
+			$html .= "<li><a href='#' id='{$id}' class='option'>{$class_code}</a></li>";
+		}
+		$html .= "</ul>";
+		$this->data['class_list'] = $html;
 	}
 
 	/**
@@ -68,7 +88,73 @@ class ClassPageView extends PageView implements PageViewInterface {
 		<div class="class body">
 			<div class="body-inner">
 				<div class="content">
-					{$body['block']}
+					<div class="calendar panel-menu">
+						<div class="panel-menu-inner">
+							<form name="calendar-option" id="calendar-option-menu">
+								<input type="hidden" name="type" value="today" />
+								<input type="hidden" name="timestamp" value="{$timestamp}" />
+								<input type="hidden" name="begin" />
+								<input type="hidden" name="end" />
+							</form>
+							{$class_list}
+						</div>
+					</div>
+					<div class="panel-01">
+						<div class="panel-inner">
+							<h2 class="course-title"></h2>
+							<div class="book-display"></div>
+						</div>
+					</div>
+					<div class="panel-02">
+						<div class="panel-inner">
+							<div class="upload-form">
+								<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
+									<input type="hidden" name="token" />
+									<input type="file" name="document" />
+									<div class="error hidden"></div>
+									<a class="button submit" href="#">submit</a>
+								</form>
+								<a class="button upload" href="#">upload syllabus</a>
+							</div>
+							<div class="task-create-form-wrapper">
+								<form id="new-task-form" class="task-create-form" action="task/create" method="post">
+									<fieldset class="required">
+										<legend>NEW to-do</legend>
+										<input type="hidden" name="token" />
+										<div class="required">
+											<div class="row">
+												<input type="text" name="objective" class="objective" value="reading due in the morning, etc" maxlength="72"/>
+											</div>
+										</div>
+										<div class="additional hidden">
+											<div class="row">
+												<label for="due_date" class="title">Due: </label>
+												<input type="text" name="due_date" id="time-picker" class="due_date" />
+											</div>
+											<div class="row">
+												<label for="course-section" class="title">Class: </label>
+												<input type="text" name="course-section" class="course-section"/>
+												<input type="hidden" name="section_id" />
+												<a href="#" class="button show-detail">more detail</a>
+											</div>
+											<div class="optional hidden">
+												<div class="row">
+													<label for="location" class="title">Place: </label>
+													<input type="text" name="location" class="location"/>
+												</div>
+												<div class="row">
+													<textarea name="description" rows="6" class="description">read chapter 12 to 13, etc</textarea>
+												</div>
+											</div>
+											<a href="#" class="button submit">add</a>
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="task-list">
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
