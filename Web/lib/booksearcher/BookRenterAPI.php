@@ -37,7 +37,7 @@
 				else{
 
 					$this->result = $parsedXml;
-					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url);
+					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url));
 					$this->link = $this->URLPrefix . $bookURL;
 					return $parsedXml;
 				}
