@@ -79,7 +79,7 @@
 		}
 
 		public function getLowestMarketPlacePrice(){
-			return $this->result->RentalPrice;
+			return $this->result->MarketPlacePrice;
 		}
 
 		public function getLowestMarketPlaceLink(){

@@ -6,7 +6,8 @@
 		private $result;
 
 		private $isbn;
-		private $link = "http://www.shareasale.com/r.cfm?u=532647&b=96706&m=14293&urllink=www.bookrenter.com%2Fmodern-american-women-writers-0020820259-9780020820253";
+		private $URLPrefix= "http://www.shareasale.com/r.cfm?u=532647&b=96706&m=14293&urllink=";
+		private $link;
 
 
 		//initial
@@ -36,6 +37,7 @@
 				else{
 
 					$this->result = $parsedXml;
+					$this->link = $this->URLPrefix . $this->result->book->book_url;
 					return $parsedXml;
 				}
 			}
@@ -60,6 +62,7 @@
 				}
 				else{
 					$this->result = $parsedXml;
+					$this->link = $this->URLPrefix . $this->result->book->book_url;
 					return $parsedXml;
 				}
 			}
@@ -85,6 +88,7 @@
 				}
 				else{
 					$this->result = $parsedXml;
+					$this->link = $this->URLPrefix . $this->result->book->book_url;
 					return $parsedXml;
 				}
 			}
