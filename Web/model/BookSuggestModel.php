@@ -18,7 +18,6 @@ class BookSuggestModel extends Model {
 	private $book_list;
 
 	private $list;
-	private $amazonSearch;
 
 	/**
 	 * Extend Model::__construct()
@@ -111,12 +110,12 @@ class BookSuggestModel extends Model {
 		);
 
 		$newlink = array(
-			'Amazon'	=> $this->amazonSearch->getLowestNewLink(),
-			'eCampus'	=> $ecampusSearch->getLowestNewLink(),
-			'BookRenter'	=> $bookrenterSearch->getLowestNewLink(),
-			'ValoreBooks'   => $valorebookSearch->getLowestNewLink(),
-			'AmazonMarket'  => $this->amazonSearch->getLowestNewLink(),
-			'eCampusMArket' => $ecampusSearch->getLowestMarketPlaceLink()
+			'Amazon'	=> (string)$this->amazonSearch->getLowestNewLink(),
+			'eCampus'	=> (string)$ecampusSearch->getLowestNewLink(),
+			'BookRenter'	=> (string)$bookrenterSearch->getLowestNewLink(),
+			'ValoreBooks'   => (string)$valorebookSearch->getLowestNewLink(),
+			'AmazonMarket'  => (string)$this->amazonSearch->getLowestNewLink(),
+			'eCampusMArket' => (string)$ecampusSearch->getLowestMarketPlaceLink()
 		);
 
 		//used
@@ -126,9 +125,9 @@ class BookSuggestModel extends Model {
 			'AmazonMarket'  => substr($this->amazonSearch->getMarketPlaceLowestUsedPrice(),1,strlen($this->amazonSearch->getMarketPlaceLowestUsedPrice()))		
 		);
 		$usedlink = array(
-			'eCampus'	=> $ecampusSearch->getLowestUsedLink(),
-			'BookRenter'	=> $bookrenterSearch->getLowestUsedLink(),
-			'AmazonMarket'  => $this->amazonSearch->getLowestNewLink()
+			'eCampus'	=> (string)$ecampusSearch->getLowestUsedLink(),
+			'BookRenter'	=> (string)$bookrenterSearch->getLowestUsedLink(),
+			'AmazonMarket'  => (string)$this->amazonSearch->getLowestNewLink()
 		);
 
 		//rental
@@ -137,44 +136,43 @@ class BookSuggestModel extends Model {
 			'BookRenter'	=> substr($bookrenterSearch->getLowestRentalPrice(),1,strlen($bookrenterSearch->getLowestRentalPrice()))			
 		);
 		$rentallink = array(
-			'eCampus'	=> $ecampusSearch->getLowestRentalLink(),
-			'BookRenter'	=> $bookrenterSearch->getLowestRentalLink()
+			'eCampus'	=> (string)$ecampusSearch->getLowestRentalLink(),
+			'BookRenter'	=> (string)$bookrenterSearch->getLowestRentalLink()
 		);
 
 		//begin sort
 		natsort($newprice);
 		natsort($usedprice);
 		natsort($rentalprice);
-
-		//return $newprice;
-		return $newprice;	
+	
 
 		//rank new book
 		foreach($newprice as $storename => $price){
 			$new[$storename] = array(
 				'price'  => $price,
-				'link'   => $newlink[$storename]
+				'link'   => (string)$newlink[$storename]
 			);
 		};
 
 		foreach($usedprice as $storename => $price){
 			$used[$storename] = array(
 				'price'  => $price,
-				'link'   => $usedlink[$storename]
+				'link'   => (string)$usedlink[$storename]
 			);
 		};
 
 		foreach($rentalprice as $storename => $price){
 			$rental[$storename] = array(
 				'price'  => $price,
-				'link'   => $rentallink[$storename]
+				'link'   => (string)$rentallink[$storename]
 			);
 		};
 
 		$rankList = array(
-			'New'      =>     $new,
-			'Used'     =>     $used,
-			'Rental'   =>     $rental
+			'New'       => $new,
+			'Used'      => $used,
+			'Rental'    => $rental,
+			'ListPrice' => substr($this->amazonSearch->getListPrice(),1,strlen($this->amazonSearch->getListPrice()))
 		);
 
 		return $rankList;
