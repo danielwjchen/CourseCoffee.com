@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Represents a user object in database
+ * Represent user record in database
  */
 class UserDAO extends DAO implements DAOInterface{
 
@@ -77,8 +77,9 @@ class UserDAO extends DAO implements DAOInterface{
 			WHERE `id` = :id
 		";
 		$this->db->perform($sql, array(
-			'account' => $this->attr['account'], 
-			'password' => $this->attr['password']
+			'id'       => $this->attr['id'],
+			'account'  => $this->attr['account'], 
+			'password' => $this->attr['password'],
 		));
 
 	}
@@ -88,7 +89,7 @@ class UserDAO extends DAO implements DAOInterface{
 	 */
 	public function destroy() {
 		$sql = "DELETE FROM `user` WHERE `id` = :id";
-		$this->db->perform($sql, array('id' => $this->id));
+		$this->db->perform($sql, array('id' => $this->attr['id']));
 
 	}
 }

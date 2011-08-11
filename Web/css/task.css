@@ -23,3 +23,7 @@
 	width: 100%;
 	height: 20px;
 }
+.task-list dt {
+	font-weight: bold;
+	font-size: 14px;
+}

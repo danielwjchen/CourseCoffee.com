@@ -101,6 +101,10 @@ class TaskDAO extends DAO implements DAOInterface{
 				q.user_id AS creator_id,
 				qu_linkage.user_id,
 				qs_linkage.section_id,
+				s.id AS section_id,
+				s.num AS section_num,
+				c.num AS course_num,
+				sub.abbr AS subject_abbr,
 				qt.name AS type,
 				q.objective,
 				q.description,
@@ -124,6 +128,12 @@ class TaskDAO extends DAO implements DAOInterface{
 				ON ql_linkage.location_id = l.id
 			LEFT JOIN quest_section_linkage qs_linkage
 				ON qs_linkage.quest_id = q.id
+			LEFT JOIN section s
+				ON qs_linkage.section_id = s.id
+			LEFT JOIN course c
+				ON s.course_id = c.id
+			LEFT JOIN subject sub
+				ON c.subject_id = sub.id
 			LEFT JOIN user_section_linkage us_linkage
 				ON us_linkage.section_id = qs_linkage.section_id
 				AND us_linkage.user_id = u.id

@@ -19,11 +19,11 @@ $P.ready(function() {
 	$('.calendar-display').scrollBar();
 
 	// Initialize calendars
-	timestamp = $('input[name=timestamp]', panelMenu).val();
-	displayType= $('input[name=type]', panelMenu).val();
-	calendar.init(displayType, timestamp);
+	calendar = new Calendar('.calendar-display', '#calendar-option', '.task-list');
+	calendar.getMonthCalendar();
+	calendar.populate();
 
-	// Over see inputs in panel menu
+	// Oversee inputs in panel menu
 	panelMenu.delegate('a', 'click', function(e) {
 		e.preventDefault();
 		target = $(this);
@@ -32,27 +32,22 @@ $P.ready(function() {
 		agendaPanel.empty();
 
 		if (target.hasClass('today')) {
-			range = calendar.getDayCalendar(timestamp, 1);
-			calendar.setCalendarOption(range);
-			calendar.populate();
+			calendar.getDayCalendar(1);
 
+		// we might have customizable calendar view in the future, but for now 
+		// it's hard-coded to 4
 		} else if (target.hasClass('customized')) {
-			// we might have customizable calendar view in the future, but for now 
-			// it's hard-coded to 4
-			range = calendar.getDayCalendar(timestamp, 4);
-			calendar.setCalendarOption(range);
-			calendar.populate();
+			calendar.getDayCalendar(4);
 
 		} else if (target.hasClass('week')) {
-			range = calendar.getWeekCalendar(timestamp);
-			calendar.setCalendarOption(range);
-			calendar.populate();
+			calendar.getWeekCalendar();
 
 		} else if (target.hasClass('month')) {
-			range = calendar.getMonthCalendar(timestamp);
-			calendar.setCalendarOption(range);
-			calendar.populate();
+			calendar.getMonthCalendar();
+
 		}
+
+		calendar.populate();
 
 	});
 

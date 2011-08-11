@@ -32,34 +32,12 @@ $P.ready(function() {
 		e.preventDefault();
 		target = $(this);
 
-		currentBookListId = $('.active', panelMenu).attr('id');
-		// if the current book list is not cached already
-		if (!bookListCache[currentBookListId]) {
-			bookListCache[currentBookListId] = classBookList.html();
-			classBookList.empty();
-			
-			// debug
-			// console.log(currentBookListId);
-		}
 
 		selectedBookListId = target.attr('id');
-		console.log(selectedBookListId);
-		if (bookListCache[selectedBookListId]) {
-			classBookList.empty();
-			classBookList.html(bookListCache[selectedBookListId]);
+		bookList.getBookList(selectedBookListId);
 
-			// debug
-			// console.log('selected id');
-			// console.log(bookListCache[selectedBookListId]);
-		} else {
-			classBookList.empty();
-			bookList.getBookList(selectedBookListId);
-			bookListCache[selectedBookListId] = classBookList.html();
-
-			// debug
-			// console.log('selected book list');
-			// console.log(bookListCache[selectedBookListId]);
-		}
+		// debug
+		// console.log(selectedBookListId);
 
 		$('.option', panelMenu).removeClass('active');
 		target.addClass('active');

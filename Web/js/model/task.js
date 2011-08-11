@@ -9,7 +9,7 @@ window.task = {
 	'init' : function() {
 		formFields = $('#new-task-form');
 		$.ajax({
-			url: '?q=task-init',
+			url: '/task-init',
 			type: 'POST',
 			success: function(response) {
 				if (response.token) {
@@ -39,7 +39,7 @@ window.task = {
 		}
 		var formData = $('#new-task-form').serialize();
 		$.ajax({
-			url: '?q=task-add',
+			url: '/task-add',
 			type: 'POST',
 			cache: false,
 			data: formData,
@@ -85,12 +85,19 @@ window.task = {
 	 *
 	 * @return
 	 */
-	'getListItem': function(objective, dueDate, location, description) {
+	'getListItem': function(item) {
 		var html = "<li><dl>";
-		html += "<dt>" + objective + "</dt>";
-		html += "<dd id='" + dueDate + "' class='due_date count-down'>" + dueDate + "</dd>";
-		html += location != null ? "<dd class='location'>" + location + "</dd>" : "";
-		html += description != null ? "<dd class='description'>" + description + "</dd>" : "";
+
+		if (item['subject_abbr'] && item['course_num']) { 
+			html += "<dt>" + item['subject_abbr'] + '-' + item['course_num'] + "</dt>";
+			html += "<dd>" + item['objective'] + "</dd>";
+		} else {
+			html += "<dt>" + item['objective'] + "</dt>";
+		}
+
+		html += "<dd id='" + item['due_date'] + "' class='due_date count-down'>" + item['due_date'] + "</dd>";
+		html += item['location'] != null ? "<dd class='location'>" + item['location'] + "</dd>" : "";
+		html += item['description'] != null ? "<dd class='description'>" + item['description'] + "</dd>" : "";
 			
 		html += "</dl></li>";
 		return html;
@@ -107,7 +114,7 @@ window.task = {
 		region.addClass('loading');
 		var formData = option.serialize();
 		$.ajax({
-			url: '?q=user-list-task',
+			url: '/user-list-task',
 			type: 'POST',
 			cache: false,
 			data: formData,
@@ -135,19 +142,11 @@ window.task = {
 		} else {
 			html = '';
 			// if there is only one single item.
-			if (list['id'] != undefined) {
-				html += task.getListItem(list['objective'], 
-					list['due_date'],
-					list['location'],
-					list['description']
-				);
+			if (list['id']) {
+				html += task.getListItem(list);
 			} else {
 				for (i in list) {
-					html += task.getListItem(list[i]['objective'], 
-						list[i]['due_date'],
-						list[i]['location'],
-						list[i]['description']
-					);
+					html += task.getListItem(list[i]);
 				}
 			}
 

@@ -21,6 +21,7 @@ window.ClassSuggest = function(formName) {
 			type: 'post',
 			data: form.serialize(),
 			success: function(response) {
+				content = '';
 				if (response.redirect) {
 					window.location = response.redirect;
 				}

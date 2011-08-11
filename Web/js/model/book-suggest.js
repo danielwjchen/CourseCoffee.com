@@ -4,6 +4,7 @@
  */
 window.BookSuggest = function(regionName) {
 	region = $(regionName);
+	cache  = {};
 
 	/**
 	 * Generate output for each offer type
@@ -44,10 +45,18 @@ window.BookSuggest = function(regionName) {
 	 * @param sectionId
 	 */
 	this.getBookList = function(sectionId) {
+		region.empty();
 		region.addClass('loading');
+		if (cache[sectionId]) {
+			region.removeClass('loading');
+			region.html(cache[sectionId]);
+			return ;
+		}
+
 		$.ajax({
 			url: '/college-class-reading',
 			type: 'post',
+			cache: true,
 			data: 'section_id=' + sectionId,
 			success: function(response) {
 				region.removeClass('loading');
@@ -68,6 +77,12 @@ window.BookSuggest = function(regionName) {
 						// console.log(value);
 					});
 					html += '</ul>';
+
+					cache[sectionId] = html
+
+					// debug
+					console.log('book suggest cache');
+					console.log(cache);
 
 					region.html(html);
 				}

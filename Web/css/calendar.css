@@ -6,6 +6,9 @@
 .calendar .panel-02{
 	padding-bottom: 50px;
 }
+.calendar .has-event {
+	background: #F8DA94!important;
+}
 /**
  * Define styles for button
  */
@@ -235,9 +238,6 @@
 	height: 20px;
 	font-size: 10px;
 	font-weight: bold;
-}
-.calendar .month .has-event {
-	background: #F8DA94!important;
 }
 .calendar .month .event {
 	text-align: right;

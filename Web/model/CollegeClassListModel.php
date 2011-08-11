@@ -120,8 +120,14 @@ class CollegeClassListModel extends Model {
 		));
 		
 		$result = array();
-		foreach ($this->list_dao->list as $key => $value) {
-			$result[$value['section_id']] = $value['subject_abbr'] . ' ' . $value['course_num'] . ' ' .$value['section_num'];
+		if (isset($this->list_dao->list['section_id'])) {
+			error_log('asdfasdf');
+			$result[$this->list_dao->list['section_id']] = $this->list_dao->list['subject_abbr'] . ' ' . $this->list_dao->list['course_num'] . ' ' .$this->list_dao->list['section_num'];
+
+		} else {
+			foreach ($this->list_dao->list as $key => $value) {
+				$result[$value['section_id']] = $value['subject_abbr'] . ' ' . $value['course_num'] . ' ' .$value['section_num'];
+			}
 		}
 
 		// debug output

@@ -35,22 +35,25 @@ class DocumentProcessorFormModel extends FormModel{
 	 * @} End of error_messages
 	 */
 
+	const HAS_SYLLABUS = 'has_syllabus';
+
 	/**
 	 * Access to file records
 	 */
 	private $file_dao;
 
 	/**
-	 * Access to class records
+	 * Access to section records
 	 */
-	private $class_dao;
+	private $section_dao;
 
 	/**
 	 * Extend Model::__construct()
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->file_dao = new FileDAO($this->db);
+		$this->file_dao    = new FileDAO($this->db);
+		$this->section_dao = new SectionDAO($this->db);
 		// form submission is limite to 5 times
 		$this->max_try = 5;
 		// form expires in three hours
@@ -236,13 +239,21 @@ class DocumentProcessorFormModel extends FormModel{
 		// $result = str_replace("[NEWLINE]", "\n", $result);
 		// $result = iconv("UTF-8","UTF-8//IGNORE", $result);
 
+		// debug
+		error_log('section_id - ' . $section_id);
+
+		$this->section_dao->read(array('id' => $section_id));
+		$this->section_dao->syllabus_status = self::HAS_SYLLABUS;
+		$this->section_dao->syllabus_raw    = $result;
+		$this->section_dao->update();
+
 		return array(
 			'institution_id' => $params['institution_id'],
 			'year_id'        => $params['year_id'],
 			'term_id'        => $params['term_id'],
 			'section_id'     => $section_id,
 			'course_code'    => $course_code,
-			'content' => $result
+			'content'        => $result
 		);
 	}
 

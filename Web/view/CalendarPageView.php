@@ -79,17 +79,17 @@ class CalendarPageView extends PageView implements PageViewInterface {
 					<div class="content">
 						<div class="calendar panel-menu">
 							<div class="panel-menu-inner">
-								<form name="calendar-option" id="calendar-option-menu">
-									<input type="hidden" name="type" value="today" />
+								<form name="calendar-option-form" id="calendar-option">
+									<input type="hidden" name="type" value="month" />
 									<input type="hidden" name="timestamp" value="{$timestamp}" />
 									<input type="hidden" name="begin" />
 									<input type="hidden" name="end" />
 								</form>
 								<ul>
-									<li><a href="#" class="option today active">today</a></li>
-									<li><a href="#" class="option customized">4-day</a></li>
+									<li><a href="#" class="option month active">month</a></li>
 									<li><a href="#" class="option week">week</a></li>
-									<li><a href="#" class="option month">month</a></li>
+									<li><a href="#" class="option customized">4-day</a></li>
+									<li><a href="#" class="option today">today</a></li>
 								</ul>
 							</div>
 						</div>
