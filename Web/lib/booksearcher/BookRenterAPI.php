@@ -63,7 +63,7 @@
 				}
 				else{
 					$this->result = $parsedXml;
-					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url);
+					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url));
 					$this->link = $this->URLPrefix . $bookURL;
 					return $parsedXml;
 				}
@@ -90,7 +90,7 @@
 				}
 				else{
 					$this->result = $parsedXml;
-					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url);
+					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url));
 					$this->link = $this->URLPrefix . $bookURL;
 					return $parsedXml;
 				}
@@ -100,6 +100,7 @@
 
 
 		public function getLowestNewPrice(){
+			$price = '';
 			foreach($this->result->book->prices->purchase_price as $purchase ){
 				if($purchase->attributes() == "new") $price = $purchase;
 			};
@@ -112,6 +113,7 @@
 		}
 
 		public function getLowestUsedPrice(){
+			$price = '';
 			foreach($this->result->book->prices->purchase_price as $purchase ){
 				if($purchase->attributes() == "used") $price = $purchase;
 			};
@@ -125,6 +127,7 @@
 
 
 		public function getLowestRentalPrice(){
+			$price = '';
 			foreach($this->result->book->prices->rental_price as $rental ){
 				if($rental->attributes() == "90") $price = $rental;
 			};
