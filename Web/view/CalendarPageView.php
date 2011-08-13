@@ -111,7 +111,7 @@ class CalendarPageView extends PageView implements PageViewInterface {
 									<a class="button upload" href="#">upload syllabus</a>
 								</div>
 								<div class="task-create-form-wrapper">
-									<form id="new-task-form" class="task-create-form" action="task/create" method="post">
+									<form id="calendar-task-creation-form" class="task-create-form" action="task/create" method="post">
 										<fieldset class="required">
 											<legend>NEW to-do</legend>
 											<input type="hidden" name="token" />

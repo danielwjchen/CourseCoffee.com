@@ -67,11 +67,14 @@ class Router {
 	 *
 	 * @param string $uri
 	 *  requested URI
+	 * @param array @params
+	 *  an single dimension array containing pieces exploded from original URI 
+	 *  request
 	 *
 	 * @return string
 	 *  the corresponding controller class name
 	 */
-	public static function Dispatch($uri) {
+	public static function Dispatch($uri, $params = array()) {
 		try {
 			$sql = "SELECT controller, action FROM router WHERE path = :uri";
 			$record = self::$db->fetch($sql, array('uri' => $uri)); 
@@ -85,7 +88,7 @@ class Router {
 			$controller = new $record['controller'];
 
 			call_user_func(array($controller, 'beforeAction'));
-			call_user_func(array($controller, $record['action']));
+			call_user_func(array($controller, $record['action']), $params);
 			call_user_func(array($controller, 'afterAction'));
 
 		} catch (Exception $e) {

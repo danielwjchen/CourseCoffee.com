@@ -8,22 +8,32 @@
  *
  */
 $P.ready(function() {
-	panelMenu = $('.panel-menu');
-	classBookList = $('#class-book-list');
+	var panelMenu = $('.panel-menu');
+	var classBookList = $('#class-book-list');
 
-	// cache book list to save time
-	bookListCache = {};
+	var classInfo = new ClassInfo('.class-section-info', '#class-option-form');
 
 	// mark the first item in class list as active on page load
-	$('a:first', panelMenu).addClass('active');
-	sectionId = $('a:first', panelMenu).attr('id');
-	bookList = new BookSuggest('#class-book-list');
+	var defaultMenuOption = 'a:first';
+	var defaultClassId = classInfo.getClassId();
+	if (defaultClassId != undefined) {
+		defaultOption = '#' + defaultClassId;
+	}
+
+	$(defaultMenuOption, panelMenu).addClass('active');
+	var sectionId = $(defaultMenuOption, panelMenu).attr('id');
+	var bookList = new BookSuggest('#class-book-list');
+
+	// debug
+	console.log('default class id - ' + defaultClassId);
+
+	classInfo.getClassInfo(sectionId);
 	bookList.getBookList(sectionId);
 	
 
 
 	// Load tasks
-	task.init();
+	var task = new Task('#task-creation-form');
 	var userTaskOption = $('#user-list-task-option');
 	var agendaPanel = $('.panel-02 .panel-inner .task-list');
 
@@ -32,9 +42,9 @@ $P.ready(function() {
 		e.preventDefault();
 		target = $(this);
 
-
-		selectedBookListId = target.attr('id');
-		bookList.getBookList(selectedBookListId);
+		selectedSectionId = target.attr('id');
+		classInfo.getClassInfo(selectedSectionId);
+		bookList.getBookList(selectedSectionId);
 
 		// debug
 		// console.log(selectedBookListId);

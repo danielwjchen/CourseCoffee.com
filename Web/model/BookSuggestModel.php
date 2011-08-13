@@ -13,10 +13,21 @@ require_once LIB_PATH . '/booksearcher/ValoreBooksAPI.php';
 class BookSuggestModel extends Model {
 
 	/**
+	 * def_group message
+	 * @{
+	 * a group of message to indicate the result
+	 */
+	const BOOK_FOUND_SINGLE   = 'Here is the book we think you might need for this class.';
+	const BOOK_FOUND_MULTIPLE = 'Here is a list of books we think you might need for this class.';
+	const BOOK_FOUND_NONE     = 'We didn\'t find required reading for this class.';
+	/**
+	 * @} End of "message"
+	 */
+
+	/**
 	 * Access to book list record
 	 */
 	private $book_list;
-
 	private $list;
 
 	/**
@@ -45,15 +56,18 @@ class BookSuggestModel extends Model {
 
 		if (!$has_reading) {
 			//return $this->list;
-			return array('message' => 'no reading');
+			return array('message' => self::BOOK_FOUND_NONE);
 		}
 		// the system truncates the list if there is only one record... we need to 
 		// restore it back
-		$record = array();
+		$record  = array();
+		$message = '';
 		if (isset($this->book_list->list['isbn'])) {
+			$message   = self::BOOK_FOUND_SINGLE;
 			$record[0] = $this->book_list->list;
 		} else {
-			$record = $this->book_list->list;
+			$message = self::BOOK_FOUND_MULTIPLE;
+			$record  = $this->book_list->list;
 		}
 
 		// debug
@@ -61,7 +75,6 @@ class BookSuggestModel extends Model {
 
 		$this->list = array();	
 
-		//$this->list = array($record[0]['isbn'],$this->getSingleBookRankList($record[0]['isbn']));
 
 		for ($i = 0; $i < count($record); $i++) {
 			$isbn = $record[$i]['isbn'];
@@ -81,7 +94,10 @@ class BookSuggestModel extends Model {
 		// debug
 		// error_log('book suggest result - ' . print_r($this->list, true));
 
-		return array('list' => $this->list);
+		return array(
+			'message' => $message,
+			'list'    => $this->list
+		);
 	}
 
 

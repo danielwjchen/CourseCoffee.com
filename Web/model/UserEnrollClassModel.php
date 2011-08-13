@@ -34,8 +34,9 @@ class UserEnrollClassModel extends Model {
 	 * @} End of even_messages
 	 */
 
-	// access to records
+	// Access to records
 	private $linkage;
+	private $section_dao;
 
 	// enrollment limt
 	const ENROLLMENT_LIMIT = 6;
@@ -45,7 +46,8 @@ class UserEnrollClassModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->linkage = new UserClassLinkageDAO($this->db);
+		$this->linkage     = new UserClassLinkageDAO($this->db);
+		$this->section_dao = new SectionDAO($this->db);
 	}
 
 	/**
@@ -72,8 +74,9 @@ class UserEnrollClassModel extends Model {
 
 
 		$current_class_count = $this->linkage->read(array('user_id' => $user_id));
-		//debug
-		error_log('enrollment count - ' . $current_class_count);
+
+		// debug
+		//error_log('enrollment count - ' . $current_class_count);
 
 		if ($current_class_count >= $this::ENROLLMENT_LIMIT) {
 			Logger::Write(self::EVENT_EXCEED_MAX_ENROLL);
@@ -90,10 +93,14 @@ class UserEnrollClassModel extends Model {
 		));
 
 		if ($linkage_id != false) {
-			Logger::Write(EVENT_NEW_ENROLL);
+			Logger::Write(self::EVENT_NEW_ENROLL);
+			$this->section_dao->read(array('id' => $section_id));
+			$has_syllabus = $this->section_dao->syllabus_raw != null;
+			
 			return array(
-				'section_id' => $section_id,
-				'message'    => 'You are now enrolled in this class!',
+				'section_id'   => $section_id,
+				'has_syllabus' => $has_syllabus,
+				'message'      => 'You are now enrolled in ' . $this->section_dao->subject_abbr . '-' . $this->section_dao->course_num . '!',
 			);
 		} 
 

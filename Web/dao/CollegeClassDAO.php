@@ -12,11 +12,13 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 		$attr = array(
 			'institution_id',
 			'institution',
+			'institution_uri',
 			'subject_id',
 			'subject_abbr',
 			'course_id',
 			'course_num',
 			'course_title',
+			'course_description',
 			'section_id',
 			'section_num',
 			'syllabus_status',
@@ -44,22 +46,31 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 	 *  - section_num
 	 */
 	public function read($params) {
+		$sql_param = array();
 		$sql = "
 			SELECT 
-				s.id AS section_id,
-				s.num AS section_num,
-				s.syllabus_status,
-				s.course_id,
-				c.num AS course_num,
-				c.title AS course_title,
-				c.description AS course_description,
+				sec.id AS section_id,
+				sec.num AS section_num,
+				sec.syllabus_status,
+				sec.course_id,
+				crs.num AS course_num,
+				crs.title AS course_title,
+				crs.description AS course_description,
+				sub.id AS subject_id,
 				sub.abbr AS subject_abbr,
-				sub.title AS subject_title
-			FROM `section` s
-			INNER JOIN course c
-				ON s.course_id = c.id
+				sub.title AS subject_title,
+				it.id AS term_id,
+				it.name AS term,
+				iy.id AS year_id,
+				iy.period AS year,
+				i.id AS institution_id,
+				i.uri AS institution_uri,
+				i.name AS institution
+			FROM `section` sec
+			INNER JOIN course crs
+				ON sec.course_id = crs.id
 			INNER JOIN subject sub
-				ON c.subject_id = sub.id
+				ON crs.subject_id = sub.id
 			INNER JOIN subject_term_linkage st_linkage
 				ON sub.id = st_linkage.subject_id
 			INNER JOIN institution_term it
@@ -73,8 +84,32 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 		";
 
 		if (isset($params['id'])) {
-			$sql = " WHERE s.id = :id";
+			$sql .= "WHERE sec.id = :id";
 			$sql_param = array('id' => $params['id']);
+		} else if (
+				isset($params['institution_uri']) &&
+				isset($params['year']) &&
+				isset($params['term']) &&
+				isset($params['subject_abbr']) &&
+				isset($params['course_num']) &&
+				isset($params['section_num'])
+		) {
+			$sql .= "
+				WHERE i.uri = :institution_uri
+					AND iy.period = :year
+					AND it.name = :term
+					AND sub.abbr = :subject_abbr
+					AND crs.num = :course_num
+					AND sec.num = :section_num
+			";
+			$sql_param = array(
+				'institution_uri' => $params['institution_uri'],
+				'year'            => $params['year'],
+				'term'            => $params['term'],
+				'subject_abbr'    => $params['subject_abbr'],
+				'course_num'      => $params['course_num'],
+				'section_num'     => $params['section_num'],
+			);
 		} else if (
 				isset($params['institution_id']) &&
 				isset($params['year_id']) &&
@@ -83,12 +118,13 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 				isset($params['course_num']) &&
 				isset($params['section_num'])
 		) {
-			$sql = "
+			$sql .= "
 				WHERE i.id = :institution_id
 					AND iy.id = :year_id
 					AND it.id = :term_id
-					AND sub.abbr LIKE :subject_abbr
-					AND c.num LIKE :course_num
+					AND sub.abbr = :subject_abbr
+					AND crs.num = :course_num
+					AND sec.num = :section_num
 			";
 			$sql_param = array(
 				'institution_id' => $params['institution_id'],
@@ -102,8 +138,14 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 			throw new Exception('unknow college class identifier');
 		}
 
-		$this->list = $this->db->fetch($sql, $sql_param);
-		return !empty($this->list);
+
+		$data = $this->db->fetch($sql, $sql_param);
+
+		// debug
+		// error_log('params - ' . print_r($params, true));
+		// error_log('data - ' . print_r($data, true));
+
+		return $this->updateAttribute($data);
 	}
 
 	/**

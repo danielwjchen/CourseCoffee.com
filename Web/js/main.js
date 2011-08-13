@@ -50,10 +50,14 @@ window.dialog = {
 	 *  the content to be displayed within the dialog
 	 */
 	'open' : function(type, content) {
+		$('body').addClass('no-scroll');
 		$('.body', $P).after('<div class="dialog-mesh"></div>' + 
 		'<div class="dialog-wrapper">' + 
 			'<div class="' + type + ' dialog">' + 
 				'<div class="dialog-inner">' + 
+					'<a href="#" class="dialog-close">' + 
+						'<span class="hidden">close</span>' +
+					'</a>' +
 					content + 
 				'</div>' + 
 			'</div>' + 
@@ -61,14 +65,18 @@ window.dialog = {
 		$('.dialog-inner', $P).live('click', function(e) {
 			e.stopPropagation();
 		});
+		
+		/*
 		$('.dialog-wrapper', $P).live('click', function(e) {
 			dialog.close();
 		});
+		*/
 	},
 	/**
 	 * Close a dialog
 	 */
 	'close' : function() {
+		$('body').removeClass('no-scroll');
 		$('.dialog-mesh', $P).remove();
 		$('.dialog-wrapper', $P).remove();
 	}

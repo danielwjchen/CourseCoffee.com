@@ -92,19 +92,43 @@ class PageController extends Controller implements ControllerInterface {
 
 	/**
 	 * Get the class page for a user
+	 *
+	 * @param array $params
+	 *  optional, but when presnet it expects values to be in the following order
+	 *  - institution_uri
+	 *  - year
+	 *  - term
+	 *  - subject_abbr
+	 *  - course_num
+	 *  - section_num
 	 */
-	public function getClassPage() {
+	public function getClassPage($params = array()) {
 		$this->redirectUnknownUser();
+
+		$default_section_id = '';
 
 		$user_id        = $this->getUserId();
 		$institution_id = $this->getUserInstitutionId();
 		$year_id        = $this->getUserYearId();
 		$term_id        = $this->getUserTermId();
 
-		$this->page = new ClassPageView(array());
 		$class_list = new CollegeClassListModel();
-		$user_class_list = $class_list->fetchUserClassList($user_id, $institution_id, $year_id, $term_id);
-		$this->page->buildClassList($user_class_list);
+		$result['class_list'] = $class_list->fetchUserClassList($user_id, $institution_id, $year_id, $term_id);
+
+		// a paticular class is specified to be displayed as default
+		if (!empty($params)) {
+			$class = new CollegeClassModel();
+			list($instituion_uri, $year, $term, $subject_abbr, $course_num, $section_num) = $params;
+			$class_info = $class->getClassByURI($instituion_uri, $year, $term, $subject_abbr, $course_num, $section_num);
+
+			// debug 
+			// error_log('class_info - ' . print_r($class_info, true));
+
+			$result['default_class'] = $class_info;
+
+		}
+
+		$this->page = new ClassPageView($result);
 	}
 
 	/**

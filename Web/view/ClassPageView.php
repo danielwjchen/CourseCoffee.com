@@ -15,11 +15,14 @@ class ClassPageView extends PageView implements PageViewInterface {
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
+		$this->buildClassList($content['class_list']);
+
 		$this->addJS('model/logout.js');
 		$this->addJS('model/task.js');
 		$this->addJS('model/doc.js');
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');
+		$this->addJS('model/class-info.js');
 		$this->addJS('timer.js');
 		$this->addJS('controller/class.js');
 		$this->addJS('controller/navigation.js');
@@ -42,7 +45,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 	 *
 	 * @param array $class_list
 	 */
-	public function buildClassList($class_list) {
+	private function buildClassList($class_list) {
 		$html = "<ul>";
 		foreach ($class_list as $id => $class_code) {
 			$html .= "<li><a href='#' id='{$id}' class='option'>{$class_code}</a></li>";
@@ -51,11 +54,48 @@ class ClassPageView extends PageView implements PageViewInterface {
 		$this->data['class_list'] = $html;
 	}
 
+	private function getClassOption($class_info) {
+
+		// debug
+		//  error_log('class info - ' . print_r($class_info, true));
+		if ($class_info['content']) {
+			extract($class_info['content']);
+
+			// debug
+			// error_log('institution_uri - ' . $institution_uri);
+
+			return <<<HTML
+	<input type="hidden" name="institution-uri" value="{$institution_uri}" />
+	<input type="hidden" name="institution-id" value="{$institution_id}" />
+	<input type="hidden" name="subject-abbr" value="{$subject_abbr}" />
+	<input type="hidden" name="course-title" value="{$course_title}" />
+	<input type="hidden" name="course-num" value="{$course_num}" />
+	<input type="hidden" name="course-description" value="{$course_description}" />
+	<input type="hidden" name="section-num" value="{$section_num}" />
+	<input type="hidden" name="section-id" value="{$section_id}" />
+HTML;
+		} else {
+			return <<<HTML
+	<input type="hidden" name="institution-uri" value="" />
+	<input type="hidden" name="institution-id" value="" />
+	<input type="hidden" name="subject-abbr" value="" />
+	<input type="hidden" name="course-title" value="" />
+	<input type="hidden" name="course-num" value="" />
+	<input type="hidden" name="course-description" value="" />
+	<input type="hidden" name="section-num" value="" />
+	<input type="hidden" name="section-id" value="" />
+HTML;
+		}
+	}
+
 	/**
 	 * Implement PageViewInterface::getContent()
 	 */
 	public function getContent() {
 		extract($this->data);
+
+		$class_option = $this->getClassOption($default_class);
+
 		return <<<HTML
 <div class="class container">
 	<div class="container-inner">
@@ -90,18 +130,16 @@ class ClassPageView extends PageView implements PageViewInterface {
 				<div class="content">
 					<div class="calendar panel-menu">
 						<div class="panel-menu-inner">
-							<form name="calendar-option" id="calendar-option-menu">
-								<input type="hidden" name="type" value="today" />
-								<input type="hidden" name="timestamp" value="{$timestamp}" />
-								<input type="hidden" name="begin" />
-								<input type="hidden" name="end" />
+							<form name="class-option" id="class-option-form">
+								{$class_option}
 							</form>
 							{$class_list}
 						</div>
 					</div>
 					<div class="panel-01">
 						<div class="panel-inner">
-							<h2 class="course-title"></h2>
+							<div class="class-section-info"></div>
+							<hr />
 							<div id="class-book-list" class="book-list" ></div>
 						</div>
 					</div>

@@ -3,8 +3,8 @@
  * Get list of suggested readings for a class
  */
 window.BookSuggest = function(regionName) {
-	region = $(regionName);
-	cache  = {};
+	var region = $(regionName);
+	var cache  = {};
 
 	/**
 	 * Generate output for each offer type
@@ -14,11 +14,10 @@ window.BookSuggest = function(regionName) {
 	 *
 	 * @return string html
 	 */
-	generateOfferOutput = function(type, offer) {
+	var generateOfferOutput = function(type, offer) {
 
-		offerHtml = '<ul>';
-		offerHtml += '<li class="offer-type">' + type + '</li>';
-		vendorHtml = '';
+		var offerHtml = '<ul><li class="offer-type">' + type + '</li>';
+		var vendorHtml = '';
 		$.each(offer, function(index, value) {
 			if (value['price']) {
 				vendorHtml += '<li><a href="' + value['link'] + '" target="_blank" >' +
@@ -47,6 +46,7 @@ window.BookSuggest = function(regionName) {
 	this.getBookList = function(sectionId) {
 		region.empty();
 		region.addClass('loading');
+		region.html('<h3>Please wait while we find the lowest price on your textbooks.</h3>');
 		if (cache[sectionId]) {
 			region.removeClass('loading');
 			region.html(cache[sectionId]);
@@ -60,14 +60,16 @@ window.BookSuggest = function(regionName) {
 			data: 'section_id=' + sectionId,
 			success: function(response) {
 				region.removeClass('loading');
+				var html = '<h3>' + response.message + '</h3>';
 				if (response.list) {
-					html = '<ul>';
+					html += '<ul>';
 					$.each(response.list, function(title, value) {
-						newOffers     = generateOfferOutput('buy new', value['offers']['new']);
-						usedOffers    = generateOfferOutput('buy used', value['offers']['used']);
-						retanlOoffers = generateOfferOutput('rent', value['offers']['rental']);
+						var newOffers     = generateOfferOutput('buy new', value['offers']['new']);
+						var usedOffers    = generateOfferOutput('buy used', value['offers']['used']);
+						var retanlOoffers = generateOfferOutput('rent', value['offers']['rental']);
+						var bookCover = value['image'] != '' ? '<img src="' + value['image'] + '" class="cover" />' : '';
 						html += '<li class="book">' +
-							'<img src="' + value['image'] + '" class="cover" />' +
+							bookCover + 
 							'<div class="info">' +
 								'<span class="title">' + title  + '</span>' +
 								'<div class="offer">' + newOffers + usedOffers + retanlOoffers + '</div>' +
@@ -78,14 +80,14 @@ window.BookSuggest = function(regionName) {
 					});
 					html += '</ul>';
 
-					cache[sectionId] = html
 
 					// debug
-					console.log('book suggest cache');
-					console.log(cache);
+					// console.log('book suggest cache');
+					// console.log(cache);
 
-					region.html(html);
 				}
+				cache[sectionId] = html
+				region.html(html);
 			}
 		});
 	}

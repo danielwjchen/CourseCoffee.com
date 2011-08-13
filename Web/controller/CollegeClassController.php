@@ -15,7 +15,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			'college-class-add'     => 'createClass',
 			'college-class-update'  => 'updateClass',
 			'college-class-remove'  => 'removeClass',
-			'college-class-detail'  => 'getClassDetail',
+			'college-class-info'  => 'getClassDetail',
 			'college-class-list'    => 'getListOfClass',
 			'college-class-suggest' => 'suggestClass',
 			'college-class-enroll'  => 'enrollClass',
@@ -59,6 +59,11 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 * Get detail of a class()
 	 */
 	public function getClassDetail() {
+		$section_id = Input::Post('section_id');
+		$class_model = new CollegeClassModel();
+		$result = $class_model->getClassById($section_id);
+		$this->json = new JSONView($result);
+
 	}
 
 	/**
