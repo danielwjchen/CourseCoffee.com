@@ -29,13 +29,17 @@ $P.ready(function(){
 
             fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, /m/gi , /t/gi, /w/gi, /r/gi, /f/gi]
             
-
+            
             
             schedule_list = []
             word = [];
             delim = [];
             orig_html = "";
 	    pre_text = ""; // text before real date
+
+            
+            /* html elements e.g. span, tables for dynamically loading*/
+            date_label_string =  "<br><span class='date_label' sid='SID_STR'><span>DATE_CONTENT_STR</span><a href='#' sid='SID_STR' class='del_date_label' >x</a></span>" ;
 
             /*       flags            */
             editing_flag = 0;
@@ -139,11 +143,13 @@ $P.ready(function(){
             });
 
 
-
+            /**
+             *  showing edit buttons when mouse entered schedule_elem
+             */
 
             $(".schedule_elem").live("mouseenter",function(){
                     id_temp = $(this).attr("sid")
-                    $("td[id]", this).html("<a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_sch'>edit</a>")
+                    $("td[id]", this).html("<a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_date'>change date</a> <a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_sch'>edit</a>")
                     adjust_spacing();
                     adjust_parsed_data_pos();
             });
@@ -154,6 +160,10 @@ $P.ready(function(){
                     adjust_spacing();
                     adjust_parsed_data_pos();
             });
+
+            /**
+             *  save schedule
+             */
 
             $("#save_sch").live("click",function(){
                     id_temp = $(this).attr("sid")
@@ -225,6 +235,11 @@ $P.ready(function(){
 
             });
 
+            $("a[id='edit_date']").live("click",function(e){
+                    id_temp = $(this).attr("sid")
+                    alert(id_temp)
+            });
+
             $(window).scroll(function(){
                     adjust_parsed_data_pos();
                     //$("#tool_box").css("top", $(window).scrollTop() +"px")
@@ -262,8 +277,10 @@ $P.ready(function(){
                     return true;
             }
 
+
             function get_date_label_html(date_id, date_content){
-                    return "<br><span class='date_label' sid='"+date_id+"'>" + "<span>" + date_content + "</span><a href='#' sid='"+date_id+"' class='del_date_label'> X</a></span>" 
+                    return date_label_string.replace(/SID_STR/gi, date_id).replace(/DATE_CONTENT_STR/gi, date_content)
+                    //return "<br><span class='date_label' sid='"+date_id+"'>" + "<span>" + date_content + "</span><a href='#' sid='"+date_id+"' class='del_date_label'> X</a></span>" 
             }
 
             function update_date_label(){
@@ -280,14 +297,16 @@ $P.ready(function(){
                             }
                     }
             }
+            
+            schedule_elem_string = "<div sid='SID_STR' class='schedule_elem'>";
 
             function get_sch_html(date_id, date_t, content){
                     if(flag_week_format != 1){  // not week format, i.e. not week 1,2,3,4,5
                             return '<div sid="'+date_id+'" class="schedule_elem" >\
                                     <table width="490" border="0" cellpadding="0" cellspacing="0">\
                                     <tr>\
-                                      <td width="400" class="schedule_elem_title">Date:'+(date_t.getMonth()+1)+'/'+date_t.getDate()+'</td>\
-                                      <td width="50" id="editing_btn">&nbsp;</td>\
+                                      <td width="100" class="schedule_elem_title">Date:<span class="date_sch" sid="'+date_id+'">'+(date_t.getMonth()+1)+'/'+date_t.getDate()+'</span></td>\
+                                      <td width="350" id="editing_btn">&nbsp;</td>\
                                       <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
                                     </tr>\
                                     <tr>\
@@ -594,7 +613,7 @@ $P.ready(function(){
                     update_date_label()
 						   
                    }});        
-        /*****************      end of main    *********************/  
+        /*****************      end of main     *********************/  
 
 	/**
 	 * Create tasks from document

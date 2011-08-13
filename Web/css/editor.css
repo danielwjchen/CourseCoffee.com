@@ -149,7 +149,7 @@ body{
 	cursor:pointer;
 	display: inline-block;
 	text-align:center;
-        float: right;
+        float: left;
 	text-decoration: none;
 }
 
