@@ -43,7 +43,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 								</div>
 							</div>
 							<div class="login error hidden"></div>
-							<p class="slogan">School is hectic. Instantly organize!</p>
+							<p class="slogan"><span class="hidden">School is hectic! <br />Instantly organize!</span></p>
 						</div>
 					</div>
 					<div class="panel-01">
@@ -54,7 +54,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 								<li class="text-book">Instantly find the cheapest deals on your textbooks online</li>
 								<li class="facebook">Collaborate with your classmates on facebook</li>
 						 </ul>
-							 <a href="#">Help: where do I access my electronic syllabi?</a>
+							 <a href="#">Help: where do I access my electronic syllabus?</a>
 							 <div class="sign-up-shortcut">
 									<p>or... you can always just</p>
 									<a href="/sign-up" class="button sign-up">sign up</a>
@@ -70,7 +70,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 								<div class="error hidden"></div>
 								<a class="button submit" href="#">submit</a>
 							</form>
-							<a class="button upload" href="#">upload</a>
+							<a class="button upload" href="#">start here!</a>
 						</div>
 					</div>
 				</div>

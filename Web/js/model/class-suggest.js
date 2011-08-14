@@ -17,14 +17,11 @@ window.ClassSuggest = function(formName) {
 	 */
 	this.enroll = function() {
 		$.ajax({
-			url: 'college-class-enroll',
+			url: '/college-class-enroll',
 			type: 'post',
 			data: form.serialize(),
 			success: function(response) {
 				content = '';
-				if (response.redirect) {
-					window.location = response.redirect;
-				}
 
 				if (response.error) {
 					content = '<h2 class="error">' + response.message + '</h2>';

@@ -141,7 +141,7 @@ class UserLoginFormModel extends FormModel {
 		$has_record = $this->user_dao->read(array('account' => $email));
 
 		// obviously if no such user exists
-		if ($has_record) {
+		if (!$has_record) {
 			Logger::write(self::EVENT_FAILED_TO_LOGIN, Logger::SEVERITY_LOW);
 			return array(
 				'error'    => self::ERROR_FAILED_TO_LOGIN,
@@ -190,14 +190,26 @@ class UserLoginFormModel extends FormModel {
 	 *  a string to identifer the user as the owner of the account
 	 */
 	public function startUserSession($user_id, $email, $password) {
+		Session::Set('user_id', $user_id);
 		$signature = Crypto::encrypt($email . $password);
 		$this->user_cookie_dao->create(array(
 			'user_id'   => $user_id,
 			'signature' => $signature, 
 		));
-		Session::Set('user_id', $user_id);
+
+		// check if user_profile is populated in session
+		if (!Session::Get('user_profile')) {
+			$user_profile_dao = new UserProfileDAO($this->db);
+			$user_profile_dao->read(array('id' => $user_id));
+			$result = $this->user_profile_dao->attribute;;
+
+			// debug
+			// error_log('user_profile - ' . print_r($result, true));
+
+			Session::Set('user_profile', $result);
+		}
+
 		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
-		Session::Set('user_id', $user_id);
 		Cookie::Set(UserLoginFormModel::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
 	}
 

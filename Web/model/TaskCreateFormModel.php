@@ -80,17 +80,8 @@ class TaskCreateFormModel extends FormModel {
 			);
 		}
 
-		if (time() <= $this->getLockSubmission()) {
-			Logger::write(self::EVENT_FORM_LOCKED, Logger::SEVERITY_LOW);
-			return array(
-				'error' => self::ERROR_FORM_LOCKED,
-			);
-		}
-
-		// expire the current toke and create a new one
 		$this->unsetFormToken();
 		$token = $this->initializeFormToken();
-
 		$record_id = $this->task_dao->create(array(
 			'user_id'     => $user_id,
 			'objective'   => $objective,
@@ -98,9 +89,6 @@ class TaskCreateFormModel extends FormModel {
 			'description' => $description,
 			'section_id'  => $section_id,
 		));
-
-		$this->setLockSubmission();
-
 		return array(
 			'quest_id' => $record_id,
 			'token'    => $token,

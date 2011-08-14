@@ -70,7 +70,7 @@ window.dialog = {
 	 *  the content to be displayed within the dialog
 	 */
 	'open' : function(type, content) {
-		$('body').addClass('no-scroll');
+		//$('body').addClass('no-scroll');
 		$('.body', $P).after('<div class="dialog-mesh"></div>' + 
 		'<div class="dialog-wrapper">' + 
 			'<div class="' + type + ' dialog">' + 
@@ -96,7 +96,7 @@ window.dialog = {
 	 * Close a dialog
 	 */
 	'close' : function() {
-		$('body').removeClass('no-scroll');
+		//$('body').removeClass('no-scroll');
 		$('.dialog-mesh', $P).remove();
 		$('.dialog-wrapper', $P).remove();
 	}

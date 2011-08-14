@@ -13,14 +13,15 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'doc-edit'        => 'getDocumentEditorPage',
-			'sign-up'         => 'getSignUpPage',
-			'welcome'         => 'getWelcomePage',
-			'home'            => 'getHomePage',
-			'calendar'        => 'getCalendarPage',
-			'class'           => 'getClassPage',
-			'page-not-found'  => 'get404Page',
-			'all-system-down' => 'get500Page',
+			'doc-edit'         => 'getDocumentEditorPage',
+			'sign-up'          => 'getSignUpPage',
+			'facebook-sign-up' => 'getFacebookSignUpPage',
+			'welcome'          => 'getWelcomePage',
+			'home'             => 'getHomePage',
+			'calendar'         => 'getCalendarPage',
+			'class'            => 'getClassPage',
+			'page-not-found'   => 'get404Page',
+			'all-system-down'  => 'get500Page',
 		);
 	}
 
@@ -78,6 +79,13 @@ class PageController extends Controller implements ControllerInterface {
 			'register_token' => $user_register->initializeFormToken(),
 			'college_option' => $college->getCollegeOption(),
 		));
+	}
+
+	/**
+	 * Get facebook signup page for visiters
+	 */
+	public function getFacebookSignUpPage() {
+		$this->page = new FacebookSignUpPageView(array());
 	}
 
 	/**

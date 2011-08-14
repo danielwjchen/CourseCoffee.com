@@ -13,6 +13,10 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 			'institution_id',
 			'institution',
 			'institution_uri',
+			'year_id',
+			'year',
+			'term_id',
+			'term',
 			'subject_id',
 			'subject_abbr',
 			'course_id',
@@ -22,6 +26,7 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 			'section_id',
 			'section_num',
 			'syllabus_status',
+			'syllabus_raw',
 		);
 		parent::__construct($db, $attr, $params);
 
@@ -52,6 +57,7 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 				sec.id AS section_id,
 				sec.num AS section_num,
 				sec.syllabus_status,
+				sec.syllabus_raw,
 				sec.course_id,
 				crs.num AS course_num,
 				crs.title AS course_title,

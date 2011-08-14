@@ -12,7 +12,7 @@ $P.ready(function() {
 	$('#suggest-input').autocomplete({
 		source: function(request, response) {
 			$.ajax({
-				url: '?q=college-class-suggest',
+				url: '/college-class-suggest',
 				type: 'post',
 				data: 'term=' + request.term,
 				success: function(data) {

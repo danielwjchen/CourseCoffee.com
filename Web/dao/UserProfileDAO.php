@@ -19,7 +19,6 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	function __construct($db, $params = NULL) {
 		$attr = array(
 			'id',
-			'fb_uid',
 			'institution',
 			'institution_id',
 			'year_id',
@@ -28,8 +27,6 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			'term',
 			'first_name',
 			'last_name',
-			'email',
-			'password',
 		);
 
 		$this->user_dao                = new UserDAO($db);
@@ -100,10 +97,8 @@ class UserProfileDAO extends DAO implements DAOInterface{
 		$sql = "
 			SELECT 
 				u.id,
-				u.account AS email,
 				p.first_name,
 				p.last_name,
-				u.password,
 				f.path,
 				f.mime,
 				us.institution_id,

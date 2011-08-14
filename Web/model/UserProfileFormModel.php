@@ -45,13 +45,19 @@ class UserProfileFormModel extends FormModel {
 	}
 
 	/**
-	 * Get user's profile
+	 * Get user's profile info
 	 */
 	public function getProfile($user_id) {
+		$user_profile = Session::Get('user_profile');
+		if (!empty($user_profile)) {
+			return $user_profile;
+		}
+
 		$has_record = $this->user_profile_dao->read(array('id' => $user_id));
 
 		if ($has_record ) {
 			$result = $this->user_profile_dao->attribute;;
+			Session::Set('user_profile', $result);
 			$result['success'] = true;
 			return $result;
 		} else {

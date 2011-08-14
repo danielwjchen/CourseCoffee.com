@@ -112,6 +112,12 @@ class CollegeClassListModel extends Model {
 	 * @return array
 	 */
 	public function fetchUserClassList($user_id, $institution_id, $year_id, $term_id) {
+		$user_class_list = Session::Get('user_class_list');
+
+		if (!empty($user_class_list)) {
+			return $user_class_list;
+		}
+
 		$this->list_dao = new UserClassListDAO($this->db);
 
 		$has_record = $this->list_dao->read(array(
@@ -138,6 +144,8 @@ class CollegeClassListModel extends Model {
 		// debug output
 		// error_log('user class list - ' . print_r($this->list_dao->list, true));
 		// error_log('formatted user class list - ' . print_r($result, true));
+
+		Session::Set('user_class_list', $result);
 
 		return $result;
 	}
