@@ -216,8 +216,8 @@
 .welcome .panel-02{
 }
 .welcome .panel-02 .panel-inner{
-  height: 529px;
-  background: url('../images/syllabus-icon.png') 0 0 no-repeat;
+  height: 475px;
+  background: url('../images/syllabus-icon.png') center center no-repeat;
 }
 .welcome .panel-02 .error{
 	color: red;
