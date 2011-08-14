@@ -42,7 +42,7 @@
 	position: absolute;
 	right: -5px;
 	top: -5px;
-	background: red;
+	background: url('../images/dialog-close.png') center center no-repeat;
 }
 .dialog-inner {
 	margin: 50px auto 0;
@@ -125,7 +125,7 @@
 }
 
 .enroll .dialog-inner {
-	width: 458px;
+	height: 600px;
 }
 .enroll .error{
 	color: red;
