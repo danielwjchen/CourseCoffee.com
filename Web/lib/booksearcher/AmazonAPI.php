@@ -190,6 +190,28 @@
 		}
 
 
+		private function createCart($isbns){
+			$params = array(
+				"Operation"   => "CartCreate",
+			);
+
+			for($i=0; $i<count($isbns); $i++){
+				$params["Item." . ($i+1) . ".ASIN"] = $isbns[$i];
+				$params["Item." . ($i+1) . ".Quantity"] = 1;
+
+				echo $isbns[$i];
+			}
+
+			return $this->queryAmazon($params);
+		}
+
+		public function buyAllNewBooks($isbns){
+			$cart = $this->createCart($isbns);
+
+			//return purchase url
+			$cart->purchaseurl;
+		}
+
 	}
 
 ?>
