@@ -1,6 +1,6 @@
 <?php
 
-//KnetBook seems only accept 13 digits ISBN
+//KnetBook only accept 13 digits ISBN
 
 	class KnetBooksAPI{
 		//params
@@ -9,33 +9,46 @@
 		private $result;
 
 		//initial
-		function __construct($input) {
-			$this->isbn = $input;
+		function __construct($isbn) {
+			$this->isbn = $isbn;
 			$this->result = $this->searchBookInfo();
 		}
+
+		//change 10 digits isbn to 13 digits
+		public function to13($isbn){
+			$isbn = str_replace('-', '', $isbn);  
+			if(!preg_match('/^\d+x?$/i', $isbn)){  
+				return null;  
+			}
+			if(strlen($isbn) == 13){
+				return $isbn;
+			}  
+			
+			$sum = 0;  
+			$num = '978' . substr($isbn, 0, 9);  
+			for($i = 0; $i < 12; $i++){  
+				$n = $num[$i];  
+				if(($i + 1) % 2 == 0){  
+					$sum += $n * 3;  
+				}else{  
+					$sum += $n;  
+				}  
+			}
+			$m = $sum % 10;  
+			$check = 10 - $m;  
+			
+			return $num . $check;
+		}  
+		
 
 		//search book detail info
 		//return xml result
 		public function searchBookInfo(){
-			$request = "http://www.knetbooks.com/botprice.asp?isbn=" . $this->isbn;
+			$request = "http://www.knetbooks.com/botprice.asp?isbn=" . $this->to13($this->isbn);
 			// send request
 			$response = @file_get_contents($request);
 
-			echo $response;
-
-			if ($response === False){
-				return False;
-			}
-			else{
-				// parse XML to SimpleXMLObject
-				$parsedXml = simplexml_load_string($response);
-				if ($parsedXml === False){
-					return False; // no xml
-				}
-				else{
-					return $parsedXml;
-				}
-			}
+			return $response;
 		}
 
 		public function linkBookDetail(){
@@ -49,7 +62,9 @@
 		}
 
 		public function getLowestRentalPrice(){
-			return $this->result;
+			$tmp = substr($this->result, strpos($this->result,"Rental Price"), 20);
+			$price = substr($tmp,-5, 5);
+			return $price;
 		}
 
 		public function getLowestRentalLink(){
@@ -58,3 +73,4 @@
 	}
 
 ?>
+

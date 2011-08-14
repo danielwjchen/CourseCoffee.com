@@ -14,7 +14,8 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 		$this->addJQueryUI();
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('controller/editor.js');
-		$this->addJS('lib/date.js');
+                $this->addJS('lib/date.js');
+                $this->addJQueryUIPlugin('datetime');
 		$this->addCSS('book-list.css');
 		$this->addCSS('dialog.css');
 		$this->addCSS('editor.css');

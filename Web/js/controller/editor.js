@@ -8,7 +8,7 @@ $P.ready(function(){
             reg_idx = -1;
             flag_week_format = 0;
             
-
+            
             pre_text_orig = "";
             pre_text_trunc = "";
             flag_show_orig_pre_text = 0
@@ -29,49 +29,73 @@ $P.ready(function(){
 
             fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, /m/gi , /t/gi, /w/gi, /r/gi, /f/gi]
             
-
+            
             
             schedule_list = []
+            schedule_list_orig_len = 0
             word = [];
             delim = [];
             orig_html = "";
 	    pre_text = ""; // text before real date
 
+            
+            /* html elements e.g. span, tables for dynamically loading*/
+            date_label_string =  "<br><span class='date_label' sid='SID_STR'><span>DATE_CONTENT_STR</span><a href='#' sid='SID_STR' class='del_date_label' >x</a></span>" ;
+            schedule_elem_string = "<div sid='SID_STR' class='schedule_elem'>\
+                                    <table width='450' border='0' cellpadding='0' cellspacing='0'>\
+                                    <tr>\
+                                        <td width='150'><span class='schedule_elem_date' sid='SID_STR'>DATE_STR</span></td>\
+                                        <td width='250' id='editing_btn'></td>\
+                                        <td width='50'><a href='#' class='sch_btn' sid='SID_STR' id='toggle_del_sch'>x</a></td>\
+                                    </tr>\
+                                    <tr>\
+                                        <td colspan='3' class='sch_content' sid='SID_STR' >CONTENT_STR</td>\
+                                    </tr>\
+                                    </table></div>";
+            schedule_edit_string = "<textarea sid='SID_STR' class='schedule_elem_edit'>CONTENT_STR</textarea>\
+                                    <input type='button' id='save_sch' sid='SID_STR' value='save'>\
+                                    <input type='button' id='cancel_sch' sid='SID_STR' value='cancel'>"           
+            
             /*       flags            */
             editing_flag = 0;
 
 
             /*    data stuctures      */
             function sch(start_pos, next_start_pos, match_str){
-                    id_temp=start_pos
-                    content = result_g.slice(start_pos+match_str.length, next_start_pos)
-
-
-                    if(content.lastIndexOf('\n') !=-1 && content.search(/[a-z]/i) !=-1){
-                        last_oc_idx = content.lastIndexOf('\n')
-                        first_oc_idx =  content.search(/[a-z]/i)
-                        last_line = content.slice(last_oc_idx, content.length)
-                        
-                        hit_flag = 0
-                        for (j = 0; j < fil_list.length; j++){
-                                if(last_line.match(fil_list[j]) != null) { hit_flag = 1; break; }
-                        }
-                        
-                        if(last_oc_idx > first_oc_idx && hit_flag == 1){
-                                content = content.slice(first_oc_idx, last_oc_idx)
-                        }
+                    if(start_pos ==  -1 && next_start_pos == -1){
+                        content = "New assignment"
+                        id_temp = Math.random()
                     }
+                    else{ 
+                            id_temp=start_pos
+                            content = result_g.slice(start_pos+match_str.length, next_start_pos)
+                            if(content.lastIndexOf('\n') !=-1 && content.search(/[a-z]/i) !=-1){
+                                last_oc_idx = content.lastIndexOf('\n')
+                                first_oc_idx =  content.search(/[a-z]/i)
+                                last_line = content.slice(last_oc_idx, content.length)
+                                
+                                hit_flag = 0
+                                for (j = 0; j < fil_list.length; j++){
+                                        if(last_line.match(fil_list[j]) != null) { hit_flag = 1; break; }
+                                }
+                                
+                                if(last_oc_idx > first_oc_idx && hit_flag == 1){
+                                        content = content.slice(first_oc_idx, last_oc_idx)
+                                }
+                            }
 
-                    content = content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+                            content = content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
 
-                    if(content.length < 4){
-                                date_label_deleted=true
-                    }
-                    else{
-                                date_label_deleted=false	
-                    }
+                            if(content.length < 4){
+                                        date_label_deleted=true
+                            }
+                            else{
+                                        date_label_deleted=false	
+                            }
+                    
+                    } 
 
-                    if(parse_date(match_str)==true){ date_out = Date.parse(match_str) }
+                    if(parse_date(match_str) == true){ date_out = Date.parse(match_str) }
                     var temp_sch = { 'id' : id_temp, 'start_pos' : start_pos, 'end_pos': next_start_pos, 'match_str' : match_str,'content': content , 'modified': 0, 'catergory': '', 'date': date_out, 'next': false, 'deleted': false, 'date_label_deleted': date_label_deleted};
                     return temp_sch;
 
@@ -95,6 +119,7 @@ $P.ready(function(){
                     history_stack.push( $.extend(true, [], schedule_list) );
                     show_schedule();
                     adjust_spacing();
+                    update_schedule();
                     update_date_label();
             });
 
@@ -110,6 +135,7 @@ $P.ready(function(){
                     $(".schedule_elem[sid='"+temp_id+"']").css("background-color","");									 
             });
 
+            
 
             $("a[id='edit_sch']").live("click",function(e){
                     e.preventDefault();
@@ -119,8 +145,7 @@ $P.ready(function(){
                     orig_html = $(".sch_content[sid='"+orig_sid+"']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
                     orig_height = $(".sch_content[sid='"+orig_sid+"']").height()*0.8
                     orig_width = $(".sch_content[sid='"+orig_sid+"']").width()
-                    $(".sch_content[sid='"+orig_sid+"']").html("<textarea sid='"+orig_sid+"' style='width:"+"490"+"px; height:"+orig_height+"px'>"+orig_html+"</textarea>\
-                                             <input type='button' id='save_sch' sid='"+orig_sid+"' value='save'/><input type='button' id='cancel_sch' sid='"+orig_sid+"' value='cancel'/>")
+                    $(".sch_content[sid='" + orig_sid + "']").html(schedule_edit_string.replace(/SID_STR/gi, orig_sid).replace(/CONTENT_STR/gi, orig_html))
                     editing_flag=1
                     adjust_spacing();
             });
@@ -139,11 +164,13 @@ $P.ready(function(){
             });
 
 
-
+            /**
+             *  showing edit buttons when mouse entered schedule_elem
+             */
 
             $(".schedule_elem").live("mouseenter",function(){
                     id_temp = $(this).attr("sid")
-                    $("td[id]", this).html("<a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_sch'>edit</a>")
+                    $("td[id]", this).html("<a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_date'>change date</a> <a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_sch'>edit</a>")
                     adjust_spacing();
                     adjust_parsed_data_pos();
             });
@@ -154,6 +181,10 @@ $P.ready(function(){
                     adjust_spacing();
                     adjust_parsed_data_pos();
             });
+
+            /**
+             *  save schedule
+             */
 
             $("#save_sch").live("click",function(){
                     id_temp = $(this).attr("sid")
@@ -207,8 +238,13 @@ $P.ready(function(){
             });
 		
             $("#new_assignment").click(function(){
-                dialog.open('new_assignment', "<h2>Add New Assignment</h2>");
-            
+                    $("#parsed_data").html("")
+                    s = sch(-1,-1,"1/1")  
+                    schedule_list.push(s)
+                    show_schedule()
+                    adjust_spacing()
+                    adjust_parsed_data_pos()
+                    
             });
             $("#toggle_pre_text").live("click", function(){
                     if (flag_show_orig_pre_text == 0){ // currently showing truncated text
@@ -223,6 +259,50 @@ $P.ready(function(){
                     }
                     flag_show_orig_pre_text = !flag_show_orig_pre_text ;
 
+            });
+            
+            date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'><a href='#' id='confirm_date_change' sid='SID_STR' class='sch_btn_3'>O</a><a href='#' id='cancel_date_change' sid='SID_STR' class='sch_btn_3'>X</a>"
+
+
+            $("a[id='edit_date']").live("click",function(e){
+                    e.preventDefault();
+                    sid = $(this).attr("sid")
+                    curr_sch = get_sch_by_id(sid)
+                    orig_date = (curr_sch.date.getMonth() + 1) + "/" +(curr_sch.date.getDate())
+                    $(".schedule_elem_date[sid='" + sid + "']").html(date_string.replace(/SID_STR/gi, sid).replace(/ORIG_DATE_STR/gi, orig_date))
+            });
+
+            $("a[id='confirm_date_change']").live("click", function(e){
+                    e.preventDefault();
+                    sid = $(this).attr("sid")
+                    sch_idx = get_sch_idx_by_id(sid)
+                    orig_first_day = schedule_list[0].date.getOrdinalNumber() 
+                    new_date = $(".date_container[sid='" + sid + "']").val() 
+                    if(Date.parse(new_date) == null){
+                            alert("invalid date")
+                    }
+                    else{
+                            schedule_list[sch_idx].date = Date.parse(new_date)
+                            if(sch_idx == 0){
+                                    day_offest = schedule_list[sch_idx].date.getOrdinalNumber() - orig_first_day
+                                    for(i = 1; i < schedule_list_orig_len; i++ ){
+                                            schedule_list[i].date.addDays(day_offest)
+                                    }
+                                    
+                                    flag_week_format = 0
+                                    show_schedule()
+                            }
+                            new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
+                            $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
+                    }
+            });
+            
+            $("a[id='cancel_date_change']").live("click", function(e){
+                    e.preventDefault();
+                    sid = $(this).attr("sid")
+                    sch_idx = get_sch_idx_by_id(sid)
+                    new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
+                    $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
             });
 
             $(window).scroll(function(){
@@ -239,12 +319,18 @@ $P.ready(function(){
                     }
             }
 
-            function get_sch_by_idx(sid){
+            function get_sch_by_id(sid){
                     for(i=0;i<schedule_list.length;i++){
                                 if(schedule_list[i].id==sid) return schedule_list[i];		
                     }
             }
-                                  
+            
+            function get_sch_idx_by_id(sid){
+                    for(i=0;i<schedule_list.length;i++){
+                                if(schedule_list[i].id==sid) return i;		
+                    }
+            }
+
             function init(){
                     $("#parsed_data").css("left" , $("#table_syl").position().left + $("#table_syl").width()  );
                     $("#tool_box").css("left",  $("#parsed_data").position().left);
@@ -253,7 +339,6 @@ $P.ready(function(){
 
             function parse_date(str){
                     date_out = Date.parse(match_str)
-                    //console.log(match_str, date_out)
                     year_temp = date_out.getFullYear()
 
                     if(year_temp<curr_year){
@@ -262,8 +347,9 @@ $P.ready(function(){
                     return true;
             }
 
+
             function get_date_label_html(date_id, date_content){
-                    return "<br><span class='date_label' sid='"+date_id+"'>" + "<span>" + date_content + "</span><a href='#' sid='"+date_id+"' class='del_date_label'> X</a></span>" 
+                    return date_label_string.replace(/SID_STR/gi, date_id).replace(/DATE_CONTENT_STR/gi, date_content)
             }
 
             function update_date_label(){
@@ -280,39 +366,21 @@ $P.ready(function(){
                             }
                     }
             }
-
+            
+            
             function get_sch_html(date_id, date_t, content){
+                    curr_sch = get_sch_by_id(date_id)
+                    month = curr_sch.date.getMonth() + 1
+                    day = curr_sch.date.getDate()
                     if(flag_week_format != 1){  // not week format, i.e. not week 1,2,3,4,5
-                            return '<div sid="'+date_id+'" class="schedule_elem" >\
-                                    <table width="490" border="0" cellpadding="0" cellspacing="0">\
-                                    <tr>\
-                                      <td width="400" class="schedule_elem_title">Date:'+(date_t.getMonth()+1)+'/'+date_t.getDate()+'</td>\
-                                      <td width="50" id="editing_btn">&nbsp;</td>\
-                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
-                                    </tr>\
-                                    <tr>\
-                                      <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
-                                    </tr>\
-                                    </table></div>'
+                        return schedule_elem_string.replace(/SID_STR/gi, date_id).replace(/DATE_STR/gi, month + '/' + day).replace(/CONTENT_STR/gi, content)
                     }
                     else{
-                            return '<div sid="'+date_id+'" class="schedule_elem" >\
-                                    <table width="490" border="0" cellpadding="0" cellspacing="0">\
-                                    <tr>\
-                                      <td width="400" class="schedule_elem_title">Date:'+get_sch_by_idx(date_id).match_str+'</td>\
-                                      <td width="50" id="editing_btn">&nbsp;</td>\
-                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
-                                    </tr>\
-                                    <tr>\
-                                      <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
-                                    </tr>\
-                                    </table></div>'
+                        return schedule_elem_string.replace(/SID_STR/gi, date_id).replace(/DATE_STR/gi, curr_sch.match_str).replace(/CONTENT_STR/gi, content)
                     }
             }
 
             function show_schedule(){
-                    
-                    //$("#parsed_data").html("<h2>loading your assignments</h2>")
                     schedule_lc = "" //create schedule html
                     i_idx=0
 
@@ -358,7 +426,13 @@ $P.ready(function(){
 
                     for(i=1; i<sch_div.length; i++){
                             curr_sid = $(sch_div[i]).attr("sid")
-                            curr_pos = $(".date_label[sid='"+curr_sid+"']").position().top
+                            temp_curr = $(".date_label[sid='"+curr_sid+"']").position()
+                            if(temp_curr == null){
+                                curr_pos = 0
+                            }
+                            else{
+                                curr_pos = $(".date_label[sid='"+curr_sid+"']").position().top
+                            }
                             prev_sid = $(sch_div[i-1]).attr("sid")
                             prev_pos = $(".schedule_elem[sid='"+prev_sid+"']").position().top + $(".schedule_elem[sid='"+prev_sid+"']").height()
                             $(sch_div[i]).css("position", "absolute")
@@ -374,7 +448,8 @@ $P.ready(function(){
                     min_idx = ""
                     scorll_val = 0
 
-                    for(i=0; i<sch_div.length; i++){
+                    //for(i=0; i<sch_div.length; i++){
+                    for(i=0; i<schedule_list_orig_len; i++){
                             temp_id = $(sch_div[i]).attr("sid");
                             temp_dist = $(".date_label[sid='"+temp_id+"']").position().top - $(window).scrollTop() ;
                             
@@ -588,13 +663,14 @@ $P.ready(function(){
                     $("#pre_text").fadeTo("fast", 0.2);
 
                     show_schedule();
+                    schedule_list_orig_len = schedule_list.length
                     adjust_spacing();
                     t=$.extend(true, [], schedule_list);
                     history_stack.push(t)
                     update_date_label()
 						   
                    }});        
-        /*****************      end of main    *********************/  
+        /*****************      end of main     *********************/  
 
 	/**
 	 * Create tasks from document
