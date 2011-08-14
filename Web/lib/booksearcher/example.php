@@ -26,6 +26,7 @@
 	}
  */
 
+
 	$amazonSearch = new AmazonAPI();
 
 	$isbns = array("1848000693","0201558025");
@@ -82,9 +83,8 @@
  */
 
 //	$search = new KnetBooksAPI("0262033848");
-//	$tt = $search->getLowestRentalPrice();
-//	$tt = $search->getLowestRentalLink();
-//	echo $tt;
+//	echo $search->getLowestRentalPrice();
+//	echo $search->getLowestRentalLink();
 
 
 
