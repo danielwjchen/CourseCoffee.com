@@ -15,7 +15,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			'college-class-add'     => 'createClass',
 			'college-class-update'  => 'updateClass',
 			'college-class-remove'  => 'removeClass',
-			'college-class-detail'  => 'getClassDetail',
+			'college-class-info'  => 'getClassDetail',
 			'college-class-list'    => 'getListOfClass',
 			'college-class-suggest' => 'suggestClass',
 			'college-class-enroll'  => 'enrollClass',
@@ -59,6 +59,11 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 * Get detail of a class()
 	 */
 	public function getClassDetail() {
+		$section_id = Input::Post('section_id');
+		$class_model = new CollegeClassModel();
+		$result = $class_model->getClassById($section_id);
+		$this->json = new JSONView($result);
+
 	}
 
 	/**
@@ -105,6 +110,20 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			$section_id = Input::Post('section_id');
 			$enroll = new UserEnrollClassModel();
 			$result = $enroll->AddUserToClass($user_id, $section_id);
+
+			// rebuild user_class_list in session
+			if (isset($result['success'])) {
+				Session::Set('user_class_list', null);
+				$user_profile = Session::Get('user_profile');
+				$class_list_model = new CollegeClassListModel();
+				$class_list_model->fetchUserClassList(
+					$user_id, 
+					$user_profile['institution_id'],
+					$user_profile['year_id'],
+					$user_profile['term_id']
+				);
+			}
+
 			$this->json = new JSONView($result);
 		}
 

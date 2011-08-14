@@ -1,6 +1,6 @@
 /**
  * @file
- * Handle event inputs on /clas and lazy load contents to reduce load time
+ * Handle event inputs on /class and lazy load contents to reduce load time
  *
  * @see js/model/task.js
  * @see js/model/calendar.js
@@ -8,33 +8,42 @@
  *
  */
 $P.ready(function() {
-	panelMenu = $('.panel-menu');
-	classBookList = $('#class-book-list');
+	var panelMenu = $('.panel-menu');
+	var classBookList = $('#class-book-list');
 
-	// cache book list to save time
-	bookListCache = {};
+	var classInfo = new ClassInfo('.class-section-info', '#class-option-form', '#class-task-list', '#class-task-creation-form');
 
 	// mark the first item in class list as active on page load
-	$('a:first', panelMenu).addClass('active');
-	sectionId = $('a:first', panelMenu).attr('id');
-	bookList = new BookSuggest('#class-book-list');
-	bookList.getBookList(sectionId);
-	
+	var defaultMenuOption = 'a:first';
+	var defaultClassId = classInfo.getClassId();
+	if (defaultClassId) {
+		defaultMenuOption = '#' + defaultClassId;
+	}
 
+	$(defaultMenuOption, panelMenu).addClass('active');
+	var sectionId = $(defaultMenuOption, panelMenu).attr('id');
+	var bookList = new BookSuggest('#class-book-list');
+
+	// debug
+	// console.log('default class id - ' + defaultClassId);
+
+	classInfo.getClassInfo(sectionId);
+	classInfo.populate();
+	bookList.getBookList(sectionId);
 
 	// Load tasks
-	task.init();
+	var task = new Task('#task-creation-form');
 	var userTaskOption = $('#user-list-task-option');
 	var agendaPanel = $('.panel-02 .panel-inner .task-list');
 
 	// Over see inputs in panel menu
 	panelMenu.delegate('a', 'click', function(e) {
 		e.preventDefault();
-		target = $(this);
+		var target = $(this);
 
-
-		selectedBookListId = target.attr('id');
-		bookList.getBookList(selectedBookListId);
+		var selectedSectionId = target.attr('id');
+		classInfo.getClassInfo(selectedSectionId);
+		bookList.getBookList(selectedSectionId);
 
 		// debug
 		// console.log(selectedBookListId);
@@ -44,43 +53,21 @@ $P.ready(function() {
 		agendaPanel.empty();
 	});
 
-	// Initilize the date-time selector
-	$('#time-picker').datetime({  
-		duration: '15',  
-		showTime: true,  
-		constrainInput: false,  
-		stepMinutes: 1,  
-		stepHours: 1,  
-		time24h: false  
-	});  
-
-	// toggle task creation form
-	$('input.objective').live('click', function(e) {
-		$('.additional').removeClass('hidden');
-	});
 	blurInput(body);
 
 	// Over see inputs in task panel
-	taskRegion = $('.panel-02');
-	taskRegion.delegate('a', 'click', function(e) {
+	$('.panel-02', body).delegate('a', 'click', function(e) {
 		e.preventDefault();
 		target = $(this);
 
-		if (target.hasClass('show-detail')) {
-			if ($('.optional').hasClass('hidden')) {
-				$('.optional').removeClass('hidden');
-				target.text('less detail');
-			} else {
-				$('.optional').addClass('hidden');
-				target.text('more detail');
-			}
-
-		} else if (target.hasClass('upload')) {
+		if (target.hasClass('upload')) {
 			doc.init();
 		} else if (target.hasClass('submit')) {
-			task.submit();
-			setTimeout("calendar.populate()", 2000);
+			classInfo.createTask();
 
+		} else if (target.hasClass('more')) {
+			classInfo.incrementPaginate();
+			classInfo.populate();
 		}
 	});
 

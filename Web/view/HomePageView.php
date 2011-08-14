@@ -18,6 +18,7 @@ class HomePageView extends PageView implements PageViewInterface {
 
 		$this->addJS('model/logout.js');
 		$this->addJS('model/task.js');
+		$this->addJS('model/to-do.js');
 		$this->addJS('model/doc.js');
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');
@@ -73,6 +74,7 @@ class HomePageView extends PageView implements PageViewInterface {
 								<img src="images/default-profile.png" />
 								<div class="name">{$first_name} {$last_name}</div>
 								<div class="school">{$institution}</div>
+								<div class="semester">{$term} {$year}</div>
 							</div>
 							<div class="upload-form">
 								<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
@@ -84,7 +86,7 @@ class HomePageView extends PageView implements PageViewInterface {
 								<a class="button upload" href="#">upload</a>
 							</div>
 							<div class="task-create-form-wrapper">
-								<form id="new-task-form" class="task-create-form" action="task/create" method="post">
+								<form id="to-do-creation-form" class="task-create-form" action="task/create" method="post">
 									<fieldset class="required">
 										<legend>NEW to-do</legend>
 										<input type="hidden" name="token" />
@@ -120,10 +122,13 @@ class HomePageView extends PageView implements PageViewInterface {
 					</div>
 					<div class="panel-01 panel-class">
 						<h1>To-dos</h1>
-						<form id="user-list-task-option" action="user/list-task" method="post">
+						<form id="to-do-option" action="user/list-task" method="post">
 							<input type="hidden" name="paginate" value="0" />
 						</form>
 						<div class="panel-inner">
+							<div id="to-do-list" class="task-list">
+							</div>
+							<a href="#" class="button more">more</a>
 						</div>
 					</div>
 					<div class="panel-02">

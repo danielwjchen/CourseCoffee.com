@@ -11,6 +11,7 @@ class UserController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
+			'user-register-facebook' => 'registerUserByFacebook',
 			'user-register' => 'registerUser',
 			'user-update'   => 'updateUser',
 			'user-remove'   => 'removeUser',
@@ -35,32 +36,35 @@ class UserController extends Controller implements ControllerInterface {
 
 	/**
 	 * Register a new user
+	 *
+	 * Since this is our first semester, some of information is hard-coded
 	 */
 	public function registerUser() {
-		$first_name = Input::Post('first-name');
-		$last_name  = Input::Post('last-name');
-		$school     = Input::Post('school');
-		$fb_uid     = Input::Post('fb_uid');
-		$token      = Input::Post('token');
-		$email      = Input::Post('email', FILTER_SANITIZE_EMAIL);
-		$password   = Input::Post('password');
-		$confirm    = Input::Post('confirm');
+		$first_name     = Input::Post('first-name');
+		$last_name      = Input::Post('last-name');
+		$institution_id = Input::Post('school');
+		$year           = '2011';
+		$term           = 'fall';
+		$token          = Input::Post('token');
+		$email          = Input::Post('email', FILTER_SANITIZE_EMAIL);
+		$password       = Input::Post('password');
+		$confirm        = Input::Post('confirm');
 
 		$user_register_form = new UserRegisterFormModel();
 
 		$result = $user_register_form->processForm(
 			$first_name,
 			$last_name,
-			$school,
-			$fb_uid,
+			$institution_id,
+			$year,
+			$term,
 			$email, 
 			$password, 
 			$confirm, 
 			$token
 		);
-		// if a user_id is generated, that means we have a new user and we start a 
-		// nwe user session
-		if (isset($result['user_id'])) {
+		
+		if (isset($result['success'])) {
 			$user_login = new UserLoginFormModel();
 			$user_login->startUserSession(
 				$result['user_id'], 
@@ -101,6 +105,9 @@ class UserController extends Controller implements ControllerInterface {
 		$token    = Input::Post('token');
 
 		$result = $login_form->processForm($email, $password, $token);
+		if (isset($result['success'])) {
+		}
+
 		$json = new JSONView($result);
 		echo $json->render();
 	}

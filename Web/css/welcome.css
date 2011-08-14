@@ -20,14 +20,16 @@
 	float: left;
 	clear: both;
 	width: 960px;
+	height: 160px;
 }
 /**
  * Define styles for log and slogan 
  */
-.welcome .logo{
-	float: left;
+.welcome .logo {
   width: 392px;
-  margin: 30px -459px 20px 67px;
+	position: absolute;
+	left: 45px;
+	top: 45px;
 }
 
 /**
@@ -121,8 +123,11 @@
 .welcome .slogan{
   float: left;
   width: 480px;
-  margin: 70px -960px 20px 480px;
-  text-align: left;
+	height: 115px;
+	background: url('../images/slogan.png') no-repeat center center;
+  margin: 80px -960px 20px 480px;
+	/**
+  text-align: center;
 	line-height: 30px;
 	padding: 50px 0 0px;
 	font-size: 30px;
@@ -131,6 +136,7 @@
 	text-shadow: 0 0 6px #000;
 	-moz-text-shadow: 0 0 6px #000;
 	-webkit-text-shadow: 0 0 6px #000;
+	**/
 }
 /**
  * Define styles for panel-01
@@ -146,6 +152,8 @@
 .welcome .panel-01 .panel-inner{
 }
 .welcome .panel-01 h2{
+	margin-top: 20px;
+	text-align: center;
   font-size: 24px;
 }
 .welcome .panel-01 ul,
@@ -155,11 +163,11 @@
   list-style: none;
 }
 .welcome .panel-01 ul{
-	width: 400px;
-  margin: 40px auto;
+	width: 325px;
+  margin: 20px auto 40px;
 }
 .welcome .panel-01 li{
-  padding: 10px 0 10px 50px;
+  padding: 20px 0 20px 50px;
 	height: 40px;
 }
 .welcome .panel-01 li.calendar {
@@ -208,8 +216,8 @@
 .welcome .panel-02{
 }
 .welcome .panel-02 .panel-inner{
-  height: 529px;
-  background: url('../images/syllabus-icon.png') 0 0 no-repeat;
+  height: 475px;
+  background: url('../images/syllabus-icon.png') center center no-repeat;
 }
 .welcome .panel-02 .error{
 	color: red;

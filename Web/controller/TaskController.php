@@ -130,7 +130,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get tasks belong to a user
 	 */
 	public function getTaskBelongToUser() {
-		$user_id  = Session::get('user_id');
+		$user_id  = $this->getUserId();
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
 		$result = $list_model->fetchUserList($user_id, $paginate);
@@ -141,18 +141,24 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get task belong to a class
 	 */
 	public function getTaskBelongToClass() {
+		$user_id    = $this->getUserId();
+		$section_id = Input::Post('section_id');
+		$paginate   = Input::Post('paginate');
+		$list_model = new TaskListModel();
+		$result = $list_model->fetchUserClassList($user_id, $section_id, $paginate);
+		$this->json = new JSONView($result);
 	}
 
 	/**
 	 * Get task belong to a time period
 	 */
 	public function getTaskBelongToDate() {
-		$user_id  = Session::Get('user_id');
+		$user_id  = $this->getUserId();
 		$begin    = Input::Post('begin');
 		$end      = Input::Post('end');
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
-		$result = $list_model->fetchCalendarList($user_id, $begin, $end);
+		$result = $list_model->fetchUserCalendarList($user_id, $begin, $end, $paginate);
 		$this->json = new JSONView($result);
 	}
 

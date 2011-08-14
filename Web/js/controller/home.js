@@ -2,7 +2,7 @@
  * @file
  * Handle event inputs on /home and lazy load contents to reduce load time
  *
- * @see js/model/task.js
+ * @see js/model/toDo.js
  */
 $P.ready(function() {
 	// Initilize the date-time selector
@@ -15,15 +15,13 @@ $P.ready(function() {
 		time24h: false  
 	});  
 
-	// Load tasks
-	task.init();
-	var userTaskOption = $('#user-list-task-option');
-	$('input[name=paginate]', userTaskOption).val(0);
+	// Load to-dos
+	toDo = new ToDo('#to-do-option', '#to-do-list', '#to-do-creation-form');
+	toDo.populate();
 	var agendaPanel = $('.panel-01 .panel-inner');
-	agendaPanel.after('<a href="#" class="button more">more</a>');
-	task.getTaskBelongToUser(userTaskOption, agendaPanel);
+	agendaPanel.after('');
 
-	// toggle task creation form
+	// toggle toDo creation form
 	$('input.objective').live('click', function(e) {
 		$('.additional').removeClass('hidden');
 	});
@@ -32,25 +30,14 @@ $P.ready(function() {
 	body.delegate('a.button', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);
-		if (target.hasClass('show-detail')) {
-			if ($('.optional').hasClass('hidden')) {
-				$('.optional').removeClass('hidden');
-				target.text('less detail');
-			} else {
-				$('.optional').addClass('hidden');
-				target.text('more detail');
-			}
-
-		} else if (target.hasClass('upload')) {
+		if (target.hasClass('upload')) {
 			doc.init();
 		} else if (target.hasClass('submit')) {
-			task.submit(agendaPanel);
-			agendaPanel.empty('');
-			task.loading();
-			task.getTaskBelongToUser(userTaskOption, agendaPanel);
+			toDo.createTask();
+
 		} else if (target.hasClass('more')) {
-			task.incrementPaginate(userTaskOption);
-			task.getTaskBelongToUser(userTaskOption, agendaPanel);
+			toDo.incrementPaginate();
+			toDo.populate();
 		}
 	});
 });

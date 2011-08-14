@@ -14,7 +14,8 @@ class CollegeClassListModel extends Model {
 	 */
 	const ERROR_FAILED_TO_CREATE = 'All servers down!!11!one!!';
 	const ERROR_FORM_EMPTY       = 'The email and password fields cannot be empty';
-	const ERROR_FORM_EXPIRED     = 'The form hasexpired. Please try again.';
+	const ERROR_FORM_EXPIRED     = 'The form has expired. Please try again.';
+	const ERROR_NO_ENROLLMENT    = 'hmmm... it seems you are not enrolled in classes.';
 	/**
 	 * @} End of error_messages
 	 */
@@ -111,17 +112,27 @@ class CollegeClassListModel extends Model {
 	 * @return array
 	 */
 	public function fetchUserClassList($user_id, $institution_id, $year_id, $term_id) {
+		$user_class_list = Session::Get('user_class_list');
+
+		if (!empty($user_class_list)) {
+			return $user_class_list;
+		}
+
 		$this->list_dao = new UserClassListDAO($this->db);
-		$this->list_dao->read(array(
+
+		$has_record = $this->list_dao->read(array(
 			'user_id'        => $user_id,
 			'institution_id' => $institution_id,
 			'year_id'        => $year_id,
 			'term_id'        => $term_id,
 		));
+
+		if (!$has_record) {
+			return array('error' => self::ERROR_NO_ENROLLMENT);
+		}
 		
 		$result = array();
 		if (isset($this->list_dao->list['section_id'])) {
-			error_log('asdfasdf');
 			$result[$this->list_dao->list['section_id']] = $this->list_dao->list['subject_abbr'] . ' ' . $this->list_dao->list['course_num'] . ' ' .$this->list_dao->list['section_num'];
 
 		} else {
@@ -131,8 +142,10 @@ class CollegeClassListModel extends Model {
 		}
 
 		// debug output
-		error_log('user class list - ' . print_r($this->list_dao->list, true));
-		error_log('formatted user class list - ' . print_r($result, true));
+		// error_log('user class list - ' . print_r($this->list_dao->list, true));
+		// error_log('formatted user class list - ' . print_r($result, true));
+
+		Session::Set('user_class_list', $result);
 
 		return $result;
 	}

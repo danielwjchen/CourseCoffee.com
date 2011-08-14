@@ -1,0 +1,17 @@
+/**
+ * Define styles for facebook-sign-up page
+ */
+.fb-sign-up .body-inner{
+	/* override default*/
+	width: 600px;
+}
+.fb-sign-up .content{
+	/* override default*/
+	width: 600px;
+	text-align: center;
+	padding: 50px 0 ;
+}
+.fb-sign-up .content iframe {
+	min-height: 500px!important;
+	float: left;
+}

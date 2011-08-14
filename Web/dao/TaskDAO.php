@@ -138,6 +138,7 @@ class TaskDAO extends DAO implements DAOInterface{
 				ON us_linkage.section_id = qs_linkage.section_id
 				AND us_linkage.user_id = u.id
 			%s
+			GROUP BY q.id
 			ORDER BY due_date ASC
 		";
 		if (isset($params['limit'])) {
@@ -155,6 +156,10 @@ class TaskDAO extends DAO implements DAOInterface{
 				'id' => $params['id'],
 				'type_name' => QuestType::TASK,
 			));
+
+			// debug
+			// error_log('task dao attribute - ' . print_r($data, true));
+
 			return $this->updateAttribute($data);
 
 		// get tasks in arange
@@ -204,30 +209,36 @@ class TaskDAO extends DAO implements DAOInterface{
 			} else {
 				throw new Exception("unknown task identifier - " . print_r($params, true));
 			}
-
-		// get tasks belong to user
-		} elseif (isset($params['user_id'])) {
-				$where_clause = "WHERE u.id = :user_id";
-				$sql = sprintf($sql, $where_clause);
-				$data = $this->db->fetch($sql, array(
-					'user_id' => $params['user_id'],
-					'type_name' => QuestType::TASK,
-				));
-
 		// get tasks belong to class
-		} elseif (isset($params['section_id'])) {
+		} elseif (isset($params['section_id']) && isset($params['user_id'])) {
 			$where_clause = "
-				WHERE qs_linkage.section_id = :section_id
+				WHERE u.id = :user_id
+					AND qs_linkage.section_id = :section_id
 			";
 			$sql = sprintf($sql, $where_clause);
 			$data = $this->db->fetch($sql, array(
+				'user_id' => $params['user_id'],
+				'type_name' => QuestType::TASK,
 				'section_id' => $params['section_id'],
 			));
+
+		// get tasks belong to user
+		} elseif (isset($params['user_id'])) {
+			$where_clause = "WHERE u.id = :user_id";
+			$sql = sprintf($sql, $where_clause);
+			$data = $this->db->fetch($sql, array(
+				'user_id' => $params['user_id'],
+				'type_name' => QuestType::TASK,
+			));
+
 
 		} else {
 			throw new Exception("unknown task identifier - " . print_r($params, true));
 
 		}
+
+		// debug
+		// error_log('task dao list - ' . print_r($data, true));
 
 		$this->list = $data;
 		return !empty($data);

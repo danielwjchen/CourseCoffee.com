@@ -21,7 +21,7 @@ $config = new Config(array(
 	/**
 	 * Define the Facebook app
 	 */
-	'facebooky' => array(
+	'facebook' => array(
 		'app_key' => '',
 		'app_secret' => '',
 	),

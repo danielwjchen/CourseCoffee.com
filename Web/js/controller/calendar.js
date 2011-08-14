@@ -11,7 +11,6 @@ $P.ready(function() {
 	panelMenu = $('.panel-menu');
 
 	// Load tasks
-	task.init();
 	var userTaskOption = $('#user-list-task-option');
 	var agendaPanel = $('.panel-02 .panel-inner .task-list');
 
@@ -19,7 +18,7 @@ $P.ready(function() {
 	$('.calendar-display').scrollBar();
 
 	// Initialize calendars
-	calendar = new Calendar('.calendar-display', '#calendar-option', '.task-list');
+	calendar = new Calendar('.calendar-display', '#calendar-option', '#calendar-task-list', '#calendar-task-creation-form');
 	calendar.getMonthCalendar();
 	calendar.populate();
 
@@ -51,43 +50,23 @@ $P.ready(function() {
 
 	});
 
-	// Initilize the date-time selector
-	$('#time-picker').datetime({  
-		duration: '15',  
-		showTime: true,  
-		constrainInput: false,  
-		stepMinutes: 1,  
-		stepHours: 1,  
-		time24h: false  
-	});  
-
-	// toggle task creation form
-	$('input.objective').live('click', function(e) {
-		$('.additional').removeClass('hidden');
-	});
 	blurInput(body);
 
 	// Over see inputs in task panel
-	taskRegion = $('.panel-02');
+	taskRegion = $('.panel-02', body);
+
 	taskRegion.delegate('a', 'click', function(e) {
 		e.preventDefault();
 		target = $(this);
 
-		if (target.hasClass('show-detail')) {
-			if ($('.optional').hasClass('hidden')) {
-				$('.optional').removeClass('hidden');
-				target.text('less detail');
-			} else {
-				$('.optional').addClass('hidden');
-				target.text('more detail');
-			}
-
-		} else if (target.hasClass('upload')) {
+		if (target.hasClass('upload')) {
 			doc.init();
 		} else if (target.hasClass('submit')) {
-			task.submit();
-			setTimeout("calendar.populate()", 2000);
+			calendar.createTask();
 
+		} else if (target.hasClass('more')) {
+			calendar.incrementPaginate();
+			calendar.populate();
 		}
 	});
 

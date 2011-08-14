@@ -6,10 +6,28 @@ window.doc = {
 	 * Initialize the upload process
 	 */
 	'init' : function() {
+		dialog.open('upload', '');
+		doc.createForm('.dialog-inner', 'Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)');
+
+		$('.dialog-close', $P).live('click', function(e) {
+			e.preventDefault();
+			dialog.close()
+		});
+
+	},
+	/**
+	 * Create document form
+	 *
+	 * @param string regionName
+	 *  the id or class name of the resion which this form will be appended to.
+	 * @param string message
+	 *  a message to guide the user through the process
+	 */
+	'createForm' : function (regionName, message) {
 		var form = $('#doc-upload-form-skeleton').clone();
 		form.attr('id', 'doc-upload-form');
 		$.ajax({
-			url: '?q=doc-init',
+			url: '/doc-init',
 			type: 'POST',
 			success: function(response) {
 				if (response.token) {
@@ -17,9 +35,8 @@ window.doc = {
 				} 
 			}
 		});
-		content = '<h2>Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)</h2>';
-		dialog.open('upload', content);
-		form.appendTo('.dialog-inner');
+		form.appendTo(regionName);
+		form.before('<h3>' + message + '</h3>');
 		form.removeClass('hidden');
 		form.delegate('a.submit', 'click', function(e) {
 			e.preventDefault();
@@ -32,10 +49,4 @@ window.doc = {
 			}
 		});
 	},
-	/**
-	 * Cancel the process
-	 */
-	'cancel' : function() {
-		display.close();
-	}
 };

@@ -105,10 +105,10 @@ class UserLoginFormModel extends FormModel {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_FORM_EXPIRED);
 			return array(
+				'error'    => self::ERROR_FORM_EXPIRED,
 				'email'    => null,
 				'password' => null,
 				'token'    => $token,
-				'error'    => self::ERROR_FORM_EXPIRED
 			);
 		}
 
@@ -117,10 +117,10 @@ class UserLoginFormModel extends FormModel {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_MAX_TRY);
 			return array(
+				'error'    => self::ERROR_MAX_TRY,
 				'email'    => null,
 				'password' => null,
 				'token'    => $token,
-				'error'    => self::ERROR_MAX_TRY
 			);
 		}
 
@@ -129,40 +129,44 @@ class UserLoginFormModel extends FormModel {
 		if (empty($email) || empty($password)) {
 			Logger::write(self::EVENT_FORM_EMPTY, Logger::SEVERITY_HIGH);
 			return array(
+				'error'      => self::ERROR_FORM_EMPTY,
 				'email'      => null,
 				'password'   => null,
 				'token'      => $token,
-				'error'      => self::ERROR_FORM_EMPTY
 			);
 		}
 
 		// look for record
 		$encrypted_password = Crypto::Encrypt($password);
-		$this->user_dao->read(array('account' => $email));
+		$has_record = $this->user_dao->read(array('account' => $email));
 
 		// obviously if no such user exists
-		if ($this->user_dao->id === null) {
+		if (!$has_record) {
 			Logger::write(self::EVENT_FAILED_TO_LOGIN, Logger::SEVERITY_LOW);
 			return array(
+				'error'    => self::ERROR_FAILED_TO_LOGIN,
 				'email'    => $email,
 				'password' => $password,
 				'token'    => $token,
-				'error'    => self::ERROR_FAILED_TO_LOGIN,
 			);
+
 		// if the password doesn't match... we log this event
 		} elseif ($this->user_dao->password !== $encrypted_password) {
 			Logger::write(self::EVENT_FAILED_PASSWORD, Logger::SEVERITY_HIGH);
 			return array(
+				'error'    => self::ERROR_FAILED_TO_LOGIN,
 				'email'    => $email,
 				'password' => $password,
 				'token'    => $token,
-				'error'    => self::ERROR_FAILED_TO_LOGIN,
 			);
+
+		// success
 		} else {
 			Logger::write(self::EVENT_NEW_LOGIN);
 			$this->unsetFormToken();
 			$this->startUserSession($this->user_dao->id, $email, $password);
 			return array(
+				'success'  => true,
 				'user_id'  => $this->user_dao->id,
 				'redirect' => self::REDIRECT,
 			);
@@ -186,14 +190,26 @@ class UserLoginFormModel extends FormModel {
 	 *  a string to identifer the user as the owner of the account
 	 */
 	public function startUserSession($user_id, $email, $password) {
+		Session::Set('user_id', $user_id);
 		$signature = Crypto::encrypt($email . $password);
 		$this->user_cookie_dao->create(array(
 			'user_id'   => $user_id,
 			'signature' => $signature, 
 		));
-		Session::Set('user_id', $user_id);
+
+		// check if user_profile is populated in session
+		if (!Session::Get('user_profile')) {
+			$user_profile_dao = new UserProfileDAO($this->db);
+			$user_profile_dao->read(array('id' => $user_id));
+			$result = $this->user_profile_dao->attribute;;
+
+			// debug
+			// error_log('user_profile - ' . print_r($result, true));
+
+			Session::Set('user_profile', $result);
+		}
+
 		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
-		Session::Set('user_id', $user_id);
 		Cookie::Set(UserLoginFormModel::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
 	}
 

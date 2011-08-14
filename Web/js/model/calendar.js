@@ -4,44 +4,49 @@
  *
  * @see js/model/taskjs
  */
-window.Calendar = function(regionName, optionName, listName) {
+window.Calendar = function(regionName, optionFormName, listName, creationFormName) {
 
 	/**
 	 * HTML region to be populated with the calendar
 	 */
-	region = $(regionName);
+	var region = $(regionName);
 
 	/**
 	 * HTML Form to store configuration
 	 */
-	option = $(optionName);
+	var option = $(optionFormName);
 
 	/**
 	 * HTML region to be populated with events
 	 */
-	list = $(listName);
+	var list = $(listName);
 
 	/**
 	 * Store generated HTML for future use
 	 */
-	cache = {};
+	var cache = new Cache();
 
 	/**
 	 * Type of calendar
 	 */
-	type = $('input[name=type]', option).val();
+	var type = $('input[name=type]', option).val();
 
 	/**
 	 * current timestamp
 	 */
-	timestamp = $('input[name=timestamp]', option).val();
+	var timestamp = $('input[name=timestamp]', option).val();
+
+	/**
+	 * Inherit from Task
+	 */
+	var task = new Task(creationFormName, optionFormName);
 
 	/**
 	 * Time range which the calendar covers
 	 *
 	 * This is a helper/private method.
 	 */
-	range = {
+	var range = {
 		'begin' : $('input[name=begin]', option).val(),
 		'end'   : $('input[name=end]', option).val()
 	};
@@ -49,15 +54,70 @@ window.Calendar = function(regionName, optionName, listName) {
 	/**
 	 * private attributes
 	 */
-	weekArray  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-	monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'];
+	var weekArray  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	var monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'];
+
+	/**
+	 * Get event list from server
+	 *
+	 * It also clears out timeslots before re-populating.
+	 *
+	 * This a private function because javascript is retarded. By default the 
+	 * 'this' keyword refer to the current function, thus making it impossible 
+	 *  to call class methods within a definition to share code.
+	 */
+	var getTaskList = function() {
+		var cacheKey   = 'task-list-' + range.begin + '-' + range.end;
+		var cacheValue = cache.get(cacheKey);
+
+		/**
+		 * A helper function to populate calendar timeslot
+		 */
+		var populateTimeSlot = function(itemList) {
+			if (itemList && itemList['id']) {
+				findTimeInterval(itemList);
+			} else if (itemList) {
+				for (i in itemList) {
+					findTimeInterval(itemList[i]);
+
+				}
+			}
+		}
+
+		if (cacheValue) {
+			Task.generateList(cacheValue, list);
+			populateTimeSlot(cacheValue);
+
+		} else {
+			list.addClass('loading');
+			$.ajax({
+				url: '/calendar-list-task',
+				type: 'POST',
+				cache: false,
+				data: option.serialize(),
+				success: function(response) {
+					list.removeClass('loading');
+					if (response.success) {
+
+						// debug
+						// console.log(response.list);
+
+						Task.generateList(response.list, list);
+						populateTimeSlot(response.list);
+
+						cache.set(cacheKey, response.list);
+					}
+				}
+			});
+		}
+	}
 
 	/**
 	 * A hash function to map a event to a timeslot on the calendar.
 	 *
 	 * This is a helper/private method.
 	 */
-	findTimeInterval = function(item) {
+	var findTimeInterval = function(item) {
 		date = new Date(item['due_date'] * 1000);
 		date.setMinutes(0, 0, 0);
 
@@ -85,7 +145,7 @@ window.Calendar = function(regionName, optionName, listName) {
 	 *
 	 * This is a helper/private method.
 	 */
-	wrap = function(text) {
+	var wrap = function(text) {
 		return '<span class="event">' + text + '</span>';
 	}
 
@@ -94,7 +154,7 @@ window.Calendar = function(regionName, optionName, listName) {
 	 *
 	 * This is a helper/private method.
 	 */
-	setCalendarRange = function() {
+	var setCalendarRange = function() {
 		$('input[name=begin]', option).val(range.begin);
 		$('input[name=end]', option).val(range.end);
 	};
@@ -104,7 +164,7 @@ window.Calendar = function(regionName, optionName, listName) {
 	 *
 	 * This is a helper/private method.
 	 */
-	setCalendarType = function() {
+	var setCalendarType = function() {
 		$('input[name=type]', option).val(type);
 	}
 
@@ -119,7 +179,7 @@ window.Calendar = function(regionName, optionName, listName) {
 	 * @return string
 	 *  UNIX timestamp
 	 */
-	toTimestamp = function(date) {
+	var toTimestamp = function(date) {
 		return Math.round(date.getTime() / 1000);
 	};
 
@@ -128,7 +188,7 @@ window.Calendar = function(regionName, optionName, listName) {
 	 *
 	 * This is a helper/private method.
 	 */
-	displayDay = function() {
+	var displayDay = function() {
 		date = new Date();
 		currentMonth = '';
 		currentDate  = '';
@@ -177,8 +237,8 @@ window.Calendar = function(regionName, optionName, listName) {
 	 *
 	 * This is a helper/private method.
 	 */
-	displayMonth = function() {
-		html = '<div class="month calendar-display-inner">' + 
+	var displayMonth = function() {
+		var html = '<div class="month calendar-display-inner">' + 
 			'<div class="month-label">' +
 			monthArray[((new Date(range.begin * 1000)).getMonth())] +
 			'</div>' +
@@ -191,9 +251,10 @@ window.Calendar = function(regionName, optionName, listName) {
 
 		html += '</div><div class="week row">';
 
-		firstDayInWeek = (new Date(range.begin * 1000)).getDay();
+		var firstDayInWeek = (new Date(range.begin * 1000)).getDay();
 		// create padding between the first day of the week and the beginning of 
 		// the month
+		var colType = '';
 		for (j = 0; j < firstDayInWeek; j++) {
 			colType = (j % 2 == 0) ? 'even' : 'odd';
 			html += '<div class="day col ' + colType + '"></div>';
@@ -234,8 +295,8 @@ window.Calendar = function(regionName, optionName, listName) {
 	 *   - begin
 	 *   - end
 	 */
-	calculateDayRange = function(number) {
-		date = new Date(timestamp * 1000);
+	var calculateDayRange = function(number) {
+		var date = new Date(timestamp * 1000);
 		date.setHours(0, 0, 0, 0);
 		range.begin = toTimestamp(date);
 		date.setDate(date.getDate() + number);
@@ -256,8 +317,8 @@ window.Calendar = function(regionName, optionName, listName) {
 	 *   - begin
 	 *   - end
 	 */
-	calculateWeekRange = function() {
-		date = new Date(timestamp * 1000);
+	var calculateWeekRange = function() {
+		var date = new Date(timestamp * 1000);
 		date.setHours(0, 0, 0, 0);
 		date.setTime(date.getTime() - ((date.getDay() * 86400) * 1000));
 		range.begin = toTimestamp(date);
@@ -276,8 +337,8 @@ window.Calendar = function(regionName, optionName, listName) {
 	 *   - begin
 	 *   - end
 	 */
-	calculateMonthRange = function() {
-		date = new Date(timestamp * 1000);
+	var calculateMonthRange = function() {
+		var date = new Date(timestamp * 1000);
 		date.setDate(1)
 		date.setHours(0, 0, 0, 0);
 		range.begin = toTimestamp(date);
@@ -344,36 +405,27 @@ window.Calendar = function(regionName, optionName, listName) {
 	};
 
 	/**
-	 * Populate task list and calendar
+	 * Extend Task::createTask()
 	 *
-	 * It also clears out the timeslot before populating it.
+	 * Create task as calendar event
+	 */
+	this.createTask = function() {
+		cache.unset('task-list-' + range.begin + '-' + range.end);
+		list.empty();
+		task.createTask(getTaskList);
+	};
+
+	/**
+	 * Populate task list and calendar
 	 */
 	this.populate = function() {
-		list.addClass('loading');
-
-		$.ajax({
-			url: '/calendar-list-task',
-			type: 'POST',
-			cache: false,
-			data: option.serialize(),
-			success: function(response) {
-				list.removeClass('loading');
-				if (response.success) {
-
-					// debug
-					// console.log(response.list);
-
-					task.generateList(response.list, list);
-					if (response.list && response.list['id']) {
-						findTimeInterval(response.list);
-					} else if (response.list) {
-						for (i in response.list) {
-							findTimeInterval(response.list[i]);
-
-						}
-					}
-				}
-			}
-		});
+		getTaskList();
 	};
+
+	/**
+	 * Extend Task::incrementPaginate().
+	 */
+	this.incrementPaginate = function() {
+		task.incrementPaginate();
+	}
 };

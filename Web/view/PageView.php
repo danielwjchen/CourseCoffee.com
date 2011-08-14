@@ -203,16 +203,43 @@ META;
 	}
 
 	/**
+	 * Get Facebook Javascript SDK 
+	 */
+	protected function getFacebookSDK() {
+		global $config;
+		return <<<HTML
+<div id="fb-root"></div>
+<script>
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId : '{$config->facebook['app_id']}',
+			status : true,
+			cookie : true,
+			xfbml : true,
+			oauth: true
+		});
+	};
+	(function() {
+		var e = document.createElement('script'); e.async = true;
+		e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+		document.getElementById('fb-root').appendChild(e);
+}());
+</script>
+HTML;
+	}
+
+	/**
 	 * Implement ViewInteface::render()
 	 */
 	public function render() {
-		$js      = $this->renderJS();
-		$css     = $this->renderCSS();
-		$content = $this->getContent();
-		$title   = $this->data['title'];
+		$js       = $this->renderJS();
+		$css      = $this->renderCSS();
+		$content  = $this->getContent();
+		$title    = $this->data['title'];
+		$facebook = $this->getFacebookSDK();
 
 		return <<<HTML
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
 	<head>
 		<meta http-equiv='data-type' data='text/html;charset=UTF-8' /> 
 		<meta http-equiv='Pragma' data='no-cache' /> 
@@ -222,6 +249,7 @@ META;
 	</head>
 	<body>
 		{$content}
+		{$facebook}
 	</body>
 </html>
 HTML;
