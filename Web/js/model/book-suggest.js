@@ -4,7 +4,7 @@
  */
 window.BookSuggest = function(regionName) {
 	var region = $(regionName);
-	var cache  = {};
+	var cache  = new Cache();
 
 	/**
 	 * Generate output for each offer type
@@ -47,9 +47,10 @@ window.BookSuggest = function(regionName) {
 		region.empty();
 		region.addClass('loading');
 		region.html('<h3>Please wait while we find the lowest price on your textbooks.</h3>');
-		if (cache[sectionId]) {
+		var cachedValue = cache.get(sectionId);
+		if (cachedValue) {
 			region.removeClass('loading');
-			region.html(cache[sectionId]);
+			region.html(cachedValue);
 			return ;
 		}
 
@@ -86,7 +87,7 @@ window.BookSuggest = function(regionName) {
 					// console.log(cache);
 
 				}
-				cache[sectionId] = html
+				cache.set(sectionId, html);
 				region.html(html);
 			}
 		});

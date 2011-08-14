@@ -46,21 +46,55 @@ class TaskListModel extends Model {
 	}
 
 	/**
+	 * Fetch a list of task belong to a class section
+	 *
+	 * @param string $user_id
+	 * @param int $section_id
+	 * @param int $paginate
+	 *
+	 * @return array
+	 */
+	public function fetchUserClassList($user_id, $section_id, $paginate) {
+		$this->task_dao->read(array(
+			'user_id' => $user_id,
+			'section_id' => $section_id,
+			'limit'   => array(
+				'offset' => $paginate * self::COUNT,
+				'count'  => self::COUNT,
+			),
+		));
+		$record_list = $this->task_dao->list;
+		return array(
+			'success' => true,
+			'list'    => $record_list,
+		);
+	}
+
+	/**
 	 * Fetch a list of task record in a date range
 	 *
 	 * @param string $user_id
 	 * @param int $begin_date
 	 * @param int $end_date
+	 * @param int $paginate
 	 *
 	 * @return array
 	 */
-	public function fetchCalendarList($user_id, $begin_date = null, $end_date = null, $paginate = 5) {
+	public function fetchUserCalendarList($user_id, $begin_date, $end_date, $paginate) {
 		$this->task_dao->read(array(
 			'user_id' => $user_id,
 			'range'   => array(
 				'begin_date' => $begin_date,
 				'end_date'   => $end_date,
 			),
+			/**
+			 * We don't do pagination for now, because tasks should be limited by the 
+			 * date range
+			'limit'   => array(
+				'offset' => $paginate * self::COUNT,
+				'count'  => self::COUNT,
+			),
+			*/
 		));
 		$record_list = $this->task_dao->list;
 		return array(

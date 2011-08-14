@@ -1,13 +1,35 @@
 /**
  * @file
- * Handle access to class information
+ * Handle access to class information and related assignments
+ *
+ * @see js/model/task.js
  */
-window.ClassInfo = function(regionName, optionName) {
+window.ClassInfo = function(regionName, optionFormName, listName, creationFormName) {
+	
 	var region = $(regionName);
-	var option = $(optionName);
-	var cache  = {};
+	
+	var option = $(optionFormName);
+
+	/**
+	 * HTML region to be populated with to-do list
+	 */
+	var list = $(listName);
+
+	/**
+	 * Store generated HTML for future use
+	 */
+	var cache  = new Cache();
+
+	/**
+	 * Inherit from Task
+	 */
+	var task = new Task(creationFormName, optionFormName);
+
+	/**
+	 * Process default class data if specified
+	 */
 	var defaultData = option.serializeArray();
-	//console.log(defaultData);
+	
 	if (defaultData.length != 0) {
 		data = {};
 		for (i in defaultData) {
@@ -15,8 +37,46 @@ window.ClassInfo = function(regionName, optionName) {
 			data[key] = defaultData[i].value;
 		}
 
-		cache[data['section_id']] = data;
+		cache.set(data['section_id'], data);
 	}
+
+	/**
+	 * Implement Task::getTaskList()
+	 *
+	 * Get to-do list from server
+	 */
+	var getTaskList = function() {
+		var sectionId  = $('input[name=section-id]', option).val();
+		var cacheKey   = 'task-list-' + sectionId;
+		var cacheValue = cache.get(cacheKey);
+
+		if (cacheValue) {
+			Task.generateList(cacheValue);
+		} else {
+			list.addClass('loading');
+
+			// debug
+			// console.log(option);
+
+			$.ajax({
+				url: '/class-list-task',
+				type: 'POST',
+				cache: false,
+				data: 'section_id=' + sectionId,
+				success: function(response) {
+					list.removeClass('loading');
+					if (response.success) {
+
+						// debug
+						// console.log(response.list);
+
+						cache.set(cacheKey, response.list);
+						Task.generateList(response.list, list);
+					}
+				}
+			});
+		}
+	};
 
 	/**
 	 * Set option values to the data recieved
@@ -45,8 +105,8 @@ window.ClassInfo = function(regionName, optionName) {
 	 * Display class information stored in option
 	 */
 	var displayClassInfo = function() {
-		content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>';
-		courseInfo = $('input[name=course-description]', option).val();
+		var content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>';
+		var courseInfo = $('input[name=course-description]', option).val();
 		content += courseInfo != undefined ? '<p>' + courseInfo + '</p>' : '';
 		region.html(content);
 	}
@@ -57,21 +117,27 @@ window.ClassInfo = function(regionName, optionName) {
 	 * @param int sectionId
 	 */
 	this.getClassInfo = function(sectionId) {
-		if (cache[sectionId]) {
+		getTaskList();
+		region.empty();
+		var cachedValue = cache.get(sectionId);
+		if (cachedValue) {
 			// debug
-			console.log(cache);
-			setClassOption(cache[sectionId]);
+			// console.log(cache);
+
+			setClassOption(cachedValue);
 			displayClassInfo();
 
 		} else {
+			region.addClass('loading');
 			$.ajax({
 				url: '/college-class-info',
 				type: 'post',
 				cache: true,
 				data: 'section_id=' + sectionId,
 				success: function(response) {
+					region.removeClass('loading');
 					if (response.content) {
-						cache[response.content.section_id] = response.content;
+						cache.set(response.content.section_id, response.content);
 						setClassOption(response.content);
 						displayClassInfo();
 					}
@@ -86,4 +152,28 @@ window.ClassInfo = function(regionName, optionName) {
 	this.getClassId = function() {
 		return $('input[name=section-id]', option).val();
 	}
+
+	/**
+	 * Implement Task::createTask()
+	 *
+	 * Create task as user's to-do
+	 */
+	this.createTask = function() {
+		cache.unset('task-list-' + $('input[name=section-id]', option).val());
+		task.createTask(getTaskList);
+	};
+
+	/**
+	 * Populate to-do list
+	 */
+	this.populate = function() {
+		getTaskList();
+	};
+
+	/**
+	 * Extend Task::incrementPaginate().
+	 */
+	this.incrementPaginate = function() {
+		task.incrementPaginate();
+	};
 }

@@ -18,7 +18,7 @@ $P.ready(function() {
 	$('.calendar-display').scrollBar();
 
 	// Initialize calendars
-	calendar = new Calendar('.calendar-display', '#calendar-option', '.task-list', '#calendar-task-creation-form');
+	calendar = new Calendar('.calendar-display', '#calendar-option', '#calendar-task-list', '#calendar-task-creation-form');
 	calendar.getMonthCalendar();
 	calendar.populate();
 
@@ -50,16 +50,6 @@ $P.ready(function() {
 
 	});
 
-	// Initilize the date-time selector
-	$('#time-picker').datetime({  
-		duration: '15',  
-		showTime: true,  
-		constrainInput: false,  
-		stepMinutes: 1,  
-		stepHours: 1,  
-		time24h: false  
-	});  
-
 	blurInput(body);
 
 	// Over see inputs in task panel
@@ -73,8 +63,10 @@ $P.ready(function() {
 			doc.init();
 		} else if (target.hasClass('submit')) {
 			calendar.createTask();
-			setTimeout("calendar.populate()", 2000);
 
+		} else if (target.hasClass('more')) {
+			calendar.incrementPaginate();
+			calendar.populate();
 		}
 	});
 

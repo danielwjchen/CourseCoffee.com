@@ -84,6 +84,7 @@ class CalendarPageView extends PageView implements PageViewInterface {
 									<input type="hidden" name="timestamp" value="{$timestamp}" />
 									<input type="hidden" name="begin" />
 									<input type="hidden" name="end" />
+									<input type="hidden" name="paginate" value="0" />
 								</form>
 								<ul>
 									<li><a href="#" class="option month active">month</a></li>
@@ -145,8 +146,9 @@ class CalendarPageView extends PageView implements PageViewInterface {
 										</fieldset>
 									</form>
 								</div>
-								<div class="task-list">
+								<div id="calendar-task-list" class="task-list">
 								</div>
+								<a href="#" class="button more">more</a>
 							</div>
 						</div>
 					</div>

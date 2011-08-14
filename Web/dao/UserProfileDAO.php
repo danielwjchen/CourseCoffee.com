@@ -6,6 +6,7 @@
 class UserProfileDAO extends DAO implements DAOInterface{
 
 	private $user_dao;
+	private $user_setting_dao;
 	private $person_dao;
 	private $institution_linkage_dao;
 	private $institution_dao;
@@ -21,6 +22,10 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			'fb_uid',
 			'institution',
 			'institution_id',
+			'year_id',
+			'year',
+			'term_id',
+			'term',
 			'first_name',
 			'last_name',
 			'email',
@@ -28,6 +33,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 		);
 
 		$this->user_dao                = new UserDAO($db);
+		$this->user_setting_dao        = new UserSettingDAO($db);
 		$this->person_dao              = new PersonDAO($db);
 		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($db);
 		$this->institution_dao         = new InstitutionDAO($db);
@@ -100,16 +106,29 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				u.password,
 				f.path,
 				f.mime,
-				ui_linkage.institution_id AS institution_id,
+				us.institution_id,
+				us.year_id,
+				us.term_id,
 				i.name AS institution,
+				iy.period AS year,
+				it.name AS term,
 				uf_linkage.fb_uid
 			FROM `user` u
 			INNER JOIN `person` p
 				ON u.id = p.user_id
+			INNER JOIN `user_setting` us
+				ON u.id = us.user_id
 			INNER JOIN `user_institution_linkage` ui_linkage
 				ON u.id = ui_linkage.user_id
+				AND us.institution_id = ui_linkage.institution_id
 			INNER JOIN `institution` i
 				ON ui_linkage.institution_id = i.id
+			INNER JOIN `institution_year_linkage` iy_linkage
+				ON i.id = iy_linkage.institution_id
+			INNER JOIN `institution_year` iy
+				ON iy_linkage.year_id = iy.id
+			INNER JOIN `institution_term` it
+				ON iy.id = it.year_id
 			LEFT JOIN `user_facebook_linkage` uf_linkage
 				ON u.id = uf_linkage.user_id
 			LEFT JOIN `file` f

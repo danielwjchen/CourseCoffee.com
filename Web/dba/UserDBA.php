@@ -60,6 +60,71 @@ class UserDBA implements DBAInterface{
 					'signature' => array('signature'),
 				),
 			),
+			'user_setting' => array(
+				'description' => 'store user setting',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'description' => 'the primary key that identifies a user',
+					),
+					'user_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a user',
+					),
+					'institution_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a institution',
+					),
+					'year_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a year',
+					),
+					'term_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a term',
+					),
+				),
+				'primary' => array('id'),
+				'unique'  => array(
+					'user_id' => array('user_id')
+				),
+				'index' => array(
+					'institution_id' => array('institution_id'),
+					'year_id' => array('year_id'),
+					'term_id' => array('term_id'),
+				),
+			),
+			'user_cookie' => array(
+				'description' => "store user's cookie signature",
+				'column' => array(
+					'user_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a user',
+					),
+					'signature' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'the signature generated for the user',
+					),
+				),
+				'primary' => array('user_id'),
+				'unique' => array(
+					'signature' => array('signature'),
+				),
+			),
 			'user_section_linkage' => array(
 				'description' => 'provide a one-to-many mapping among user and section',
 				'column' => array(

@@ -66,14 +66,9 @@
 	-webkit-box-shadow: 2px 2px 5px #000;
 	box-shadow: 2px 2px 5px #000;
 }
-.home .profile .name{
-	left: 225px;
-	width: 200px;
-	font-weight: bold;
-	font-size: 18px;
-	color: #333333;
-}
-.home .profile .school{
+.home .profile .name,
+.home .profile .school,
+.home .profile .semester {
 	left: 225px;
 	font-weight: bold;
 	font-size: 18px;

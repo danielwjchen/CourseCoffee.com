@@ -1,11 +1,17 @@
 /**
  * @file
  * Manage access to task and task creation
+ *
+ * This is a base class for calendar, class, and to-do. Child classes must 
+ * define method populate() and getTaskList(), and extend createTask() and 
+ * incrementPaginate().
+ *
+ * I wish javascript supports OOP.
+ *
  */
-window.Task = function(creationFormName) {
-	var creationForm   = $(creationFormName);
-	var listRegion     = {};
-	var listOptionForm = {};
+window.Task = function(creationFormName, optionFormName) {
+	var creationForm = $(creationFormName);
+	var optionForm   = $(optionFormName);
 
 	// toggle task creation form
 	$('input.objective', creationForm).live('click', function(e) {
@@ -30,12 +36,23 @@ window.Task = function(creationFormName) {
 	$.ajax({
 		url: '/task-init',
 		type: 'POST',
+		cache: false,
 		success: function(response) {
 			if (response.token) {
 				$('input[name=token]', creationForm).attr('value', response.token);
 			} 
 		}
 	});
+
+	// Initilize the date-time selector
+	$('#time-picker').datetime({  
+		duration: '15',  
+		showTime: true,  
+		constrainInput: false,  
+		stepMinutes: 1,  
+		stepHours: 1,  
+		time24h: false  
+	});  
 
 	/**
 	 * Set error messages
@@ -46,8 +63,12 @@ window.Task = function(creationFormName) {
 	/**
 	 * Increment the paginate value
 	 */
-	var incrementPaginate = function() {
-		paginate = $('input[name=paginate]', listOptionForm);
+	this.incrementPaginate = function() {
+		var paginate = $('input[name=paginate]', optionForm);
+
+		// debug
+		// console.log(paginate);
+
 		paginate.val(parseInt(paginate.val()) + 1);
 	};
 
@@ -91,35 +112,7 @@ window.Task = function(creationFormName) {
 					$('.optional').addClass('hidden');
 					$('.show-detail').text('mode detail');
 
-					callback();
-				}
-			}
-		});
-	};
-
-	/**
-	 * Get tasks belong to a user
-	 *
-	 * @params option
-	 *  a form of options to be serializd
-	 * @param region
-	 *  a region to update the content
-	 */
-	this.getTaskBelongToUser = function(listOptionName, listRegionName) {
-		listRegion     = $(listRegionName);
-		listOptionForm = $(listOptionName);
-
-		listRegion.addClass('loading');
-
-		$.ajax({
-			url: '/user-list-task',
-			type: 'POST',
-			cache: false,
-			data: listOptionForm.serialize(),
-			success: function(response) {
-				region.removeClass('loading');
-				if (response.success) {
-					Task.generateList(response.list, listRegion);
+					setTimeout(callback(), 500);
 				}
 			}
 		});
@@ -187,9 +180,7 @@ Task.generateList = function(list, region) {
 
 	}
 
-	var hasTask = $('.task li').length;
-
-	if (hasTask.length == 0) {
+	if ($('li', region).length == 0) {
 		html = "<div class='task'>" + 
 			"<div class='task-inner'>" + 
 				"<ul>" +

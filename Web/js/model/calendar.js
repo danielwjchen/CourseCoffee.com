@@ -4,7 +4,7 @@
  *
  * @see js/model/taskjs
  */
-window.Calendar = function(regionName, optionName, listName, creationFormName) {
+window.Calendar = function(regionName, optionFormName, listName, creationFormName) {
 
 	/**
 	 * HTML region to be populated with the calendar
@@ -14,7 +14,7 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	/**
 	 * HTML Form to store configuration
 	 */
-	var option = $(optionName);
+	var option = $(optionFormName);
 
 	/**
 	 * HTML region to be populated with events
@@ -24,7 +24,7 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	/**
 	 * Store generated HTML for future use
 	 */
-	var cache = {};
+	var cache = new Cache();
 
 	/**
 	 * Type of calendar
@@ -39,7 +39,7 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	/**
 	 * Inherit from Task
 	 */
-	var task = new Task(creationFormName);
+	var task = new Task(creationFormName, optionFormName);
 
 	/**
 	 * Time range which the calendar covers
@@ -66,33 +66,50 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	 * 'this' keyword refer to the current function, thus making it impossible 
 	 *  to call class methods within a definition to share code.
 	 */
-	var getEventList = function() {
-		list.addClass('loading');
+	var getTaskList = function() {
+		var cacheKey   = 'task-list-' + range.begin + '-' + range.end;
+		var cacheValue = cache.get(cacheKey);
 
-		$.ajax({
-			url: '/calendar-list-task',
-			type: 'POST',
-			cache: false,
-			data: option.serialize(),
-			success: function(response) {
-				list.removeClass('loading');
-				if (response.success) {
+		/**
+		 * A helper function to populate calendar timeslot
+		 */
+		var populateTimeSlot = function(itemList) {
+			if (itemList && itemList['id']) {
+				findTimeInterval(itemList);
+			} else if (itemList) {
+				for (i in itemList) {
+					findTimeInterval(itemList[i]);
 
-					// debug
-					// console.log(response.list);
-
-					Task.generateList(response.list, list);
-					if (response.list && response.list['id']) {
-						findTimeInterval(response.list);
-					} else if (response.list) {
-						for (i in response.list) {
-							findTimeInterval(response.list[i]);
-
-						}
-					}
 				}
 			}
-		});
+		}
+
+		if (cacheValue) {
+			Task.generateList(cacheValue, list);
+			populateTimeSlot(cacheValue);
+
+		} else {
+			list.addClass('loading');
+			$.ajax({
+				url: '/calendar-list-task',
+				type: 'POST',
+				cache: false,
+				data: option.serialize(),
+				success: function(response) {
+					list.removeClass('loading');
+					if (response.success) {
+
+						// debug
+						// console.log(response.list);
+
+						Task.generateList(response.list, list);
+						populateTimeSlot(response.list);
+
+						cache.set(cacheKey, response.list);
+					}
+				}
+			});
+		}
 	}
 
 	/**
@@ -221,7 +238,7 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	 * This is a helper/private method.
 	 */
 	var displayMonth = function() {
-		html = '<div class="month calendar-display-inner">' + 
+		var html = '<div class="month calendar-display-inner">' + 
 			'<div class="month-label">' +
 			monthArray[((new Date(range.begin * 1000)).getMonth())] +
 			'</div>' +
@@ -234,9 +251,10 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 
 		html += '</div><div class="week row">';
 
-		firstDayInWeek = (new Date(range.begin * 1000)).getDay();
+		var firstDayInWeek = (new Date(range.begin * 1000)).getDay();
 		// create padding between the first day of the week and the beginning of 
 		// the month
+		var colType = '';
 		for (j = 0; j < firstDayInWeek; j++) {
 			colType = (j % 2 == 0) ? 'even' : 'odd';
 			html += '<div class="day col ' + colType + '"></div>';
@@ -278,7 +296,7 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	 *   - end
 	 */
 	var calculateDayRange = function(number) {
-		date = new Date(timestamp * 1000);
+		var date = new Date(timestamp * 1000);
 		date.setHours(0, 0, 0, 0);
 		range.begin = toTimestamp(date);
 		date.setDate(date.getDate() + number);
@@ -300,7 +318,7 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	 *   - end
 	 */
 	var calculateWeekRange = function() {
-		date = new Date(timestamp * 1000);
+		var date = new Date(timestamp * 1000);
 		date.setHours(0, 0, 0, 0);
 		date.setTime(date.getTime() - ((date.getDay() * 86400) * 1000));
 		range.begin = toTimestamp(date);
@@ -320,7 +338,7 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	 *   - end
 	 */
 	var calculateMonthRange = function() {
-		date = new Date(timestamp * 1000);
+		var date = new Date(timestamp * 1000);
 		date.setDate(1)
 		date.setHours(0, 0, 0, 0);
 		range.begin = toTimestamp(date);
@@ -387,16 +405,27 @@ window.Calendar = function(regionName, optionName, listName, creationFormName) {
 	};
 
 	/**
+	 * Extend Task::createTask()
+	 *
 	 * Create task as calendar event
 	 */
-	this.createTask = function(creationFormName) {
-		task.createTask(getEventList);
+	this.createTask = function() {
+		cache.unset('task-list-' + range.begin + '-' + range.end);
+		list.empty();
+		task.createTask(getTaskList);
 	};
 
 	/**
 	 * Populate task list and calendar
 	 */
 	this.populate = function() {
-		getEventList();
+		getTaskList();
 	};
+
+	/**
+	 * Extend Task::incrementPaginate().
+	 */
+	this.incrementPaginate = function() {
+		task.incrementPaginate();
+	}
 };

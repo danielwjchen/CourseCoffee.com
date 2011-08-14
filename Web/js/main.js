@@ -36,6 +36,26 @@ window.blurInput = function(region) {
 }
 
 /**
+ * Define a generic cache handler
+ */
+Cache = function() {
+	var storedValue = {};
+
+	this.set = function(key, value) {
+		storedValue[key] = value;
+	};
+	this.get = function(key) {
+		return storedValue[key] ? storedValue[key] : null;
+	};
+	this.unset = function(key) {
+		storedValue[key] = null;
+	};
+	this.flush = function() {
+		storedValue = {};
+	};
+};
+
+/**
  * Define popup dialog
  *
  * The dialog style is defined in css/dialog.css
