@@ -283,7 +283,7 @@ $P.ready(function(){
                     }
                     else{
                             schedule_list[sch_idx].date = Date.parse(new_date)
-                            if(sch_idx == 0){
+                            if(sch_idx == 0 && flag_week_format == 1){ // auto fill
                                     day_offest = schedule_list[sch_idx].date.getOrdinalNumber() - orig_first_day
                                     for(i = 1; i < schedule_list_orig_len; i++ ){
                                             schedule_list[i].date.addDays(day_offest)
