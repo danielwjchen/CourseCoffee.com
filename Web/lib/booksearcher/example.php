@@ -14,6 +14,7 @@
 	
 //	include("cjCheggAPI.php");
 
+/*	
 	$stime=microtime(true);
 	$etime=microtime(true);
 	$total=$etime-$stime;
@@ -23,17 +24,21 @@
 		$total = $float_total/100000;  
 		echo "The total encode time is $total ".'second';  
 	}
-
+ */
 
 	$amazonSearch = new AmazonAPI();
 
-	$amazonSearch->searchBookIsbn("0415991404");
+	$isbns = array("1848000693","0201558025");
+
+	echo $amazonSearch->buyAllNewBooks($isbns);
+
+/*	$amazonSearch->searchBookIsbn("0415991404");
 	echo $amazonSearch->getAuthors();
 	echo $amazonSearch->getLowestNewPrice();
 	echo $amazonSearch->getMarketPlaceLowestNewPrice();
 	echo $amazonSearch->getMarketPlaceLowestUsedPrice();
 	echo $amazonSearch->getSmallImageLink();
-
+ */
 
 
 /*
