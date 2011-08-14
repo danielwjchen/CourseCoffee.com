@@ -10,6 +10,8 @@
 		private $result;
 		private $book;
 
+		private $cartURL;
+
 		//SearchIndex Value is listed on 
 		//http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/APPNDX_SearchIndexValues.html
         
@@ -190,7 +192,7 @@
 		}
 
 
-		private function createCart($isbns){
+		public function createCart($isbns){
 			$params = array(
 				"Operation"   => "CartCreate",
 			);
@@ -198,18 +200,13 @@
 			for($i=0; $i<count($isbns); $i++){
 				$params["Item." . ($i+1) . ".ASIN"] = $isbns[$i];
 				$params["Item." . ($i+1) . ".Quantity"] = 1;
-
-				echo $isbns[$i];
 			}
 
-			return $this->queryAmazon($params);
-		}
+			$xmlResponse = $this->queryAmazon($params);
 
-		public function buyAllNewBooks($isbns){
-			$cart = $this->createCart($isbns);
+			$this->cartURL = $xmlResponse->Cart->PurchaseURL;
 
-			//return purchase url
-			$cart->purchaseurl;
+			return $this->cartURL;
 		}
 
 	}

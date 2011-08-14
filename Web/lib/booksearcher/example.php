@@ -31,7 +31,7 @@
 
 	$isbns = array("1848000693","0201558025");
 
-	echo $amazonSearch->buyAllNewBooks($isbns);
+	echo $amazonSearch->createCart($isbns);
 
 /*	$amazonSearch->searchBookIsbn("0415991404");
 	echo $amazonSearch->getAuthors();
@@ -82,9 +82,9 @@
  * knetbooks
  */
 
-//	$search = new KnetBooksAPI("0262033848");
-//	echo $search->getLowestRentalPrice();
-//	echo $search->getLowestRentalLink();
+	$search = new KnetBooksAPI("0262033848");
+	echo $search->getLowestRentalPrice();
+	echo $search->getLowestRentalLink();
 
 
 
