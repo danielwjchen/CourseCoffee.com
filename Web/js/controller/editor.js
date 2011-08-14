@@ -40,7 +40,21 @@ $P.ready(function(){
             
             /* html elements e.g. span, tables for dynamically loading*/
             date_label_string =  "<br><span class='date_label' sid='SID_STR'><span>DATE_CONTENT_STR</span><a href='#' sid='SID_STR' class='del_date_label' >x</a></span>" ;
-
+            schedule_elem_string = "<div sid='SID_STR' class='schedule_elem'>\
+                                    <table width='450' border='0' cellpadding='0' cellspacing='0'>\
+                                    <tr>\
+                                        <td width='150'><span class='schedule_elem_date' sid='SID_STR'>DATE_STR</span></td>\
+                                        <td width='250' id='editing_btn'></td>\
+                                        <td width='50'><a href='#' class='sch_btn' sid='SID_STR' id='toggle_del_sch'>x</a></td>\
+                                    </tr>\
+                                    <tr>\
+                                        <td colspan='3' class='schedule_elem_content' sid='SID_STR' >CONTENT_STR</td>\
+                                    </tr>\
+                                    </table></div>";
+            schedule_edit_string = "<textarea sid='SID_STR' class='schedule_elem_edit'>CONTENT_STR</textarea>\
+                                    <input type='button' id='save_sch' sid='SID_STR' value='save'>\
+                                    <input type='button' id='cancel_sch' sid='SID_STR' value='cancel'>"           
+            
             /*       flags            */
             editing_flag = 0;
 
@@ -114,6 +128,7 @@ $P.ready(function(){
                     $(".schedule_elem[sid='"+temp_id+"']").css("background-color","");									 
             });
 
+            
 
             $("a[id='edit_sch']").live("click",function(e){
                     e.preventDefault();
@@ -123,8 +138,7 @@ $P.ready(function(){
                     orig_html = $(".sch_content[sid='"+orig_sid+"']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
                     orig_height = $(".sch_content[sid='"+orig_sid+"']").height()*0.8
                     orig_width = $(".sch_content[sid='"+orig_sid+"']").width()
-                    $(".sch_content[sid='"+orig_sid+"']").html("<textarea sid='"+orig_sid+"' style='width:"+"490"+"px; height:"+orig_height+"px'>"+orig_html+"</textarea>\
-                                             <input type='button' id='save_sch' sid='"+orig_sid+"' value='save'/><input type='button' id='cancel_sch' sid='"+orig_sid+"' value='cancel'/>")
+                    $(".sch_content[sid='" + orig_sid + "']").html(schedule_edit_string.replace(/SID_STR/gi, orig_sid).replace(/CONTENT_STR/gi, orig_html))
                     editing_flag=1
                     adjust_spacing();
             });
@@ -234,10 +248,39 @@ $P.ready(function(){
                     flag_show_orig_pre_text = !flag_show_orig_pre_text ;
 
             });
+            
+            date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'><a href='#' id='confirm_date_change' sid='SID_STR' class='sch_btn_3'>O</a><a href='#' id='cancel_date_change' sid='SID_STR' class='sch_btn_3'>X</a>"
+
 
             $("a[id='edit_date']").live("click",function(e){
-                    id_temp = $(this).attr("sid")
-                    alert(id_temp)
+                    e.preventDefault();
+                    sid = $(this).attr("sid")
+                    curr_sch = get_sch_by_id(sid)
+                    orig_date = (curr_sch.date.getMonth() + 1) + "/" +(curr_sch.date.getDate())
+                    $(".schedule_elem_date[sid='" + sid + "']").html(date_string.replace(/SID_STR/gi, sid).replace(/ORIG_DATE_STR/gi, orig_date))
+            });
+
+            $("a[id='confirm_date_change']").live("click", function(e){
+                    e.preventDefault();
+                    sid = $(this).attr("sid")
+                    sch_idx = get_sch_idx_by_id(sid)
+                    new_date = $(".date_container[sid='" + sid + "']").val() 
+                    if(Date.parse(new_date) == null){
+                        alert("invalid date")
+                    }
+                    else{
+                        schedule_list[sch_idx].date = Date.parse(new_date)
+                        new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
+                        $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
+                    }
+            });
+            
+            $("a[id='cancel_date_change']").live("click", function(e){
+                    e.preventDefault();
+                    sid = $(this).attr("sid")
+                    sch_idx = get_sch_idx_by_id(sid)
+                    new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
+                    $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
             });
 
             $(window).scroll(function(){
@@ -254,12 +297,18 @@ $P.ready(function(){
                     }
             }
 
-            function get_sch_by_idx(sid){
+            function get_sch_by_id(sid){
                     for(i=0;i<schedule_list.length;i++){
                                 if(schedule_list[i].id==sid) return schedule_list[i];		
                     }
             }
-                                  
+            
+            function get_sch_idx_by_id(sid){
+                    for(i=0;i<schedule_list.length;i++){
+                                if(schedule_list[i].id==sid) return i;		
+                    }
+            }
+
             function init(){
                     $("#parsed_data").css("left" , $("#table_syl").position().left + $("#table_syl").width()  );
                     $("#tool_box").css("left",  $("#parsed_data").position().left);
@@ -280,7 +329,6 @@ $P.ready(function(){
 
             function get_date_label_html(date_id, date_content){
                     return date_label_string.replace(/SID_STR/gi, date_id).replace(/DATE_CONTENT_STR/gi, date_content)
-                    //return "<br><span class='date_label' sid='"+date_id+"'>" + "<span>" + date_content + "</span><a href='#' sid='"+date_id+"' class='del_date_label'> X</a></span>" 
             }
 
             function update_date_label(){
@@ -298,40 +346,20 @@ $P.ready(function(){
                     }
             }
             
-            schedule_elem_string = "<div sid='SID_STR' class='schedule_elem'>";
-
+            
             function get_sch_html(date_id, date_t, content){
+                    curr_sch = get_sch_by_id(date_id)
+                    month = curr_sch.date.getMonth() + 1
+                    day = curr_sch.date.getDate()
                     if(flag_week_format != 1){  // not week format, i.e. not week 1,2,3,4,5
-                            return '<div sid="'+date_id+'" class="schedule_elem" >\
-                                    <table width="490" border="0" cellpadding="0" cellspacing="0">\
-                                    <tr>\
-                                      <td width="100" class="schedule_elem_title">Date:<span class="date_sch" sid="'+date_id+'">'+(date_t.getMonth()+1)+'/'+date_t.getDate()+'</span></td>\
-                                      <td width="350" id="editing_btn">&nbsp;</td>\
-                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
-                                    </tr>\
-                                    <tr>\
-                                      <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
-                                    </tr>\
-                                    </table></div>'
+                        return schedule_elem_string.replace(/SID_STR/gi, date_id).replace(/DATE_STR/gi, month + '/' + day).replace(/CONTENT_STR/gi, content)
                     }
                     else{
-                            return '<div sid="'+date_id+'" class="schedule_elem" >\
-                                    <table width="490" border="0" cellpadding="0" cellspacing="0">\
-                                    <tr>\
-                                      <td width="400" class="schedule_elem_title">Date:'+get_sch_by_idx(date_id).match_str+'</td>\
-                                      <td width="50" id="editing_btn">&nbsp;</td>\
-                                      <td width="40"  ><a href="#" class="sch_btn" sid="' + date_id + '" id="toggle_del_sch">X</span></td>\
-                                    </tr>\
-                                    <tr>\
-                                      <td colspan="3" class="sch_content" sid="'+date_id+'" >'+content+'</td>\
-                                    </tr>\
-                                    </table></div>'
+                        return schedule_elem_string.replace(/SID_STR/gi, date_id).replace(/DATE_STR/gi, curr_sch.match_str).replace(/CONTENT_STR/gi, content)
                     }
             }
 
             function show_schedule(){
-                    
-                    //$("#parsed_data").html("<h2>loading your assignments</h2>")
                     schedule_lc = "" //create schedule html
                     i_idx=0
 

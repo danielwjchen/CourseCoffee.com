@@ -79,7 +79,6 @@ body{
 	}
 
 .schedule_elem{
-	width: 490px;
         background-color:#09F;
 	border-style:dashed;
 	border-width: 1px;
@@ -87,16 +86,18 @@ body{
         border-radius: 4px;
 	}
 
-.schedule_elem_title{
+.schedule_elem_date{
         color: #FFFFFF;
 	font-family: sans-serif;
 	font-size:14px;
 	text-align:left;
-	border-bottom-style:solid;
 	border-bottom-width:2px;
 	}
-
-.sch_content{
+.schedule_elem_edit{
+        width: 450px;
+        height: 300px;
+        }
+.schedule_elem_content{
         background-color:#FFFFFF;
 	font-family:sans-serif;
 	text-align:left;
@@ -168,6 +169,38 @@ body{
 	background-color:#FFF;
 	border-color:#09F;
 }
+
+
+.sch_btn_3{
+	color:#FFF;
+	background-color:#09F;
+	border-radius: 2px;	
+	border-color:#FFF;
+	border-width:2px;
+	border-style:solid;
+	font-size:12px;
+	cursor:pointer;
+	display: inline-block;
+	text-align:center;
+	text-decoration: none;
+}
+
+.sch_btn_3:hover{
+	color:#FFF;
+	background-color:#09F;
+	border-color:#FFF;
+        text-shadow: 0 0 6px #8a4c0a;
+	-moz-text-shadow: 0 0 6px #8a4c0a;
+	-webkit-text-shadow: 0 0 6px #8a4c0a;
+
+}
+
+.sch_btn_3:active{
+	color:#09F;
+	background-color:#FFF;
+	border-color:#09F;
+}
+
 .del_date_label{
 	color:#F60;
 	background-color:#FFF;
