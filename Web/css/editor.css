@@ -95,9 +95,9 @@ body{
 	}
 .schedule_elem_edit{
         width: 450px;
-        height: 300px;
+        height: 200px;
         }
-.schedule_elem_content{
+.sch_content{
         background-color:#FFFFFF;
 	font-family:sans-serif;
 	text-align:left;

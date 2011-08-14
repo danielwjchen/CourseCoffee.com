@@ -8,7 +8,7 @@ $P.ready(function(){
             reg_idx = -1;
             flag_week_format = 0;
             
-
+            
             pre_text_orig = "";
             pre_text_trunc = "";
             flag_show_orig_pre_text = 0
@@ -32,6 +32,7 @@ $P.ready(function(){
             
             
             schedule_list = []
+            schedule_list_orig_len = 0
             word = [];
             delim = [];
             orig_html = "";
@@ -48,7 +49,7 @@ $P.ready(function(){
                                         <td width='50'><a href='#' class='sch_btn' sid='SID_STR' id='toggle_del_sch'>x</a></td>\
                                     </tr>\
                                     <tr>\
-                                        <td colspan='3' class='schedule_elem_content' sid='SID_STR' >CONTENT_STR</td>\
+                                        <td colspan='3' class='sch_content' sid='SID_STR' >CONTENT_STR</td>\
                                     </tr>\
                                     </table></div>";
             schedule_edit_string = "<textarea sid='SID_STR' class='schedule_elem_edit'>CONTENT_STR</textarea>\
@@ -61,35 +62,40 @@ $P.ready(function(){
 
             /*    data stuctures      */
             function sch(start_pos, next_start_pos, match_str){
-                    id_temp=start_pos
-                    content = result_g.slice(start_pos+match_str.length, next_start_pos)
-
-
-                    if(content.lastIndexOf('\n') !=-1 && content.search(/[a-z]/i) !=-1){
-                        last_oc_idx = content.lastIndexOf('\n')
-                        first_oc_idx =  content.search(/[a-z]/i)
-                        last_line = content.slice(last_oc_idx, content.length)
-                        
-                        hit_flag = 0
-                        for (j = 0; j < fil_list.length; j++){
-                                if(last_line.match(fil_list[j]) != null) { hit_flag = 1; break; }
-                        }
-                        
-                        if(last_oc_idx > first_oc_idx && hit_flag == 1){
-                                content = content.slice(first_oc_idx, last_oc_idx)
-                        }
+                    if(start_pos ==  -1 && next_start_pos == -1){
+                        content = "New assignment"
+                        id_temp = Math.random()
                     }
+                    else{ 
+                            id_temp=start_pos
+                            content = result_g.slice(start_pos+match_str.length, next_start_pos)
+                            if(content.lastIndexOf('\n') !=-1 && content.search(/[a-z]/i) !=-1){
+                                last_oc_idx = content.lastIndexOf('\n')
+                                first_oc_idx =  content.search(/[a-z]/i)
+                                last_line = content.slice(last_oc_idx, content.length)
+                                
+                                hit_flag = 0
+                                for (j = 0; j < fil_list.length; j++){
+                                        if(last_line.match(fil_list[j]) != null) { hit_flag = 1; break; }
+                                }
+                                
+                                if(last_oc_idx > first_oc_idx && hit_flag == 1){
+                                        content = content.slice(first_oc_idx, last_oc_idx)
+                                }
+                            }
 
-                    content = content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+                            content = content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
 
-                    if(content.length < 4){
-                                date_label_deleted=true
-                    }
-                    else{
-                                date_label_deleted=false	
-                    }
+                            if(content.length < 4){
+                                        date_label_deleted=true
+                            }
+                            else{
+                                        date_label_deleted=false	
+                            }
+                    
+                    } 
 
-                    if(parse_date(match_str)==true){ date_out = Date.parse(match_str) }
+                    if(parse_date(match_str) == true){ date_out = Date.parse(match_str) }
                     var temp_sch = { 'id' : id_temp, 'start_pos' : start_pos, 'end_pos': next_start_pos, 'match_str' : match_str,'content': content , 'modified': 0, 'catergory': '', 'date': date_out, 'next': false, 'deleted': false, 'date_label_deleted': date_label_deleted};
                     return temp_sch;
 
@@ -113,6 +119,7 @@ $P.ready(function(){
                     history_stack.push( $.extend(true, [], schedule_list) );
                     show_schedule();
                     adjust_spacing();
+                    update_schedule();
                     update_date_label();
             });
 
@@ -231,8 +238,13 @@ $P.ready(function(){
             });
 		
             $("#new_assignment").click(function(){
-                dialog.open('new_assignment', "<h2>Add New Assignment</h2>");
-            
+                    $("#parsed_data").html("")
+                    s = sch(-1,-1,"1/1")  
+                    schedule_list.push(s)
+                    show_schedule()
+                    adjust_spacing()
+                    adjust_parsed_data_pos()
+                    
             });
             $("#toggle_pre_text").live("click", function(){
                     if (flag_show_orig_pre_text == 0){ // currently showing truncated text
@@ -264,14 +276,24 @@ $P.ready(function(){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx_by_id(sid)
+                    orig_first_day = schedule_list[0].date.getOrdinalNumber() 
                     new_date = $(".date_container[sid='" + sid + "']").val() 
                     if(Date.parse(new_date) == null){
-                        alert("invalid date")
+                            alert("invalid date")
                     }
                     else{
-                        schedule_list[sch_idx].date = Date.parse(new_date)
-                        new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
-                        $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
+                            schedule_list[sch_idx].date = Date.parse(new_date)
+                            if(sch_idx == 0){
+                                    day_offest = schedule_list[sch_idx].date.getOrdinalNumber() - orig_first_day
+                                    for(i = 1; i < schedule_list_orig_len; i++ ){
+                                            schedule_list[i].date.addDays(day_offest)
+                                    }
+                                    
+                                    flag_week_format = 0
+                                    show_schedule()
+                            }
+                            new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
+                            $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
                     }
             });
             
@@ -317,7 +339,6 @@ $P.ready(function(){
 
             function parse_date(str){
                     date_out = Date.parse(match_str)
-                    //console.log(match_str, date_out)
                     year_temp = date_out.getFullYear()
 
                     if(year_temp<curr_year){
@@ -405,7 +426,13 @@ $P.ready(function(){
 
                     for(i=1; i<sch_div.length; i++){
                             curr_sid = $(sch_div[i]).attr("sid")
-                            curr_pos = $(".date_label[sid='"+curr_sid+"']").position().top
+                            temp_curr = $(".date_label[sid='"+curr_sid+"']").position()
+                            if(temp_curr == null){
+                                curr_pos = 0
+                            }
+                            else{
+                                curr_pos = $(".date_label[sid='"+curr_sid+"']").position().top
+                            }
                             prev_sid = $(sch_div[i-1]).attr("sid")
                             prev_pos = $(".schedule_elem[sid='"+prev_sid+"']").position().top + $(".schedule_elem[sid='"+prev_sid+"']").height()
                             $(sch_div[i]).css("position", "absolute")
@@ -421,7 +448,8 @@ $P.ready(function(){
                     min_idx = ""
                     scorll_val = 0
 
-                    for(i=0; i<sch_div.length; i++){
+                    //for(i=0; i<sch_div.length; i++){
+                    for(i=0; i<schedule_list_orig_len; i++){
                             temp_id = $(sch_div[i]).attr("sid");
                             temp_dist = $(".date_label[sid='"+temp_id+"']").position().top - $(window).scrollTop() ;
                             
@@ -635,6 +663,7 @@ $P.ready(function(){
                     $("#pre_text").fadeTo("fast", 0.2);
 
                     show_schedule();
+                    schedule_list_orig_len = schedule_list.length
                     adjust_spacing();
                     t=$.extend(true, [], schedule_list);
                     history_stack.push(t)
