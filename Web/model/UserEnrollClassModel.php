@@ -101,7 +101,7 @@ class UserEnrollClassModel extends Model {
 
 			// debug
 			// error_log('section enrolled - ' . print_r($this->class_dao->attribute, true));
-			error_log('section redirect - ' . $redirect);
+			// error_log('section redirect - ' . $redirect);
 			
 			return array(
 				'success'      => true,
@@ -137,7 +137,7 @@ class UserEnrollClassModel extends Model {
 	 */
 	public function getUserClass($user_id) {
 		$this->linkage->read(array('user_id' => $user_id));
-		return $this->linkage->attribute;
+		return $this->linkage->list;
 	}
 
 }

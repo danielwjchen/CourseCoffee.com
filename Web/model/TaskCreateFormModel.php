@@ -64,6 +64,26 @@ class TaskCreateFormModel extends FormModel {
 	}
 
 
+	/**
+	 * Process task creation request
+	 *
+	 * @param $token
+	 * @param $user_id
+	 * @param $objective
+	 * @param $due_date
+	 * @param $description
+	 * @oaram $section_id
+	 *
+	 * @return array
+	 *  on success:
+	 *   - success:
+	 *   - quest_id:
+	 *   - token:
+	 *  on failure:
+	 *  - error:
+	 *  - message
+	 *  - token
+	 */
 	public function processForm($token, $user_id, $objective, $due_date, $description ='', $section_id = '') {
 		// if the form token has expired, this is more a study on user behavior. We 
 		// might want to change the expire to a higher value if this happens too
@@ -89,11 +109,20 @@ class TaskCreateFormModel extends FormModel {
 			'description' => $description,
 			'section_id'  => $section_id,
 		));
-		return array(
-			'quest_id' => $record_id,
-			'token'    => $token,
-			'success'  => true,
-		);
+
+		if ($record_id != 0) {
+			return array(
+				'success'  => true,
+				'quest_id' => $record_id,
+				'token'    => $token,
+			);
+		} else {
+			return array(
+				'error'   => true,
+				'message' => '',
+				'token'   => $token,
+			);
+		}
 	}
 }
 

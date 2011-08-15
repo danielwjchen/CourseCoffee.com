@@ -39,7 +39,7 @@ class UserProfileImageForm extends FormModel{
 	 *   - path
 	 *   - mime
 	 *   - timestamp
-	 *  On faie:
+	 *  On failure:
 	 *   - error
 	 */
 	public function processForm($user_id, $token, $filename) {

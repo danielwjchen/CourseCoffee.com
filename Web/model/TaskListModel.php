@@ -29,20 +29,33 @@ class TaskListModel extends Model {
 	 * @param int $paginate
 	 *
 	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - list:
+	 *  On failure:
+	 *   - error
+	 *   - message
 	 */
 	public function fetchUserList($user_id, $paginate) {
-		$this->task_dao->read(array(
+		$has_record = $this->task_dao->read(array(
 			'user_id' => $user_id,
 			'limit'   => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
 			),
 		));
-		$record_list = $this->task_dao->list;
-		return array(
-			'success' => true,
-			'list'    => $record_list,
-		);
+		if ($has_record) {
+			$record_list = $this->task_dao->list;
+			return array(
+				'success' => true,
+				'list'    => $record_list,
+			);
+		} else {
+			return array(
+				'error'   => true,
+				'message' => '',
+			);
+		}
 	}
 
 	/**
@@ -53,9 +66,15 @@ class TaskListModel extends Model {
 	 * @param int $paginate
 	 *
 	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - list:
+	 *  On failure:
+	 *   - error
+	 *   - message
 	 */
 	public function fetchUserClassList($user_id, $section_id, $paginate) {
-		$this->task_dao->read(array(
+		$has_record = $this->task_dao->read(array(
 			'user_id' => $user_id,
 			'section_id' => $section_id,
 			'limit'   => array(
@@ -63,11 +82,18 @@ class TaskListModel extends Model {
 				'count'  => self::COUNT,
 			),
 		));
-		$record_list = $this->task_dao->list;
-		return array(
-			'success' => true,
-			'list'    => $record_list,
-		);
+		if ($has_record) {
+			$record_list = $this->task_dao->list;
+			return array(
+				'success' => true,
+				'list'    => $record_list,
+			);
+		} else {
+			return array(
+				'error'   => true,
+				'message' => '',
+			);
+		}
 	}
 
 	/**
@@ -79,9 +105,15 @@ class TaskListModel extends Model {
 	 * @param int $paginate
 	 *
 	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - list:
+	 *  On failure:
+	 *   - error
+	 *   - message
 	 */
 	public function fetchUserCalendarList($user_id, $begin_date, $end_date, $paginate) {
-		$this->task_dao->read(array(
+		$has_record = $this->task_dao->read(array(
 			'user_id' => $user_id,
 			'range'   => array(
 				'begin_date' => $begin_date,
@@ -96,10 +128,17 @@ class TaskListModel extends Model {
 			),
 			*/
 		));
-		$record_list = $this->task_dao->list;
-		return array(
-			'success' => true,
-			'list'    => $record_list,
-		);
+		if ($has_record) {
+			$record_list = $this->task_dao->list;
+			return array(
+				'success' => true,
+				'list'    => $record_list,
+			);
+		} else {
+			return array(
+				'error'   => true,
+				'message' => '',
+			);
+		}
 	}
 }

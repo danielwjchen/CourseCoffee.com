@@ -27,6 +27,14 @@ class CollegeClassModel extends Model {
 
 	/**
 	 * A helper method to share code
+	 *
+	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - content:
+	 *  On failure:
+	 *   - error:
+	 *   - meessage:
 	 */
 	private function returnResult($has_record) {
 		if ($has_record) {
@@ -45,6 +53,14 @@ class CollegeClassModel extends Model {
 	 * Get college class information by section id
 	 *
 	 * @param string $section_id
+	 *
+	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - content:
+	 *  On failure:
+	 *   - error:
+	 *   - meessage:
 	 */
 	public function getClassById($section_id) {
 		$has_record = $this->class_dao->read(array('id' => $section_id));
@@ -61,6 +77,14 @@ class CollegeClassModel extends Model {
 	 * @param string subject_abbr
 	 * @param string course_num
 	 * @param string section_num
+	 *
+	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - content:
+	 *  On failure:
+	 *   - error:
+	 *   - meessage:
 	 */
 	public function getClassByURI($institution_uri, $year, $term, $subject_abbr, $course_num, $section_num) {
 		$has_record = $this->class_dao->read(array(

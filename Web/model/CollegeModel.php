@@ -29,6 +29,12 @@ class CollegeModel extends Model {
 	 *  option
 	 *
 	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - content:
+	 *  On failure:
+	 *   - error:
+	 *   - meessage:
 	 */
 	public function getCollegeOption() {
 		$this->institution_dao->read(array('all' => true));

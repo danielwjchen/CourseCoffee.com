@@ -49,6 +49,13 @@ class CollegeClassListModel extends Model {
 	 * @param string $string
 	 *
 	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - message:
+	 *   - list:
+	 *  On failure:
+	 *   - error:
+	 *   - message:
 	 */
 	public function suggestClassList($institution_id, $year_id, $term_id, $string) {
 
@@ -97,8 +104,20 @@ class CollegeClassListModel extends Model {
 		$params['limit']['count']  = 10;
 
 		$this->list_dao = new CollegeClassSuggestDAO($this->db);
-		$this->list_dao->read($params);
-		return $this->list_dao->list;
+		$has_records = $this->list_dao->read($params);
+
+		if ($has_records) {
+			return array(
+				'success' => true,
+				'message' => '',
+				'list'    => $this->list_dao->list,
+			);
+		} else {
+			return array(
+				'error'   => true,
+				'message' => '',
+			);
+		}
 	}
 
 	/**

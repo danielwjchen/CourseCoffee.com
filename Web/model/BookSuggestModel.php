@@ -46,6 +46,13 @@ class BookSuggestModel extends Model {
 	 *
 	 * @return array
 	 *  the returned variable must be of array type!
+	 *  On success:
+	 *   - success:
+	 *   - message:
+	 *   - list
+	 *  On failure:
+	 *   - error:
+	 *   - message:
 	 */
 	public function getBookList($section_id) {
 		$this->book_list = new BookListDAO($this->db);
@@ -95,6 +102,7 @@ class BookSuggestModel extends Model {
 		// error_log('book suggest result - ' . print_r($this->list, true));
 
 		return array(
+			'success' => true,
 			'message' => $message,
 			'list'    => $this->list
 		);

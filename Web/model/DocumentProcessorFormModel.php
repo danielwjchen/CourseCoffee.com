@@ -63,10 +63,24 @@ class DocumentProcessorFormModel extends FormModel{
 	/**
 	 * Process the document
 	 *
+	 * This method goes through the document and try to tag information of the 
+	 * class
+	 *
 	 * @param string $doc
 	 * @param string $mime
 	 * @param string $token
 	 *  
+	 * @return array
+	 *  On success:
+	 *   - success:
+	 *   - institution_id: optional
+	 *   - year_id: optional
+	 *   - section_id: optional
+	 *   - course_code: optional
+	 *   - content:
+	 *  On failure:
+	 *   - error:
+	 *   - message:
 	 */
 	public function processDocument($doc, $mime, $token) {
 		$this->incrementTries();
@@ -240,7 +254,7 @@ class DocumentProcessorFormModel extends FormModel{
 		// $result = iconv("UTF-8","UTF-8//IGNORE", $result);
 
 		// debug
-		error_log('section_id - ' . $section_id);
+		// error_log('document procesor section_id - ' . $section_id);
 
 		$this->section_dao->read(array('id' => $section_id));
 		$this->section_dao->syllabus_status = self::HAS_SYLLABUS;
@@ -248,6 +262,7 @@ class DocumentProcessorFormModel extends FormModel{
 		$this->section_dao->update();
 
 		return array(
+			'success'        => true,
 			'institution_id' => $params['institution_id'],
 			'year_id'        => $params['year_id'],
 			'term_id'        => $params['term_id'],
