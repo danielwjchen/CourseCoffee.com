@@ -19,14 +19,11 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	function __construct($db, $params = NULL) {
 		$attr = array(
 			'id',
-			'institution',
-			'institution_id',
-			'year_id',
-			'year',
-			'term_id',
-			'term',
 			'first_name',
 			'last_name',
+			'institution',
+			'year',
+			'term',
 		);
 
 		$this->user_dao                = new UserDAO($db);
@@ -34,7 +31,6 @@ class UserProfileDAO extends DAO implements DAOInterface{
 		$this->person_dao              = new PersonDAO($db);
 		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($db);
 		$this->institution_dao         = new InstitutionDAO($db);
-		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($db);
 		$this->file_dao                = new FileDAO($db);
 
 		parent::__construct($db, $attr, $params);
@@ -48,9 +44,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	 *   - last_name
 	 *   - email
 	 *   - password
-	 *   - institution
 	 *   - institution_id
-	 *   - fb_uid
 	 *
 	 * @return string $user_id
 	 *   the primary key of the user record created
@@ -86,7 +80,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	 * Extend DAO::read()
 	 *
 	 * @param array $params
-	 *   - id
+	 *   - user_id
 	 *   - email
 	 *   - password
 	 *
@@ -101,51 +95,41 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				p.last_name,
 				f.path,
 				f.mime,
-				us.institution_id,
-				us.year_id,
-				us.term_id,
 				i.name AS institution,
 				iy.period AS year,
-				it.name AS term,
-				uf_linkage.fb_uid
+				it.name AS term
 			FROM `user` u
 			INNER JOIN `person` p
 				ON u.id = p.user_id
 			INNER JOIN `user_setting` us
 				ON u.id = us.user_id
-			INNER JOIN `user_institution_linkage` ui_linkage
+			LEFT JOIN `user_institution_linkage` ui_linkage
 				ON u.id = ui_linkage.user_id
 				AND us.institution_id = ui_linkage.institution_id
-			INNER JOIN `institution` i
+			LEFT JOIN `institution` i
 				ON ui_linkage.institution_id = i.id
-			INNER JOIN `institution_year_linkage` iy_linkage
+			LEFT JOIN `institution_year_linkage` iy_linkage
 				ON i.id = iy_linkage.institution_id
-			INNER JOIN `institution_year` iy
+			LEFT JOIN `institution_year` iy
 				ON iy_linkage.year_id = iy.id
-			INNER JOIN `institution_term` it
+			LEFT JOIN `institution_term` it
 				ON iy.id = it.year_id
-			LEFT JOIN `user_facebook_linkage` uf_linkage
-				ON u.id = uf_linkage.user_id
-			LEFT JOIN `file` f
+			LEFT JOIN (`file` f,  `file_type` ft)
 				ON u.id = f.user_id
-			LEFT JOIN `file_type` ft
-				ON f.type_id = ft.id
+				AND f.type_id = ft.id
+				AND ft.name = :file_type
 		";
 
-		if (isset($params['id'])) {
-			$sql .= "
-				WHERE u.id = :id
-					OR ft.name = :file_type
-			";
+		if (isset($params['user_id'])) {
+			$sql .= "WHERE u.id = :user_id";
 			$data = $this->db->fetch($sql, array(
+				'user_id' => $params['user_id'],
 				'file_type' => FileType::PROFILE_IMAGE,
-				'id' => $params['id'],
 			));
 		} elseif (isset($params['email']) && isset($params['password'])) {
 			$sql .= "
-				WHREE u.account = :email
+				WHERE u.account = :email
 					AND u.password = :password
-					OR ft.name = :file_type
 			";
 			$data = $this->db->fetch($sql, array(
 				'file_type' => FileType::PROFILE_IMAGE,

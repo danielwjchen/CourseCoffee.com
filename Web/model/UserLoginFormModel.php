@@ -2,6 +2,8 @@
 /**
  * @file
  * Handle user login
+ *
+ * @see UserSessionModel
  */
 class UserLoginFormModel extends FormModel {
 
@@ -44,21 +46,14 @@ class UserLoginFormModel extends FormModel {
 	const REDIRECT = '/home';
 
 	/**
-	 * Name to be used for the cookie
-	 */
-	const LOGIN_COOKIE = 'lc';
-
-	/**
 	 * @defgroup dao
 	 * @{
 	 */
 	private $user_dao;
-	private $user_cookie_dao;
 	private $facebook_linkage_dao;
 	/**
 	 * @} End of "dao"
 	 */
-
 
 	/**
 	 * Extend Model::__construct()
@@ -66,7 +61,6 @@ class UserLoginFormModel extends FormModel {
 	function __construct() {
 		parent::__construct();
 		$this->user_dao             = new UserDAO($this->db);
-		$this->user_cookie_dao      = new UserCookieDAO($this->db);
 		$this->facebook_linkage_dao = new UserFacebookLinkageDAO($this->db);
 
 		$this->form_name = 'user_login_form';
@@ -164,7 +158,6 @@ class UserLoginFormModel extends FormModel {
 		} else {
 			Logger::write(self::EVENT_NEW_LOGIN);
 			$this->unsetFormToken();
-			$this->startUserSession($this->user_dao->id, $email, $password);
 			return array(
 				'success'  => true,
 				'user_id'  => $this->user_dao->id,
@@ -172,45 +165,6 @@ class UserLoginFormModel extends FormModel {
 			);
 		}
 
-	}
-
-	/**
-	 * Start user session
-	 *
-	 * we drop a cookie so we can automatically log in when the user comes 
-	 * back. Why are we not using user's id? because if the user changes his
-	 * password, this will force him to re-login when accessing from other 
-	 * browsers
-	 *
-	 * @param string $user_id
-	 *  the user's id
-	 * @param string $email
-	 *  a string of email address to be user as account
-	 * @param string $password
-	 *  a string to identifer the user as the owner of the account
-	 */
-	public function startUserSession($user_id, $email, $password) {
-		Session::Set('user_id', $user_id);
-		$signature = Crypto::encrypt($email . $password);
-		$this->user_cookie_dao->create(array(
-			'user_id'   => $user_id,
-			'signature' => $signature, 
-		));
-
-		// check if user_profile is populated in session
-		if (!Session::Get('user_profile')) {
-			$user_profile_dao = new UserProfileDAO($this->db);
-			$user_profile_dao->read(array('id' => $user_id));
-			$result = $this->user_profile_dao->attribute;;
-
-			// debug
-			// error_log('user_profile - ' . print_r($result, true));
-
-			Session::Set('user_profile', $result);
-		}
-
-		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
-		Cookie::Set(UserLoginFormModel::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
 	}
 
 }

@@ -12,8 +12,6 @@ class UserClassListDAO extends DAO {
 	 */
 	function __construct($db, $params = NULL) {
 		$attr = array(
-			'institution_id',
-			'institution',
 			'subject_id',
 			'subject_abbr',
 			'course_id',
@@ -48,9 +46,7 @@ class UserClassListDAO extends DAO {
 		$sql = "
 			SELECT 
 				s.id AS section_id,
-				s.num AS section_num,
-				c.num AS course_num,
-				sub.abbr AS subject_abbr
+				CONCAT(sub.abbr, '-', c.num) AS course_code
 			FROM `section` s
 			INNER JOIN user_section_linkage us_linkage
 				ON s.id = us_linkage.section_id

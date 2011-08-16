@@ -95,17 +95,21 @@ class UserController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Log in a user
+	 * Accept user login request and begin session
 	 */
 	public function loginUser() {
-		$login_form = new UserLoginFormModel();
+		$login_form   = new UserLoginFormModel();
 
 		$email    = Input::Post('email', FILTER_SANITIZE_EMAIL);
 		$password = Input::Post('password');
 		$token    = Input::Post('token');
 
 		$result = $login_form->processForm($email, $password, $token);
+
+		// begin user session on success
 		if (isset($result['success'])) {
+			$user_session_model = new UserSessionModel();
+			$user_session_model->beginUserSession($result['user_id'], $email, $password);
 		}
 
 		$json = new JSONView($result);
@@ -116,9 +120,13 @@ class UserController extends Controller implements ControllerInterface {
 	 * Log out a user
 	 */
 	public function logoutUser() {
-		$logout = new UserLogoutModel();
+		$logout_model = new UserLogoutModel();
 		$user_id = Session::Get('user_id');
-		$result = $logout->terminate($user_id);
+		$result = $logout_model->terminate($user_id);
+		if (isset($result['success'])) {
+			$user_session_model = new UserSessionModel();
+			$user_session_model->endUserSession();
+		}
 		$json = new JSONView($result);
 		echo $json->render();
 	}

@@ -64,9 +64,9 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getHomePage() {
 		$this->redirectUnknownUser();
-		$user_profile = new UserProfileFormModel();
-		$result = $user_profile->getProfile($this->isUserLoggedIn());
-		$this->page = new HomePageView($result);
+		$user_session_model = new UserSessionModel();
+		$profile = $user_session_model->getUserProfile();
+		$this->page = new HomePageView($profile);
 	}
 
 	/**

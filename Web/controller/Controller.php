@@ -70,6 +70,14 @@ abstract class Controller {
 	}
 
 	/**
+	 * Implement ControllerInterface::afterAction()
+	 *
+	 * This is a stub!
+	 */
+	public function afterAction() {
+	}
+
+	/**
 	 * Redirect unknown user 
 	 *
 	 * @param string $url
@@ -102,7 +110,7 @@ abstract class Controller {
 	public function getUserId() {
 		$user_id = Session::Get('user_id');
 		if (empty($user_id)) {
-			$signature = Cookie::Get(UserLoginFormModel::LOGIN_COOKIE);
+			$signature = Cookie::Get(UserSessionModel::LOGIN_COOKIE);
 			if (!empty($signature)) {
 				global $config;
 				$user_cookie_dao = new UserCookieDAO(new DB($config->db));
@@ -115,6 +123,13 @@ abstract class Controller {
 		}
 
 		return $user_id == '' ? false : $user_id;
+	}
+
+	/**
+	 * Get the HTTP referrer
+	 */
+	public function getReferrer() {
+		return $_SERVER['HTTP_REFERER'];
 	}
 
 	/**
@@ -156,13 +171,5 @@ abstract class Controller {
 		return $this->getUserId();
 	}
 	
-
-	/**
-	 * Implement ControllerInterface::afterAction()
-	 *
-	 * This is a stub!
-	 */
-	public function afterAction() {
-	}
 
 }

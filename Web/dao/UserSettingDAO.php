@@ -12,12 +12,9 @@ class UserSettingDAO extends DAO implements DAOInterface{
 		$attr = array(
 			'id',
 			'user_id',
-			'institution',
 			'institution_id',
 			'year_id',
-			'year',
 			'term_id',
-			'term',
 		);
 		parent::__construct($db, $attr, $params);
 
@@ -56,22 +53,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	 * Extend DAO::read().
 	 */
 	public function read($params) {
-		$sql = "
-			SELECT 
-				us.*,
-				i.name AS institution,
-				iy.period AS year,
-				it.name AS term
-			FROM `user_setting` us
-			INNER JOIN `institution` i
-				ON us.institution_id = i.id
-			INNER JOIN `institution_year_linkage` iy_linkage
-				ON i.id = iy_linkage.institution_id
-			INNER JOIN `institution_year` iy
-				ON iy_linkage.year_id = iy.id
-			INNER JOIN `institution_term` it
-				ON iy.id = it.year_id
-		";
+		$sql = "SELECT * FROM `user_setting` us ";
 		$sql_param = array();
 		
 		if (isset($params['id'])) {
@@ -79,7 +61,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 			$sql_param = array('id' => $params['id']);
 
 		} elseif (isset($params['user_id'])) {
-			$sql      .= "`WHERE us.user_id` = :user_id";
+			$sql      .= "WHERE us.`user_id` = :user_id";
 			$sql_param = array('user_id' => $params['user_id']);
 
 		} else {
@@ -88,6 +70,10 @@ class UserSettingDAO extends DAO implements DAOInterface{
 		}
 
 		$data = $this->db->fetch($sql, $sql_param);
+		
+		// debug
+		// error_log(__METHOD__ . ' - data - ' . print_r($data, true));
+
 		return $this->updateAttribute($data);
 
 	}

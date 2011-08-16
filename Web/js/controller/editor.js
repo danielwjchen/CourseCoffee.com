@@ -767,7 +767,7 @@ $P.ready(function(){
 		$('.confirm', selectionForm).live('click', function(e) {
 			e.preventDefault();
 			$.ajax({
-				url: '/task-bulk-add',
+				url: '/task-add-from-doc',
 				type: 'post',
 				cache: false,
 				data: $('#task-creation-form').serialize() + '&section_id=' + $('#section-id', selectionForm).val(),

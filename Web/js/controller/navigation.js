@@ -16,15 +16,27 @@ $P.ready(function() {
 				type: 'post',
 				data: 'term=' + request.term,
 				success: function(data) {
+					if (data.error) {
+						return;
+					}
+
 					// we get a specific item, this is a hack and someone needs to fix it
-					if (data['subject_abbr'] != undefined) {
+					if (data.message) {
+					}
+
+					var list = null;
+					if (data.success) {
+						list = data.list;
+					}
+
+					if (list['subject_abbr'] != undefined) {
 						fixedData  = {
 							0 : {
-								'subject_abbr' : data['subject_abbr'],
-								'course_num' : data['course_num'],
-								'section_num' : data['section_num'],
-								'course_title' : data['course_title'],
-								'section_id' : data['section_id']
+								'subject_abbr' : list['subject_abbr'],
+								'course_num' : list['course_num'],
+								'section_num' : list['section_num'],
+								'course_title' : list['course_title'],
+								'section_id' : list['section_id']
 							}
 						}
 						response( $.map(fixedData, function(item) {
@@ -36,7 +48,7 @@ $P.ready(function() {
 							}
 						}));
 					} else {
-						response( $.map(data, function(item) {
+						response( $.map(list, function(item) {
 							if (item['section_num'] != undefined) {
 								return {
 									courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
