@@ -12,7 +12,7 @@
 
 	include("KnetBooksAPI.php");
 	
-//	include("cjCheggAPI.php");
+	include("CheggAPI.php");
 
 /*	
 	$stime=microtime(true);
@@ -26,12 +26,13 @@
 	}
  */
 
-
+/*
 	$amazonSearch = new AmazonAPI();
 
 	$isbns = array("1848000693","0201558025");
 
 	echo $amazonSearch->createCart($isbns);
+ */
 
 /*	$amazonSearch->searchBookIsbn("0415991404");
 	echo $amazonSearch->getAuthors();
@@ -82,10 +83,11 @@
  * knetbooks
  */
 
+/*
 	$search = new KnetBooksAPI("0262033848");
 	echo $search->getLowestRentalPrice();
 	echo $search->getLowestRentalLink();
-
+ */
 
 
 /*
@@ -93,6 +95,10 @@
 	$result = $search->searchBookKeyword("Introduction to Algorithm");
 	var_dump($result);
  */
+
+	$search = new CheggAPI("0321489845");
+	echo $search->getLowestRentalPrice();
+	echo $search->getLowestRentalLink();
 
 ?>
 
