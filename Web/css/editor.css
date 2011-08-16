@@ -1,6 +1,7 @@
 #main_container{
         width: 900px;
         border-collapse:collapse;
+        margin: 0 auto;
 }
 
 .data_col_left{
