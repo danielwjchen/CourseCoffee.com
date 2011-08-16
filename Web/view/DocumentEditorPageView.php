@@ -64,35 +64,36 @@ HTML;
 						<a href="#" class="button confirm disabled">confirm</a>
 					</form>
 					<form id="task-creation-form" name="task-creation">
-					</form>
-					<div id="parsed_data">parsed_data</div>
-						<table width="460"  cellpadding="0" cellspacing="0" id="table_syl">
-							<tr>
-								<td height="30" id="table_title" width="460">Original Text</td>
-							</tr>
-							<tr>
-								<td width="460"><div id="orig_syl"></div></td>
-							</tr>
-						</table>
-						<div id="tool_box" class="button">
-							<table width="460" height="30" cellpadding="0" cellspacing="0">
-								<tr>
-									<td width="49" class="tool_box_btn" id="undo">undo</td>
-									<td width="49" class="tool_box_btn" id="redo">redo</td>
-									<td width="81" class="tool_box_btn" id="new_assignment">new schedule</td>
-									<td width="80" class="tool_box_btn" >
-										<a id="create-task" href="#">submit</a>
-									</td>
-									<td width="279"></td>
-								</tr>
-                                                                <tr>
-                                                                </tr>
-                                                                <tr>
+                                        </form>
+
+                                        <table id='main_container'>
+                                         <tr>
+                                            <td id='table_title_left'>original syllabus</td>
+                                            <td id='table_title_right' >parsed data</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class='data_col_left' id='orig_syl'></td>
+                                            <td class='data_col_right'> <div id='parsed_data'></div> </td>
+                                        </tr>
+                                        </table>
+                                        
+                                        <div id="tool_box">
+                                                        <table>
+                                                                <tr>    
+                                                                        <td>
+                                                                                <a class='toolbox_btn' id="undo" href="#">undo</a>
+                                                                                <a class='toolbox_btn' id="redo" href="#">redo</a>
+                                                                                <a class='toolbox_btn' id="new_assignment" href="#">new assignment</a>
+                                                                                <a class='toolbox_btn' id="create-task" href="#">submit</a>
+                                                                        </td>
                                                                 </tr>
 
-							</table>
-						</div>
+                                                        </table>
+                                        </div>
+
 					</div>
+
 				</div>
 			</div>
 		</div>
