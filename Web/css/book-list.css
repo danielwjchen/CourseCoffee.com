@@ -5,7 +5,7 @@
  overflow: auto;
 }
 .book-list#enroll-book-list {
-	height: 300px;
+	height: 200px;
 }
 .book-list#class-book-list {
 	height: 450px;

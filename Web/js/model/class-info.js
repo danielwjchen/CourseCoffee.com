@@ -51,7 +51,10 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 		var cacheValue = cache.get(cacheKey);
 
 		if (cacheValue) {
-			Task.generateList(cacheValue);
+			// debug
+			console.log('getTaskList cache');
+			console.log(cacheValue);
+			Task.generateList(cacheValue, list);
 		} else {
 			list.addClass('loading');
 
@@ -114,18 +117,22 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	/**
 	 * Get information for a class from server
 	 *
+	 * Note that this also gets the list of assigments from that class!
+	 *
 	 * @param int sectionId
 	 */
 	this.getClassInfo = function(sectionId) {
-		getTaskList();
+		list.empty();
 		region.empty();
-		var cachedValue = cache.get(sectionId);
-		if (cachedValue) {
+		var cacheKey = 'class-info-' + sectionId;
+		var cacheValue = cache.get(cacheKey);
+		if (cacheValue) {
 			// debug
 			// console.log(cache);
 
-			setClassOption(cachedValue);
+			setClassOption(cacheValue);
 			displayClassInfo();
+			getTaskList();
 
 		} else {
 			region.addClass('loading');
@@ -137,9 +144,10 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 				success: function(response) {
 					region.removeClass('loading');
 					if (response.content) {
-						cache.set(response.content.section_id, response.content);
+						cache.set(cacheKey, response.content);
 						setClassOption(response.content);
 						displayClassInfo();
+						getTaskList();
 					}
 				}
 			});
@@ -160,6 +168,7 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	 */
 	this.createTask = function() {
 		cache.unset('task-list-' + $('input[name=section-id]', option).val());
+		list.empty();
 		task.createTask(getTaskList);
 	};
 

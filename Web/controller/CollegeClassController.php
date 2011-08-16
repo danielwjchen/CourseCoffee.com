@@ -102,8 +102,9 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 * Add a user to a class
 	 */
 	public function enrollClass() {
-		$user_id = $this->getUserId();
-		if ($user_id == false ) {
+		$user_session_model = new UserSessionModel();
+		$user_id = $user_session_model->getUserId();
+		if (empty($user_id)) {
 			$this->json = new JSONView(array('redirect' => 'welcome'));
 
 		} else {
@@ -113,15 +114,9 @@ class CollegeClassController extends Controller implements ControllerInterface {
 
 			// rebuild user_class_list in session
 			if (isset($result['success'])) {
-				Session::Set('user_class_list', null);
-				$user_profile = Session::Get('user_profile');
-				$class_list_model = new CollegeClassListModel();
-				$class_list_model->fetchUserClassList(
-					$user_id, 
-					$user_profile['institution_id'],
-					$user_profile['year_id'],
-					$user_profile['term_id']
-				);
+				$class_list = $user_session_model->getUserClassList();
+				$class_list[$section_id] = $result['course_code'];
+				$user_session_model->setUserClassList($class_list);
 			}
 
 			$this->json = new JSONView($result);

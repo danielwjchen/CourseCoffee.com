@@ -51,7 +51,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 			$html .= "<li><a href='#' id='{$id}' class='option'>{$class_code}</a></li>";
 		}
 		$html .= "</ul>";
-		$this->data['class_list'] = $html;
+		$this->data['panel_menu'] = $html;
 	}
 
 	private function getClassOption($class_info) {
@@ -93,8 +93,18 @@ HTML;
 	 */
 	public function getContent() {
 		extract($this->data);
-
-		$class_option = $this->getClassOption($default_class);
+		$option = '';
+		foreach ($class_list as $section_id => $section_code) {
+			$option .= "<option value='{$section_id}'>{$section_code}</option>";
+		}
+		$class_select = <<<HTML
+<select name="section_id" class="class-list">
+	<option selected="selected">pick a class</option>
+	{$option}
+</select>
+HTML;
+	
+		$class_option = $this->getClassOption($class_info);
 
 		return <<<HTML
 <div class="class container">
@@ -134,7 +144,7 @@ HTML;
 								{$class_option}
 									<input type="hidden" name="paginate" value="0" />
 							</form>
-							{$class_list}
+							{$panel_menu}
 						</div>
 					</div>
 					<div class="panel-01">
@@ -171,9 +181,8 @@ HTML;
 												<input type="text" name="due_date" id="time-picker" class="due_date" />
 											</div>
 											<div class="row">
-												<label for="course-section" class="title">Class: </label>
-												<input type="text" name="course-section" class="course-section"/>
-												<input type="hidden" name="section_id" />
+												<label for="section_id" class="title">Class: </label>
+												{$class_select}
 												<a href="#" class="button show-detail">more detail</a>
 											</div>
 											<div class="optional hidden">

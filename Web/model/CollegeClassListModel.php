@@ -131,12 +131,6 @@ class CollegeClassListModel extends Model {
 	 * @return array
 	 */
 	public function fetchUserClassList($user_id, $institution_id, $year_id, $term_id) {
-		$user_class_list = Session::Get('user_class_list');
-
-		if (!empty($user_class_list)) {
-			return $user_class_list;
-		}
-
 		$this->list_dao = new UserClassListDAO($this->db);
 
 		$has_record = $this->list_dao->read(array(
@@ -152,19 +146,17 @@ class CollegeClassListModel extends Model {
 		
 		$result = array();
 		if (isset($this->list_dao->list['section_id'])) {
-			$result[$this->list_dao->list['section_id']] = $this->list_dao->list['subject_abbr'] . ' ' . $this->list_dao->list['course_num'] . ' ' .$this->list_dao->list['section_num'];
+			$result[$this->list_dao->list['section_id']] = $this->list_dao->list['section_code'];
 
 		} else {
 			foreach ($this->list_dao->list as $key => $value) {
-				$result[$value['section_id']] = $value['subject_abbr'] . ' ' . $value['course_num'] . ' ' .$value['section_num'];
+				$result[$value['section_id']] = $value['section_code'];
 			}
 		}
 
 		// debug output
-		// error_log('user class list - ' . print_r($this->list_dao->list, true));
-		// error_log('formatted user class list - ' . print_r($result, true));
-
-		Session::Set('user_class_list', $result);
+		// error_log(__METHOD__ . ' : user class list - ' . print_r($this->list_dao->list, true));
+		// error_log(__METHOD__ . 'formatted user class list - ' . print_r($result, true));
 
 		return $result;
 	}

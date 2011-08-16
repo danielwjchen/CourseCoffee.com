@@ -369,6 +369,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		calculateDayRange(number);
 		type  = 'day';
 		displayDay();
+		setCalendarRange();
 		setCalendarType();
 	};
 

@@ -28,13 +28,7 @@ $P.ready(function() {
 	// console.log('default class id - ' + defaultClassId);
 
 	classInfo.getClassInfo(sectionId);
-	classInfo.populate();
 	bookList.getBookList(sectionId);
-
-	// Load tasks
-	var task = new Task('#task-creation-form');
-	var userTaskOption = $('#user-list-task-option');
-	var agendaPanel = $('.panel-02 .panel-inner .task-list');
 
 	// Over see inputs in panel menu
 	panelMenu.delegate('a', 'click', function(e) {
@@ -50,7 +44,6 @@ $P.ready(function() {
 
 		$('.option', panelMenu).removeClass('active');
 		target.addClass('active');
-		agendaPanel.empty();
 	});
 
 	blurInput(body);

@@ -22,7 +22,7 @@
  *     - fb_uid
  *  - class_list:
  *     - section_id: the primary key that identifies a section
- *        - course_code: a string that contains a class's subject abbreviation, 
+ *        - section_code: a string that contains a class's subject abbreviation, 
  *          course number, and section number
  */
 class UserSessionModel extends Model {
@@ -57,6 +57,28 @@ class UserSessionModel extends Model {
 	}
 
 	/**
+	 * Set cookie for user session
+	 *
+	 * @param string $user_id
+	 *  the user's id
+	 * @param string $email
+	 *  a string of email address to be user as account
+	 * @param string $password
+	 *  a string to identifer the user as the owner of the account
+	 */
+	public function setUserSessionCookie($user_id, $email, $password) {
+		Session::Set('user_id', $user_id);
+		$signature = Crypto::encrypt($email . $password);
+		$this->user_cookie_dao->create(array(
+			'user_id'   => $user_id,
+			'signature' => $signature, 
+		));
+
+		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
+		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
+	}
+
+	/**
 	 * Begin user session
 	 *
 	 * we drop a cookie so we can automatically log in when the user comes 
@@ -72,12 +94,7 @@ class UserSessionModel extends Model {
 	 *  a string to identifer the user as the owner of the account
 	 */
 	public function beginUserSession($user_id, $email, $password) {
-		Session::Set('user_id', $user_id);
-		$signature = Crypto::encrypt($email . $password);
-		$this->user_cookie_dao->create(array(
-			'user_id'   => $user_id,
-			'signature' => $signature, 
-		));
+		$this->setUserSessionCookie($user_id, $email, $password);
 
 		$user_profile_dao = new UserProfileDAO($this->db);
 		$user_profile_dao->read(array('user_id' => $user_id));
@@ -85,7 +102,7 @@ class UserSessionModel extends Model {
 		unset($user_profile['id']);
 
 		// debug
-		error_log('user_profile - ' . print_r($user_profile, true));
+		// error_log('user_profile - ' . print_r($user_profile, true));
 
 		$this->setUserProfile($user_profile);
 
@@ -108,49 +125,23 @@ class UserSessionModel extends Model {
 			'term_id'        => $user_setting['term_id'],
 		));
 		$record = $user_class_list_dao->list;;
+		// another ugly hack! 
+		if (isset($record['section_id'])) {
+			$record = array($record);
+		}
 
 		// debug
 		// error_log(__METHOD__ . 'user class list record- ' . print_r($record, true));
 
 		$class_list = array();
 		foreach ($record as $item) {
-			$class_list[$item['section_id']] = $item['course_code'];
+			$class_list[$item['section_id']] = $item['section_code'];
 		}
 
 		// debug
 		// error_log(__METHOD__ . 'user class list- ' . print_r($class_list, true));
 
 		$this->setUserClassList($class_list);
-
-		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
-		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
-	}
-
-	/**
-	 * Populate user session
-	 *
-	 * This is called after a user register for an account, typically.
-	 *
-	 * @param int $user_id
-	 * @param string $email
-	 * @param string $password
-	 * @param array $profile
-	 *  - first_name
-	 *  - last_name
-	 *  - institution
-	 *  - year
-	 *  - term
-	 * @param array $setting
-	 *  - institution_id
-	 *  - year_id
-	 *  - term_id
-	 *  - fb_uid
-	 * @param array $class_list
-	 *  - section_id: the primary key that identifies a section
-	 *     - course_code: a string that contains a class's subject abbreviation, 
-	 *       course number, and section number
-	 */
-	public function populateUserSession($user_id, $email, $password, array $profile, array $setting, array $class_list = array()) {
 	}
 
 	/**
@@ -159,10 +150,10 @@ class UserSessionModel extends Model {
 	 * Not sure why we have this, but we do.
 	 */
 	public function flushUserSession() {
-		Session::Set('user_id', null);
-		Session::Set(self::USER_PROFILE, null);
-		Session::Set(self::USER_SETTING, null);
-		Session::Set(self::USER_CLASS_LIST, null);
+		Session::Del('user_id');
+		Session::Del(self::USER_PROFILE);
+		Session::Del(self::USER_SETTING);
+		Session::Del(self::USER_CLASS_LIST);
 	}
 
 	/**
@@ -176,6 +167,15 @@ class UserSessionModel extends Model {
 		$this->user_cookie_dao->destroy();
 		Cookie::del(self::LOGIN_COOKIE);
 		session_destroy();
+	}
+
+	/**
+	 * Get the id of the user currently in session
+	 *
+	 * @return int
+	 */
+	public function getUserId() {
+		return Session::Get('user_id');
 	}
 
 	/**
@@ -246,7 +246,7 @@ class UserSessionModel extends Model {
 	 *
 	 * @param array $class_list
 	 *  - section_id:
-	 *     - course_code:
+	 *     - section_code:
 	 */
 	public function setUserClassList(array $class_list) {
 		Session::Set(self::USER_CLASS_LIST, $class_list);
@@ -257,7 +257,7 @@ class UserSessionModel extends Model {
 	 *
 	 * @param array $item
 	 *  - section_id:
-	 *     - course_code:
+	 *     - section_code:
 	 */
 	public function setUserClassListFiled($item) {
 		$class_list = Session::Get(self::USER_CLASS_LIST);
@@ -270,7 +270,7 @@ class UserSessionModel extends Model {
 	 *
 	 * @return array
 	 *  - section_id:
-	 *     - course_code:
+	 *     - section_code:
 	 */
 	public function getUserClassList() {
 		return Session::Get(self::USER_CLASS_LIST);

@@ -36,6 +36,16 @@ class HomePageView extends PageView implements PageViewInterface {
 	 */
 	public function getContent() {
 		extract($this->data);
+		$option = '';
+		foreach ($class_list as $section_id => $section_code) {
+			$option .= "<option value='{$section_id}'>{$section_code}</option>";
+		}
+		$class_select = <<<HTML
+<select name="section_id" class="class-list">
+	<option selected="selected">pick a class</option>
+	{$option}
+</select>
+HTML;
 		return <<<HTML
 <div class="home container">
 	<div class="container-inner">
@@ -72,9 +82,9 @@ class HomePageView extends PageView implements PageViewInterface {
 						<div class="panel-inner">
 							<div class="profile">
 								<img src="images/default-profile.png" />
-								<div class="name">{$first_name} {$last_name}</div>
-								<div class="school">{$institution}</div>
-								<div class="semester">{$term} {$year}</div>
+								<div class="name">{$profile['first_name']} {$profile['last_name']}</div>
+								<div class="school">{$profile['institution']}</div>
+								<div class="semester">{$profile['term']} {$profile['year']}</div>
 							</div>
 							<div class="upload-form">
 								<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
@@ -99,9 +109,8 @@ class HomePageView extends PageView implements PageViewInterface {
 											<div class="row">
 												<label for="due_date" class="title">Due: </label>
 												<input type="text" name="due_date" id="time-picker" class="due_date" />
-												<label for="course-section" class="title">Class: </label>
-												<input type="text" name="course-section" class="course-section"/>
-												<input type="hidden" name="section_id" />
+												<label for="section_id" class="title">Class: </label>
+												{$class_select}
 												<a href="#" class="button show-detail">more detail</a>
 											</div>
 											<div class="optional hidden">

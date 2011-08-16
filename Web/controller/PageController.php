@@ -64,9 +64,17 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getHomePage() {
 		$this->redirectUnknownUser();
+
+		// debug
+		// error_log(__METHOD__ . ' - user session - ' . print_r($_SESSION, true));
+
 		$user_session_model = new UserSessionModel();
 		$profile = $user_session_model->getUserProfile();
-		$this->page = new HomePageView($profile);
+		$class_list = $user_session_model->getUserClassList();
+		$this->page = new HomePageView(array(
+			'profile'    => $profile,
+			'class_list' => $class_list,
+		));
 	}
 
 	/**
@@ -93,8 +101,13 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getCalendarPage() {
 		$this->redirectUnknownUser();
+
+		$user_session_model = new UserSessionModel();
+		$class_list = $user_session_model->getUserClassList();
+
 		$this->page = new CalendarPageView(array(
 			'timestamp' => time(),
+			'class_list' => $class_list,
 		));
 	}
 
@@ -113,15 +126,11 @@ class PageController extends Controller implements ControllerInterface {
 	public function getClassPage($params = array()) {
 		$this->redirectUnknownUser();
 
-		$default_section_id = '';
+		$user_session_model = new UserSessionModel();
+		$result['class_list'] = $user_session_model->getUserClassList();
 
-		$user_id        = $this->getUserId();
-		$institution_id = $this->getUserInstitutionId();
-		$year_id        = $this->getUserYearId();
-		$term_id        = $this->getUserTermId();
-
-		$class_list = new CollegeClassListModel();
-		$result['class_list'] = $class_list->fetchUserClassList($user_id, $institution_id, $year_id, $term_id);
+		// debug
+		// error_log(__METHOD__ . ' : class_list - ' . print_r($result['class_list'], true));
 
 		// a paticular class is specified to be displayed as default
 		if (!empty($params)) {

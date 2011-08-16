@@ -7,12 +7,30 @@
 class UserController extends Controller implements ControllerInterface {
 
 	/**
+	 * Access to user session values
+	 */
+	private $user_session_model;
+
+	/**
+	 * Handle output in JSON format
+	 */
+	private $json;
+
+	/**
+	 * Extend Controller::__construct()
+	 */
+	function __construct() {
+		parent::__construct();
+		$this->user_session_model = new UserSessionModel();
+	}
+
+	/**
 	 * Implement ControllerInterface::path()
 	 */
 	public static function path() {
 		return array(
 			'user-register-facebook' => 'registerUserByFacebook',
-			'user-register' => 'registerUser',
+			'user-register-regular'  => 'registerUserByUs',
 			'user-update'   => 'updateUser',
 			'user-remove'   => 'removeUser',
 			'user-profile'  => 'getUserProfile',
@@ -32,17 +50,24 @@ class UserController extends Controller implements ControllerInterface {
 	 * Override Controller::beforeAction()
 	 */
 	public function afterAction() {
+		$this->json->setHeader(PageView::HTML_HEADER);
+		echo $this->json->render();
+	}
+
+	private function registerUser($fist_name, $last_name, $institution_id, $section_id, $course_code, $year, $term, $token, $password, $confirm) {
 	}
 
 	/**
-	 * Register a new user
+	 * Register user via our own registration process
 	 *
 	 * Since this is our first semester, some of information is hard-coded
 	 */
-	public function registerUser() {
+	public function registerUserByUs() {
 		$first_name     = Input::Post('first-name');
 		$last_name      = Input::Post('last-name');
 		$institution_id = Input::Post('school');
+		$section_id     = Session::Get('section_id');
+		$course_code    = Session::Get('course_code');
 		$year           = '2011';
 		$term           = 'fall';
 		$token          = Input::Post('token');
@@ -65,15 +90,33 @@ class UserController extends Controller implements ControllerInterface {
 		);
 		
 		if (isset($result['success'])) {
-			$user_login = new UserLoginFormModel();
-			$user_login->startUserSession(
-				$result['user_id'], 
-				$result['email'], 
-				$result['password']
-			);
+			$this->user_session_model->setUserSessionCookie($result['user_id'], $email, $password);
+			$this->user_session_model->setUserProfile($result['profile']);
+			$this->user_session_model->setUserSetting($result['setting']);
+
+			$class_list = array();
+			if (!empty($section_id) && !empty($course_code)) {
+				Session::Del('section_id');
+				Session::Del('course_code');
+
+				$user_enroll_class_model = new UserEnrollClassModel();
+				$user_enroll_class_model->createLinkage(
+					$result['user_id'], 
+					$section_id
+				);
+				$class_list = array(
+					'section_id' => $section_id, 
+					'course_code' => $course_code
+				);
+			}
+			$this->user_session_model->setUserClassList($class_list);
+
+			unset($result['profile']);
+			unset($result['setting']);
+
 		}
-		$json = new JSONView($result);
-		echo $json->render();
+
+		$this->json = new JSONView($result);
 	}
 
 	/**
@@ -108,12 +151,11 @@ class UserController extends Controller implements ControllerInterface {
 
 		// begin user session on success
 		if (isset($result['success'])) {
-			$user_session_model = new UserSessionModel();
-			$user_session_model->beginUserSession($result['user_id'], $email, $password);
+			$this->user_session_model = new UserSessionModel();
+			$this->user_session_model->beginUserSession($result['user_id'], $email, $password);
 		}
 
-		$json = new JSONView($result);
-		echo $json->render();
+		$this->json = new JSONView($result);
 	}
 
 	/**
@@ -121,14 +163,14 @@ class UserController extends Controller implements ControllerInterface {
 	 */
 	public function logoutUser() {
 		$logout_model = new UserLogoutModel();
-		$user_id = Session::Get('user_id');
+		$user_id = $this->user_session_model->getUserId();
 		$result = $logout_model->terminate($user_id);
+
 		if (isset($result['success'])) {
-			$user_session_model = new UserSessionModel();
-			$user_session_model->endUserSession();
+			$this->user_session_model->endUserSession();
 		}
-		$json = new JSONView($result);
-		echo $json->render();
+
+		$this->json = new JSONView($result);
 	}
 
 }

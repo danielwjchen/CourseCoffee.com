@@ -100,7 +100,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$objective   = Input::Post('objective');
 		$due_date    = Input::Post('due_date');
 		$description = Input::Post('description');
-		$quest_id    = Input::Post('quest_id');
+		$section_id  = Input::Post('section_id');
 
 		$result = $task->processForm(
 			$token,
@@ -108,7 +108,7 @@ class TaskController extends Controller implements ControllerInterface {
 			$objective, 
 			$due_date, 
 			$description, 
-			$quest_id
+			$section_id
 		);
 		$this->json = new JSONView($result);
 	}

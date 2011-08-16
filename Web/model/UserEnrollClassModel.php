@@ -46,8 +46,23 @@ class UserEnrollClassModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->linkage     = new UserClassLinkageDAO($this->db);
+		$this->linkage   = new UserClassLinkageDAO($this->db);
 		$this->class_dao = new CollegeClassDAO($this->db);
+	}
+
+	/**
+	 * Create linkage between user and section
+	 *
+	 * @param int $user_id
+	 * @param int $section_id
+	 *
+	 * @return mixed
+	 */
+	protected function createLinkage($user_id, $section_id) {
+		return $this->linkage->create(array(
+			'user_id'    => $user_id,
+			'section_id' => $section_id,
+		));
 	}
 
 	/**
@@ -72,11 +87,10 @@ class UserEnrollClassModel extends Model {
 			);
 		}
 
-
 		$current_class_count = $this->linkage->read(array('user_id' => $user_id));
 
 		// debug
-		// error_log('enrollment count - ' . $current_class_count);
+		// error_log(__METHOD__ . ' : enrollment count - ' . $current_class_count);
 
 		if ($current_class_count >= $this::ENROLLMENT_LIMIT) {
 			Logger::Write(self::EVENT_EXCEED_MAX_ENROLL);
@@ -86,11 +100,7 @@ class UserEnrollClassModel extends Model {
 			);
 		}
 
-			
-		$linkage_id = $this->linkage->create(array(
-			'user_id'    => $user_id,
-			'section_id' => $section_id,
-		));
+		$linkage_id = $this->createLinkage($user_id, $section_id);
 
 		if ($linkage_id != false) {
 			Logger::Write(self::EVENT_NEW_ENROLL);
@@ -100,19 +110,23 @@ class UserEnrollClassModel extends Model {
 			$redirect = '/class/' . $result['institution_uri'] . '/' . $result['year'] . '/' . $result['term'] . '/' . $result['subject_abbr'] . '/' . $result['course_num'] . '/' . $result['section_num'];
 
 			// debug
-			// error_log('section enrolled - ' . print_r($this->class_dao->attribute, true));
-			// error_log('section redirect - ' . $redirect);
+			// error_log(__METHOD__ . ' : section enrolled - ' . print_r($this->class_dao->attribute, true));
+			// error_log(__METHOD__ . ' : section redirect - ' . $redirect);
 			
 			return array(
 				'success'      => true,
 				'section_id'   => $section_id,
 				'redirect'     => $redirect,
+				'section_code' => $result['section_code'],
 				'has_syllabus' => $has_syllabus,
-				'message'      => 'You are now enrolled in ' . $this->class_dao->subject_abbr . '-' . $this->class_dao->course_num . '!',
+				'message'      => 'You are now enrolled in ' . $result['section_code'],
 			);
 		} 
 
-		return false;;
+		return array(
+			'error'   => true,
+			'message' =>''
+		);
 	}
 
 	/**

@@ -48,6 +48,7 @@ class UserRegisterFormModel extends FormModel {
 	 */
 	private $user_dao;
 	private $user_setting_dao;
+	private $facebook_linkage_dao;
 	private $person_dao;
 	private $institution_linkage_dao;
 	private $institution_dao;
@@ -64,6 +65,7 @@ class UserRegisterFormModel extends FormModel {
 		parent::__construct();
 		$this->user_dao                = new UserDAO($this->db);
 		$this->user_setting_dao        = new UserSettingDAO($this->db);
+		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->db);
 
 		$this->person_dao              = new PersonDAO($this->db);
 		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($this->db);
@@ -74,8 +76,8 @@ class UserRegisterFormModel extends FormModel {
 		$this->form_name = 'user_register_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
-		// form expires in 10 minutes
-		$this->expire = 600;
+		// form expires in 30 minutes
+		$this->expire = 1800;
 	}
 
 	/**
@@ -98,6 +100,9 @@ class UserRegisterFormModel extends FormModel {
 	 *  a string that should be identical to $password
 	 * @param string $token
 	 *  a uniquely generated token to counter CSR attacks
+	 * @param int $fb_uid
+	 *  user's facebook uid, only exists when the user is registered through 
+	 *  facebook
 	 *
 	 * @return array
 	 *  on failure, the method returns an array made of the params plus error 
@@ -114,7 +119,7 @@ class UserRegisterFormModel extends FormModel {
 	 *   - password
 	 *   - redirect
 	 */
-	public function processForm($first_name, $last_name, $institution_id, $year, $term, $email, $password, $confirm, $token) {
+	public function processForm($first_name, $last_name, $institution_id, $year, $term, $email, $password, $confirm, $token, $fb_uid = null) {
 		// if the form is new
 		if (empty($token)) {
 			$token = $this->initializeFormToken();
@@ -215,6 +220,32 @@ class UserRegisterFormModel extends FormModel {
 			'password' => $encrypted_password,
 		));
 
+		// for some crazy reason, the system failed to create an record and return
+		// the primary key
+		if (empty($user_id)) {
+			$token = $this->initializeFormToken();
+			Logger::write(self::EVENT_FAILED_TO_CREATE, Logger::SEVERITY_LOW);
+			return array(
+				'error'          => self::ERROR_FAILED_TO_CREATE,
+				'first_name'     => $first_name,
+				'last_name'      => $last_name,
+				'institution_id' => $institution_id,
+				'year'           => null,
+				'term'           => null,
+				'email'          => $email,
+				'password'       => $password,
+				'confirm'        => $confirm,
+				'token'          => $token,
+			);
+		} 
+
+		if (!empty($fb_uid)) {
+			$this->facebook_linkage_dao->create(array(
+				'user_id' => $user_id,
+				'fb_uid'  => $fb_uid,
+			));
+		}
+
 		$this->person_dao->create(array(
 			'user_id'    => $user_id,
 			'first_name' => $first_name,
@@ -227,12 +258,15 @@ class UserRegisterFormModel extends FormModel {
 		));
 
 		// debug
-		error_log('institution_id - ' . $institution_id . ', period - ' . $year . ', term - ' . $term);
+		// error_log('institution_id - ' . $institution_id . ', period - ' . $year . ', term - ' . $term);
 
 		$this->institution_year_dao->read(array(
 			'institution_id' => $institution_id,
 			'period' => $year,
 		));
+
+		$this->institution_dao->read(array('id' => $institution_id));
+		$institution_name = $this->institution_dao->name;
 
 		$year_id = $this->institution_year_dao->id;
 
@@ -254,33 +288,27 @@ class UserRegisterFormModel extends FormModel {
 			'term_id'        => $term_id,
 		));
 
-		// for some crazy reason, the system failed to create an record and return
-		// the primary key
-		if (empty($user_id)) {
-			Logger::write(self::EVENT_FAILED_TO_CREATE, Logger::SEVERITY_LOW);
-			return array(
-				'error'          => self::ERROR_FAILED_TO_CREATE,
-				'first_name'     => $first_name,
-				'last_name'      => $last_name,
+		Logger::write(self::EVENT_NEW_USER);
+		$this->unsetFormToken();
+		return array(
+			'success' => true,
+			'user_id' => $user_id,
+			'profile' => array(
+				'first_name' => $first_name,
+				'last_name' => $last_name,
+				'institution' => $institution_name,
+				'year' => $year,
+				'term' => $term,
+			),
+			'setting' => array(
 				'institution_id' => $institution_id,
-				'year'           => null,
-				'term'           => null,
-				'email'          => $email,
-				'password'       => $password,
-				'confirm'        => $confirm,
-				'token'          => $token,
-			);
-		} else {
-			Logger::write(self::EVENT_NEW_USER);
-			$this->unsetFormToken();
-			return array(
-				'success'  => true,
-				'user_id'  => $user_id,
-				'email'    => $email,
-				'password' => $password,
-				'redirect' => self::REDIRECT,
-			);
-		}
+				'year_id' => $year_id,
+				'term_id' => $term_id,
+				'fb_uid'  => $fb_uid,
+			),
+			'redirect'   => self::REDIRECT,
+		);
+
 		
 	}
 

@@ -45,15 +45,15 @@ class UserClassListDAO extends DAO {
 
 		$sql = "
 			SELECT 
-				s.id AS section_id,
-				CONCAT(sub.abbr, '-', c.num) AS course_code
-			FROM `section` s
+				sec.id AS section_id,
+				CONCAT(sub.abbr, '-', crs.num, ' ', sec.num) AS section_code
+			FROM `section` sec
 			INNER JOIN user_section_linkage us_linkage
-				ON s.id = us_linkage.section_id
-			INNER JOIN course c
-				ON s.course_id = c.id
+				ON sec.id = us_linkage.section_id
+			INNER JOIN course crs
+				ON sec.course_id = crs.id
 			INNER JOIN subject sub
-				ON c.subject_id = sub.id
+				ON crs.subject_id = sub.id
 			INNER JOIN subject_term_linkage st_linkage
 				ON sub.id = st_linkage.subject_id
 			INNER JOIN institution_term it
@@ -78,6 +78,11 @@ class UserClassListDAO extends DAO {
 		);
 
 		$this->list = $this->db->fetch($sql, $sql_param);
+
+		// debug
+		error_log(__METHOD__ . ' : user class list param - ' . print_r($params, true));
+		error_log(__METHOD__ . ' : user class list - ' . print_r($this->list, true));
+
 		return !empty($this->list);
 	}
 }
