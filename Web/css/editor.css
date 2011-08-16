@@ -1,3 +1,95 @@
+#main_container{
+        width: 900px;
+        border-collapse:collapse;
+        margin: 0 auto;
+}
+
+.data_col_left{
+        width: 450px;
+        font-family:sans-serif;
+	font-size:12px;
+        vertical-align:text-top;
+}
+
+.data_col_right{
+        width: 450px;
+        font-family:sans-serif;
+	font-size:12px;
+}
+
+#table_title_left{
+	font:Tahoma, Geneva, sans-serif;
+	font-size:18px;
+	color:#F60;
+	text-align:left;
+	border-bottom-style:solid;
+	border-bottom-width:2px;
+	border-color:#F60;
+        text-align: center;
+	}
+
+#table_title_right{
+	font:Tahoma, Geneva, sans-serif;
+	font-size:18px;
+	color:#09F;
+	text-align:left;
+	border-bottom-style:solid;
+	border-bottom-width:2px;
+	border-color:#09F;
+        text-align: center;
+	}
+
+#tool_box{
+	position:fixed;
+	background-color:#09F;
+	border-radius: 4px;
+        top: 10px;
+        left: 700px; 
+	}
+        
+.toolbox_btn{
+	color:#09F;
+	background-color:#FFF;
+	border-radius: 4px;	
+	border-color:#09F;
+	border-width:2px;
+	border-style:solid;
+	font-size:18px;
+	cursor:pointer;
+	display: inline-block;
+	text-align:center;
+	text-decoration: none;
+}
+
+.toolbox_btn:hover{
+	color:#FFF;
+	background-color:#09F;
+	border-color:#FFF;
+        text-shadow: 0 0 6px #8a4c0a;
+	-moz-text-shadow: 0 0 6px #8a4c0a;
+	-webkit-text-shadow: 0 0 6px #8a4c0a;
+
+}
+
+.toolbox_btn:active{
+	color:#09F;
+	background-color:#FFF;
+	border-color:#09F;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .editor .button{
 	color: white;
 	display: block;
@@ -30,28 +122,16 @@
 	font-family:sans-serif;
 	font-size:12px;
 	}
-#table_title{
-	font:Tahoma, Geneva, sans-serif;
-	font-size:18px;
-	color:#F60;
-	text-align:left;
-	border-bottom-style:solid;
-	border-bottom-width:2px;
-	}
 #table_content{
 	font-family:sans-serif;
 	font-size:14px;
 }
 
-body{
-	background-color:#FFF;
-	
-	}
 	
 #parsed_data{
-	position:absolute;
-	width:500px;
+        margin-top:200px;
 	}
+
 
 .date_label{
 	color:#FFF;
@@ -61,22 +141,6 @@ body{
 	
 	}
 
-#tool_box{
-	position:fixed;
-	background-color:#9F0;
-	border-radius: 4px;
-	font-family:sans-serif;
-	font-size:8px;
-	color:#313131;
-        top: 100px;
-	}
-
-.tool_box_btn{
-	cursor:pointer;
-	border-radius: 2px;
-	text-align:center;
-	font-size:8px;
-	}
 
 .schedule_elem{
         background-color:#09F;
@@ -97,13 +161,16 @@ body{
         width: 450px;
         height: 200px;
         }
+.schedule_elem_space{
+        height: 10px;
+        }
 .sch_content{
         background-color:#FFFFFF;
 	font-family:sans-serif;
 	text-align:left;
 	white-space: normal;
 	font-size:12px;
-        width: 480px;	
+        border-radius: 2px;
 	}
 .sch_btn{
 	color:#09F;
