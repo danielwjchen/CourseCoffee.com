@@ -112,10 +112,17 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			$enroll = new UserEnrollClassModel();
 			$result = $enroll->AddUserToClass($user_id, $section_id);
 
+			// debug
+			// error_log(__METHOD__ . ' : result - ' . print_r($result, true));
+
 			// rebuild user_class_list in session
 			if (isset($result['success'])) {
 				$class_list = $user_session_model->getUserClassList();
-				$class_list[$section_id] = $result['course_code'];
+				$class_list[$section_id] = $result['section_code'];
+
+				// debug
+				// error_log(__METHOD__ . ' : class_list - ' . print_r($class_list, true));
+
 				$user_session_model->setUserClassList($class_list);
 			}
 

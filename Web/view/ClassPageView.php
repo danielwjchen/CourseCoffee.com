@@ -22,6 +22,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 		$this->addJS('model/doc.js');
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');
+		$this->addJS('model/class-enroll.js');
 		$this->addJS('model/class-info.js');
 		$this->addJS('timer.js');
 		$this->addJS('controller/class.js');

@@ -742,9 +742,14 @@ $P.ready(function(){
 	 */
 	$('#create-task').click(function(e) {
 		e.preventDefault();
-		form = $('#task-creation-form');
-		taskEle = $('.schedule_elem');
+		var form = $('#task-creation-form');
+		var taskEle = $('.schedule_elem');
 		form.append('<input type="hidden" name="task_count" value="' + taskEle.length + '" />');
+
+		$('.dialog-close', $P).live('click', function(e) {
+			e.preventDefault();
+			dialog.close()
+		});
 
 		taskEle.each(function(index, value) {
 			date = $('.schedule_elem_title', value).text().replace('Date:', '') + '/2011';
@@ -753,9 +758,9 @@ $P.ready(function(){
 			form.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
 		});
 
-		selectionForm = $('#class-selection-form-skeleton').clone();
+		var selectionForm = $('#class-selection-form-skeleton').clone();
 		selectionForm.attr('id', 'class-selection-form');
-		content = '<h2>Please confirm class information<h2>';
+		var content = '<h2>Please confirm class information<h2>';
 		dialog.open('confirm-class', content);
 		selectionForm.appendTo('.dialog-inner');
 		selectionForm.removeClass('hidden');
@@ -763,69 +768,8 @@ $P.ready(function(){
 		/**
 		 * Class suggest
 		 */
-		$('#suggest-input', selectionForm).autocomplete({
-			source: function(request, response) {
-				$.ajax({
-					url: '?q=college-class-suggest',
-					type: 'post',
-					data: 'term=' + request.term + '&' + selectionForm.serialize(),
-					success: function(data) {
-						// we get a specific item, this is a hack and someone needs to fix it
-						if (data['subject_abbr'] != undefined) {
-							fixedData  = {
-								0 : {
-									'subject_abbr' : data['subject_abbr'],
-									'course_num' : data['course_num'],
-									'section_num' : data['section_num'],
-									'course_title' : data['course_title'],
-									'section_id' : data['section_id']
-								}
-							}
-							response( $.map(fixedData, function(item) {
-								return {
-									courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
-									title: item['course_title'],
-									section_id : item['section_id'],
-									value: item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num']
-								}
-							}));
-						} else {
-							response( $.map(data, function(item) {
-								if (item['section_num'] != undefined) {
-									return {
-										courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
-										title: item['course_title'],
-										section_id : item['section_id'],
-										value: item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num']
-									}
-								} else {
-									return {
-										courseCode : item['subject_abbr'] + ' ' + item['course_num'],
-										title: item['course_title'],
-										value: item['subject_abbr'] + ' ' + item['course_num']
-									}
-								}
-							}));
-						}
-					}
-				})
-			},
-			select: function(event, ui) {
-				if (ui.item.section_id != undefined) {
-					$('#section-id', selectionForm).val(ui.item.section_id);
-					$('.confirm', selectionForm).removeClass('disabled');
-					
-				}
-			}
-		}).data("autocomplete")._renderItem = function(ul, item) {
-			return $( "<li></li>" )
-				.data( "item.autocomplete", item )
-				.append('<a href="#">' +
-					'<span class="course-code">' + item.courseCode + '</span>' +
-					'<span class="course-title">' + item.title+ '</span>' + 
-				'</a>')
-				.appendTo( ul );
-		};
+		var classEdit = new ClassEdit('#class-selection-form', '#suggest-input');
+
 		/**
 		 * Confirm task creation
 		 */
