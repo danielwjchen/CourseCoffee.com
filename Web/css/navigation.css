@@ -173,3 +173,17 @@
 	float: left;
 	clear: both;
 }
+#class-suggest-form .message {
+	position: absolute;
+	top: 36px;
+	text-align:center;
+	border: 1px solid #585656;
+	padding: 10px 5px;
+	border-radius: 0 0 4px 4px;
+	-moz-box-shadow: 1px 1px #003d01;
+	-webkit-box-shadow: 1px 1px 5px #003d01;
+	box-shadow: 1px 1px 5px #003d01;
+	background: white;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}

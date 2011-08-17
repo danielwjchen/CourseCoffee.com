@@ -72,7 +72,21 @@ window.ClassSuggest = function(formName, inputName, callback) {
 			})
 		},
 		select: function(event, ui) {
+			$('.message', form).remove();
 			callback(ui.item.section_id);
+		},
+		open: function(event, ui) {
+			$('.message', form).remove();
+		},
+		close: function(event, ui) {
+			if ($('input[name=section_id]', form).val() == '') {
+				form.append('<div class="message">' +
+					'<strong>Please enter section number.</strong>' +
+				'</div>');
+
+				return ;
+			}
+
 		}
 	}).data("autocomplete")._renderItem = function(ul, item) {
 		return $( "<li></li>" )

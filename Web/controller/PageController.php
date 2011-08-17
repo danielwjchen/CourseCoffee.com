@@ -139,7 +139,7 @@ class PageController extends Controller implements ControllerInterface {
 			$class_info = $class->getClassByURI($instituion_uri, $year, $term, $subject_abbr, $course_num, $section_num);
 
 			// debug 
-			// error_log('class_info - ' . print_r($class_info, true));
+			// error_log(__METHOD__ . ' : class_info - ' . print_r($class_info, true));
 
 			$result['default_class'] = $class_info;
 

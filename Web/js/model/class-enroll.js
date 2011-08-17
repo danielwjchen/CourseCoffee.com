@@ -15,7 +15,6 @@ window.ClassEnroll = function(formName, inputName) {
 	var submitEnroll = function(section_id) {
 		if (section_id != undefined) {
 			$('#section-id', form).val(section_id);
-			$('#section-id', form).val(section_id);
 			$.ajax({
 				url: '/college-class-enroll',
 				type: 'post',

@@ -105,7 +105,7 @@ HTML;
 </select>
 HTML;
 	
-		$class_option = $this->getClassOption($class_info);
+		$class_option = $this->getClassOption($default_class);
 
 		return <<<HTML
 <div class="class container">
