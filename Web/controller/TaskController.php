@@ -64,28 +64,22 @@ class TaskController extends Controller implements ControllerInterface {
 	 * This is a part of a procces which is decided by whether the user is in the 
 	 * middle of creating an account, enrolling in a class, or uploading syllabus 
 	 * for a class.
-	 * 
-	 * @see FlowModel
 	 */
 	public function createTaskFromDocument() {
 		$task_model  = new TaskCreateFormModel();
-		$flow_model  = new FlowModel();
 		$task_count = Input::Post('task_count');
 		$section_id = Input::Post('section_id');
 		$creator_id = 1;// super user id
-		$referrer   = $this->getReferrer();
-		$state      = $flow_model->trigger();
 
 		for ($i = 0; $i < $task_count; $i++) {
 			$date      = Input::Post('date_' . $i);
 			$objective = Input::Post('objective_' . $i);
 			$task->processMultipleForm($creator_id, $objective, $date, $section_id);
-
 		}
+
 		$this->json = new JSONView(array(
-			'state'      => $state,
 			'section_id' => $section_id,
-			'message'    => 'Congradulation! The syllabus is now uploaded!'
+			'message'    => 'Congratulation! The syllabus is now uploaded!'
 		));
 	}
 
@@ -142,9 +136,10 @@ class TaskController extends Controller implements ControllerInterface {
 	 */
 	public function getTaskBelongToUser() {
 		$user_id  = $this->getUserId();
+		$begin    = Input::Post('begin');
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
-		$result = $list_model->fetchUserList($user_id, $paginate);
+		$result = $list_model->fetchUserToDoList($user_id, $begin, $paginate);
 		$this->json = new JSONView($result);
 	}
 

@@ -57,7 +57,19 @@ window.Task = function(creationFormName, optionFormName) {
 	/**
 	 * Set error messages
 	 */
-	var setError = function(message) {
+	this.setError = function(message, region) {
+		region.append("<h3 class='error'>" +
+			message + 
+		"</h3>");
+		$('.button.more').addClass('disabled');
+	};
+
+	/**
+	 * Clear option
+	 */
+	this.clearOption = function(option) {
+		$('input[name=paginate]', option).val(0);
+		$('.button.more').removeClass('disabled');
 	};
 
 	/**
@@ -145,7 +157,7 @@ Task.generateList = function(list, region) {
 	 * @return html
 	 */
 	var getListItem = function(item) {
-		var html = "<li><dl>";
+		var html = "<li><dl id='" + item['id'] + "'>";
 
 		if (item['subject_abbr'] && item['course_num']) { 
 			html += "<dt>" + item['subject_abbr'] + '-' + item['course_num'] + "</dt>";
@@ -156,6 +168,7 @@ Task.generateList = function(list, region) {
 
 		html += "<dd id='" + item['due_date'] + "' class='due_date count-down'>" + item['due_date'] + "</dd>";
 		html += item['location'] != null ? "<dd class='location'>" + item['location'] + "</dd>" : "";
+		html += "<dd class='comment'><a href='#' id='" + item['id'] + "' class='fb-comment'>comments &#187;</a></dd>";
 		html += item['description'] != null ? "<dd class='description'>" + item['description'] + "</dd>" : "";
 			
 		html += "</dl></li>";
@@ -164,29 +177,21 @@ Task.generateList = function(list, region) {
 
 	var html = '';
 
-	// if user has nothing to do
-	if (list == null) {
-		html = "<h3 class='no-task'>hmmm..... you don't have anything to do at the moment. hooray?</h3>";
-		$('.button.more').addClass('disabled');
+	// if there is only one single item.
+	if (list['id']) {
+		html += getListItem(list);
 	} else {
-		// if there is only one single item.
-		if (list['id']) {
-			html += getListItem(list);
-		} else {
-			for (i in list) {
-				html += getListItem(list[i]);
-			}
+		for (i in list) {
+			html += getListItem(list[i]);
 		}
-
 	}
 
+
 	if ($('li', region).length == 0) {
-		html = "<div class='task'>" + 
-			"<div class='task-inner'>" + 
-				"<ul>" +
-					html +
-				"<ul>" + 
-			"</div>" + 
+		html = "<div class='task-list-inner'>" + 
+			"<ul>" +
+				html +
+			"<ul>" + 
 		"</div>";
 
 		region.html(html);
@@ -197,5 +202,7 @@ Task.generateList = function(list, region) {
 	$('.count-down', region).each(function(i) {
 		$(this).translateTime();
 	});
+
+	var commentPanel = new CommentPanel();
 
 };

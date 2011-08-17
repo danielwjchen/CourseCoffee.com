@@ -74,6 +74,7 @@ class PageController extends Controller implements ControllerInterface {
 		$this->page = new HomePageView(array(
 			'profile'    => $profile,
 			'class_list' => $class_list,
+			'timestamp'  => time(),
 		));
 	}
 
@@ -172,14 +173,16 @@ class PageController extends Controller implements ControllerInterface {
 	 * Provide an interactive task editor
 	 */
 	public function getDocumentEditorPage() {
+		$referrer  = $this->getReferrer();
 		$processor = new DocumentProcessorFormModel();
 		$college   = new CollegeModel();
 		$document = Input::Get('document');
 		$mime     = Input::Get('doc-type');
 		$this->page = new DocumentEditorPageView(array(
+			'process_state'   => $processor->getState($referrer),
 			'document'        => $document,
 			'mime'            => $mime,
-			'college_option' => $college->getCollegeOption(),
+			'college_option'  => $college->getCollegeOption(),
 			'processor_token' => $processor->initializeFormToken(),
 		));
 	}

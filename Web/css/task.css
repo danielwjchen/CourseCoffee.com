@@ -1,21 +1,23 @@
 /**
  * Define styles for task list
  */
-.task {
+.task-list {
+	width: 450px;
 	min-height: 400px;
+	float: left;
 }
-.task .task-inner{
+.task-list .task-list-inner{
 }
-.task .no-task{
+.task-list .no-task{
 }
-.task ul,
-.task ul li{
+.task-list ul,
+.task-list ul li{
 	list-style: none;
 }
-.task ul li{
+.task-list ul li{
 	margin-bottom: 15px;
 }
-.task .due_date{
+.task-list .due_date{
 	color: #777777;
 	text-align: right;
 }
@@ -23,10 +25,18 @@
 	width: 100%;
 	height: 20px;
 }
-.task-list {
-	float: left;
-}
 .task-list dt {
 	font-weight: bold;
 	font-size: 14px;
+}
+.task-list dd.comment {
+	text-align: right;
+	padding-top: 5px;
+}
+.task-list dd.comment a {
+	color: #1A3C6C;
+	border-bottom: 1px solid #1A3C6C;
+}
+.task-list dd.comment a:active {
+	color: #1A3C6C;
 }

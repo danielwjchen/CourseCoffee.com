@@ -89,4 +89,23 @@ abstract class FormModel extends Model {
 		return Session::Get($this->form_name);
 	}
 
+	/**
+	 * Get the current state in a process flow
+	 *
+	 * @param string $referrer
+	 */
+	public function getState($referrer) {
+		$state = preg_replace('/^http[s]?:\/\/.+\//i', '', $referrer);
+
+		switch ($state) {
+			case 'welcome':
+				return 'sign-up';
+			case 'class':
+			case 'calendar':
+			case 'home':
+			default:
+				return $state;
+		}
+	}
+
 }

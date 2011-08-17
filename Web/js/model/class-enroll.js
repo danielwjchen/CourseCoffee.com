@@ -31,7 +31,7 @@ window.ClassEnroll = function(formName, inputName) {
 							dialog.close()
 						});
 					}
-					if (response.section_id) {
+					if (response.message) {
 						content += '<h2>' + response.message + '</h2>' +
 							'<hr />' +
 							'<div class="suggested-reading">' +

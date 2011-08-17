@@ -9,6 +9,8 @@ class TaskListModel extends Model {
 	 */
 	const COUNT = 10;
 
+	const ERROR_NO_TASK = 'No scheduled assignments.';
+
 	/**
 	 * Access to task record
 	 */
@@ -36,9 +38,12 @@ class TaskListModel extends Model {
 	 *   - error
 	 *   - message
 	 */
-	public function fetchUserList($user_id, $paginate) {
+	public function fetchUserToDoList($user_id, $begin_date, $paginate) {
 		$has_record = $this->task_dao->read(array(
 			'user_id' => $user_id,
+			'range' => array(
+				'begin_date' => $begin_date,
+			),
 			'limit'   => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
@@ -53,7 +58,7 @@ class TaskListModel extends Model {
 		} else {
 			return array(
 				'error'   => true,
-				'message' => '',
+				'message' => self::ERROR_NO_TASK,
 			);
 		}
 	}
@@ -91,7 +96,7 @@ class TaskListModel extends Model {
 		} else {
 			return array(
 				'error'   => true,
-				'message' => '',
+				'message' => self::ERROR_NO_TASK,
 			);
 		}
 	}
@@ -137,7 +142,7 @@ class TaskListModel extends Model {
 		} else {
 			return array(
 				'error'   => true,
-				'message' => '',
+				'message' => self::ERROR_NO_TASK,
 			);
 		}
 	}

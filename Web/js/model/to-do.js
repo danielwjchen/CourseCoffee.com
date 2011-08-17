@@ -56,6 +56,10 @@ window.ToDo = function(optionFormName, listName, creationFormName) {
 						Task.generateList(response.list, list);
 						cache.set(cacheKey, response.list);
 					}
+
+					if (response.error) {
+						task.setError(response.message, list);
+					}
 				}
 			});
 		}

@@ -55,7 +55,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * private attributes
 	 */
 	var weekArray  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-	var monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'];
+	var monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 	/**
 	 * Get event list from server
@@ -106,6 +106,10 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 						populateTimeSlot(response.list);
 
 						cache.set(cacheKey, response.list);
+					}
+
+					if (response.error) {
+						task.setError(response.message, list);
 					}
 				}
 			});

@@ -47,13 +47,14 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	 */
 	var getTaskList = function() {
 		var sectionId  = $('input[name=section-id]', option).val();
-		var cacheKey   = 'task-list-' + sectionId;
+		var paginate   = $('input[name=paginate]', option).val();
+		var cacheKey   = 'task-list-' + sectionId + paginate;
 		var cacheValue = cache.get(cacheKey);
 
 		if (cacheValue) {
 			// debug
-			console.log('getTaskList cache');
-			console.log(cacheValue);
+			// console.log('getTaskList cache');
+			// console.log(cacheValue);
 			Task.generateList(cacheValue, list);
 		} else {
 			list.addClass('loading');
@@ -65,7 +66,7 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 				url: '/class-list-task',
 				type: 'POST',
 				cache: false,
-				data: 'section_id=' + sectionId,
+				data: 'section_id=' + sectionId + '&paginate=' + paginate,
 				success: function(response) {
 					list.removeClass('loading');
 					if (response.success) {
@@ -75,6 +76,10 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 
 						cache.set(cacheKey, response.list);
 						Task.generateList(response.list, list);
+					}
+
+					if (response.error) {
+						task.setError(response.message, list);
 					}
 				}
 			});
@@ -124,6 +129,7 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	this.getClassInfo = function(sectionId) {
 		list.empty();
 		region.empty();
+		task.clearOption();
 		var cacheKey = 'class-info-' + sectionId;
 		var cacheValue = cache.get(cacheKey);
 		if (cacheValue) {

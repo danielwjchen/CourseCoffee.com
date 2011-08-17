@@ -13,7 +13,7 @@ class UserEnrollClassModel extends Model {
 
 	const ERROR_FAILED_ENROLL     = 'A system error was encountered. Please try again later';
 	const ERROR_ALREADY_ENROLLED  = 'You already enrolled in this class';
-	const ERROR_EXCEED_MAX_ENROLL = 'Slow down brainiac. We can only add you to six classes at a time';
+	const ERROR_EXCEED_MAX_ENROLL = 'You may only add up to six courses';
 
 	/**
 	 * @} End of error_messages

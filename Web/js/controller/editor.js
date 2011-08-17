@@ -746,7 +746,7 @@ $P.ready(function(){
 		var taskEle = $('.schedule_elem');
 		form.append('<input type="hidden" name="task_count" value="' + taskEle.length + '" />');
 
-		$('.dialog-close', $P).live('click', function(e) {
+		$('.dialog-close').live('click', function(e) {
 			e.preventDefault();
 			dialog.close()
 		});
@@ -760,14 +760,21 @@ $P.ready(function(){
 
 		var selectionForm = $('#class-selection-form-skeleton').clone();
 		selectionForm.attr('id', 'class-selection-form');
-		var content = '<h2>Please confirm class information<h2>';
+		var content = '<div class="dialog-content">' +
+			'<div class="confirm-message">' +
+				"<h2>Before we submit everything, let's take a final look... </h2>" + 
+				'<ul>' +
+					'<li>Are all the dates correct?</li>' +
+					'<li>Are there missing assignments?</li>' +
+					'<li>Do the assignments make sense?</li>' +
+				'</ul>' +
+				'<h3>If everything works, congrats! Fill out the the form below and hit submit!</h3>' +
+			'</div>' +
+		'</div>';
 		dialog.open('confirm-class', content);
-		selectionForm.appendTo('.dialog-inner');
+		$('.confirm-message').after(selectionForm);
 		selectionForm.removeClass('hidden');
 
-		/**
-		 * Class suggest
-		 */
 		var classEdit = new ClassEdit('#class-selection-form', '#suggest-input');
 
 		/**
@@ -775,17 +782,46 @@ $P.ready(function(){
 		 */
 		$('.confirm', selectionForm).live('click', function(e) {
 			e.preventDefault();
+			var taskCreationForm = $('#task-creation-form');
+			var processState = $('input[name=process_state]', taskCreationForm).val();
+			var content = '';
+
 			$.ajax({
 				url: '/task-add-from-doc',
 				type: 'post',
 				cache: false,
-				data: $('#task-creation-form').serialize() + '&section_id=' + $('#section-id', selectionForm).val(),
+				data: 'section_id=' + $('#section-id', selectionForm).val(),
 				success: function(response) {
 					content = '<h3>' + response.message + '</h3>' + 
-						'<div class="book-list"></div>' +
-						'<a href="/sign-up?section_id=' + response.section_id + '" class="button sign-up">sign up</a>'
-					;
-					$('.dialog-inner').html(content);
+					'<hr />' +
+					'<div class="suggested-reading">' +
+						'<div id="enroll-book-list" class="book-list">' + 
+						'</div>' +
+					'</div>';
+
+					// in this case, the user comes from /welcome and should be greeted with 
+					// option to sign up
+					if (processState == 'sign-up') {
+						content += '<a href="/sign-up?section_id=' + response.section_id + '" class="button sign-up">sign up</a>';
+
+					// otherwise, the user is an existing user and needs to be added to the
+					// class
+					} else if (response.section_id) {
+						$.ajax({
+							url: '/college-class-enroll',
+							type: 'post',
+							data: 'section_id=' + response.section_id,
+							success: function(response) {
+								$('.dialog-close', $P).live('click', function(e) {
+									e.preventDefault();
+									window.location = response.redirect;
+									dialog.close()
+								});
+							}
+						});
+					}
+
+					$('.dialog-inner .dialog-content').html(content);
 					bookList = new BookSuggest('.book-list');
 					bookList.getBookList(response.section_id);
 				}

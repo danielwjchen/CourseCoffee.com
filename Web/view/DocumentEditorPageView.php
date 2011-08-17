@@ -58,44 +58,51 @@ HTML;
 						<input type="hidden" name="token" value="{$processor_token}" />
 					</form>
 					<form id="class-selection-form-skeleton" class="hidden" name="class-selection">
-						{$school_select}
-						<input type="hidden" id="year-id" name="year_id" />
-						<input type="hidden" id="term-id" name="term_id" />
-						<input type="hidden" id="section-id" name="section_id" />
-						<input type="text" id="suggest-input" name="string" />
-						<a href="#" class="button confirm disabled">confirm</a>
+						<div class="hidden">
+							<input type="hidden" id="year-id" name="year_id" />
+							<input type="hidden" id="term-id" name="term_id" />
+							<input type="hidden" id="section-id" name="section_id" />
+						</div>
+						<div class="row">
+							<label for="institution_id">School:</label>
+							{$school_select}
+						</div>
+						<div class="row">
+							<label for="string">Class: </label>
+							<input type="text" id="suggest-input" name="string" />
+						</div>
+						<div class="confirm-row row">
+							<a href="#" class="button confirm disabled">confirm</a>
+						</div>
 					</form>
 					<form id="task-creation-form" name="task-creation">
-                                        </form>
-
-                                        <table id='main_container'>
-                                         <tr>
-                                            <td id='table_title_left'>original syllabus</td>
-                                            <td id='table_title_right' >parsed data</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class='data_col_left' id='orig_syl'></td>
-                                            <td class='data_col_right'> <div id='parsed_data'></div> </td>
-                                        </tr>
-                                        </table>
-                                        
-                                        <div id="tool_box">
-                                                        <table>
-                                                                <tr>    
-                                                                        <td>
-                                                                                <a class='toolbox_btn' id="undo" href="#">undo</a>
-                                                                                <a class='toolbox_btn' id="redo" href="#">redo</a>
-                                                                                <a class='toolbox_btn' id="new_assignment" href="#">new assignment</a>
-                                                                                <a class='toolbox_btn' id="create-task" href="#">submit</a>
-                                                                        </td>
-                                                                </tr>
-
-                                                        </table>
-                                        </div>
-
+						<input type="hidden" name="process_state" value="{$process_state}" />
+          </form>
+          <table id='main_container'>
+						<tr>
+							<td id='table_title_left'>original syllabus</td>
+              <td id='table_title_right' >parsed data</td>
+            </tr>
+            <tr>
+              <td class='data_col_left' id='orig_syl'></td>
+              <td class='data_col_right'>
+								<div id='parsed_data'></div> 
+							</td>
+            </tr>
+					</table>
+          <div id="tool_box">
+						<table>
+              <tr>    
+								<td>
+									<a class='toolbox_btn' id="undo" href="#">undo</a>
+                  <a class='toolbox_btn' id="redo" href="#">redo</a>
+                  <a class='toolbox_btn' id="new_assignment" href="#">new assignment</a>
+                  <a class='toolbox_btn' id="create-task" href="#">submit</a>
+								</td>
+              </tr>
+            </table>
 					</div>
-
+					</div>
 				</div>
 			</div>
 		</div>

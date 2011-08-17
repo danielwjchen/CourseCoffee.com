@@ -197,6 +197,9 @@
 .task-create-form a.button.submit{
 	width: 685px;
 }
+.task-list dd.comment {
+	display: none;
+}
 
 /**
  * Define styles for panels

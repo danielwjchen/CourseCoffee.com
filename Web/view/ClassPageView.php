@@ -18,6 +18,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 		$this->buildClassList($content['class_list']);
 
 		$this->addJS('model/logout.js');
+		$this->addJS('model/panel.js');
 		$this->addJS('model/task.js');
 		$this->addJS('model/doc.js');
 		$this->addJS('model/book-suggest.js');
@@ -143,7 +144,7 @@ HTML;
 						<div class="panel-menu-inner">
 							<form name="class-option" id="class-option-form">
 								{$class_option}
-									<input type="hidden" name="paginate" value="0" />
+								<input type="hidden" name="paginate" value="0" />
 							</form>
 							{$panel_menu}
 						</div>

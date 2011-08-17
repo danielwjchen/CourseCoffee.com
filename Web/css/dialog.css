@@ -3,6 +3,7 @@
  * Define styles for dialogs
  */
 .dialog-mesh{
+	z-index: 99;
 	min-height: 100%;
 	min-width: 100%;
 	position: fixed;
@@ -15,12 +16,14 @@
 	opacity: 0.5;
 }
 .dialog-wrapper{
+	z-index: 999;
 	min-height: 100%;
 	min-width: 100%;
 	position: fixed;
 	top: 0;
 }
 .dialog{
+	z-index: 9999;
 	margin: 50px auto 0;
 	width: 480px;
 	height: 480px;
@@ -125,6 +128,7 @@
 }
 
 .enroll .dialog-inner {
+	height: auto;
 }
 .enroll .error{
 	color: red;
@@ -147,17 +151,95 @@
  * Define styles for confirm class info dialog
  */
 .confirm-class.dialog {
-	margin: 200px auto 0;
+	margin: 35px auto 0;
 }
 
 .confirm-class .dialog-inner {
+	margin: 25px auto 0;
 	width: 458px;
+	height: auto;
 }
 .confirm-class .error{
 	color: red;
 	text-align: center;
 	clear: both;
 	margin-bottom: 25px;
+}
+.confirm-class .row {
+	margin: 5px 0;
+	float: left;
+	text-align: left;
+}
+.confirm-class .confirm-message {
+	margin: 10px 5px 25px;
+	font-size: 12px;
+	float: left;
+	width: 448px;
+}
+.confirm-class .confirm-message h2 {
+	clear: both;
+	margin: 5px 0;
+	font-size: 22px;
+	text-align: left;
+}
+.confirm-class .confirm-message h3 {
+	clear: both;
+	margin: 15px 0;
+	font-size: 18px;
+	text-align: left;
+}
+.confirm-class .confirm-message ul,
+.confirm-class .confirm-message li {
+	display: block;
+	float: left;
+}
+.confirm-class .confirm-message ul {
+	margin : 25px 0 25px 120px;
+	width: 300px;
+	clear: both;
+}
+.confirm-class .confirm-message li {
+	font-weight: bold;
+	padding: 2px 0;
+	font-size: 14px;
+}
+.confirm-class label,
+.confirm-class input,
+.confirm-class select {
+	height: 34px;
+	line-height: 34px;
+	float: left;
+}
+.confirm-class .row input {
+	border: 1px solid #313131;
+	font-size: 20px;
+	width: 333px;
+}
+.confirm-class select {
+	font-size: 18px;
+	width: 333px;
+}
+.confirm-class label {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: right;
+	padding-right: 10px;
+	display: block;
+	width: 115px;
+}
+.confirm-class .confirm-row {
+	margin-top: 105px;
+	width: 100%;
+}
+.confirm-class .book-list {
+	height: 325px !important;
+	margin-bottom: 20px;
+}
+.confirm-class .message {
+	position: absolute;
+	width: 100%;
+	top: 365px;
+	text-align: center;
 }
 
 /**

@@ -345,3 +345,7 @@
 	clear: both;
 	margin-bottom: 25px;
 }
+.ui-autocomplete {
+	height: 180px;
+	overflow: auto;
+}

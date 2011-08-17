@@ -169,7 +169,6 @@ class TaskDAO extends DAO implements DAOInterface{
 				isset($params['range']['begin_date']) && 
 				isset($params['range']['end_date'])) 
 			{
-				error_log( $params['range']['end_date']);
 				$where_clause = "
 					WHERE qu_linkage.user_id = :user_id
 						AND qd.timestamp >= :begin_date
@@ -203,7 +202,7 @@ class TaskDAO extends DAO implements DAOInterface{
 				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'user_id' => $params['user_id'],
-					'begin_date' => $params['begin_date'],
+					'begin_date' => $params['range']['begin_date'],
 					'type_name' => QuestType::TASK,
 				));
 			} else {
