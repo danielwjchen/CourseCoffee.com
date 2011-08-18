@@ -85,7 +85,7 @@ HTML;
               <td id='table_title_right' >parsed data</td>
             </tr>
             <tr>
-              <td class='data_col_left' id='orig_syl'></td>
+              <td class='data_col_left'><div id='orig_syl'></div></td>
               <td class='data_col_right'>
 								<div id='parsed_data'></div> 
 							</td>
