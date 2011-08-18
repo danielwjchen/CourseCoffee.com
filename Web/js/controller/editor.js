@@ -18,23 +18,25 @@ $P.ready(function(){
             curr_year = 2000
             month=["january","february","march","april","may","june","july","august","september","october","november","december","jan","feb","mar",  "apr",  "may","jun", "jul", "aug","sep","sept","oct",       "nov",     "dec","week"];
             reg=[]
-            reg[0]=/((0?[1-9])|(1[0-2])){1}\/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}\/(\d{4}|\d{2})/gi;	// mm/dd/yy
-            reg[1]=/(0?[1-9]|1[0-2]){1}\/(1[0-9]|2[0-9]|3[0-1]|0?[1-9]){1}(?=[^\/0-9])/g;	// mm/dd(/2011 2012)
+            reg[0]=/((0?[1-9])|(1[0-2])){1}\/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(\/(\d{4}|\d{2}))?(?=[^\/0-9])/gi;	// mm/dd/yy
+            //reg[1]=/(0?[1-9]|1[0-2]){1}\/(1[0-9]|2[0-9]|3[0-1]|0?[1-9]){1}(?=[^\/0-9])/g;	// mm/dd(/2011 2012)
             reg[2]=/(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}( *|,|.){0,2}((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(?=\W)(\W+\d{4})?/gi
             reg[3]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}-(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[4]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1} (january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[5]=/^[^0-9](0?[1-9]|1[0-2]){1}-(1[0-9]|2[0-9]|3[0-1]|0?[1-9]){1}(?=[^0-9])/gi
             reg[6]=/week\W+\d{1,2}/gi
-            reg[7]=/((0?[1-9])|(1[0-2])){1}-((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(-(\d{4}|\d{2}))?(?=[^\/0-9])/gi;	// mm-dd-yy or mm-dd
+            reg[2]=/((0?[1-9])|(1[0-2])){1}-((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(-(\d{4}|\d{2}))?(?=[^\/0-9])/gi;	// mm-dd-yy or mm-dd
 
             fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, /m/gi , /t/gi, /w/gi, /r/gi, /f/gi]
             
             
+            valid_month_min= 0;
+            valid_month_max = 11;
+            //valid_month_min= 3;
+            //valid_month_max = 8;
             
             schedule_list = []
             schedule_list_orig_len = 0
-            word = [];
-            delim = [];
             orig_html = "";
 	    pre_text = ""; // text before real date
 
@@ -44,18 +46,20 @@ $P.ready(function(){
             schedule_elem_string = "<div sid='SID_STR' class='schedule_elem'>\
                                     <table width='450' border='0' cellpadding='0' cellspacing='0'>\
                                     <tr>\
-                                        <td width='150'><span class='schedule_elem_date' sid='SID_STR'>DATE_STR</span></td>\
-                                        <td width='250' id='editing_btn'></td>\
-                                        <td width='50'><a href='#' class='sch_btn' sid='SID_STR' id='toggle_del_sch'>x</a></td>\
+                                        <td width='350'><span class='schedule_elem_date' sid='SID_STR'>DATE_STR</span><span class='hint'></span></td>\
+                                        <td width='50' id='editing_btn'></td>\
+                                        <td width='50'><a href='#' class='sch_btn toggle_del_sch' sid='SID_STR'>x</a></td>\
                                     </tr>\
                                     <tr>\
-                                        <td colspan='3' class='sch_content' sid='SID_STR' >CONTENT_STR</td>\
+                                        <td colspan='3'><div class='sch_content' sid='SID_STR' >CONTENT_STR</div></td>\
                                     </tr>\
                                     </table></div><div class='schedule_elem_space'></div>";
             schedule_edit_string = "<textarea sid='SID_STR' class='schedule_elem_edit'>CONTENT_STR</textarea>\
                                     <input type='button' id='save_sch' sid='SID_STR' value='save'>\
                                     <input type='button' id='cancel_sch' sid='SID_STR' value='cancel'>"           
             
+            //date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'><a href='#' sid='SID_STR' class='sch_btn_3 confirm_date_change'>O</a><a href='#' sid='SID_STR' class='sch_btn_3 cancel_date_change'>X</a>"
+            date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'>"
             /*       flags            */
             editing_flag = 0;
 
@@ -66,22 +70,22 @@ $P.ready(function(){
              *  create schedule element, need to be pushed into schedule_list
              */
             function sch(start_pos, next_start_pos, match_str){
-                    if(start_pos ==  -1 && next_start_pos == -1){
+                    if(start_pos ==  -1 && next_start_pos == -1){ // assignment created by user
                         content = "New assignment"
                         id_temp = Math.random()
                         date_label_deleted = false
                     }
-                    else{ 
+                    else{ // auto assignment
                             id_temp=start_pos
                             content = result_g.slice(start_pos+match_str.length, next_start_pos)
                             if(content.lastIndexOf('\n') !=-1 && content.search(/[a-z]/i) !=-1){
                                 last_oc_idx = content.lastIndexOf('\n')
                                 first_oc_idx =  content.search(/[a-z]/i)
-                                last_line = content.slice(last_oc_idx, content.length)
+                                last_line = $.trim(content.slice(last_oc_idx, content.length))
                                 
                                 hit_flag = 0
                                 for (j = 0; j < fil_list.length; j++){
-                                        if(last_line.match(fil_list[j]) != null) { hit_flag = 1; break; }
+                                        if(last_line.match(fil_list[j]) != null && last_line.length < 10) { hit_flag = 1; break; }
                                 }
                                 
                                 if(last_oc_idx > first_oc_idx && hit_flag == 1){
@@ -89,7 +93,7 @@ $P.ready(function(){
                                 }
                             }
 
-                            content = content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+                            content = $.trim(content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
 
                             if(content.length < 4){
                                         date_label_deleted=true
@@ -101,7 +105,7 @@ $P.ready(function(){
                     } 
                     
                     if(parse_date(match_str) == true){ date_out = Date.parse(match_str) }
-                    var temp_sch = { 'id' : id_temp, 'start_pos' : start_pos, 'end_pos': next_start_pos, 'match_str' : match_str,'content': content , 'modified': 0, 'catergory': '', 'date': date_out, 'next': false, 'deleted': false, 'date_label_deleted': date_label_deleted};
+                    var temp_sch = { 'id' : id_temp, 'start_pos' : start_pos, 'end_pos': next_start_pos, 'match_str' : match_str,'content': content , 'modified': 0, 'catergory': '', 'date': date_out, 'next': false, 'deleted': false, 'date_label_deleted': date_label_deleted, 'content_being_edited': false, 'date_being_edited': false};
                     return temp_sch;
 
             };
@@ -122,9 +126,9 @@ $P.ready(function(){
                             schedule_list[i-1].next = schedule_list[i].date_label_deleted
                     }
                     
-                    history_stack.push( $.extend(true, [], schedule_list) );
+                    //history_stack.push( $.extend(true, [], schedule_list) );
+                    save_history();
                     show_schedule();
-                    adjust_spacing();
                     update_schedule();
                     update_date_label();
             });
@@ -148,24 +152,29 @@ $P.ready(function(){
             /**
              *  edit schedule content
              */
-            $("a[id='edit_sch']").live("click",function(e){
+            $(".edit_sch").live("click",function(e){
                     e.preventDefault();
-                    if(editing_flag == 1) return;
                     
-                    orig_sid=$(this).attr("sid")
-                    orig_html = $(".sch_content[sid='"+orig_sid+"']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
-                    orig_height = $(".sch_content[sid='"+orig_sid+"']").height()*0.8
-                    orig_width = $(".sch_content[sid='"+orig_sid+"']").width()
-                    $(".sch_content[sid='" + orig_sid + "']").html(schedule_edit_string.replace(/SID_STR/gi, orig_sid).replace(/CONTENT_STR/gi, orig_html))
+                    /* replace schedule content with textarea*/ 
+                    sid=$(this).attr("sid")
+                    orig_html = $(".sch_content[sid='" + sid + "']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
+                    orig_height = $(".sch_content[sid='" + sid + "']").height()*0.8
+                    orig_width = $(".sch_content[sid='" + sid + "']").width()
+                    $(".sch_content[sid='" + sid + "']").html(schedule_edit_string.replace(/SID_STR/gi, sid).replace(/CONTENT_STR/gi, orig_html))
+                    
+                    /* replace date with textbox*/
+                    curr_sch = get_sch_by_id(sid)
+                    orig_date = (curr_sch.date.getMonth() + 1) + "/" +(curr_sch.date.getDate())
+                    $(".schedule_elem_date[sid='" + sid + "']").html(date_string.replace(/SID_STR/gi, sid).replace(/ORIG_DATE_STR/gi, orig_date))
+
                     editing_flag=1
-                    adjust_spacing();
             });
 
 
             /**
              *  delete schedule_elem (toggle)
              */
-            $("a[id='toggle_del_sch']").live("click",function(e){
+            $(".toggle_del_sch").live("click",function(e){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx_by_id(sid)
@@ -181,15 +190,13 @@ $P.ready(function(){
 
             $(".schedule_elem").live("mouseenter",function(){
                     id_temp = $(this).attr("sid")
-                    $("td[id]", this).html("<a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_date'>change date</a> <a href='#' class='sch_btn_2'  sid='"+id_temp+"' id='edit_sch'>edit</a>")
-                    adjust_spacing();
+                    $("td[id]", this).html("<a href='#' class='sch_btn_2 edit_sch'  sid='"+id_temp+"'>edit</a>")
                     adjust_parsed_data_pos();
             });
 
 
             $(".schedule_elem").live("mouseleave",function(){					
                     $("td[id]", this).html("")
-                    adjust_spacing();
                     adjust_parsed_data_pos();
             });
 
@@ -198,16 +205,51 @@ $P.ready(function(){
              */
 
             $("#save_sch").live("click",function(){
-                    id_temp = $(this).attr("sid")
-                    content_temp = $("textarea[sid='"+id_temp+"']").val().replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+                    sid = $(this).attr("sid")
+                    /*
+                    content_temp = $("textarea[sid='" + sid + "']").val().replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
                     $(".sch_content[sid='"+$(this).attr("sid")+"']").html(content_temp);
                     for(i=0;i<schedule_list.length;i++){
-                            if(schedule_list[i].id==id_temp){
+                            if(schedule_list[i].id == sid){
                                     schedule_list[i].content = content_temp
                                     break;
                             }
                     }
                     editing_flag=0
+                    */
+                    sch_idx = get_sch_idx_by_id(sid)
+                    orig_first_day = schedule_list[0].date.getOrdinalNumber() 
+                    new_date = $(".date_container[sid='" + sid + "']").val() 
+                    if(Date.parse(new_date) == null){
+                            alert("invalid date")
+                    }
+                    else{
+                            schedule_list[sch_idx].date = Date.parse(new_date)
+                            if(sch_idx == 0 && flag_week_format == 1){ // auto fill
+                                    day_offest = schedule_list[sch_idx].date.getOrdinalNumber() - orig_first_day
+                                    for(i = 1; i < schedule_list_orig_len; i++ ){
+                                            schedule_list[i].date.addDays(day_offest)
+                                    }
+                                    
+                                    flag_week_format = 0
+                                    show_schedule()
+                            }
+                            new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
+                            $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
+                            
+                            /* saving schedule content*/
+                            content_temp = $("textarea[sid='" + sid + "']").val().replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+                            $(".sch_content[sid='"+$(this).attr("sid")+"']").html(content_temp);
+                            for(i=0;i<schedule_list.length;i++){
+                                    if(schedule_list[i].id == sid){
+                                            schedule_list[i].content = content_temp
+                                            break;
+                                    }
+                            }
+                            editing_flag=0
+
+
+                    }
                     history_stack.push($.extend(true, [], schedule_list));
             });
 
@@ -235,7 +277,6 @@ $P.ready(function(){
                     schedule_temp = history_stack[history_stack.length-1]									
                     schedule_list = $.extend(true, [], schedule_temp);
                     show_schedule();
-                    adjust_spacing();
                     adjust_parsed_data_pos();
                     update_date_label();
                     update_schedule();                   
@@ -253,7 +294,6 @@ $P.ready(function(){
                     schedule_temp = history_stack[history_stack.length-1]									
                     schedule_list = $.extend(true, [], schedule_temp);
                     show_schedule();
-                    adjust_spacing();
                     adjust_parsed_data_pos();
                     update_date_label();
                     editing_flag = 0
@@ -267,7 +307,6 @@ $P.ready(function(){
                     s = sch(-1,-1,"1/1")  
                     schedule_list.push(s)
                     show_schedule()
-                    adjust_spacing()
                     adjust_parsed_data_pos()
                     
             });
@@ -290,13 +329,12 @@ $P.ready(function(){
 
             });
             
-            date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'><a href='#' id='confirm_date_change' sid='SID_STR' class='sch_btn_3'>O</a><a href='#' id='cancel_date_change' sid='SID_STR' class='sch_btn_3'>X</a>"
 
 
             /**
              *  edit date
              */
-            $("a[id='edit_date']").live("click",function(e){
+            $(".edit_date").live("click",function(e){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     curr_sch = get_sch_by_id(sid)
@@ -304,7 +342,7 @@ $P.ready(function(){
                     $(".schedule_elem_date[sid='" + sid + "']").html(date_string.replace(/SID_STR/gi, sid).replace(/ORIG_DATE_STR/gi, orig_date))
             });
 
-            $("a[id='confirm_date_change']").live("click", function(e){
+            $(".confirm_date_change").live("click", function(e){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx_by_id(sid)
@@ -329,7 +367,7 @@ $P.ready(function(){
                     }
             });
             
-            $("a[id='cancel_date_change']").live("click", function(e){
+            $(".cancel_date_change").live("click", function(e){
                     e.preventDefault();
                     sid = $(this).attr("sid")
                     sch_idx = get_sch_idx_by_id(sid)
@@ -381,8 +419,8 @@ $P.ready(function(){
                     date_out = Date.parse(str)
                     if(date_out == null) return false
                     year_temp = date_out.getFullYear()
-
-                    if(year_temp<curr_year){
+                    month_temp = date_out.getMonth() 
+                    if(year_temp < curr_year || ( month_temp < valid_month_min || month_temp > valid_month_max ) ){
                         return false;
                     }
                     return true;
@@ -449,7 +487,9 @@ $P.ready(function(){
                             schedule_lc = schedule_lc + get_sch_html(schedule_list[i_idx].id, schedule_list[i_idx].date, content_temp) 
                     }
                     $("#parsed_data").html(schedule_lc)
-                     
+                    if(flag_week_format == 1){
+                            $(".hint:eq(0)").html(" <= Please input the date by hitting edit button =>")
+                    } 
             }
 
             /**
@@ -568,17 +608,17 @@ $P.ready(function(){
                                     //console.log(hits)
                                     filtered_hits=[]
                                     for(i=0;i<hits.length;i++){
-                                            if(Date.parse(hits[i])!= null && Date.parse(hits[i]).getFullYear() >= curr_year){
+                                            if(parse_date(hits[i]) == true){
                                                     filtered_hits.push(hits[i])
                                             }
                                     }
-                                    //console.log(filtered_hits)
+                                    //alert(filtered_hits)
     
                                     inc_val = []
                                     for(n=0;n<filtered_hits.length-2;n++){
                                             inc_val.push(  (Date.parse(filtered_hits[n+1]).getOrdinalNumber()-Date.parse(filtered_hits[n]).getOrdinalNumber())  )												
                                     }
-                                    //console.log(m, inc_val)
+                                    //alert( inc_val)
                                     if(variance(inc_val) < min_var && inc_val.length > 2){ // min number of dates allowed
                                             min_var = variance(inc_val)
                                             reg_idx =m
@@ -643,12 +683,18 @@ $P.ready(function(){
                     }
                     
                     /* build scheduel list, each elem in schedule_list is an sch object */
-                    for(i=0;i<pos_list.length-1;i++){
-                            sch_temp = sch(pos_list[i][0], pos_list[i+1][0], pos_list[i][1])
+                    for(i=0; i < pos_list.length;i++){
+                            if(i < pos_list.length -1){
+                                    sch_temp = sch(pos_list[i][0], pos_list[i+1][0], pos_list[i][1])
+                            }
+                            else{ //last elem
+                                    sch_temp = sch(pos_list[i][0], result_g.length, pos_list[i][1])
+                            }
                             if(sch_temp !=null){
                                     schedule_list.push(sch_temp)
                             }
                     }
+
                     
                     start_pos = 0
                     end_pos = 0
@@ -723,12 +769,12 @@ $P.ready(function(){
                             content = content + "<span class='orig_text_block' sid='" + schedule_list[i].id + "'>" + result_g.slice(schedule_list[i].start_pos+schedule_list[i].match_str.length, schedule_list[i].end_pos) + "</span>"
                     }
                     
+                    content = content + result_g.slice(schedule_list[i-1].end_pos, result_g.length)
                     $("#orig_syl").html(content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
                     $("#pre_text").fadeTo("fast", 0.2);
 
                     show_schedule();
                     schedule_list_orig_len = schedule_list.length
-                    adjust_spacing();
                     /*t=$.extend(true, [], schedule_list);
                     history_stack.push(t)*/
                     save_history();

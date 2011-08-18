@@ -4,6 +4,11 @@
         margin: 0 auto;
 }
 
+#orig_syl{
+        width: 450px;
+        word-wrap: break-word;
+}
+
 .data_col_left{
         width: 450px;
         font-family:sans-serif;
@@ -17,6 +22,11 @@
 	font-size:12px;
 }
 
+.hint{
+	font: sans-serif;
+        font-size: 10px;
+        color: #FF0000;
+}
 #table_title_left{
 	font:Tahoma, Geneva, sans-serif;
 	font-size:18px;
@@ -165,6 +175,8 @@
         height: 10px;
         }
 .sch_content{
+        width: 450px;
+        word-wrap: break-word;
         background-color:#FFFFFF;
 	font-family:sans-serif;
 	text-align:left;
