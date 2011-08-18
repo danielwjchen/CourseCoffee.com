@@ -104,7 +104,7 @@ abstract class FormModel extends Model {
 			case 'calendar':
 			case 'home':
 			default:
-				return $state;
+				return 'redirect';
 		}
 	}
 

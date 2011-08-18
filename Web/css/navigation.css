@@ -187,3 +187,6 @@
 	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
 }
+.ui-autocomplete {
+	z-index: 99999!important;
+}

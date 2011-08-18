@@ -17,6 +17,7 @@ class HomePageView extends PageView implements PageViewInterface {
 		$this->addJQueryUIPlugin('datetime');
 
 		$this->addJS('model/logout.js');
+		$this->addJS('model/panel.js');
 		$this->addJS('model/task.js');
 		$this->addJS('model/to-do.js');
 		$this->addJS('model/doc.js');

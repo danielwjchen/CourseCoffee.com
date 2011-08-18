@@ -197,7 +197,8 @@
 .welcome .panel-01 .sign-up-shortcut p{
 	width: 150px;
 	float: left;
-	margin-right: -150px;
+	margin-right: -210px;
+	margin-left: 60px;
 	display block;
 	height: 24px;
 	line-height: 24px;

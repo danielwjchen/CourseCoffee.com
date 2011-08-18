@@ -10,11 +10,13 @@ class UserRegisterFormModel extends FormModel {
 	 * @{
    * Error messages for the user when an error is encountered
 	 */
-	const ERROR_FAILED_TO_CREATE   = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
-	const ERROR_FORM_EXPIRED       = 'The form has expired. Please try again.';
-	const ERROR_FORM_EMPTY         = 'You have empty fields. Please try again.';
-	const ERROR_EMAIL_TAKEN        = 'An account is already registered with this emaill address. Please try again.';
-	const ERROR_PASSWORD_NOT_MATCH = 'The password and confirmation do not match. Please try again.';
+	const ERROR_FAILED_TO_CREATE     = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
+	const ERROR_FORM_EXPIRED         = 'The form has expired. Please try again.';
+	const ERROR_FORM_EMPTY           = 'You have empty fields. Please try again.';
+	const ERROR_EMAIL_TAKEN          = 'An account is already registered with this emaill address. Please try again.';
+	const ERROR_PASSWORD_NOT_MATCH   = 'The password and confirmation do not match. Please try again.';
+	const ERROR_FB_UNKNOWN_ALGORITHM = 'Unknown algorithm. Expected HMAC-SHA256';
+	const ERROR_FB_BAD_SIGNATURE     = 'Bad Signed JSON signature!';
 	
 	/**
 	 * @} End of error_messages
@@ -80,8 +82,43 @@ class UserRegisterFormModel extends FormModel {
 		$this->expire = 1800;
 	}
 
+	private function base64UrlDecode($input) {
+		return base64_decode(strtr($input, '-_', '+/'));
+	}
+
 	/**
-	 * Process the user registration request 
+	 * Parse data from facebook
+	 */
+	private function parseFBSignedRequest($signed_request) {
+		global $config;
+		$secret = $config->facebook['app_secret'];
+		list($encoded_sig, $payload) = explode('.', $signed_request, 2); 
+
+		// decode the data
+		$sig = $this->base64UrlDecode($encoded_sig);
+		$data = json_decode($this->base64UrlDecode($payload), true);
+		if (strtoupper($data['algorithm']) !== 'HMAC-SHA256') {
+			Logger::Write(self::ERROR_FB_UNKNOWN_ALGORITHM);
+			return null;
+		}
+		// check sig
+		$expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
+		if ($sig !== $expected_sig) {
+			Logger::Write(self::ERROR_FB_BAD_SIGNATURE);
+			return null;
+		}
+		return $data;
+	}
+
+	/**
+	 * Process user registration request from facebook
+	 */
+	public function processFBForm($request) {
+		error_log($request);
+	}
+
+	/**
+	 * Process user registration request 
 	 *
 	 * @param string $fisrt_name
 	 *  user's first name

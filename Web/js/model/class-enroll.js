@@ -8,6 +8,7 @@
 window.ClassEnroll = function(formName, inputName) {
 
 	var form = $(formName);
+	blurInput(formName);
 
 	/**
 	 * Submit the suggested class and enroll user

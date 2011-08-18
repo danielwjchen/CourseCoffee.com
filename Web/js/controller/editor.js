@@ -1,3 +1,12 @@
+/**
+ * @file
+ * Automatically tags assignments in a document based on occurances of dates. 
+ * It also provides an interactive editor to correct the result.
+ *
+ * On submit, the editor asks for confirmation of the information gathered,
+ * and the process flow takes two different route based on where the user comes
+ * from.
+ */ 
 $P.ready(function(){
             /*    global variables    */
             history_stack = [];
@@ -739,24 +748,12 @@ $P.ready(function(){
 
 	/**
 	 * Create tasks from document
+	 *
+	 * This process goes through the elements by the class attribute, so it's 
+	 * important to keep consistency.
 	 */
 	$('#create-task').click(function(e) {
 		e.preventDefault();
-		var form = $('#task-creation-form');
-		var taskEle = $('.schedule_elem');
-		form.append('<input type="hidden" name="task_count" value="' + taskEle.length + '" />');
-
-		$('.dialog-close').live('click', function(e) {
-			e.preventDefault();
-			dialog.close()
-		});
-
-		taskEle.each(function(index, value) {
-			date = $('.schedule_elem_title', value).text().replace('Date:', '') + '/2011';
-			objective = $('.sch_content', value).text();
-			form.append('<input type="hidden" name="date_' + index + '" value="' + date + '" />');
-			form.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
-		});
 
 		var selectionForm = $('#class-selection-form-skeleton').clone();
 		selectionForm.attr('id', 'class-selection-form');
@@ -779,18 +776,39 @@ $P.ready(function(){
 
 		/**
 		 * Confirm task creation
+		 *
+		 * This action has two different flow depend on where user comes from.
+		 *  - /welcome: this is a first-time user and goes on to register for an 
+		 *    account
+		 *  - /home, /calendar, and /class: the user already has an account,
+		 *    proceeds to the enroll in the class, and then go to the class page
 		 */
 		$('.confirm', selectionForm).live('click', function(e) {
 			e.preventDefault();
 			var taskCreationForm = $('#task-creation-form');
 			var processState = $('input[name=process_state]', taskCreationForm).val();
+			var creationForm = $('#task-creation-form');
+			var taskEle = $('.schedule_elem');
+			creationForm.append('<input type="hidden" name="task_count" value="' + taskEle.length + '" />');
+
+			$('.dialog-close').live('click', function(e) {
+				e.preventDefault();
+				dialog.close()
+			});
+
+			taskEle.each(function(index, value) {
+				date = $('.schedule_elem_date', value).text().replace('Date:', '') + '/2011';
+				objective = $('.sch_content', value).text();
+				creationForm.append('<input type="hidden" name="date_' + index + '" value="' + date + '" />');
+				creationForm.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
+			});
 			var content = '';
 
 			$.ajax({
 				url: '/task-add-from-doc',
 				type: 'post',
 				cache: false,
-				data: 'section_id=' + $('#section-id', selectionForm).val(),
+				data: creationForm.serialize() + '&section_id=' + $('#section-id', selectionForm).val(),
 				success: function(response) {
 					content = '<h3>' + response.message + '</h3>' + 
 					'<hr />' +
@@ -799,24 +817,45 @@ $P.ready(function(){
 						'</div>' +
 					'</div>';
 
-					// in this case, the user comes from /welcome and should be greeted with 
-					// option to sign up
+					/**
+					 * In this case, the user comes from /welcome and should be greeted with 
+					 * option to sign up.
+					 *
+					 * @see js/model/register.js
+					 */
 					if (processState == 'sign-up') {
-						content += '<a href="/sign-up?section_id=' + response.section_id + '" class="button sign-up">sign up</a>';
+						content += SignUp.getOptions();
 
 					// otherwise, the user is an existing user and needs to be added to the
 					// class
-					} else if (response.section_id) {
+					} else if (processState == 'redirect') {
+						content += '<a href="#" class="go-to-class-page button">go to class page</a>';
 						$.ajax({
 							url: '/college-class-enroll',
 							type: 'post',
 							data: 'section_id=' + response.section_id,
 							success: function(response) {
-								$('.dialog-close', $P).live('click', function(e) {
-									e.preventDefault();
-									window.location = response.redirect;
-									dialog.close()
-								});
+								if (response.error) {
+									$('.suggested-reading').after('<h3 class="warning">' +
+										'It appears you have more than 6 classes. This class will not be added to your list' +
+									'</h3>');
+									$('.dialog-content a.button').text('back to home page');
+									response.redirect = '/home';
+								}
+
+								// binding redirect actions to class page
+								if (response.redirect) {
+									var goToClassPage = function(url) {
+										window.location = response.redirect;
+									};
+									$('.dialog-close', $P).live('click', function(e) {
+										goToClassPage(response.redirect);
+									});
+									$('.go-to-class-page', $P).live('click', function(e) {
+										goToClassPage(response.redirect);
+									});
+								}
+
 							}
 						});
 					}

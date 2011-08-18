@@ -53,7 +53,7 @@ class FacebookSignUpPageView extends PageView implements PageViewInterface {
 						{'name' : 'email'},
 						{'name' : 'password'}
 					]" 
-					redirect-uri="http://coursecoffee.com/"
+					redirect-uri="/user-register-facebook"
 					width="530">
 				</fb:registration>
 				</div>

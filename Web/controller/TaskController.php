@@ -74,7 +74,7 @@ class TaskController extends Controller implements ControllerInterface {
 		for ($i = 0; $i < $task_count; $i++) {
 			$date      = Input::Post('date_' . $i);
 			$objective = Input::Post('objective_' . $i);
-			$task->processMultipleForm($creator_id, $objective, $date, $section_id);
+			$task_model->processMultipleForm($creator_id, $objective, $date, $section_id);
 		}
 
 		$this->json = new JSONView(array(

@@ -7,7 +7,6 @@
 window.ClassSuggest = function(formName, inputName, callback) {
 	var form  = $(formName);
 	var input = $(inputName, form);
-	blurInput(formName);
 
 	/**
 	 * Class suggest

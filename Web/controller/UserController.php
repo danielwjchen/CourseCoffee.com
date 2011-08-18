@@ -29,7 +29,7 @@ class UserController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'user-register-facebook' => 'registerUserByFacebook',
+			'user-register-facebook' => 'registerUserByFB',
 			'user-register-regular'  => 'registerUserByUs',
 			'user-update'   => 'updateUser',
 			'user-remove'   => 'removeUser',
@@ -55,6 +55,16 @@ class UserController extends Controller implements ControllerInterface {
 	}
 
 	private function registerUser($fist_name, $last_name, $institution_id, $section_id, $course_code, $year, $term, $token, $password, $confirm) {
+	}
+
+	/**
+	 * Register user via facebook
+	 *
+	 * Since this is our first semester, some of information is hard-coded
+	 */
+	public function registerUserByFB() {
+		$user_register_form = new UserRegisterFormModel();
+		$user_register_form->processFBForm($REQUEST);
 	}
 
 	/**

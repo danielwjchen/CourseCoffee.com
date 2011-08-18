@@ -13,11 +13,11 @@ $P.ready(function() {
 		if (target.hasClass('login')) {
 			login.submit();
 		} else if (target.hasClass('sign-up')) {
+			var signUpOption = SignUp.getOptions();
 			var content = '<div class="progress">' +
 				'<div class="progress-inner">' +
 					'<h3>How would you like to create your account?</h3>' +
-					'<a class="facebook button" href="/facebook-sign-up">sign up with facebook</a>' +
-					'<a class="regular button" href="/sign-up">sign up</a>' +
+					signUpOption +
 				'</div>' + 
 			'</div>';
 			dialog.open('sign-up', content);
