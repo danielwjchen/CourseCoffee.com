@@ -67,6 +67,7 @@ $P.ready(function(){
                                     <input type='button' id='save_sch' sid='SID_STR' value='save'>\
                                     <input type='button' id='cancel_sch' sid='SID_STR' value='cancel'>"           
             
+            info_box_string = "<div class='info_box'></span>"        
             //date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'><a href='#' sid='SID_STR' class='sch_btn_3 confirm_date_change'>O</a><a href='#' sid='SID_STR' class='sch_btn_3 cancel_date_change'>X</a>"
             date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'>"
             /*       flags            */
@@ -146,14 +147,22 @@ $P.ready(function(){
              *  indicate which schedule_elem is being pointed 
              */
             $(".date_label").live("mouseenter",function(){
-                    temp_id = $(this).attr("sid")
-                    $(".schedule_elem[sid='"+temp_id+"']").css("background-color","#99CCFF");
-                        
+                    sid = $(this).attr("sid")
+                    this_height =  $(this).position().top
+
+                    $(".schedule_elem[sid='"+sid+"']").css("background-color","#99CCFF");
+                    
+                    $("#info_box").css("top", this_height)
+                    $("#info_box").text("Click X to merge up")
+
+                    $("#info_box").show()
+                    $("#info_box").fadeTo("slow", 0.8)    
             });
 
             $(".date_label").live("mouseleave",function(){
-                    temp_id = $(this).attr("sid")
-                    $(".schedule_elem[sid='"+temp_id+"']").css("background-color","");									 
+                    sid = $(this).attr("sid")
+                    $(".schedule_elem[sid='"+sid+"']").css("background-color","");									 
+                    $("#info_box").fadeOut()
             });
 
 
@@ -463,13 +472,15 @@ $P.ready(function(){
                                     schedule_list[i].deleted = false
                                     $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("x")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 1)
-                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "none", "color": "#000000"})
+                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").fadeTo("fast", 1)
+                                    //$("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "none", "color": "#000000"})
                             }
                             else{ // date_label_deleted
                                     schedule_list[i].deleted = true
                                     $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("O")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 0.5)
-                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "line-through", "color": "#F60"})
+                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").fadeTo("fast", 0.2)
+                                    //$("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "line-through", "color": "#F60"})
                             }
                     }
             }

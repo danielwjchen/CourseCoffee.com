@@ -103,6 +103,8 @@ HTML;
               </tr>
             </table>
 					</div>
+        <div id="info_box">
+        </div>
 					</div>
 				</div>
 			</div>
