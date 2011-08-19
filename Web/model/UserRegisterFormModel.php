@@ -15,8 +15,6 @@ class UserRegisterFormModel extends FormModel {
 	const ERROR_FORM_EMPTY           = 'You have empty fields. Please try again.';
 	const ERROR_EMAIL_TAKEN          = 'An account is already registered with this emaill address. Please try again.';
 	const ERROR_PASSWORD_NOT_MATCH   = 'The password and confirmation do not match. Please try again.';
-	const ERROR_FB_UNKNOWN_ALGORITHM = 'Unknown algorithm. Expected HMAC-SHA256';
-	const ERROR_FB_BAD_SIGNATURE     = 'Bad Signed JSON signature!';
 	
 	/**
 	 * @} End of error_messages
@@ -41,6 +39,7 @@ class UserRegisterFormModel extends FormModel {
 	/**
 	 * Action to take after the form is successfully processed
 	 */
+	const FAIL_REDIRECT = '/welcome';
 	const REDIRECT = '/home';
 
 	/**
@@ -82,43 +81,144 @@ class UserRegisterFormModel extends FormModel {
 		$this->expire = 1800;
 	}
 
-	private function base64UrlDecode($input) {
-		return base64_decode(strtr($input, '-_', '+/'));
-	}
-
 	/**
-	 * Parse data from facebook
+	 * Create user account.
+	 *
+	 * This method does not validate the request. It's used for trusted requests 
+	 * from facebook and such. This is probably not the best practice.
+	 *
+	 * @param string $fisrt_name
+	 *  user's first name
+	 * @param string $last_name
+	 *  user's last name
+	 * @param string $institution_id
+	 *  user's school
+	 * @param string $year
+	 * @param string $term
+	 *  a facebook user id, this is optional
+	 * @param string $email
+	 *  a string of email address to be user as account
+	 * @param string $password
+	 *  a string to identifer the user as the owner of the account
+	 * @param int $fb_uid
+	 *  user's facebook uid, only exists when the user is registered through 
+	 *  facebook
+	 *
+	 * @return array
+	 *  on failure, the method returns an array made of the params plus error 
+	 *  message as listed below:
+	 *   - email
+	 *   - password
+	 *   - confirm
+	 *   - token
+	 *   - error
+	 *  on success, the method returnd the newly created user id and a redirect 
+	 *  URL as listed below:
+	 *   - user_id
+	 *   - email
+	 *   - password
+	 *   - redirect
 	 */
-	private function parseFBSignedRequest($signed_request) {
-		global $config;
-		$secret = $config->facebook['app_secret'];
-		list($encoded_sig, $payload) = explode('.', $signed_request, 2); 
-
-		// decode the data
-		$sig = $this->base64UrlDecode($encoded_sig);
-		$data = json_decode($this->base64UrlDecode($payload), true);
-		if (strtoupper($data['algorithm']) !== 'HMAC-SHA256') {
-			Logger::Write(self::ERROR_FB_UNKNOWN_ALGORITHM);
-			return null;
+	public function createUserAccount($first_name, $last_name, $institution_id, $year, $term, $email, $password, $fb_uid = null) {
+		// create record
+		$has_record = $this->user_dao->read(array('account' => $email));
+		if ($has_record) {
+			Logger::write(self::EVENT_EMAIL_TAKEN);
+			return array(
+				'error'    => self::ERROR_EMAIL_TAKEN,
+				'redirect' => self::FAIL_REDIRECT,
+			);
 		}
-		// check sig
-		$expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
-		if ($sig !== $expected_sig) {
-			Logger::Write(self::ERROR_FB_BAD_SIGNATURE);
-			return null;
-		}
-		return $data;
-	}
 
-	/**
-	 * Process user registration request from facebook
-	 */
-	public function processFBForm($request) {
-		error_log($request);
+		$encrypted_password = Crypto::Encrypt($password);
+		$user_id = $this->user_dao->create(array(
+			'account' => $email,
+			'password' => $encrypted_password,
+		));
+
+		// for some crazy reason, the system failed to create an record and return
+		// the primary key
+		if (empty($user_id)) {
+			Logger::write(self::EVENT_FAILED_TO_CREATE, Logger::SEVERITY_LOW);
+			return array('error' => true);
+		} 
+
+		if (!empty($fb_uid)) {
+			$this->facebook_linkage_dao->create(array(
+				'user_id' => $user_id,
+				'fb_uid'  => $fb_uid,
+			));
+		}
+
+		$this->person_dao->create(array(
+			'user_id'    => $user_id,
+			'first_name' => $first_name,
+			'last_name'  => $last_name,
+		));
+
+		$this->institution_linkage_dao->create(array(
+			'user_id'        => $user_id,
+			'institution_id' => $institution_id,
+		));
+
+		// debug
+		// error_log('institution_id - ' . $institution_id . ', period - ' . $year . ', term - ' . $term);
+
+		$this->institution_year_dao->read(array(
+			'institution_id' => $institution_id,
+			'period' => $year,
+		));
+
+		$this->institution_dao->read(array('id' => $institution_id));
+		$institution_name = $this->institution_dao->name;
+
+		$year_id = $this->institution_year_dao->id;
+
+		$this->institution_term_dao->read(array(
+			'institution_id' => $institution_id,
+			'year_id' => $year_id,
+			'name'    => ucfirst(strtolower($term)),
+		));
+
+		$term_id = $this->institution_term_dao->id;
+
+		// debug 
+		// error_log('institution_id - ' . $institution_id . ', year_id - ' . $year_id . ', term_id - ' . $term_id);
+
+		$this->user_setting_dao->create(array(
+			'user_id'        => $user_id,
+			'institution_id' => $institution_id,
+			'year_id'        => $year_id,
+			'term_id'        => $term_id,
+		));
+
+		Logger::write(self::EVENT_NEW_USER);
+		$this->unsetFormToken();
+		return array(
+			'success' => true,
+			'user_id' => $user_id,
+			'profile' => array(
+				'first_name' => $first_name,
+				'last_name' => $last_name,
+				'institution' => $institution_name,
+				'year' => $year,
+				'term' => $term,
+			),
+			'setting' => array(
+				'institution_id' => $institution_id,
+				'year_id' => $year_id,
+				'term_id' => $term_id,
+				'fb_uid'  => $fb_uid,
+			),
+			'redirect'   => self::REDIRECT,
+		);
 	}
 
 	/**
 	 * Process user registration request 
+	 *
+	 * This is actually a wrap around createUserAccount(). It does additional 
+	 * checking to validate the request.
 	 *
 	 * @param string $fisrt_name
 	 *  user's first name
@@ -216,24 +316,6 @@ class UserRegisterFormModel extends FormModel {
 			);
 		}
 
-		// check if the account is alread taken
-		$has_record = $this->user_dao->read(array('account' => $email));
-		if ($has_record) {
-			Logger::write(self::EVENT_EMAIL_TAKEN);
-			return array(
-				'error'          => self::ERROR_EMAIL_TAKEN,
-				'first_name'     => $first_name,
-				'last_name'      => $last_name,
-				'institution_id' => $institution_id,
-				'year'           => null,
-				'term'           => null,
-				'email'          => $email,
-				'password'       => $password,
-				'confirm'        => $confirm,
-				'token'          => $token,
-			);
-		}
-
 		// check if the password and confirmation match
 		if ($password !== $confirm) {
 			return array(
@@ -250,18 +332,19 @@ class UserRegisterFormModel extends FormModel {
 			);
 		}
 
-		// create record
-		$encrypted_password = Crypto::Encrypt($password);
-		$user_id = $this->user_dao->create(array(
-			'account' => $email,
-			'password' => $encrypted_password,
-		));
+		$result = $this->createUserAccount(
+			$first_name, 
+			$last_name, 
+			$institution_id, 
+			$year, 
+			$term, 
+			$email, 
+			$password, 
+			$fb_uid
+		);
 
-		// for some crazy reason, the system failed to create an record and return
-		// the primary key
-		if (empty($user_id)) {
+		if (isset($result['error'])) {
 			$token = $this->initializeFormToken();
-			Logger::write(self::EVENT_FAILED_TO_CREATE, Logger::SEVERITY_LOW);
 			return array(
 				'error'          => self::ERROR_FAILED_TO_CREATE,
 				'first_name'     => $first_name,
@@ -274,78 +357,9 @@ class UserRegisterFormModel extends FormModel {
 				'confirm'        => $confirm,
 				'token'          => $token,
 			);
-		} 
-
-		if (!empty($fb_uid)) {
-			$this->facebook_linkage_dao->create(array(
-				'user_id' => $user_id,
-				'fb_uid'  => $fb_uid,
-			));
 		}
 
-		$this->person_dao->create(array(
-			'user_id'    => $user_id,
-			'first_name' => $first_name,
-			'last_name'  => $last_name,
-		));
-
-		$this->institution_linkage_dao->create(array(
-			'user_id'        => $user_id,
-			'institution_id' => $institution_id,
-		));
-
-		// debug
-		// error_log('institution_id - ' . $institution_id . ', period - ' . $year . ', term - ' . $term);
-
-		$this->institution_year_dao->read(array(
-			'institution_id' => $institution_id,
-			'period' => $year,
-		));
-
-		$this->institution_dao->read(array('id' => $institution_id));
-		$institution_name = $this->institution_dao->name;
-
-		$year_id = $this->institution_year_dao->id;
-
-		$this->institution_term_dao->read(array(
-			'institution_id' => $institution_id,
-			'year_id' => $year_id,
-			'name'    => ucfirst(strtolower($term)),
-		));
-
-		$term_id = $this->institution_term_dao->id;
-
-		// debug 
-		// error_log('institution_id - ' . $institution_id . ', year_id - ' . $year_id . ', term_id - ' . $term_id);
-
-		$this->user_setting_dao->create(array(
-			'user_id'        => $user_id,
-			'institution_id' => $institution_id,
-			'year_id'        => $year_id,
-			'term_id'        => $term_id,
-		));
-
-		Logger::write(self::EVENT_NEW_USER);
-		$this->unsetFormToken();
-		return array(
-			'success' => true,
-			'user_id' => $user_id,
-			'profile' => array(
-				'first_name' => $first_name,
-				'last_name' => $last_name,
-				'institution' => $institution_name,
-				'year' => $year,
-				'term' => $term,
-			),
-			'setting' => array(
-				'institution_id' => $institution_id,
-				'year_id' => $year_id,
-				'term_id' => $term_id,
-				'fb_uid'  => $fb_uid,
-			),
-			'redirect'   => self::REDIRECT,
-		);
-
+		return $result;
 		
 	}
 

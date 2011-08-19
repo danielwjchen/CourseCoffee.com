@@ -102,3 +102,6 @@ window.dialog = {
 	}
 }
 
+/**
+ * Manage access to cookie
+ */

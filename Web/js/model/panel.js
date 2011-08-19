@@ -31,7 +31,7 @@ window.CommentPanel = function() {
 		$('.panel-03', $P).remove();
 		$('.content', $P).animate({marginLeft: '0px'}, 400, function() {
 			$('.panel-03', $P).remove();
-			$('a.fb-comment', $P).html('oomments &#187;');
+			$('a.fb-comment', $P).html('comments &#187;');
 		});
 	}
 
@@ -73,7 +73,7 @@ window.CommentPanel = function() {
 	$('.task-list', $P).delegate('a.fb-comment', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);
-		$('a.fb-comment', $P).html('oomments &#187;');
+		$('a.fb-comment', $P).html('comments &#187;');
 		var panel03 = $('.panel-03', $P);
 		var task_id = target.attr('id');
 		var task_url = window.location.href + '/' + task_id;

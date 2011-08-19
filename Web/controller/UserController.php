@@ -34,6 +34,7 @@ class UserController extends Controller implements ControllerInterface {
 			'user-update'   => 'updateUser',
 			'user-remove'   => 'removeUser',
 			'user-profile'  => 'getUserProfile',
+			'user-login-fb' => 'loginUserByFB',
 			'user-login'    => 'loginUser',
 			'user-logout'   => 'logoutUser',
 		);
@@ -50,9 +51,16 @@ class UserController extends Controller implements ControllerInterface {
 	 * Override Controller::beforeAction()
 	 */
 	public function afterAction() {
-		$this->json->setHeader(PageView::HTML_HEADER);
 		echo $this->json->render();
 	}
+
+	/**
+	 * Check if the user qualifies for auto login
+	 */
+	private function checkAutoLogin() {
+		return Cookie::Get(USerSessionModel::COOKIE_AUTO_LOGIN); 
+	}
+
 
 	private function registerUser($fist_name, $last_name, $institution_id, $section_id, $course_code, $year, $term, $token, $password, $confirm) {
 	}
@@ -63,8 +71,73 @@ class UserController extends Controller implements ControllerInterface {
 	 * Since this is our first semester, some of information is hard-coded
 	 */
 	public function registerUserByFB() {
-		$user_register_form = new UserRegisterFormModel();
-		$user_register_form->processFBForm($REQUEST);
+		$fb_model = new FBModel();
+
+		// debug
+		//error_log(__METHOD__ . ' : $_REQUEST - ' . print_r($_REQUEST, true));
+
+		$result = $fb_model->processSignUpRequest($_REQUEST['signed_request']);
+
+		if (isset($result['success'])) {
+
+			// debug 
+			// error_log(__METHOD__ . ' : result - ' . print_r($result, true));
+
+			$user_register_form = new UserRegisterFormModel();
+			$first_name     = $result['first_name'];
+			$last_name      = $result['last_name'];
+			$institution_id = $result['school'];
+			$section_id     = Session::Get('section_id');
+			$course_code    = Session::Get('course_code');
+			$year           = '2011';
+			$term           = 'fall';
+			$email          = $result['email'];
+			$password       = $result['password'];
+			$fb_uid         = $result['fb_uid'];
+			$user_record = $user_register_form->createUserAccount(
+				$first_name, 
+				$last_name, 
+				$institution_id, 
+				$year, 
+				$term, 
+				$email, 
+				$password,
+				$fb_uid
+			);
+
+			if (isset($user_record['error'])) {
+				$this->redirect($user_record['redirect']);
+			}
+
+			// debug 
+			// error_log(__METHOD__ . ' : user_record - ' . print_r($user_record, true));
+
+			$this->user_session_model->setUserSessionCookie($user_record['user_id'], $email, $password);
+			$this->user_session_model->setUserProfile($user_record['profile']);
+			$this->user_session_model->setUserSetting($user_record['setting']);
+
+			$class_list = array();
+			if (!empty($section_id) && !empty($course_code)) {
+				Session::Del('section_id');
+				Session::Del('course_code');
+
+				$user_enroll_class_model = new UserEnrollClassModel();
+				$user_enroll_class_model->createLinkage(
+					$user_record['user_id'], 
+					$section_id
+				);
+				$class_list = array(
+					'section_id' => $section_id, 
+					'course_code' => $course_code
+				);
+			}
+			$this->user_session_model->setUserClassList($class_list);
+
+			unset($user_record['profile']);
+			unset($user_record['setting']);
+		}
+
+		$this->redirect($result['redirect']);
 	}
 
 	/**
@@ -148,6 +221,33 @@ class UserController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Accept user login request by facebook and begin session
+	 */
+	public function loginUserByFB() {
+		if (!$this->checkAutoLogin()) {
+			$this->json = new JSONView(array('error' => true));
+			return ;
+		}
+		$fb_uid = Input::Post('fb_uid');
+		$user_login_model = new UserLoginFormModel();
+		$result = $user_login_model->processFBLogInRequest($fb_uid);
+		// begin user session on success
+		if (isset($result['success'])) {
+			$this->user_session_model = new UserSessionModel();
+			$this->user_session_model->beginUserSession(
+				$result['user_id'], 
+				$result['email'], 
+				Crypto::Encrypt($result['password'])
+			);
+		}
+
+		// debug
+		// error_log( __METHOD__ . ' : result - ' . print_r($result, true));
+
+		$this->json = new JSONView($result);
+	}
+
+	/**
 	 * Accept user login request and begin session
 	 */
 	public function loginUser() {
@@ -162,7 +262,7 @@ class UserController extends Controller implements ControllerInterface {
 		// begin user session on success
 		if (isset($result['success'])) {
 			$this->user_session_model = new UserSessionModel();
-			$this->user_session_model->beginUserSession($result['user_id'], $email, $password);
+			$this->user_session_model->beginUserSession($result['user_id'], $email, Crypto::Encrypt($password));
 		}
 
 		$this->json = new JSONView($result);

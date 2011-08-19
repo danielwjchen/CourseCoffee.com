@@ -205,6 +205,7 @@ class UserDBA implements DBAInterface{
 					),
 					'fb_uid' => array(
 						'type' => 'int',
+						'size' => 'big',
 						'unsigned' => TRUE,
 						'not null' => TRUE,
 						'default' => 0,

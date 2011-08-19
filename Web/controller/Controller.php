@@ -110,8 +110,9 @@ abstract class Controller {
 	public function getUserId() {
 		$user_id = Session::Get('user_id');
 		if (empty($user_id)) {
-			$signature = Cookie::Get(UserSessionModel::LOGIN_COOKIE);
-			if (!empty($signature)) {
+			$signature  = Cookie::Get(UserSessionModel::COOKIE_SIGNATURE);
+			$auto_login = Cookie::Get(USerSessionModel::COOKIE_AUTO_LOGIN); 
+			if ($auto_login && !empty($signature)) {
 				global $config;
 				$user_cookie_dao = new UserCookieDAO(new DB($config->db));
 				$user_cookie_dao->read(array('signature' => $signature));
