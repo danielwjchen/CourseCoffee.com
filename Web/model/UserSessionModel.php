@@ -13,6 +13,7 @@
  *     - first_name
  *     - last_name
  *     - institution
+ *     - institution_uri
  *     - year
  *     - term
  *  - setting
@@ -110,6 +111,10 @@ class UserSessionModel extends Model {
 		$user_setting_dao = new UserSettingDAO($this->db);
 		$user_setting_dao->read(array('user_id' => $user_id));
 		$user_setting = $user_setting_dao->attribute;;
+		$fb_linkage_dao = new UserFacebookLinkageDAO($this->db);
+		$fb_linkage_dao->read(array('user_id' => $user_id));
+		$user_setting['fb_uid'] = $fb_linkage_dao->fb_uid;
+
 		unset($user_setting['id']);
 		unset($user_setting['user_id']);
 
@@ -180,6 +185,15 @@ class UserSessionModel extends Model {
 	 */
 	public function getUserId() {
 		return Session::Get('user_id');
+	}
+
+	/**
+	 * Get user's fb_uid if there is one
+	 */
+	public function getFbUserId() {
+		$setting = Session::Get(self::USER_SETTING);
+
+		return $setting['fb_uid'];
 	}
 
 	/**

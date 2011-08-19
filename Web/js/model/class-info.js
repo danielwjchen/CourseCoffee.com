@@ -73,9 +73,10 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 
 						// debug
 						// console.log(response.list);
+						tasks = task.AddUrlToTask(response.list);
 
-						cache.set(cacheKey, response.list);
-						Task.generateList(response.list, list);
+						cache.set(cacheKey, tasks);
+						Task.generateList(tasks, list);
 					}
 
 					if (response.error) {
@@ -97,8 +98,8 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 		$('input[name=institution]', option).val(data.institution);
 		$('input[name=year-id]', option).val(data.year_id);
 		$('input[name=year]', option).val(data.year);
-		$('input[name=term]', option).val(data.term_id);
-		$('input[name=term-id]', option).val(data.term);
+		$('input[name=term]', option).val(data.term);
+		$('input[name=term-id]', option).val(data.term_id);
 		$('input[name=subject-id]', option).val(data.subject_id);
 		$('input[name=subject-abbr]', option).val(data.subject_abbr);
 		$('input[name=course-id]', option).val(data.course_id);

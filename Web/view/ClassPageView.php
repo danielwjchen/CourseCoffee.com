@@ -69,6 +69,8 @@ class ClassPageView extends PageView implements PageViewInterface {
 			return <<<HTML
 	<input type="hidden" name="institution-uri" value="{$institution_uri}" />
 	<input type="hidden" name="institution-id" value="{$institution_id}" />
+	<input type="hidden" name="year" value="{$year}" />
+	<input type="hidden" name="term" value="{$term}" />
 	<input type="hidden" name="subject-abbr" value="{$subject_abbr}" />
 	<input type="hidden" name="course-title" value="{$course_title}" />
 	<input type="hidden" name="course-num" value="{$course_num}" />
@@ -80,6 +82,8 @@ HTML;
 			return <<<HTML
 	<input type="hidden" name="institution-uri" value="" />
 	<input type="hidden" name="institution-id" value="" />
+	<input type="hidden" name="year" value="" />
+	<input type="hidden" name="term" value="" />
 	<input type="hidden" name="subject-abbr" value="" />
 	<input type="hidden" name="course-title" value="" />
 	<input type="hidden" name="course-num" value="" />

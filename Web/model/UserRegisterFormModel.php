@@ -171,6 +171,7 @@ class UserRegisterFormModel extends FormModel {
 
 		$this->institution_dao->read(array('id' => $institution_id));
 		$institution_name = $this->institution_dao->name;
+		$institution_uri = $this->institution_dao->uri;
 
 		$year_id = $this->institution_year_dao->id;
 
@@ -200,7 +201,8 @@ class UserRegisterFormModel extends FormModel {
 			'profile' => array(
 				'first_name' => $first_name,
 				'last_name' => $last_name,
-				'institution' => $institution_name,
+				'institution'     => $institution_name,
+				'institution_uri' => $institution_uri,
 				'year' => $year,
 				'term' => $term,
 			),

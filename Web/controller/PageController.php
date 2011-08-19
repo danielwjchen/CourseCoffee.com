@@ -73,6 +73,7 @@ class PageController extends Controller implements ControllerInterface {
 		$profile = $user_session_model->getUserProfile();
 		$class_list = $user_session_model->getUserClassList();
 		$this->page = new HomePageView(array(
+			'fb_uid'     => $user_session_model->getFbUserId(),
 			'profile'    => $profile,
 			'class_list' => $class_list,
 			'timestamp'  => time(),
@@ -107,11 +108,15 @@ class PageController extends Controller implements ControllerInterface {
 		$this->redirectUnknownUser();
 
 		$user_session_model = new UserSessionModel();
-		$class_list = $user_session_model->getUserClassList();
+		$class_list    = $user_session_model->getUserClassList();
+		$user_profile  = $user_session_model->getUserProfile(); 
 
 		$this->page = new CalendarPageView(array(
 			'timestamp' => time(),
 			'class_list' => $class_list,
+			'institution_uri' => $user_profile['institution_uri'],
+			'year' => $user_profile['year'],
+			'term' => $user_profile['term'],
 		));
 	}
 

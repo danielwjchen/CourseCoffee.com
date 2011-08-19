@@ -21,6 +21,13 @@ class CollegeModel extends Model {
 		$this->institution_dao = new InstitutionDAO($this->db);
 	}
 
+	public function getCollege($institution_id) {
+		$this->institution_dao->read(array('id' => $institution_id));
+
+		return $this->institution_dao->attribute;
+	}
+
+
 	/**
 	 * Get a list of college 
 	 *

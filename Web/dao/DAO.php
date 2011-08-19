@@ -24,13 +24,6 @@ interface DAOInterface {
 	 * @param array $params
 	 *  an associative array of params to be executed with the SQL query
 	 *   - id: optional, this will get a particular record
-	 *   - range: optional, this will get a list of tasks based on range
-	 *      - begin_date: optional
-	 *      - end_date: optional
-	 *   - limit: optional
-	 *      - offset
-	 *      - count
-	 *   - like: optional, this would perform string matching
 	 */
 	public function read($params) ;
 
