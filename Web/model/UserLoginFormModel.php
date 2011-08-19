@@ -50,7 +50,6 @@ class UserLoginFormModel extends FormModel {
 	 * @{
 	 */
 	private $user_dao;
-	private $facebook_linkage_dao;
 	/**
 	 * @} End of "dao"
 	 */
@@ -61,13 +60,41 @@ class UserLoginFormModel extends FormModel {
 	function __construct() {
 		parent::__construct();
 		$this->user_dao             = new UserDAO($this->db);
-		$this->facebook_linkage_dao = new UserFacebookLinkageDAO($this->db);
 
 		$this->form_name = 'user_login_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
 		// form expires in an hour
 		$this->expire = 3600;
+	}
+
+	/**
+	 * Log in user by facebook uid
+	 */
+	public function processFBLoginRequest($fb_uid) {
+		$fb_linkage_dao = new UserFacebookLinkageDAO($this->db);
+		$has_record = $fb_linkage_dao->read(array(
+			'fb_uid' => $fb_uid
+		));
+
+			// debug
+			// error_log(__METHOD__ . ' : fb_uid - ' . $fb_linkage_dao->fb_uid);
+		if ($has_record) {
+			$this->user_dao->read(array('id' => $fb_linkage_dao->user_id));
+
+			// debug
+			// error_log(__METHOD__ . ' : user_id - ' . $fb_linkage_dao->user_id);
+			
+			return array(
+				'success'  => true,
+				'user_id'  => $fb_linkage_dao->user_id,
+				'email'    => $this->user_dao->account,
+				'password' => $this->user_dao->password,
+				'redirect' => self::REDIRECT,
+			);
+		} 
+
+		return array('error' => true);
 	}
 
 	/**

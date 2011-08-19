@@ -83,19 +83,23 @@ class BookSuggestModel extends Model {
 		$this->list = array();	
 
 
-		for ($i = 0; $i < count($record); $i++) {
-			$isbn = $record[$i]['isbn'];
-			$this->amazonSearch->searchBookIsbn($isbn);
-			$title = (string)$this->amazonSearch->getTitle();
-			$image = (string)$this->amazonSearch->getSmallImageLink(); 
+		try {
+			for ($i = 0; $i < count($record); $i++) {
+				$isbn = $record[$i]['isbn'];
+				$this->amazonSearch->searchBookIsbn($isbn);
+				$title = (string)$this->amazonSearch->getTitle();
+				$image = (string)$this->amazonSearch->getSmallImageLink(); 
 
-			// debug
-			// error_log('image - ' . $image);
+				// debug
+				// error_log('image - ' . $image);
 
-			$this->list[$title] = array(
-				'image'  => $image,
-				'offers' => $this->getSingleBookRankList($isbn),
-			);
+				$this->list[$title] = array(
+					'image'  => $image,
+					'offers' => $this->getSingleBookRankList($isbn),
+				);
+			}
+		} catch (Exception $e) {
+			Logger::Write($e->getMessage());
 		}
 
 		// debug

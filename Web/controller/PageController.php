@@ -15,7 +15,7 @@ class PageController extends Controller implements ControllerInterface {
 		return array(
 			'doc-edit'         => 'getDocumentEditorPage',
 			'sign-up'          => 'getSignUpPage',
-			'facebook-sign-up' => 'getFacebookSignUpPage',
+			'facebook-sign-up' => 'getFBSignUpPage',
 			'welcome'          => 'getWelcomePage',
 			'home'             => 'getHomePage',
 			'calendar'         => 'getCalendarPage',
@@ -48,6 +48,7 @@ class PageController extends Controller implements ControllerInterface {
 		if ($this->isUserLoggedIn()) {
 			header('Location: ' . self::PAGE_HOME);
 		}
+
 		$login_form    = new UserLoginFormModel();
 		$register_form = new UserRegisterFormModel();
 		$file_form     = new FileFormModel();
@@ -93,8 +94,10 @@ class PageController extends Controller implements ControllerInterface {
 	/**
 	 * Get facebook signup page for visiters
 	 */
-	public function getFacebookSignUpPage() {
-		$this->page = new FacebookSignUpPageView(array());
+	public function getFBSignUpPage() {
+		$fb_model = new FBModel();
+		$form_fields = $fb_model->generateSignUpForm();
+		$this->page = new FBSignUpPageView($form_fields);
 	}
 
 	/**

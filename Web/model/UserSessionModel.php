@@ -34,7 +34,8 @@ class UserSessionModel extends Model {
 	/**
 	 * Name to be used for the cookie
 	 */
-	const LOGIN_COOKIE = 'lc';
+	const COOKIE_SIGNATURE  = 'lc';
+	const COOKIE_AUTO_LOGIN = 'al';
 
 	/**
 	 * @defgroup dao
@@ -74,8 +75,8 @@ class UserSessionModel extends Model {
 			'signature' => $signature, 
 		));
 
-		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
-		Cookie::Set(self::LOGIN_COOKIE, $signature, Cookie::EXPIRE_MONTH);
+		Cookie::Set(self::COOKIE_SIGNATURE, $signature, Cookie::EXPIRE_MONTH);
+		Cookie::Set(self::COOKIE_AUTO_LOGIN, true, Cookie::EXPIRE_MONTH);
 	}
 
 	/**
@@ -134,8 +135,10 @@ class UserSessionModel extends Model {
 		// error_log(__METHOD__ . 'user class list record- ' . print_r($record, true));
 
 		$class_list = array();
-		foreach ($record as $item) {
-			$class_list[$item['section_id']] = $item['section_code'];
+		if (!empty($record)) {
+			foreach ($record as $item) {
+				$class_list[$item['section_id']] = $item['section_code'];
+			}
 		}
 
 		// debug
@@ -165,7 +168,8 @@ class UserSessionModel extends Model {
 		$user_id = Session::Get('user_id');
 		$this->user_cookie_dao->read(array('user_id' => $user_id));
 		$this->user_cookie_dao->destroy();
-		Cookie::del(self::LOGIN_COOKIE);
+		Cookie::del(self::COOKIE_SIGNATURE);
+		Cookie::del(self::COOKIE_AUTO_LOGIN);
 		session_destroy();
 	}
 
