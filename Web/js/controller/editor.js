@@ -188,7 +188,7 @@ $P.ready(function(){
                     sch_idx = get_sch_idx_by_id(sid)
                     schedule_list[sch_idx].deleted = !schedule_list[sch_idx].deleted
                     update_schedule();                   
-                    history_stack.push( $.extend(true, [], schedule_list) );
+                    save_history()
             });
 
 
@@ -248,7 +248,7 @@ $P.ready(function(){
 
 
                     }
-                    history_stack.push($.extend(true, [], schedule_list));
+                    save_history()
             });
 
 
@@ -299,6 +299,7 @@ $P.ready(function(){
                     show_schedule();
                     adjust_parsed_data_pos();
                     update_date_label();
+                    update_schedule();                   
                     editing_flag = 0
             });
 	
@@ -465,6 +466,7 @@ $P.ready(function(){
                                     $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "none", "color": "#000000"})
                             }
                             else{ // date_label_deleted
+                                    schedule_list[i].deleted = true
                                     $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("O")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 0.5)
                                     $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "line-through", "color": "#F60"})
@@ -810,9 +812,10 @@ $P.ready(function(){
                     init_schedule();
                     show_schedule();
                     schedule_list_orig_len = schedule_list.length
-                    save_history();
                     update_date_label()
 	            update_schedule()				   
+                    save_history();
+
                    }});        
         /*****************      end of main     *********************/  
 
