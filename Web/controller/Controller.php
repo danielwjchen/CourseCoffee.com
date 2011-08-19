@@ -40,19 +40,11 @@ interface ControllerInterface {
  */
 abstract class Controller {
 
-	protected $oauth2;
-	protected $model;
-
 	/**
 	 * Default home page
 	 */
 	const PAGE_DEFAULT = '/welcome';
 	const PAGE_HOME = '/home';
-
-	/**
-	 * Hold the data to be returned to client
-	 */
-	protected $output;
 
 	function __construct() {
 		// we are not doing OAuth2 at the moment.
@@ -98,6 +90,18 @@ abstract class Controller {
 	 */
 	protected function redirect($url) {
 		header('Location: ' . $url);
+		exit();
+	}
+
+	/**
+	 *
+	 */
+	protected function clientRedirect($url) {
+		echo <<<HTML
+<script type="text/javascript">
+	top.location.href='{$url}';
+</script>
+HTML;
 		exit();
 	}
 

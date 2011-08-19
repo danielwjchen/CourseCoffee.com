@@ -14,7 +14,7 @@ class UserController extends Controller implements ControllerInterface {
 	/**
 	 * Handle output in JSON format
 	 */
-	private $json;
+	private $output;
 
 	/**
 	 * Extend Controller::__construct()
@@ -51,7 +51,7 @@ class UserController extends Controller implements ControllerInterface {
 	 * Override Controller::beforeAction()
 	 */
 	public function afterAction() {
-		echo $this->json->render();
+		echo $this->output->render();
 	}
 
 	/**
@@ -137,7 +137,8 @@ class UserController extends Controller implements ControllerInterface {
 			unset($user_record['setting']);
 		}
 
-		$this->redirect($result['redirect']);
+		$this->clientRedirect($result['redirect']);
+
 	}
 
 	/**
@@ -199,7 +200,7 @@ class UserController extends Controller implements ControllerInterface {
 
 		}
 
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -225,7 +226,7 @@ class UserController extends Controller implements ControllerInterface {
 	 */
 	public function loginUserByFB() {
 		if (!$this->checkAutoLogin()) {
-			$this->json = new JSONView(array('error' => true));
+			$this->output = new JSONView(array('error' => true));
 			return ;
 		}
 		$fb_uid = Input::Post('fb_uid');
@@ -244,7 +245,7 @@ class UserController extends Controller implements ControllerInterface {
 		// debug
 		// error_log( __METHOD__ . ' : result - ' . print_r($result, true));
 
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -265,7 +266,7 @@ class UserController extends Controller implements ControllerInterface {
 			$this->user_session_model->beginUserSession($result['user_id'], $email, Crypto::Encrypt($password));
 		}
 
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -280,7 +281,7 @@ class UserController extends Controller implements ControllerInterface {
 			$this->user_session_model->endUserSession();
 		}
 
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 }
