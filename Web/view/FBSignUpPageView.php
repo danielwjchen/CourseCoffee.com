@@ -3,7 +3,7 @@
  * @file
  * Generate the registration page for visiters
  */
-class FacebookSignUpPageView extends PageView implements PageViewInterface {
+class FBSignUpPageView extends PageView implements PageViewInterface {
 
 	/**
 	 * Extend PageView::__construct().
@@ -41,20 +41,7 @@ class FacebookSignUpPageView extends PageView implements PageViewInterface {
 		<div class="body">
 			<div class="body-inner">
 				<div class="content"> 
-				<fb:registration 
-					fields="[
-						{'name' : 'name'},
-						{'name' : 'first_name'},
-						{'name' : 'last_name'},
-						{'name' : 'school', 
-							'description' : 'The current school you are attending', 
-							'type' : 'select',
-							'options' : {1 : 'Michigan State University', 2: 'University of Michigan'}},
-						{'name' : 'email'},
-						{'name' : 'password'}
-					]" 
-					redirect-uri="/user-register-facebook"
-					width="530">
+				<fb:registration fields="{$fields}" redirect-uri="{$redirect}" width="530">
 				</fb:registration>
 				</div>
 			</div>

@@ -204,21 +204,50 @@ META;
 
 	/**
 	 * Get Facebook Javascript SDK 
+	 *
+	 * This loads the library asynchronously and provides FBSDK() as a callback
+	 * function to execute facebook api calls.
 	 */
 	protected function getFacebookSDK() {
 		global $config;
 		return <<<HTML
 <div id="fb-root"></div>
 <script>
-	window.fbAsyncInit = function() {
-		FB.init({
-			appId : '{$config->facebook['app_id']}',
-			status : true,
-			cookie : true,
-			xfbml : true,
-			oauth: true
-		});
+
+	var \$FB = function(callback) {
+
+		var FBReady = function () {
+			FB.init({
+				appId : '{$config->facebook['id']}',
+				status : true,
+				cookie : true,
+				xfbml : true,
+				oauth: true
+			});
+			callback();
+		}
+
+		if (window.FB) {
+			FBReady();
+		} else {
+			window.fbAsyncInit = FBReady;
+		}
+
 	};
+		if (window.FB) {
+			FBReady();
+		} else {
+			window.fbAsyncInit = function() {
+			FB.init({
+				appId : '{$config->facebook['id']}',
+				status : true,
+				cookie : true,
+				xfbml : true,
+				oauth: true
+			});
+			}
+		}
+
 	(function() {
 		var e = document.createElement('script'); e.async = true;
 		e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';

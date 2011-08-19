@@ -8,6 +8,14 @@
 
 $config = new Config(array(
 	/**
+	 * Define default web admin
+	 */
+	'admin' => array(
+		'email' => 'admin@example.com',
+		'password' => 'example',
+	),
+	'domain' => 'eample.com',
+	/**
 	 * Define a database connection for system database
 	 */
 	'db' => array(
@@ -22,7 +30,8 @@ $config = new Config(array(
 	 * Define the Facebook app
 	 */
 	'facebook' => array(
-		'app_key' => '',
-		'app_secret' => '',
+		'id'  => '',
+		'key' => '',
+		'secret' => '',
 	),
 ));

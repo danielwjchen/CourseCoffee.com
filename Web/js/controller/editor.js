@@ -33,8 +33,8 @@ $P.ready(function(){
             reg[3]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}-(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[4]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1} (january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[5]=/^[^0-9](0?[1-9]|1[0-2]){1}-(1[0-9]|2[0-9]|3[0-1]|0?[1-9]){1}(?=[^0-9])/gi
-            reg[6]=/week\W+\d{1,2}/gi
-            reg[2]=/((0?[1-9])|(1[0-2])){1}-((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(-(\d{4}|\d{2}))?(?=[^\/0-9])/gi;	// mm-dd-yy or mm-dd
+            reg[6]=/week\W{1,2}\d{1,2}/gi
+            reg[1]=/((0?[1-9])|(1[0-2])){1}-((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(-(\d{4}|\d{2}))?(?=[^\/0-9])/gi;	// mm-dd-yy or mm-dd
 
             fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, /m/gi , /t/gi, /w/gi, /r/gi, /f/gi]
             
@@ -43,7 +43,7 @@ $P.ready(function(){
             valid_month_max = 11;
             //valid_month_min= 3;
             //valid_month_max = 8;
-            
+     
             schedule_list = []
             schedule_list_orig_len = 0
             orig_html = "";
@@ -67,6 +67,7 @@ $P.ready(function(){
                                     <input type='button' id='save_sch' sid='SID_STR' value='save'>\
                                     <input type='button' id='cancel_sch' sid='SID_STR' value='cancel'>"           
             
+            info_box_string = "<div class='info_box'></span>"        
             //date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'><a href='#' sid='SID_STR' class='sch_btn_3 confirm_date_change'>O</a><a href='#' sid='SID_STR' class='sch_btn_3 cancel_date_change'>X</a>"
             date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'>"
             /*       flags            */
@@ -135,11 +136,10 @@ $P.ready(function(){
                             schedule_list[i-1].next = schedule_list[i].date_label_deleted
                     }
                     
-                    //history_stack.push( $.extend(true, [], schedule_list) );
                     save_history();
                     show_schedule();
-                    update_schedule();
                     update_date_label();
+                    update_schedule();
             });
             
 
@@ -147,14 +147,22 @@ $P.ready(function(){
              *  indicate which schedule_elem is being pointed 
              */
             $(".date_label").live("mouseenter",function(){
-                    temp_id = $(this).attr("sid")
-                    $(".schedule_elem[sid='"+temp_id+"']").css("background-color","#99CCFF");
-                        
+                    sid = $(this).attr("sid")
+                    this_height =  $(this).position().top
+
+                    $(".schedule_elem[sid='"+sid+"']").css("background-color","#99CCFF");
+                    
+                    $("#info_box").css("top", this_height)
+                    $("#info_box").text("Click X to merge up")
+
+                    $("#info_box").show()
+                    $("#info_box").fadeTo("slow", 0.8)    
             });
 
             $(".date_label").live("mouseleave",function(){
-                    temp_id = $(this).attr("sid")
-                    $(".schedule_elem[sid='"+temp_id+"']").css("background-color","");									 
+                    sid = $(this).attr("sid")
+                    $(".schedule_elem[sid='"+sid+"']").css("background-color","");									 
+                    $("#info_box").fadeOut()
             });
 
 
@@ -166,9 +174,9 @@ $P.ready(function(){
                     
                     /* replace schedule content with textarea*/ 
                     sid=$(this).attr("sid")
-                    orig_html = $(".sch_content[sid='" + sid + "']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
-                    orig_height = $(".sch_content[sid='" + sid + "']").height()*0.8
-                    orig_width = $(".sch_content[sid='" + sid + "']").width()
+                    idx = get_sch_idx_by_id(sid)
+                    orig_html = schedule_list[idx].content.replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
+
                     $(".sch_content[sid='" + sid + "']").html(schedule_edit_string.replace(/SID_STR/gi, sid).replace(/CONTENT_STR/gi, orig_html))
                     
                     /* replace date with textbox*/
@@ -189,7 +197,7 @@ $P.ready(function(){
                     sch_idx = get_sch_idx_by_id(sid)
                     schedule_list[sch_idx].deleted = !schedule_list[sch_idx].deleted
                     update_schedule();                   
-                    history_stack.push( $.extend(true, [], schedule_list) );
+                    save_history()
             });
 
 
@@ -215,17 +223,7 @@ $P.ready(function(){
 
             $("#save_sch").live("click",function(){
                     sid = $(this).attr("sid")
-                    /*
-                    content_temp = $("textarea[sid='" + sid + "']").val().replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
-                    $(".sch_content[sid='"+$(this).attr("sid")+"']").html(content_temp);
-                    for(i=0;i<schedule_list.length;i++){
-                            if(schedule_list[i].id == sid){
-                                    schedule_list[i].content = content_temp
-                                    break;
-                            }
-                    }
-                    editing_flag=0
-                    */
+                    
                     sch_idx = get_sch_idx_by_id(sid)
                     orig_first_day = schedule_list[0].date.getOrdinalNumber() 
                     new_date = $(".date_container[sid='" + sid + "']").val() 
@@ -259,7 +257,7 @@ $P.ready(function(){
 
 
                     }
-                    history_stack.push($.extend(true, [], schedule_list));
+                    save_history()
             });
 
 
@@ -268,9 +266,13 @@ $P.ready(function(){
              */
 
             $("#cancel_sch").live("click",function(){
-                    id_temp = $(this).attr("sid")
-                    content_temp = $("textarea[sid='"+id_temp+"']").text().replace(/(\n|\r)/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
-                    $(".sch_content[sid='"+$(this).attr("sid")+"']").html(content_temp);
+                    sid = $(this).attr("sid")
+                    sch_idx = get_sch_idx_by_id(sid)
+                    $(".sch_content[sid='" + sid + "']").html(schedule_list[sch_idx].content);
+                    
+                    new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
+                    $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
+
                     editing_flag=0
             });
 
@@ -278,7 +280,8 @@ $P.ready(function(){
              *  undo, get back to the previous schedule_list elem
              */
 
-            $("#undo").click(function (){
+            $("#undo").click(function (e){
+                    e.preventDefault();
                     if(history_stack.length >1){
                             redo_stack.push(history_stack.pop())
                     }        
@@ -295,29 +298,44 @@ $P.ready(function(){
             /**
              * redo
              */
-            $("#redo").click(function(){
+            $("#redo").click(function(e){
+                    e.preventDefault();
                     if(redo_stack.length>0){
                             history_stack.push(redo_stack.pop())
                     }
-                    
                     schedule_temp = history_stack[history_stack.length-1]									
                     schedule_list = $.extend(true, [], schedule_temp);
                     show_schedule();
                     adjust_parsed_data_pos();
                     update_date_label();
+                    update_schedule();                   
                     editing_flag = 0
             });
 	
             /**
              *  add new assignment
              */        
-            $("#new_assignment").click(function(){
+            $("#new_assignment").click(function(e){
+                    e.preventDefault();
                     $("#parsed_data").html("")
-                    s = sch(-1,-1,"1/1")  
+                    s = sch(-1,-1,"1/1") 
                     schedule_list.push(s)
+                    sid = s.id
                     show_schedule()
-                    adjust_parsed_data_pos()
+                    //adjust_parsed_data_pos()
                     
+                    /* replace schedule content with textarea*/ 
+                    orig_html = $(".sch_content[sid='" + sid + "']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
+                    $(".sch_content[sid='" + sid + "']").html(schedule_edit_string.replace(/SID_STR/gi, sid).replace(/CONTENT_STR/gi, orig_html))
+                    
+                    /* replace date with textbox*/
+                    curr_sch = get_sch_by_id(sid)
+                    orig_date = (curr_sch.date.getMonth() + 1) + "/" +(curr_sch.date.getDate())
+                    $(".schedule_elem_date[sid='" + sid + "']").html(date_string.replace(/SID_STR/gi, sid).replace(/ORIG_DATE_STR/gi, orig_date))
+
+
+                    
+                    $("html,body").animate({ scrollTop:  document.body.scrollHeight}, 600);       
             });
 
             /**
@@ -425,6 +443,9 @@ $P.ready(function(){
              *  filter out dates previous to current year
              */
             function parse_date(str){
+                    if(str.search(/week/gi) != -1){
+                            return true
+                    }
                     date_out = Date.parse(str)
                     if(date_out == null) return false
                     year_temp = date_out.getFullYear()
@@ -448,14 +469,18 @@ $P.ready(function(){
             function update_date_label(){
                     for(i=0;i<schedule_list.length;i++){
                             if(schedule_list[i].date_label_deleted == false){ //NOT date_label_deleted
+                                    schedule_list[i].deleted = false
                                     $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("x")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 1)
-                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "none", "color": "#000000"})
+                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").fadeTo("fast", 1)
+                                    //$("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "none", "color": "#000000"})
                             }
                             else{ // date_label_deleted
+                                    schedule_list[i].deleted = true
                                     $(".date_label[sid='"+schedule_list[i].id+"'] > a[sid='"+ schedule_list[i].id +"']").text("O")
                                     $(".date_label[sid='"+schedule_list[i].id+"']").fadeTo("fast", 0.5)
-                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "line-through", "color": "#F60"})
+                                    $("span.orig_text_block[sid='"+schedule_list[i].id+"']").fadeTo("fast", 0.2)
+                                    //$("span.orig_text_block[sid='"+schedule_list[i].id+"']").css({"text-decoration": "line-through", "color": "#F60"})
                             }
                     }
             }
@@ -509,9 +534,11 @@ $P.ready(function(){
                             sid = schedule_list[i].id
                             if( schedule_list[i].deleted == true ){
                                     $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 0.2)
+                                    $(".toggle_del_sch[sid='" + sid + "']").text("O")
                             }
                             else{
                                     $(".schedule_elem[sid='" + sid + "']").fadeTo("fast", 1)
+                                    $(".toggle_del_sch[sid='" + sid + "']").text("x")
                             }
 
                     } 
@@ -609,7 +636,7 @@ $P.ready(function(){
                     max_hit_number=0
                     max_hit_idx=0
                     min_var=999999999
-
+                    best_guess_idx = -1
                     for(m=0;m<reg.length;m++){
                             hits = result_g.match(reg[m]);
                             
@@ -628,17 +655,30 @@ $P.ready(function(){
                                             inc_val.push(  (Date.parse(filtered_hits[n+1]).getOrdinalNumber()-Date.parse(filtered_hits[n]).getOrdinalNumber())  )												
                                     }
                                     //alert( inc_val)
+                                    if(variance(inc_val) < 1 && inc_val.length > 10){ // min number of dates allowed
+                                            best_guess_idx = m
+                                    }
                                     if(variance(inc_val) < min_var && inc_val.length > 2){ // min number of dates allowed
                                             min_var = variance(inc_val)
-                                            reg_idx =m
+                                            reg_idx = m
                                             find_average(inc_val)
                                             
                                     }
                             }
                     }
-                    //reg_idx = 6
+                    
+                    if(best_guess_idx != -1) {reg_idx = best_guess_idx;}
                     if(reg_idx == 6) {flag_week_format = 1;}
+                    
                     return reg_idx
+            }
+            
+            function init_schedule(){
+                    for(i = 0; i < schedule_list.length; i++){
+                            if(schedule_list[i].date_label_deleted == true){
+                                    schedule_list[i].deleted = true
+                            }
+                    }
             }
 
             /************   main **************/
@@ -668,8 +708,6 @@ $P.ready(function(){
                    
 
 
-                    
-
                     reg_idx = get_reg_idx(result);
                     if(reg_idx == -1){ //no valid pattern found
                             alert("No date assignment found!");
@@ -691,7 +729,7 @@ $P.ready(function(){
                             idx = idx + match_idx + match_str.length
                     }
                     
-                    /* build scheduel list, each elem in schedule_list is an sch object */
+                    /* build schedule list, each elem in schedule_list is an sch object */
                     for(i=0; i < pos_list.length;i++){
                             if(i < pos_list.length -1){
                                     sch_temp = sch(pos_list[i][0], pos_list[i+1][0], pos_list[i][1])
@@ -781,14 +819,14 @@ $P.ready(function(){
                     content = content + result_g.slice(schedule_list[i-1].end_pos, result_g.length)
                     $("#orig_syl").html(content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
                     $("#pre_text").fadeTo("fast", 0.2);
-
+                    
+                    init_schedule();
                     show_schedule();
                     schedule_list_orig_len = schedule_list.length
-                    /*t=$.extend(true, [], schedule_list);
-                    history_stack.push(t)*/
-                    save_history();
                     update_date_label()
-						   
+	            update_schedule()				   
+                    save_history();
+
                    }});        
         /*****************      end of main     *********************/  
 

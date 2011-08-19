@@ -4,6 +4,24 @@
  * page
  */
 $P.ready(function() {
+	$FB(function() {
+		FB.getLoginStatus(function(response) {
+			if (response.authResponse) {
+				$.ajax({
+					url: '/user-login-fb',
+					type: 'post',
+					cache: false,
+					data: 'fb_uid=' + response.authResponse.userID,
+					success: function(response) {
+						if (response.success) {
+							window.location = response.redirect;
+						}
+					}
+				});
+			}
+		});
+	});
+
 	window.welcome = $('.welcome');
 	blurInput(welcome);
 

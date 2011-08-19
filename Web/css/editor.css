@@ -54,7 +54,8 @@
 	background-color:#09F;
 	border-radius: 4px;
         top: 10px;
-        left: 700px; 
+        left: 676px;
+        width: 450px; 
 	}
         
 .toolbox_btn{
@@ -64,7 +65,7 @@
 	border-color:#09F;
 	border-width:2px;
 	border-style:solid;
-	font-size:18px;
+	font-size:14px;
 	cursor:pointer;
 	display: inline-block;
 	text-align:center;
@@ -87,6 +88,28 @@
 	border-color:#09F;
 }
 
+.date_label{
+	color:#FFF;
+	background-color:#F60;
+	border-radius: 2px;
+	font-size:14px;
+}
+
+
+#info_box{
+	font: sans-serif;
+	position:absolute;
+        top: 10px;
+        left: 226px;
+        color: #FFF;
+        background-color: #F60;
+        font-size: 12px;
+        text-align: center;
+	border-radius: 4px;	
+        width: 120px;
+        height: 30px;
+        left: -100px;
+}
 
 
 
@@ -143,14 +166,6 @@
 	}
 
 
-.date_label{
-	color:#FFF;
-	background-color:#F60;
-	border-radius: 2px;
-	font-size:14px;
-	
-	}
-
 
 .schedule_elem{
         background-color:#09F;
@@ -172,7 +187,7 @@
         height: 200px;
         }
 .schedule_elem_space{
-        height: 10px;
+        height: 20px;
         }
 .sch_content{
         width: 450px;
