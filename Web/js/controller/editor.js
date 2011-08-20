@@ -29,7 +29,7 @@ $P.ready(function(){
             reg=[]
             reg[0]=/((0?[1-9])|(1[0-2])){1}\/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(\/(\d{4}|\d{2}))?(?=[^\/0-9])/gi;	// mm/dd/yy
             //reg[1]=/(0?[1-9]|1[0-2]){1}\/(1[0-9]|2[0-9]|3[0-1]|0?[1-9]){1}(?=[^\/0-9])/g;	// mm/dd(/2011 2012)
-            reg[2]=/(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}( *|,|.){0,2}((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(?=\W)(\W+\d{4})?/gi
+            reg[2]=/(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}( *|,|.){0,2}((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(?=[^0-9])(\W+\d{4})?/gi
             reg[3]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}-(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[4]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1} (january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[5]=/^[^0-9](0?[1-9]|1[0-2]){1}-(1[0-9]|2[0-9]|3[0-1]|0?[1-9]){1}(?=[^0-9])/gi
@@ -67,7 +67,7 @@ $P.ready(function(){
                                     <input type='button' id='save_sch' sid='SID_STR' value='save'>\
                                     <input type='button' id='cancel_sch' sid='SID_STR' value='cancel'>"           
             
-            info_box_string = "<div class='info_box'></span>"        
+            info_box_string = "<div id='info_box'></span>"        
             //date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'><a href='#' sid='SID_STR' class='sch_btn_3 confirm_date_change'>O</a><a href='#' sid='SID_STR' class='sch_btn_3 cancel_date_change'>X</a>"
             date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'>"
             /*       flags            */
@@ -95,7 +95,7 @@ $P.ready(function(){
                                 
                                 hit_flag = 0
                                 for (j = 0; j < fil_list.length; j++){
-                                        if(last_line.match(fil_list[j]) != null && last_line.length < 10) { hit_flag = 1; break; }
+                                        if(last_line.match(fil_list[j]) != null && last_line.length < 12) { hit_flag = 1; break; }
                                 }
                                 
                                 if(last_oc_idx > first_oc_idx && hit_flag == 1){
@@ -150,17 +150,33 @@ $P.ready(function(){
                     sid = $(this).attr("sid")
                     this_height =  $(this).position().top
 
-                    $(".schedule_elem[sid='"+sid+"']").css("background-color","#99CCFF");
-                    
+                    $(".schedule_elem[sid='"+sid+"']").css("background-color","#99CCFF");                   
+		    
+		    idx = get_sch_idx_by_id(sid);		    
+		    if(idx > 0){
+			sid_prev = schedule_list[idx-1].id
+		        $(".orig_text_block[sid='" + sid + "']").css("background-color", "#DDDDDD")
+		        $(".orig_text_block[sid='" + sid_prev + "']").css("background-color", "#DDDDDD")
+
+		    }		    
+
                     $("#info_box").css("top", this_height)
                     $("#info_box").text("Click X to merge up")
-
+		    
                     $("#info_box").show()
                     $("#info_box").fadeTo("slow", 0.8)    
             });
 
             $(".date_label").live("mouseleave",function(){
                     sid = $(this).attr("sid")
+                    idx = get_sch_idx_by_id(sid);		    
+		    if(idx > 1){
+			sid_prev = schedule_list[idx-1].id
+		        $(".orig_text_block[sid='" + sid + "']").css("background-color", "")
+		        $(".orig_text_block[sid='" + sid_prev + "']").css("background-color", "")
+
+		    }
+
                     $(".schedule_elem[sid='"+sid+"']").css("background-color","");									 
                     $("#info_box").fadeOut()
             });
@@ -322,7 +338,8 @@ $P.ready(function(){
                     schedule_list.push(s)
                     sid = s.id
                     show_schedule()
-                    //adjust_parsed_data_pos()
+                    sch_top = $(".schedule_elem[sid='" + sid  + "']").position().top
+                    adjust_parsed_data_pos()
                     
                     /* replace schedule content with textarea*/ 
                     orig_html = $(".sch_content[sid='" + sid + "']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
@@ -335,7 +352,7 @@ $P.ready(function(){
 
 
                     
-                    $("html,body").animate({ scrollTop:  document.body.scrollHeight}, 600);       
+                    $("html,body").animate({ scrollTop:  sch_top}, 600);       
             });
 
             /**
@@ -649,9 +666,9 @@ $P.ready(function(){
                                             }
                                     }
                                     //alert(filtered_hits)
-    
                                     inc_val = []
                                     for(n=0;n<filtered_hits.length-2;n++){
+                                            if(Date.parse(filtered_hits[n+1]) == null || Date.parse(filtered_hits[n]) == null) continue
                                             inc_val.push(  (Date.parse(filtered_hits[n+1]).getOrdinalNumber()-Date.parse(filtered_hits[n]).getOrdinalNumber())  )												
                                     }
                                     //alert( inc_val)
@@ -666,7 +683,7 @@ $P.ready(function(){
                                     }
                             }
                     }
-                    
+                    console.log(min_var)
                     if(best_guess_idx != -1) {reg_idx = best_guess_idx;}
                     if(reg_idx == 6) {flag_week_format = 1;}
                     
@@ -748,13 +765,14 @@ $P.ready(function(){
                     start_pos_final = 0
                     end_pos_final = 0
                     max_len = 0
-                    
                     for(i=0;i<schedule_list.length-1;i++){
-                            //console.log(start_pos,end_pos)
+                            if(schedule_list[i].content.length < 3){
+                                    continue // some suckers will write their syls as " Quizzes: EVERY Thursday: 1/25, 2/1, 2/8, 2/15, 3/1, 3/8, 3/22, 4/5, 4/12, 4/19 ", which will total screw the smoothing process
+                            }
                             curr_day = schedule_list[i].date.getOrdinalNumber()
                             next_day = schedule_list[i+1].date.getOrdinalNumber()
                             
-                            if( (next_day-curr_day) > 0 && (next_day-curr_day) < avg*3 ){
+                            if( (next_day-curr_day) > 0 && (next_day-curr_day) < avg*4 ){
                                     end_pos = i+1
                             }
                             else{
@@ -762,7 +780,7 @@ $P.ready(function(){
                                             max_len = end_pos-start_pos
                                             start_pos_final = start_pos
                                             end_pos_final = end_pos
-                                            //console.log("break", start_pos_final, end_pos_final, max_len)
+                                            console.log("break", start_pos_final, end_pos_final, max_len)
                                     }
                                     start_pos = i+1
                                     end_pos = i+2
@@ -771,7 +789,7 @@ $P.ready(function(){
                     
                     if( (end_pos-start_pos) > max_len ) { max_len = end_pos-start_pos; start_pos_final = start_pos; end_pos_final = end_pos }
                     
-                    //console.log("smooth",start_pos_final, end_pos_final)
+                    console.log("smooth",start_pos_final, end_pos_final)
                     
                     /* filtration */ 
                     for(i=end_pos_final; i<schedule_list.length-1; i++){
