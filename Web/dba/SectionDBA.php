@@ -59,16 +59,19 @@ class SectionDBA implements DBAInterface{
 						'not null' => TRUE,
 						'description' => 'a status flag, e.g. HAS_SYLLABUS.',
 					),
-					'syllabus_raw' => array(
-						'type' => 'text',
+					'syllabus_id' => array(
+						'type' => 'int',
+						'size' => 'normal',
 						'not null' => TRUE,
-						'description' => 'the raw output generated from the document',
+						'default' => 0,
+						'description' => 'Syllabus id.',
 					),
 				),
 				'primary' => array('id'),
 				'index' => array(
 					'course_id' => array('course_id'),
 					'num' => array('num'),
+					'syllabus_id' => array('syllabus_id'),
 				),
 			),
 		);

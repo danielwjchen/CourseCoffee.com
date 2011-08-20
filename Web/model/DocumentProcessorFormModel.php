@@ -61,6 +61,40 @@ class DocumentProcessorFormModel extends FormModel{
 	}
 
 	/**
+	 * Read document and return a content in arrays of text
+	 *
+	 * @return array
+	 */
+	private function readDocument($doc) {
+		$doc = escapeshellcmd($doc);
+		$doc = escapeshellarg($doc);
+
+		$output = null;
+		if (strpos($mime, 'pdf')) {
+			exec('pdftotext ' . FILE_PATH . '/' . $doc . ' -  -layout', $output);
+
+		} elseif (strpos($mime, 'word')) {
+			exec('catdoc ' . FILE_PATH . '/' . $doc, $output);
+
+		} elseif (strpos($mime, 'html')) {
+			exec('html2text ' . FILE_PATH . '/' . $doc, $output);
+
+		} elseif (strpos($mime, 'plain')) {
+			exec('cat ' . FILE_PATH . '/' . $doc, $output);
+
+		}
+
+		if (empty($output)) {
+			Logger::write(self::EVENT_FAIL);
+			return array(
+				'error' => self::ERROR_FAIL,
+			);
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Process the document
 	 *
 	 * This method goes through the document and try to tag information of the 
@@ -103,28 +137,11 @@ class DocumentProcessorFormModel extends FormModel{
 				'error'    => self::ERROR_MAX_TRY
 			);
 		}
-		$doc = escapeshellcmd($doc);
-		$doc = escapeshellarg($doc);
-		$output = null;
-		if (strpos($mime, 'pdf')) {
-			exec('pdftotext ' . FILE_PATH . '/' . $doc . ' -  -layout', $output);
 
-		} elseif (strpos($mime, 'word')) {
-			exec('catdoc ' . FILE_PATH . '/' . $doc, $output);
+		$output = $this->readDocument($doc);
 
-		} elseif (strpos($mime, 'html')) {
-			exec('html2text ' . FILE_PATH . '/' . $doc, $output);
-
-		} elseif (strpos($mime, 'plain')) {
-			exec('cat ' . FILE_PATH . '/' . $doc, $output);
-
-		}
-
-		if (empty($output)) {
-			Logger::write(self::EVENT_FAIL);
-			return array(
-				'error' => self::ERROR_FAIL,
-			);
+		if (isset($output['error'])) {
+			return $output;
 		}
 
 		$line_count = count($output);
@@ -132,9 +149,12 @@ class DocumentProcessorFormModel extends FormModel{
 		$params = array();
 
 		/**
-		 * Find university information
+		 * List possible institution name string patterns 
+		 *
+		 * This should be improved in the future and utilize records in the 
+		 * institution_alias table.
 		 */
-		$school = array(
+		$institution_list = array(
 			'/michigan state/i' => 'Michigan State University',
 			'/msu/i' => 'Michigan State University',
 			'/university of michigan/i' => 'University of Michigan',
@@ -144,16 +164,14 @@ class DocumentProcessorFormModel extends FormModel{
 		$escape = false;
 
 		for ($i = 0; $i < $search_range; $i++) {
-			foreach($school as $key => $value) {
+			foreach($institution_list as $key => $value) {
 				preg_match($key, $output[$i], $matches);
 				if (!empty($matches)) {
 					$school_string = $value;
 					$escape = true;
 					break;
 				}
-				
 			}
-
 			if ($escape) {
 				break;
 			}
@@ -162,6 +180,7 @@ class DocumentProcessorFormModel extends FormModel{
 		$school = new InstitutionDAO($this->db);
 		$school->read(array('name' => $school_string));
 		$params['institution_id'] = $school->id;
+
 		/**
 		 * @to-do
 		 * we hardcode year and term id to 1 because there is only one semester
@@ -256,10 +275,6 @@ class DocumentProcessorFormModel extends FormModel{
 		// debug
 		// error_log('document procesor section_id - ' . $section_id);
 
-		$this->section_dao->read(array('id' => $section_id));
-		$this->section_dao->syllabus_status = self::HAS_SYLLABUS;
-		$this->section_dao->syllabus_raw    = $result;
-		$this->section_dao->update();
 
 		return array(
 			'success'        => true,
@@ -270,6 +285,36 @@ class DocumentProcessorFormModel extends FormModel{
 			'course_code'    => $course_code,
 			'content'        => $result
 		);
+	}
+
+	/**
+	 * Create linkage among uploaded syllabus file and class section
+	 */
+	public function setSectionSyllabus($section_id, $file_id) {
+		$this->section_dao->read(array('id' => $section_id));
+		$this->section_dao->syllabus_status = self::HAS_SYLLABUS;
+		$this->section_dao->syllabus_id = $file_id;
+		$this->section_dao->update();
+
+		// debug
+		error_log(__METHOD__ . ' : document procesor section - ' . print_r($this->section_dao->attribute, true));
+	}
+
+	/**
+	 * Update the syllabus status of given section
+	 */
+	public function updateSectionSyllabusStatus($section_id, $status) {
+
+		// debug
+		// error_log('document procesor section_id - ' . $section_id);
+
+		$this->section_dao->read(array('id' => $section_id));
+		$this->section_dao->syllabus_status = $status;
+		$this->section_dao->update();
+
+		// debug
+		error_log(__METHOD__ . ' : document procesor section - ' . print_r($this->section_dao->attribute, true));
+
 	}
 
 }

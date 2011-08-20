@@ -61,6 +61,7 @@ window.Task = function(creationFormName, optionFormName) {
 		// debug
 		// console.log(response.list);
 
+		var domain = 'http://' + window.location.hostname;
 		var institution_uri = $('input[name=institution-uri]', optionForm).val();
 		var year = $('input[name=year]', optionForm).val();
 		var term = $('input[name=term]', optionForm).val();
@@ -74,7 +75,7 @@ window.Task = function(creationFormName, optionFormName) {
 
 		$.each(tasks, function(i, task) {
 			if (task && task['subject_abbr'] && task['course_num'] && task['section_num']) {
-				tasks[i]['url'] = window.location.origin + '/class/' + 
+				tasks[i]['url'] = domain + '/class/' + 
 					institution_uri + '/' +
 					year + '/' + term + '/' +
 					task['subject_abbr'] + '/' + 
@@ -82,7 +83,7 @@ window.Task = function(creationFormName, optionFormName) {
 					task['section_num'] + '/' +
 					task['id'];
 			} else if (task) {
-				tasks[i]['url'] = window.location.origin + '/task/' + task['id'];
+				tasks[i]['url'] = domain + '/task/' + task['id'];
 			}
 		});
 

@@ -49,14 +49,22 @@ class TaskCreateFormModel extends FormModel {
 	}
 
 	/**
-	 * Bulk create multiple tasks
+	 * Create task
+	 *
+	 * @param $user_id
+	 * @param $objective
+	 * @param $due_date
+	 * @param $description
+	 * @oaram $section_id
+	 *
+	 * @return int
+	 *  the record id
 	 */
-	public function processMultipleForm($user_id, $objective, $due_date, $section_id ='', $description = '') {
-		$objective = preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $objective);
-		$record_id = $this->task_dao->create(array(
+	public function createTask($user_id, $objective, $timestamp, $section_id ='', $description = '') {
+		return $this->task_dao->create(array(
 			'user_id'     => $user_id,
 			'objective'   => $objective,
-			'due_date'    => strtotime($due_date),
+			'due_date'    => $timstamp,
 			'description' => $description,
 			'section_id'  => $section_id,
 		));
@@ -102,13 +110,13 @@ class TaskCreateFormModel extends FormModel {
 
 		$this->unsetFormToken();
 		$token = $this->initializeFormToken();
-		$record_id = $this->task_dao->create(array(
-			'user_id'     => $user_id,
-			'objective'   => $objective,
-			'due_date'    => strtotime($due_date),
-			'description' => $description,
-			'section_id'  => $section_id,
-		));
+		$record_id = $this->createTask(
+			$user_id,
+			$objective,
+			strtotime($due_date),
+			$description,
+			$section_id
+		);
 
 		if ($record_id != 0) {
 			return array(
