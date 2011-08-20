@@ -49,14 +49,22 @@ class TaskCreateFormModel extends FormModel {
 	}
 
 	/**
-	 * Bulk create multiple tasks
+	 * Create task
+	 *
+	 * @param $user_id
+	 * @param $objective
+	 * @param $due_date
+	 * @oaram $section_id
+	 * @param $description
+	 *
+	 * @return int
+	 *  the record id
 	 */
-	public function processMultipleForm($user_id, $objective, $due_date, $section_id ='', $description = '') {
-		$objective = preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $objective);
-		$record_id = $this->task_dao->create(array(
+	public function createTask($user_id, $objective, $timestamp, $section_id ='', $description = '') {
+		return $this->task_dao->create(array(
 			'user_id'     => $user_id,
 			'objective'   => $objective,
-			'due_date'    => strtotime($due_date),
+			'due_date'    => $timestamp,
 			'description' => $description,
 			'section_id'  => $section_id,
 		));
@@ -71,8 +79,8 @@ class TaskCreateFormModel extends FormModel {
 	 * @param $user_id
 	 * @param $objective
 	 * @param $due_date
-	 * @param $description
 	 * @oaram $section_id
+	 * @param $description
 	 *
 	 * @return array
 	 *  on success:
@@ -84,7 +92,7 @@ class TaskCreateFormModel extends FormModel {
 	 *  - message
 	 *  - token
 	 */
-	public function processForm($token, $user_id, $objective, $due_date, $description ='', $section_id = '') {
+	public function processForm($token, $user_id, $objective, $due_date, $section_id = '', $description ='') {
 		// if the form token has expired, this is more a study on user behavior. We 
 		// might want to change the expire to a higher value if this happens too
 		// often
@@ -102,13 +110,13 @@ class TaskCreateFormModel extends FormModel {
 
 		$this->unsetFormToken();
 		$token = $this->initializeFormToken();
-		$record_id = $this->task_dao->create(array(
-			'user_id'     => $user_id,
-			'objective'   => $objective,
-			'due_date'    => strtotime($due_date),
-			'description' => $description,
-			'section_id'  => $section_id,
-		));
+		$record_id = $this->createTask(
+			$user_id,
+			$objective,
+			strtotime($due_date),
+			$section_id,
+			$description
+		);
 
 		if ($record_id != 0) {
 			return array(

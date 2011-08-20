@@ -203,7 +203,7 @@
 	font-size: 10px;
 }
 .calendar .day .day-interval .row{
-	border-left: 1px solid #DBE1E6;
+	/*border-left: 1px solid #DBE1E6;*/
 }
 /**
  * Define styles for month calendar

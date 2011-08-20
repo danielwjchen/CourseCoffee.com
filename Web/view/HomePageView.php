@@ -39,8 +39,10 @@ class HomePageView extends PageView implements PageViewInterface {
 	public function getContent() {
 		extract($this->data);
 		$option = '';
+		$sections = '';
 		foreach ($class_list as $section_id => $section_code) {
 			$option .= "<option value='{$section_id}'>{$section_code}</option>";
+			$sections .= "<input type='hidden' name='section-code' value='{$section_code}' />";
 		}
 		$class_select = <<<HTML
 <select name="section_id" class="class-list">
@@ -48,6 +50,8 @@ class HomePageView extends PageView implements PageViewInterface {
 	{$option}
 </select>
 HTML;
+
+		$profile_image = empty($fb_uid) ? 'images/default-profile.png' : 'https://graph.facebook.com/' . $fb_uid . '/picture?type=large';
 		return <<<HTML
 <div class="home container">
 	<div class="container-inner">
@@ -83,7 +87,7 @@ HTML;
 					<div class="panel-top">
 						<div class="panel-inner">
 							<div class="profile">
-								<img src="images/default-profile.png" />
+								<img src="{$profile_image}" />
 								<div class="name">{$profile['first_name']} {$profile['last_name']}</div>
 								<div class="school">{$profile['institution']}</div>
 								<div class="semester">{$profile['term']} {$profile['year']}</div>
@@ -146,6 +150,12 @@ HTML;
 					<div class="panel-02">
 						<h1>Class Feed</h1>
 						<div class="panel-inner">
+							<form name="class-feed">
+								<input type="hidden" name="institution_uri" value="{$profile['institution_uri']}" />
+								<input type="hidden" name="year" value="{$profile['year']}" />
+								<input type="hidden" name="term" value="{$profile['term']}" />
+								{$sections}
+							</form>
 						</div>
 					</div>
 				</div>

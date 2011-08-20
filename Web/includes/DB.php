@@ -56,8 +56,7 @@ class DB{
 			}
 
 			if ($result === false) {
-				echo $sql . "\n";
-				echo "PDO::errorInfo(): " . print_r($sth->errorInfo(), true) . "\n";
+				Logger::Write("PDO::errorInfo(): " . print_r($sth->errorInfo(), true));
 				return false;
 				
 			} 

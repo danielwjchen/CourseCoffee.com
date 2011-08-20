@@ -6,13 +6,6 @@
 class DocumentController extends Controller implements ControllerInterface {
 
 	/**
-	 * Extend Controller::__construct()
-	 */
-	function __construct() {
-		parent::__construct();
-	}
-
-	/**
 	 * Implement ControllerInterface::path()
 	 */
 	public static function path() {
@@ -33,7 +26,7 @@ class DocumentController extends Controller implements ControllerInterface {
 	 * Override Controller::afterAction()
 	 */
 	public function afterAction() {
-		echo $this->json->render();
+		echo $this->output->render();
 	}
 
 	/**
@@ -41,7 +34,7 @@ class DocumentController extends Controller implements ControllerInterface {
 	 */
 	public function issueDocToken() {
 		$file = new FileFormModel();
-		$this->json = new JSONView(array(
+		$this->output = new JSONView(array(
 			'token' => $file->initializeFormToken(),
 		));
 	}
@@ -69,7 +62,7 @@ class DocumentController extends Controller implements ControllerInterface {
 		$mime     = Input::Post('mime');
 		$document = Input::Post('document');
 		$result = $processor->processDocument($document, $mime, $token);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 }

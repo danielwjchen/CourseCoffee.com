@@ -44,7 +44,7 @@ window.CommentPanel = function() {
 		content.animate({marginLeft: '-479px', marginRight: '-960px'}, 400, function() {
 			content.after('<div class="panel-03" id="'+ thread + '">' + 
 				'<div class="panel-inner"></div>' + 
-				'<a href="#" id="remove-panel"><span class="hidden">remove</span></a>' +
+				'<a href="#" id="remove-panel"><span class="hidden">back</span></a>' +
 			'</div>');
 			$('.panel-03 > .panel-inner', $P).panelizeFbComments(thread, url);
 			$('.panel-03', $P).delegate('a#remove-panel', 'click', function(e) {
@@ -70,13 +70,13 @@ window.CommentPanel = function() {
 	}
 	*/
 
-	$('.task-list', $P).delegate('a.fb-comment', 'click', function(e) {
+	$('.task-list a.fb-comment', $P).click( function(e) {
 		e.preventDefault();
 		var target = $(this);
 		$('a.fb-comment', $P).html('comments &#187;');
 		var panel03 = $('.panel-03', $P);
 		var task_id = target.attr('id');
-		var task_url = window.location.href + '/' + task_id;
+		var task_url = target.attr('href');
 		if (panel03.length != 0) {
 			if (panel03.attr('id') == 'thread-' + task_id) {
 				panelCollapse();
@@ -93,6 +93,6 @@ window.CommentPanel = function() {
 			panelExpand(task_id, task_url);
 
 		}
-		return false;
+
 	});
 };

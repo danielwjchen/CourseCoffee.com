@@ -17,7 +17,7 @@ class SectionDAO extends DAO implements DAOInterface{
 			'num',
 			'credit',
 			'syllabus_status',
-			'syllabus_raw',
+			'syllabus_id',
 		);
 		parent::__construct($db, $attr, $params);
 
@@ -32,7 +32,7 @@ class SectionDAO extends DAO implements DAOInterface{
 				!isset($params['num']) ||
 				!isset($params['credit']) ||
 				!isset($params['syllabus_status']) ||
-				!isset($params['syllabus_raw'])
+				!isset($params['syllabus_id'])
 		) {
 			throw new Exception('incomplete section pramas - ' . print_r($params, true));
 			return ;
@@ -44,20 +44,20 @@ class SectionDAO extends DAO implements DAOInterface{
 					`num`,
 					`credit`,
 					`syllabus_status`,
-					`syllabus_raw`
+					`syllabus_id`
 				) VALUES (
 					:course_id, 
 					:num,
 					:credit,
 					:syllabus_status,
-					:syllabus_raw
+					:syllabus_id
 				)",
 			array(
 				'course_id'       => $params['course_id'], 
 				'num'             => $params['num'],
 				'credit'          => $params['credit'],
 				'syllabus_status' => $params['syllabus_status'],
-				'syllabus_raw'    => $params['syllabus_raw'],
+				'syllabus_id'    => $params['syllabus_id'],
 			));
 
 		}
@@ -75,7 +75,7 @@ class SectionDAO extends DAO implements DAOInterface{
 				sec.num AS section_num,
 				sec.credit,
 				sec.syllabus_status,
-				sec.syllabus_raw,
+				sec.syllabus_id,
 				crs.num AS course_num,
 				sub.abbr AS subject_abbr
 			FROM `section` sec
@@ -109,14 +109,14 @@ class SectionDAO extends DAO implements DAOInterface{
 				`num` = :num,
 				`credit` = :credit,
 				`syllabus_status` = :syllabus_status,
-				`syllabus_raw` = :syllabus_raw
+				`syllabus_id` = :syllabus_id
 			WHERE `id` = :id
 		";
 		$this->db->perform($sql, array(
 			'id'              => $this->attr['id'],
 			'num'             => $this->attr['num'],
 			'credit'          => $this->attr['credit'],
-			'syllabus_raw'    => $this->attr['syllabus_raw'],
+			'syllabus_id'     => $this->attr['syllabus_id'],
 			'syllabus_status' => $this->attr['syllabus_status'],
 		));
 

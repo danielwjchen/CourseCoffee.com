@@ -917,7 +917,7 @@ $P.ready(function(){
 						$.ajax({
 							url: '/college-class-enroll',
 							type: 'post',
-							data: 'section_id=' + response.section_id,
+							data: 'section_id=' + $('#section-id', selectionForm).val(),
 							success: function(response) {
 								if (response.error) {
 									$('.suggested-reading').after('<h3 class="warning">' +
@@ -946,7 +946,7 @@ $P.ready(function(){
 
 					$('.dialog-inner .dialog-content').html(content);
 					bookList = new BookSuggest('.book-list');
-					bookList.getBookList(response.section_id);
+					bookList.getBookList($('#section-id', selectionForm).val())
 				}
 			});
 		});

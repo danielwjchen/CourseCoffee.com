@@ -92,6 +92,9 @@ HTML;
 						<div class="calendar panel-menu">
 							<div class="panel-menu-inner">
 								<form name="calendar-option-form" id="calendar-option">
+									<input type="hidden" name="institution-uri" value="{$institution_uri}" />
+									<input type="hidden" name="year" value="{$year}" />
+									<input type="hidden" name="term" value="{$term}" />
 									<input type="hidden" name="type" value="month" />
 									<input type="hidden" name="timestamp" value="{$timestamp}" />
 									<input type="hidden" name="begin" />

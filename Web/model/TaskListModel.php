@@ -14,14 +14,14 @@ class TaskListModel extends Model {
 	/**
 	 * Access to task record
 	 */
-	private $task_dao;
+	private $task_list_dao;
 
 	/**
 	 * Extend Model::__construct()
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->task_dao = new TaskDAO($this->db);
+		$this->task_list_dao = new TaskListDAO($this->db);
 	}
 
 	/**
@@ -39,8 +39,7 @@ class TaskListModel extends Model {
 	 *   - message
 	 */
 	public function fetchUserToDoList($user_id, $begin_date, $paginate) {
-		$has_record = $this->task_dao->read(array(
-			'user_id' => $user_id,
+		$has_record = $this->task_list_dao->read(array(
 			'range' => array(
 				'begin_date' => $begin_date,
 			),
@@ -50,7 +49,7 @@ class TaskListModel extends Model {
 			),
 		));
 		if ($has_record) {
-			$record_list = $this->task_dao->list;
+			$record_list = $this->task_list_dao->list;
 			return array(
 				'success' => true,
 				'list'    => $record_list,
@@ -79,8 +78,7 @@ class TaskListModel extends Model {
 	 *   - message
 	 */
 	public function fetchUserClassList($user_id, $section_id, $paginate) {
-		$has_record = $this->task_dao->read(array(
-			'user_id' => $user_id,
+		$has_record = $this->task_list_dao->read(array(
 			'section_id' => $section_id,
 			'limit'   => array(
 				'offset' => $paginate * self::COUNT,
@@ -88,7 +86,7 @@ class TaskListModel extends Model {
 			),
 		));
 		if ($has_record) {
-			$record_list = $this->task_dao->list;
+			$record_list = $this->task_list_dao->list;
 			return array(
 				'success' => true,
 				'list'    => $record_list,
@@ -118,8 +116,7 @@ class TaskListModel extends Model {
 	 *   - message
 	 */
 	public function fetchUserCalendarList($user_id, $begin_date, $end_date, $paginate) {
-		$has_record = $this->task_dao->read(array(
-			'user_id' => $user_id,
+		$has_record = $this->task_list_dao->read(array(
 			'range'   => array(
 				'begin_date' => $begin_date,
 				'end_date'   => $end_date,
@@ -134,7 +131,7 @@ class TaskListModel extends Model {
 			*/
 		));
 		if ($has_record) {
-			$record_list = $this->task_dao->list;
+			$record_list = $this->task_list_dao->list;
 			return array(
 				'success' => true,
 				'list'    => $record_list,

@@ -22,6 +22,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			'first_name',
 			'last_name',
 			'institution',
+			'institution_uri',
 			'year',
 			'term',
 		);
@@ -96,6 +97,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				f.path,
 				f.mime,
 				i.name AS institution,
+				i.uri AS institution_uri,
 				iy.period AS year,
 				it.name AS term
 			FROM `user` u

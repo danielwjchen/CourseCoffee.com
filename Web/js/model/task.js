@@ -55,6 +55,42 @@ window.Task = function(creationFormName, optionFormName) {
 	});  
 
 	/**
+	 * Add URL to each task
+	 */
+	this.AddUrlToTask = function(list) {
+		// debug
+		// console.log(response.list);
+
+		var domain = 'http://' + window.location.hostname;
+		var institution_uri = $('input[name=institution-uri]', optionForm).val();
+		var year = $('input[name=year]', optionForm).val();
+		var term = $('input[name=term]', optionForm).val();
+		var tasks = {};
+
+		if (list['id']) {
+			tasks['0'] = list;
+		} else {
+			tasks = list;
+		}
+
+		$.each(tasks, function(i, task) {
+			if (task && task['subject_abbr'] && task['course_num'] && task['section_num']) {
+				tasks[i]['url'] = domain + '/class/' + 
+					institution_uri + '/' +
+					year + '/' + term + '/' +
+					task['subject_abbr'] + '/' + 
+					task['course_num'] + '/' +
+					task['section_num'] + '/' +
+					task['id'];
+			} else if (task) {
+				tasks[i]['url'] = domain + '/task/' + task['id'];
+			}
+		});
+
+		return tasks;
+	};
+
+	/**
 	 * Set error messages
 	 */
 	this.setError = function(message, region) {
@@ -168,7 +204,7 @@ Task.generateList = function(list, region) {
 
 		html += "<dd id='" + item['due_date'] + "' class='due_date count-down'>" + item['due_date'] + "</dd>";
 		html += item['location'] != null ? "<dd class='location'>" + item['location'] + "</dd>" : "";
-		html += "<dd class='comment'><a href='#' id='" + item['id'] + "' class='fb-comment'>comments &#187;</a></dd>";
+		html += "<dd class='comment'><a href='" + item['url'] + "' id='" + item['id'] + "' class='fb-comment'>comments &#187;</a></dd>";
 		html += item['description'] != null ? "<dd class='description'>" + item['description'] + "</dd>" : "";
 			
 		html += "</dl></li>";

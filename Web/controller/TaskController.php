@@ -6,7 +6,7 @@
 
 class TaskController extends Controller implements ControllerInterface {
 
-	private $json;
+	private $output;
 	
 	/**
 	 * Extend Controller::__construct()
@@ -21,8 +21,8 @@ class TaskController extends Controller implements ControllerInterface {
 	public static function path() {
 		return array(
 			'task-init'          => 'issueTaskToken',
-			'task-add'           => 'createTask',
-			'task-add-from-doc'  => 'createTaskFromDocument',
+			'task-add'           => 'handleTaskCreation',
+			'task-add-from-doc'  => 'handleTaskCreationFromDoc',
 			'task-update'        => 'updateTask',
 			'task-remove'        => 'removeTask',
 			'task-search'        => 'searchTask',
@@ -44,8 +44,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
-		$this->json->setHeader(PageView::HTML_HEADER);
-		echo $this->json->render();
+		echo $this->output->render();
 	}
 
 	/**
@@ -53,7 +52,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 */
 	public function issueTaskToken() {
 		$task = new TaskCreateFormModel();
-		$this->json = new JSONView(array(
+		$this->output = new JSONView(array(
 			'token' => $task->initializeFormToken(),
 		));
 	}
@@ -65,19 +64,24 @@ class TaskController extends Controller implements ControllerInterface {
 	 * middle of creating an account, enrolling in a class, or uploading syllabus 
 	 * for a class.
 	 */
-	public function createTaskFromDocument() {
+	public function handleTaskCreationFromDoc() {
 		$task_model  = new TaskCreateFormModel();
 		$task_count = Input::Post('task_count');
 		$section_id = Input::Post('section_id');
-		$creator_id = 1;// super user id
+		$user_id = $this->GetUserId();
+		$creator_id = ($user_id !== false) ? $user_id : 1;// super user id
 
 		for ($i = 0; $i < $task_count; $i++) {
 			$date      = Input::Post('date_' . $i);
-			$objective = Input::Post('objective_' . $i);
-			$task_model->processMultipleForm($creator_id, $objective, $date, $section_id);
+			$objective = preg_replace('/[^(\x20-\x7F)\x0A]*/', '', Input::Post('objective_' . $i));
+			$task_model->createTask($creator_id, $objective, $date, $section_id);
 		}
 
-		$this->json = new JSONView(array(
+		$processor = new DocumentProcessorFormModel();
+		$processor->setSectionSyllabus($section_id);
+		$processor->updateSectionSyllabusStatus($section_id, $status);
+
+		$this->output = new JSONView(array(
 			'section_id' => $section_id,
 			'message'    => 'Congratulation! The syllabus is now uploaded!'
 		));
@@ -86,7 +90,7 @@ class TaskController extends Controller implements ControllerInterface {
 	/**
 	 * Create new task
 	 */
-	public function createTask() {
+	public function handleTaskCreation() {
 		$task = new TaskCreateFormModel();
 
 		$user_id     = Session::Get('user_id');
@@ -101,10 +105,10 @@ class TaskController extends Controller implements ControllerInterface {
 			$user_id, 
 			$objective, 
 			$due_date, 
-			$description, 
-			$section_id
+			$section_id,
+			$description
 		);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -140,7 +144,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
 		$result = $list_model->fetchUserToDoList($user_id, $begin, $paginate);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -152,7 +156,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$paginate   = Input::Post('paginate');
 		$list_model = new TaskListModel();
 		$result = $list_model->fetchUserClassList($user_id, $section_id, $paginate);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -165,7 +169,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
 		$result = $list_model->fetchUserCalendarList($user_id, $begin, $end, $paginate);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 }
