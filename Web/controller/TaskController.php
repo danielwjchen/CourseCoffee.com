@@ -105,8 +105,8 @@ class TaskController extends Controller implements ControllerInterface {
 			$user_id, 
 			$objective, 
 			$due_date, 
-			$description, 
-			$section_id
+			$section_id,
+			$description
 		);
 		$this->output = new JSONView($result);
 	}
