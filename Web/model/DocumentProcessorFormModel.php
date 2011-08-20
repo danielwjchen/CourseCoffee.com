@@ -65,7 +65,7 @@ class DocumentProcessorFormModel extends FormModel{
 	 *
 	 * @return array
 	 */
-	private function readDocument($doc) {
+	private function readDocument($doc, $mime) {
 		$doc = escapeshellcmd($doc);
 		$doc = escapeshellarg($doc);
 
@@ -83,6 +83,9 @@ class DocumentProcessorFormModel extends FormModel{
 			exec('cat ' . FILE_PATH . '/' . $doc, $output);
 
 		}
+
+		// debug
+		error_log(__METHOD__ . ' : output - ' . print_r($output, true));
 
 		if (empty($output)) {
 			Logger::write(self::EVENT_FAIL);
@@ -138,7 +141,7 @@ class DocumentProcessorFormModel extends FormModel{
 			);
 		}
 
-		$output = $this->readDocument($doc);
+		$output = $this->readDocument($doc, $mime);
 
 		if (isset($output['error'])) {
 			return $output;
