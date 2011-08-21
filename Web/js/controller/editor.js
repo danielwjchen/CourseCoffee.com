@@ -15,8 +15,7 @@ $P.ready(function(){
             result_g = "";
             avg = 0 //average increasement
             reg_idx = -1;
-            flag_week_format = 0;
-            
+            auto_fill_start_idx = 0 
             
             pre_text_orig = "";
             pre_text_trunc = "";
@@ -33,7 +32,7 @@ $P.ready(function(){
             reg[3]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}-(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[4]=/((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1} (january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec){1}(\W+\d{4})?/gi
             reg[5]=/^[^0-9](0?[1-9]|1[0-2]){1}-(1[0-9]|2[0-9]|3[0-1]|0?[1-9]){1}(?=[^0-9])/gi
-            reg[6]=/week\W{1,2}\d{1,2}/gi
+            reg[6]=/week\W{0,2}\d{1,2}/gi
             reg[1]=/((0?[1-9])|(1[0-2])){1}-((1[0-9])|(2[0-9])|(3[0-1])|(0?[1-9])){1}(-(\d{4}|\d{2}))?(?=[^\/0-9])/gi;	// mm-dd-yy or mm-dd
 
             fil_list = [/mon/gi, /tue/gi, /wed/gi, /thu/gi, /thur/gi, /fri/gi, /sat/gi, /sun/gi,/week/gi, /m/gi , /t/gi, /w/gi, /r/gi, /f/gi]
@@ -72,7 +71,7 @@ $P.ready(function(){
             date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'>"
             /*       flags            */
             editing_flag = 0;
-
+            flag_week_format = 0;
 
             /*    data stuctures      */
             
@@ -102,8 +101,9 @@ $P.ready(function(){
                                         content = content.slice(first_oc_idx, last_oc_idx)
                                 }
                             }
-
-                            content = $.trim(content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
+                            
+                            if($.trim(content).length < 2)
+                                return null
 
                             if(content.length < 4){
                                         date_label_deleted=true
@@ -112,8 +112,12 @@ $P.ready(function(){
                                         date_label_deleted=false	
                             }
                     
+                            content = $.trim(content.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
                     } 
-                    
+
+                    if(reg_idx == 6){
+                            match_str = match_str.replace(/\W/gi, " ")    
+                    }
                     if(parse_date(match_str) == true){ date_out = Date.parse(match_str) }
                     var temp_sch = { 'id' : id_temp, 'start_pos' : start_pos, 'end_pos': next_start_pos, 'match_str' : match_str,'content': content , 'modified': 0, 'catergory': '', 'date': date_out, 'next': false, 'deleted': false, 'date_label_deleted': date_label_deleted, 'content_being_edited': false, 'date_being_edited': false};
                     return temp_sch;
@@ -241,27 +245,28 @@ $P.ready(function(){
                     sid = $(this).attr("sid")
                     
                     sch_idx = get_sch_idx_by_id(sid)
-                    orig_first_day = schedule_list[0].date.getOrdinalNumber() 
+                    orig_first_day = schedule_list[auto_fill_start_idx].date.getOrdinalNumber() 
                     new_date = $(".date_container[sid='" + sid + "']").val() 
                     if(Date.parse(new_date) == null){
                             alert("invalid date")
                     }
-                    else{
+                    else{ // if valid date
                             schedule_list[sch_idx].date = Date.parse(new_date)
-                            if(sch_idx == 0 && flag_week_format == 1){ // auto fill
+                            if(sch_idx == auto_fill_start_idx  && flag_week_format == 1){ // auto fill
                                     day_offest = schedule_list[sch_idx].date.getOrdinalNumber() - orig_first_day
-                                    for(i = 1; i < schedule_list_orig_len; i++ ){
+                                    for(i = 0; i < schedule_list_orig_len; i++ ){
+                                            if( i == auto_fill_start_idx ) continue
                                             schedule_list[i].date.addDays(day_offest)
                                     }
                                     
                                     flag_week_format = 0
-                                    show_schedule()
                             }
                             new_date_str = (schedule_list[sch_idx].date.getMonth() + 1) + "/" + schedule_list[sch_idx].date.getDate()
                             $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
                             
                             /* saving schedule content*/
-                            content_temp = $("textarea[sid='" + sid + "']").val().replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+                            console.log(sid)
+                            content_temp = $(".schedule_elem_edit[sid='" + sid + "']").val().replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
                             $(".sch_content[sid='"+$(this).attr("sid")+"']").html(content_temp);
                             for(i=0;i<schedule_list.length;i++){
                                     if(schedule_list[i].id == sid){
@@ -273,6 +278,8 @@ $P.ready(function(){
 
 
                     }
+                    show_schedule()
+                    update_schedule()
                     save_history()
             });
 
@@ -538,8 +545,22 @@ $P.ready(function(){
                             schedule_lc = schedule_lc + get_sch_html(schedule_list[i_idx].id, schedule_list[i_idx].date, content_temp) 
                     }
                     $("#parsed_data").html(schedule_lc)
-                    if(flag_week_format == 1){
-                            $(".hint:eq(0)").html(" <= Please input the date by hitting edit button =>")
+
+                    if(flag_week_format == 1){  // if doc can be parsed by week X
+                            start_idx =  -1
+                            for(i = 0; i < schedule_list.length; i++ ){
+                                    if( schedule_list[i].match_str.search(/week 1/gi) != -1 && schedule_list[i].deleted == false ){
+                                            start_idx = i
+                                            break
+                                    }
+                            }
+                            if(start_idx == -1){
+                                    auto_fill_start_idx = 0
+                            }
+                            else{
+                                    auto_fill_start_idx = start_idx
+                            }
+                            $(".hint:eq(" + start_idx + ")").html(" <= Please input the date by hitting edit button =>")
                     } 
             }
 
@@ -654,7 +675,7 @@ $P.ready(function(){
                     max_hit_idx=0
                     min_var=999999999
                     best_guess_idx = -1
-                    for(m=0;m<reg.length;m++){
+                    for(m = 0; m < reg.length; m++){ // loop thru all regexp
                             hits = result_g.match(reg[m]);
                             
                             if(hits != null){
@@ -673,6 +694,7 @@ $P.ready(function(){
                                     }
                                     //alert( inc_val)
                                     if(variance(inc_val) < 1 && inc_val.length > 10){ // min number of dates allowed
+                                            console.log("best")
                                             best_guess_idx = m
                                     }
                                     if(variance(inc_val) < min_var && inc_val.length > 2){ // min number of dates allowed
@@ -769,6 +791,7 @@ $P.ready(function(){
                             if(schedule_list[i].content.length < 3){
                                     continue // some suckers will write their syls as " Quizzes: EVERY Thursday: 1/25, 2/1, 2/8, 2/15, 3/1, 3/8, 3/22, 4/5, 4/12, 4/19 ", which will total screw the smoothing process
                             }
+                            console.log(i,i+1)
                             curr_day = schedule_list[i].date.getOrdinalNumber()
                             next_day = schedule_list[i+1].date.getOrdinalNumber()
                             
