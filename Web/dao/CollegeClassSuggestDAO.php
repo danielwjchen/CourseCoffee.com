@@ -208,7 +208,7 @@ class CollegeClassSuggestDAO extends DAO {
 				$sql_params = array_merge($sql_params, array(
 					'subject_abbr' => $params['like']['subject_abbr'] . '%',
 					'course_num'   => $params['like']['course_num'] . '%',
-					'section_num'  => $params['like']['section_num'] . '%',
+					'section_num'  => '%' . $params['like']['section_num'] . '%',
 				));
 
 			} elseif (

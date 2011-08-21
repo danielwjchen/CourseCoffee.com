@@ -75,7 +75,7 @@ class TaskController extends Controller implements ControllerInterface {
 		for ($i = 0; $i < $task_count; $i++) {
 			$date      = Input::Post('date_' . $i);
 			$objective = preg_replace('/[^(\x20-\x7F)\x0A]*/', '', Input::Post('objective_' . $i));
-			$task_model->createTask($creator_id, $objective, $date, $section_id);
+			$task_model->createTask($creator_id, $objective, strtotime($date), $section_id);
 		}
 
 		$processor = new DocumentProcessorFormModel();

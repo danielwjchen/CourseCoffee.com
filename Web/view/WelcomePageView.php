@@ -68,7 +68,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 								<input type="hidden" name="token" value="{$file_token}" />
 								<input type="file" name="document" />
 								<div class="error hidden"></div>
-								<a class="button submit" href="#">submit</a>
+								<a class="button submit" href="#">upload</a>
 							</form>
 							<a class="button upload" href="#">start here!</a>
 						</div>

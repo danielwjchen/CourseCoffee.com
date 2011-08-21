@@ -57,6 +57,9 @@ class CalendarPageView extends PageView implements PageViewInterface {
 </select>
 HTML;
 
+		$upload_form_block_view = new UploadFormBlockView();
+		$upload_form = $upload_form_block_view->render();
+
 		return <<<HTML
 	<div class="calendar container">
 		<div class="container-inner">
@@ -118,15 +121,7 @@ HTML;
 						</div>
 						<div class="panel-02">
 							<div class="panel-inner">
-								<div class="upload-form">
-									<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
-										<input type="hidden" name="token" />
-										<input type="file" name="document" />
-										<div class="error hidden"></div>
-										<a class="button submit" href="#">submit</a>
-									</form>
-									<a class="button upload" href="#">upload syllabus</a>
-								</div>
+							{$upload_form}
 								<div class="task-create-form-wrapper">
 									<form id="calendar-task-creation-form" class="task-create-form" action="task/create" method="post">
 										<fieldset class="required">
