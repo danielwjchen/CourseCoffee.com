@@ -97,6 +97,7 @@
 
 
 #info_box{
+        display: none;
 	font: sans-serif;
 	position:absolute;
         top: 10px;
@@ -111,7 +112,10 @@
         left: -100px;
 }
 
-
+#parsed_data{
+        margin-top:200px;
+        vertical-align:text-top;
+	}
 
 
 
@@ -161,9 +165,7 @@
 }
 
 	
-#parsed_data{
-        margin-top:200px;
-	}
+
 
 
 
