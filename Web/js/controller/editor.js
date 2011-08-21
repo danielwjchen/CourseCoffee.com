@@ -920,13 +920,23 @@ $P.ready(function(){
 				e.preventDefault();
 				dialog.close()
 			});
-
+                       /* 
 			taskEle.each(function(index, value) {
 				date = $('.schedule_elem_date', value).text().replace('Date:', '') + '/2011';
 				objective = $('.sch_content', value).text();
 				creationForm.append('<input type="hidden" name="date_' + index + '" value="' + date + '" />');
 				creationForm.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
-			});
+			});*/
+                        
+                       
+                        for(i=0; i<schedule_list.length; i++){
+                                if(schedule_list[i].deleted == false){
+                                        sch_date = schedule_list[i].date
+                                        sch_content = schedule_list[i].content
+				        creationForm.append('<input type="hidden" name="date_' + i + '" value="' + sch_date + '" />');
+				        creationForm.append('<input type="hidden" name="objective_' + i + '" value="' + sch_content + '" />');
+                                }
+                        }
 			var content = '';
 
 			$.ajax({
