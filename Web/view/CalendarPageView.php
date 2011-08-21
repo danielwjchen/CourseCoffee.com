@@ -99,6 +99,7 @@ HTML;
 									<input type="hidden" name="timestamp" value="{$timestamp}" />
 									<input type="hidden" name="begin" />
 									<input type="hidden" name="end" />
+									<input type="hidden" name="user_id" value="{$user_id}" />
 									<input type="hidden" name="paginate" value="0" />
 								</form>
 								<ul>

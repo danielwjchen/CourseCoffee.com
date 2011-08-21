@@ -141,6 +141,7 @@ HTML;
 						<h1>To-dos</h1>
 						<form id="to-do-option" action="user/list-task" method="post">
 							<input type="hidden" name="paginate" value="0" />
+							<input type="hidden" name="user_id" value="{$user_id}" />
 							<input type="hidden" name="begin" value="{$timestamp}" />
 						</form>
 						<div class="panel-inner">

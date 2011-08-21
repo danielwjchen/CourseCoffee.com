@@ -118,6 +118,11 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 		var content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>';
 		var courseInfo = $('input[name=course-description]', option).val();
 		content += courseInfo != undefined ? '<p>' + courseInfo + '</p>' : '';
+		if ($('input[name=syllabus-id]', option).val() != 0) {
+			$('a.button.upload').addClass('disabled');
+		} else {
+			$('a.button.upload').removeClass('disabled');
+		}
 		region.html(content);
 	}
 

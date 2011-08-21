@@ -139,7 +139,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get tasks belong to a user
 	 */
 	public function getTaskBelongToUser() {
-		$user_id  = $this->getUserId();
+		$user_id  = Input::Post('user_id');
 		$begin    = Input::Post('begin');
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
@@ -151,7 +151,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get task belong to a class
 	 */
 	public function getTaskBelongToClass() {
-		$user_id    = $this->getUserId();
+		$user_id    = Input::Post('user_id');
 		$section_id = Input::Post('section_id');
 		$paginate   = Input::Post('paginate');
 		$list_model = new TaskListModel();
@@ -163,7 +163,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get task belong to a time period
 	 */
 	public function getTaskBelongToDate() {
-		$user_id  = $this->getUserId();
+		$user_id  = Input::Post('user_id');
 		$begin    = Input::Post('begin');
 		$end      = Input::Post('end');
 		$paginate = Input::Post('paginate');

@@ -40,6 +40,7 @@ class TaskListModel extends Model {
 	 */
 	public function fetchUserToDoList($user_id, $begin_date, $paginate) {
 		$has_record = $this->task_list_dao->read(array(
+			'user_id' => $user_id,
 			'range' => array(
 				'begin_date' => $begin_date,
 			),
@@ -117,6 +118,7 @@ class TaskListModel extends Model {
 	 */
 	public function fetchUserCalendarList($user_id, $begin_date, $end_date, $paginate) {
 		$has_record = $this->task_list_dao->read(array(
+			'user_id' => $user_id,
 			'range'   => array(
 				'begin_date' => $begin_date,
 				'end_date'   => $end_date,
