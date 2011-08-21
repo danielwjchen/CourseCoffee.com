@@ -101,6 +101,10 @@
 
 		public function getLowestNewPrice(){
 			$price = '';
+			if (!is_array($this->result->book->prices->purchase_price)) {
+				return $price;
+			}
+
 			foreach($this->result->book->prices->purchase_price as $purchase ){
 				if($purchase->attributes() == "new") $price = $purchase;
 			};

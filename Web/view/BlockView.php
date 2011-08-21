@@ -3,5 +3,10 @@
  * @file
  * Base class for all child BlockViews
  */
-abstract class BlockView extends View {
+
+interface BlockViewInterface {
+	public function render();
+}
+
+abstract class BlockView {
 }

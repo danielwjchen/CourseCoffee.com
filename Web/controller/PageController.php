@@ -74,6 +74,7 @@ class PageController extends Controller implements ControllerInterface {
 		$class_list = $user_session_model->getUserClassList();
 		$this->page = new HomePageView(array(
 			'fb_uid'     => $user_session_model->getFbUserId(),
+			'user_id'    => $user_session_model->getUserId(),
 			'profile'    => $profile,
 			'class_list' => $class_list,
 			'timestamp'  => time(),
@@ -112,6 +113,7 @@ class PageController extends Controller implements ControllerInterface {
 		$user_profile  = $user_session_model->getUserProfile(); 
 
 		$this->page = new CalendarPageView(array(
+			'user_id'    => $user_session_model->getUserId(),
 			'timestamp' => time(),
 			'class_list' => $class_list,
 			'institution_uri' => $user_profile['institution_uri'],

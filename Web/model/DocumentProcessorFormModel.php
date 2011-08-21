@@ -317,7 +317,7 @@ class DocumentProcessorFormModel extends FormModel{
 		$this->section_dao->update();
 
 		// debug
-		error_log(__METHOD__ . ' : document procesor section - ' . print_r($this->section_dao->attribute, true));
+		// error_log(__METHOD__ . ' : document procesor section - ' . print_r($this->section_dao->attribute, true));
 
 	}
 

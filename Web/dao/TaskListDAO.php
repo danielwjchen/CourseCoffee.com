@@ -36,7 +36,8 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 				INNER JOIN date qd
 					ON qd.id = qd_linkage.date_id
 				INNER JOIN quest_user_linkage qu_linkage
-					ON qu_linkage.quest_id = q.id
+					ON qu_linkage.user_id = :quest_user_id
+					AND qu_linkage.quest_id = q.id
 				LEFT JOIN (
 					quest_section_linkage qs_linkage, 
 					user_section_linkage us_linkage,
@@ -47,6 +48,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 					ON qs_linkage.quest_id = q.id
 					AND qs_linkage.section_id = sec.id
 					AND us_linkage.section_id = sec.id
+					AND us_linkage.user_id = :section_user_id
 					AND sec.course_id = crs.id
 					AND crs.subject_id = sub.id
 				LEFT JOIN (quest_location_linkage ql_linkage, location l)
@@ -72,6 +74,8 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 				$data = $this->db->fetch($sql, array(
 					'begin_date' => $params['range']['begin_date'],
 					'end_date' => $params['range']['end_date'],
+					'section_user_id' => $params['user_id'],
+					'quest_user_id' => $params['user_id'],
 					'type_name' => QuestType::TASK,
 				));
 			// all tasks due before
@@ -82,6 +86,8 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'end_date' => $params['range']['end_date'],
+					'section_user_id' => $params['user_id'],
+					'quest_user_id' => $params['user_id'],
 					'type_name' => QuestType::TASK,
 				));
 			// all tasks due after
@@ -92,6 +98,8 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 				$sql = sprintf($sql, $where_clause);
 				$data = $this->db->fetch($sql, array(
 					'begin_date' => $params['range']['begin_date'],
+					'section_user_id' => $params['user_id'],
+					'quest_user_id' => $params['user_id'],
 					'type_name' => QuestType::TASK,
 				));
 			} else {

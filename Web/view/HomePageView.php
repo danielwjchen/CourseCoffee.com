@@ -54,6 +54,10 @@ class HomePageView extends PageView implements PageViewInterface {
 HTML;
 
 		$profile_image = empty($fb_uid) ? 'images/default-profile.png' : 'https://graph.facebook.com/' . $fb_uid . '/picture?type=large';
+
+		$upload_form_block_view = new UploadFormBlockView();
+		$upload_form = $upload_form_block_view->render();
+
 		return <<<HTML
 <div class="home container">
 	<div class="container-inner">
@@ -94,15 +98,7 @@ HTML;
 								<div class="school">{$profile['institution']}</div>
 								<div class="semester">{$profile['term']} {$profile['year']}</div>
 							</div>
-							<div class="upload-form">
-								<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
-									<input type="hidden" name="token" />
-									<input type="file" name="document" />
-									<div class="error hidden"></div>
-									<a class="button submit" href="#">submit</a>
-								</form>
-								<a class="button upload" href="#">upload</a>
-							</div>
+							{$upload_form}
 							<div class="task-create-form-wrapper">
 								<form id="to-do-creation-form" class="task-create-form" action="task/create" method="post">
 									<fieldset class="required">
@@ -141,6 +137,7 @@ HTML;
 						<h1>To-dos</h1>
 						<form id="to-do-option" action="user/list-task" method="post">
 							<input type="hidden" name="paginate" value="0" />
+							<input type="hidden" name="user_id" value="{$user_id}" />
 							<input type="hidden" name="begin" value="{$timestamp}" />
 						</form>
 						<div class="panel-inner">

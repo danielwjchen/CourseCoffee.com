@@ -116,7 +116,7 @@ class SectionDAO extends DAO implements DAOInterface{
 		";
 
 		// debug
-		error_log(__METHOD__ . ' : attr - ' . print_r($this->attr, true));
+		// error_log(__METHOD__ . ' : attr - ' . print_r($this->attr, true));
 
 		$this->db->perform($sql, array(
 			'id'              => $this->attr['id'],
