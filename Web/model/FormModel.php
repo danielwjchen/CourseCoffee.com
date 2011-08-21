@@ -98,13 +98,13 @@ abstract class FormModel extends Model {
 		$state = preg_replace('/^http[s]?:\/\/.+\//i', '', $referrer);
 
 		switch ($state) {
-			case 'welcome':
-				return 'sign-up';
 			case 'class':
 			case 'calendar':
 			case 'home':
-			default:
 				return 'redirect';
+			case 'welcome':
+			default:
+				return 'sign-up';
 		}
 	}
 

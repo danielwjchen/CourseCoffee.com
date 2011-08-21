@@ -105,7 +105,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 		$user_session_model = new UserSessionModel();
 		$user_id = $user_session_model->getUserId();
 		if (empty($user_id)) {
-			$this->json = new JSONView(array('redirect' => 'welcome'));
+			$this->json = new JSONView(array('redirect' => '/welcome'));
 
 		} else {
 			$section_id = Input::Post('section_id');

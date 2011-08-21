@@ -6,6 +6,7 @@
  */
 $P.ready(function() {
 
+	/**
 	var classFeed = $('form[name=class-feed]');
 	var institution_uri = $('input[name=institution_uri]', classFeed).val();
 	var year = $('input[name=year]', classFeed).val();
@@ -25,8 +26,8 @@ $P.ready(function() {
 	if (window.FB !== undefined) {
 		FB.XFBML.parse(document.getElementById(id));
 	}
+	*/
 
-	/**
 	var domain = window.location.origin;
 	$('.panel-02 .panel-inner').append('<fb:activity site="' + domain + '" width="460" height="300" header="false" recommendations="true">' +
 	'</fb:activity>');
@@ -34,7 +35,6 @@ $P.ready(function() {
 	if (window.FB !== undefined) {
 		FB.XFBML.parse(document.getElementById(id));
 	}
-	*/
 
 	// Initilize the date-time selector
 	$('#time-picker').datetime({  

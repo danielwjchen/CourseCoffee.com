@@ -980,9 +980,12 @@ $P.ready(function(){
 
 								// binding redirect actions to class page
 								if (response.redirect) {
+
+									// a helper function to redirect page
 									var goToClassPage = function(url) {
 										window.location = response.redirect;
 									};
+
 									$('.dialog-close', $P).live('click', function(e) {
 										goToClassPage(response.redirect);
 									});
