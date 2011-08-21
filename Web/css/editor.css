@@ -118,6 +118,25 @@
 	}
 
 
+.alert_box.dialog{
+        margin: 35px auto 0;
+        width: 200px;
+        height: 100px;
+
+}
+
+.alert_box .dialog-inner{
+        width: 200px;
+        height: 100px;
+        color: red;
+
+}
+
+.alert_box.row{
+        margin: 5px 0;
+        float: left;
+        text-align: left;
+}
 
 
 

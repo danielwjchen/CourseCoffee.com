@@ -125,6 +125,14 @@ $P.ready(function(){
             };
 
             /**
+             *  alert message
+             */
+            
+            $(".dialog-close").live("click", function(e){
+                dialog.close('alert_box')
+            });
+
+            /**
              * toggle date lable
              */
             $(".del_date_label").live("click",function(e){
@@ -248,7 +256,8 @@ $P.ready(function(){
                     orig_first_day = schedule_list[auto_fill_start_idx].date.getOrdinalNumber() 
                     new_date = $(".date_container[sid='" + sid + "']").val() 
                     if(Date.parse(new_date) == null){
-                            alert("invalid date")
+                            dialog.open("alert_box", "invalid date")
+                            return
                     }
                     else{ // if valid date
                             schedule_list[sch_idx].date = Date.parse(new_date)
@@ -931,7 +940,8 @@ $P.ready(function(){
                        
                         for(i=0; i<schedule_list.length; i++){
                                 if(schedule_list[i].deleted == false){
-                                        sch_date = schedule_list[i].date
+                                        curr_date =  schedule_list[i].date
+                                        sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate())
                                         sch_content = schedule_list[i].content
 				        creationForm.append('<input type="hidden" name="date_' + i + '" value="' + sch_date + '" />');
 				        creationForm.append('<input type="hidden" name="objective_' + i + '" value="' + sch_content + '" />');
