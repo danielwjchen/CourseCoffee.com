@@ -4059,7 +4059,7 @@ CREATE TABLE IF NOT EXISTS `institution_term` (
 --
 
 INSERT INTO `institution_term` (`id`, `institution_id`, `year_id`, `name`, `begin_timestamp`, `end_timestamp`) VALUES
-(1, 1, 1, 'Spring', 1294635600, 1304049600);
+(1, 1, 1, 'Fall', 1294635600, 1304049600);
 
 -- --------------------------------------------------------
 

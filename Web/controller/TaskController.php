@@ -6,7 +6,7 @@
 
 class TaskController extends Controller implements ControllerInterface {
 
-	private $json;
+	private $output;
 	
 	/**
 	 * Extend Controller::__construct()
@@ -44,8 +44,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
-		$this->json->setHeader(PageView::HTML_HEADER);
-		echo $this->json->render();
+		echo $this->output->render();
 	}
 
 	/**
@@ -53,7 +52,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 */
 	public function issueTaskToken() {
 		$task = new TaskCreateFormModel();
-		$this->json = new JSONView(array(
+		$this->output = new JSONView(array(
 			'token' => $task->initializeFormToken(),
 		));
 	}
@@ -82,7 +81,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$processor->setSectionSyllabus($section_id);
 		$processor->updateSectionSyllabusStatus($section_id, $status);
 
-		$this->json = new JSONView(array(
+		$this->output = new JSONView(array(
 			'section_id' => $section_id,
 			'message'    => 'Congratulation! The syllabus is now uploaded!'
 		));
@@ -106,10 +105,10 @@ class TaskController extends Controller implements ControllerInterface {
 			$user_id, 
 			$objective, 
 			$due_date, 
-			$description, 
-			$section_id
+			$section_id,
+			$description
 		);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -145,7 +144,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
 		$result = $list_model->fetchUserToDoList($user_id, $begin, $paginate);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -157,7 +156,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$paginate   = Input::Post('paginate');
 		$list_model = new TaskListModel();
 		$result = $list_model->fetchUserClassList($user_id, $section_id, $paginate);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -170,7 +169,7 @@ class TaskController extends Controller implements ControllerInterface {
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
 		$result = $list_model->fetchUserCalendarList($user_id, $begin, $end, $paginate);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 }

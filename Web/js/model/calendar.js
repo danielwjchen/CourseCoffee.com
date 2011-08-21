@@ -90,7 +90,9 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 			// auto scroll to the first task on day calendars
 			if (type.indexOf('day') > 0) {
 				var offset = $('.has-event:first', region).offset();
-				$('.scrollable-inner').animate({scrollTop: offset.top}, 'slow');
+				if (offset) {
+					$('.scrollable-inner').animate({scrollTop: offset.top}, 'slow');
+				}
 			}
 		}
 

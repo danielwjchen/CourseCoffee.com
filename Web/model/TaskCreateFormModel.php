@@ -54,8 +54,8 @@ class TaskCreateFormModel extends FormModel {
 	 * @param $user_id
 	 * @param $objective
 	 * @param $due_date
-	 * @param $description
 	 * @oaram $section_id
+	 * @param $description
 	 *
 	 * @return int
 	 *  the record id
@@ -64,7 +64,7 @@ class TaskCreateFormModel extends FormModel {
 		return $this->task_dao->create(array(
 			'user_id'     => $user_id,
 			'objective'   => $objective,
-			'due_date'    => $timstamp,
+			'due_date'    => $timestamp,
 			'description' => $description,
 			'section_id'  => $section_id,
 		));
@@ -79,8 +79,8 @@ class TaskCreateFormModel extends FormModel {
 	 * @param $user_id
 	 * @param $objective
 	 * @param $due_date
-	 * @param $description
 	 * @oaram $section_id
+	 * @param $description
 	 *
 	 * @return array
 	 *  on success:
@@ -92,7 +92,7 @@ class TaskCreateFormModel extends FormModel {
 	 *  - message
 	 *  - token
 	 */
-	public function processForm($token, $user_id, $objective, $due_date, $description ='', $section_id = '') {
+	public function processForm($token, $user_id, $objective, $due_date, $section_id = '', $description ='') {
 		// if the form token has expired, this is more a study on user behavior. We 
 		// might want to change the expire to a higher value if this happens too
 		// often
@@ -114,8 +114,8 @@ class TaskCreateFormModel extends FormModel {
 			$user_id,
 			$objective,
 			strtotime($due_date),
-			$description,
-			$section_id
+			$section_id,
+			$description
 		);
 
 		if ($record_id != 0) {

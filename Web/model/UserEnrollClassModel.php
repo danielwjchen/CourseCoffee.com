@@ -105,7 +105,7 @@ class UserEnrollClassModel extends Model {
 		if ($linkage_id != false) {
 			Logger::Write(self::EVENT_NEW_ENROLL);
 			$this->class_dao->read(array('id' => $section_id));
-			$has_syllabus = $this->class_dao->syllabus_raw != null;
+			$has_syllabus = $this->class_dao->syllabus_id != null;
 			$result = $this->class_dao->attribute;
 			$redirect = '/class/' . $result['institution_uri'] . '/' . $result['year'] . '/' . $result['term'] . '/' . $result['subject_abbr'] . '/' . $result['course_num'] . '/' . $result['section_num'];
 

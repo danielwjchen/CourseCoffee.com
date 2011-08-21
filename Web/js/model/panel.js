@@ -70,7 +70,7 @@ window.CommentPanel = function() {
 	}
 	*/
 
-	$('.task-list', $P).delegate('a.fb-comment', 'click', function(e) {
+	$('.task-list a.fb-comment', $P).click( function(e) {
 		e.preventDefault();
 		var target = $(this);
 		$('a.fb-comment', $P).html('comments &#187;');
@@ -93,6 +93,6 @@ window.CommentPanel = function() {
 			panelExpand(task_id, task_url);
 
 		}
-		return false;
+
 	});
 };
