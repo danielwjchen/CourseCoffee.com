@@ -86,24 +86,28 @@ HTML;
               <td id='table_title_right' >parsed data</td>
             </tr>
             <tr>
-              <td class='data_col_left'><div id='orig_syl'></div></td>
-              <td class='data_col_right'><div id='parsed_data'></div> </td>
+              <td class='data_col_left'><div id='orig_syl'></div><div id="info_box"></div></td>
+              <td class='data_col_right'><div id='parsed_data'></div>
+                    <div id="tool_box">
+			<table>
+                            <tr>    
+		                <td>
+		                    <a class='toolbox_btn' id="undo" href="#">undo</a>
+                                    <a class='toolbox_btn' id="redo" href="#">redo</a>
+                                    <a class='toolbox_btn' id="new_assignment" href="#">new assignment</a>
+                                    <a class='toolbox_btn' id="create-task" href="#">submit</a>
+                                    <span class="hint" id="toolbox_hint"></span>
+				</td>
+                            </tr>
+                        </table>
+		    </div>
+            </td>
             </tr>
-					</table>
-          <div id="tool_box">
-						<table>
-              <tr>    
-								<td>
-									<a class='toolbox_btn' id="undo" href="#">undo</a>
-                  <a class='toolbox_btn' id="redo" href="#">redo</a>
-                  <a class='toolbox_btn' id="new_assignment" href="#">new assignment</a>
-                  <a class='toolbox_btn' id="create-task" href="#">submit</a>
-								</td>
-              </tr>
-            </table>
-					</div>
-        <div id="info_box">
+	    </table>
+                  
+         <div id="msg_board">
         </div>
+
 					</div>
 				</div>
 			</div>
