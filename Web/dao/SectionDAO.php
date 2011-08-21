@@ -11,10 +11,10 @@ class SectionDAO extends DAO implements DAOInterface{
 	function __construct($db, $params = NULL) {
 		$attr = array(
 			'id',
-			'subject_abbr',
-			'course_num',
-			'course_id',
 			'num',
+			'course_id',
+			'course_num',
+			'subject_abbr',
 			'credit',
 			'syllabus_status',
 			'syllabus_id',
@@ -70,12 +70,12 @@ class SectionDAO extends DAO implements DAOInterface{
 	public function read($params) {
 		$sql = "
 			SELECT 
-				sec.id AS section_id,
-				sec.course_id,
-				sec.num AS section_num,
+				sec.id,
+				sec.num,
 				sec.credit,
 				sec.syllabus_status,
 				sec.syllabus_id,
+				sec.course_id,
 				crs.num AS course_num,
 				sub.abbr AS subject_abbr
 			FROM `section` sec
@@ -85,17 +85,19 @@ class SectionDAO extends DAO implements DAOInterface{
 				ON crs.subject_id = sub.id
 			WHERE 
 		";
+
+		$sql_param = array();
 		
 		if (isset($params['id'])) {
-			$params = array('id' => $params['id']);
 			$sql .= "sec.`id` = :id";
+			$sql_param = array('id' => $params['id']);
 
 		} else {
 			throw new Exception('unknown section identifier');
 
 		}
 
-		$data = $this->db->fetch($sql, $params);
+		$data = $this->db->fetch($sql, $sql_param);
 		return $this->updateAttribute($data);
 
 	}
@@ -112,6 +114,10 @@ class SectionDAO extends DAO implements DAOInterface{
 				`syllabus_id` = :syllabus_id
 			WHERE `id` = :id
 		";
+
+		// debug
+		error_log(__METHOD__ . ' : attr - ' . print_r($this->attr, true));
+
 		$this->db->perform($sql, array(
 			'id'              => $this->attr['id'],
 			'num'             => $this->attr['num'],

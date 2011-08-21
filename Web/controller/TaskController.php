@@ -67,6 +67,7 @@ class TaskController extends Controller implements ControllerInterface {
 	public function handleTaskCreationFromDoc() {
 		$task_model  = new TaskCreateFormModel();
 		$task_count = Input::Post('task_count');
+		$file_id    = Input::Post('file_id');
 		$section_id = Input::Post('section_id');
 		$user_id = $this->GetUserId();
 		$creator_id = ($user_id !== false) ? $user_id : 1;// super user id
@@ -78,8 +79,7 @@ class TaskController extends Controller implements ControllerInterface {
 		}
 
 		$processor = new DocumentProcessorFormModel();
-		$processor->setSectionSyllabus($section_id);
-		$processor->updateSectionSyllabusStatus($section_id, $status);
+		$processor->setSectionSyllabus($section_id, $file_id);
 
 		$this->output = new JSONView(array(
 			'section_id' => $section_id,

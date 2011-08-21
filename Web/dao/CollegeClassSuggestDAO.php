@@ -206,9 +206,9 @@ class CollegeClassSuggestDAO extends DAO {
 				";
 
 				$sql_params = array_merge($sql_params, array(
-					'subject_abbr' => '%' . $params['like']['subject_abbr'] . '%',
-					'course_num'   => '%' . $params['like']['course_num'] . '%',
-					'section_num'  => '%' . $params['like']['section_num'] . '%',
+					'subject_abbr' => $params['like']['subject_abbr'] . '%',
+					'course_num'   => $params['like']['course_num'] . '%',
+					'section_num'  => $params['like']['section_num'] . '%',
 				));
 
 			} elseif (
@@ -279,8 +279,8 @@ class CollegeClassSuggestDAO extends DAO {
 				}
 
 				$sql_params = array_merge($sql_params, array(
-					'subject_abbr' => '%' . $params['like']['subject_abbr'] . '%',
-					'course_num'   => '%' . $params['like']['course_num'] . '%',
+					'subject_abbr' => $params['like']['subject_abbr'] . '%',
+					'course_num'   => $params['like']['course_num'] . '%',
 				));
 
 			} elseif (isset($params['like']['subject_abbr'])) {
@@ -310,7 +310,7 @@ class CollegeClassSuggestDAO extends DAO {
 						AND sub.abbr LIKE :subject_abbr
 				";
 				$sql_params = array_merge($sql_params, array(
-					'subject_abbr' => '%' . $params['like']['subject_abbr'] . '%'
+					'subject_abbr' => $params['like']['subject_abbr'] . '%'
 				));
 
 			} else {

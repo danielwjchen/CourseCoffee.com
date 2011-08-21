@@ -88,6 +88,10 @@ class FileDAO extends DAO implements DAOInterface{
 			$params = array('id' => $params['id']);
 			$sql .= "WHERE f.id = :id";
 
+		} elseif (isset($params['name'])) {
+			$params = array('name' => $params['name']);
+			$sql .= "WHERE f.name = :name";
+
 		} elseif (isset($params['user_id']) && isset($params['type'])) {
 			$params = array(
 				'user_id' => $params['user_id'],

@@ -40,9 +40,11 @@ class HomePageView extends PageView implements PageViewInterface {
 		extract($this->data);
 		$option = '';
 		$sections = '';
-		foreach ($class_list as $section_id => $section_code) {
-			$option .= "<option value='{$section_id}'>{$section_code}</option>";
-			$sections .= "<input type='hidden' name='section-code' value='{$section_code}' />";
+		if (isset($class_list) && is_array($class_list)) {
+			foreach ($class_list as $section_id => $section_code) {
+				$option .= "<option value='{$section_id}'>{$section_code}</option>";
+				$sections .= "<input type='hidden' name='section-code' value='{$section_code}' />";
+			}
 		}
 		$class_select = <<<HTML
 <select name="section_id" class="class-list">

@@ -286,6 +286,7 @@ class DocumentProcessorFormModel extends FormModel{
 			'term_id'        => $params['term_id'],
 			'section_id'     => $section_id,
 			'course_code'    => $course_code,
+			'file_id'        => $this->file_dao->id,
 			'content'        => $result
 		);
 	}
@@ -300,7 +301,7 @@ class DocumentProcessorFormModel extends FormModel{
 		$this->section_dao->update();
 
 		// debug
-		error_log(__METHOD__ . ' : document procesor section - ' . print_r($this->section_dao->attribute, true));
+		// error_log(__METHOD__ . ' : document procesor section - ' . print_r($this->section_dao->attribute, true));
 	}
 
 	/**

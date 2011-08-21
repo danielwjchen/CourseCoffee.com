@@ -185,10 +185,12 @@ class PageController extends Controller implements ControllerInterface {
 		$processor = new DocumentProcessorFormModel();
 		$college   = new CollegeModel();
 		$document = Input::Get('document');
+		$file_id  = Input::Get('file_id');
 		$mime     = Input::Get('doc-type');
 		$this->page = new DocumentEditorPageView(array(
 			'process_state'   => $processor->getState($referrer),
 			'document'        => $document,
+			'file_id'         => $file_id,
 			'mime'            => $mime,
 			'college_option'  => $college->getCollegeOption(),
 			'processor_token' => $processor->initializeFormToken(),

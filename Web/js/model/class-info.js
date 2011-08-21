@@ -108,6 +108,7 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 		$('input[name=course-num]', option).val(data.course_num);
 		$('input[name=section-id]', option).val(data.section_id);
 		$('input[name=section-num]', option).val(data.section_num);
+		$('input[name=syllabus-id]', option).val(data.syllabus_id);
 	};
 	
 	/**

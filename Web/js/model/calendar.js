@@ -91,7 +91,8 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 			if (type.indexOf('day') > 0) {
 				var offset = $('.has-event:first', region).offset();
 				if (offset) {
-					$('.scrollable-inner').animate({scrollTop: offset.top}, 'slow');
+					var newTop = offset.top - $('.has-event:first', region).height();
+					$('.scrollable-inner').animate({scrollTop: newTop}, 'slow');
 				}
 			}
 		}

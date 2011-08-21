@@ -78,6 +78,7 @@ HTML;
 					</form>
 					<form id="task-creation-form" name="task-creation">
 						<input type="hidden" name="process_state" value="{$process_state}" />
+						<input type="hidden" name="file_id" value="{$file_id}"/>
           </form>
           <table id='main_container'>
 						<tr>

@@ -89,7 +89,8 @@ class FileFormModel extends FormModel{
 		if (!isset($result['error'])) {
 			$result['user_id'] = $user_id;
 			$result['type']    = $type;
-			$this->file_dao->create($result);
+			$file_id = $this->file_dao->create($result);
+			$result['file_id'] = $file_id;
 		}
 
 		return $result;
