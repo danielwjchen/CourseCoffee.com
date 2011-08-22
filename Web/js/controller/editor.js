@@ -69,7 +69,8 @@ $P.ready(function(){
                                     <input type='button' id='save_sch' sid='SID_STR' value='save'>\
                                     <input type='button' id='cancel_sch' sid='SID_STR' value='cancel'>"           
             
-            info_box_string = "<div id='info_box'></span>"        
+            info_box_left_string = "<div id='info_box_left'></span>"        
+            info_box_right_string = "<div id='info_box_right'></span>"        
             date_string = "<input type='text' class='date_container' sid='SID_STR' size=10 value='ORIG_DATE_STR'>"
             /*       flags            */
             editing_flag = 0;
@@ -184,11 +185,11 @@ $P.ready(function(){
 
 		    }		    
 
-                    $("#info_box").css("top", this_height)
-                    $("#info_box").text("Click X to merge up")
+                    $("#info_box_left").css("top", this_height)
+                    $("#info_box_left").text("Click X to merge up")
 		    
-                    $("#info_box").show()
-                    $("#info_box").fadeTo("slow", 0.8)    
+                    $("#info_box_left").show()
+                    $("#info_box_left").fadeTo("slow", 0.8)    
             });
 
             $(".date_label").live("mouseleave",function(){
@@ -202,7 +203,7 @@ $P.ready(function(){
 		    }
 
                     $(".schedule_elem[sid='"+sid+"']").css("background-color","");									 
-                    $("#info_box").fadeOut()
+                    $("#info_box_left").fadeOut()
             });
 
 
@@ -240,6 +241,19 @@ $P.ready(function(){
                     save_history()
             });
 
+            $(".toggle_del_sch").live("mouseenter",function(e){
+                    this_height =  $(this).position().top
+                    $("#info_box_right").css("top", this_height)
+                    $("#info_box_right").text("Click X tasdffado merge up")
+		    
+                    $("#info_box_right").show()
+                    $("#info_box_right").fadeTo("slow", 0.8)    
+
+            });
+
+            $(".toggle_del_sch").live("mouseleave",function(e){
+                    $("#info_box_right").fadeOut()
+            });
 
             /**
              *  showing edit buttons when mouse entered schedule_elem
@@ -372,8 +386,6 @@ $P.ready(function(){
                     sid = s.id
                     show_schedule()
                     sch_top = $(".schedule_elem[sid='" + sid  + "']").position().top
-                    adjust_parsed_data_pos()
-                    
                     /* replace schedule content with textarea*/ 
                     orig_html = $(".sch_content[sid='" + sid + "']").html().replace(/<br>/gi,"\n").replace(/&nbsp;/g, " ")
                     $(".sch_content[sid='" + sid + "']").html(schedule_edit_string.replace(/SID_STR/gi, sid).replace(/CONTENT_STR/gi, orig_html))
@@ -385,6 +397,7 @@ $P.ready(function(){
 
 
                     
+                    adjust_parsed_data_pos()
                     $("html,body").animate({ scrollTop:  sch_top}, 600);       
             });
 
@@ -462,10 +475,8 @@ $P.ready(function(){
 
             $(window).scroll(function(){
                     adjust_parsed_data_pos();
-                    $("#tool_box").animate({"top": ($(window).scrollTop()-125)+"px"}, 100)
-                    $("#msg_board").animate({"top": ($(window).scrollTop()-125)+"px"}, 100)
-                    //$("#msg_board").fadeTo("slow", 0.7)
-                    //$("#msg_board").fadeTo("slow", 0.8)
+                    $("#tool_box").animate({"top": ($(window).scrollTop()-125)+"px"}, 10)
+                    $("#msg_board").animate({"top": ($(window).scrollTop()-125)+"px"}, 10)
             });
 
 
@@ -644,6 +655,9 @@ $P.ready(function(){
                     //for(i=0; i<sch_div.length; i++){
                     for(i=0; i<schedule_list.length; i++){
                             temp_id = $(sch_div[i]).attr("sid");
+                            if( $(".date_label[sid='"+temp_id+"']").position() == null){
+                                    break
+                            }
                             temp_dist = $(".date_label[sid='"+temp_id+"']").position().top - $(window).scrollTop() ;
                             
                             if (temp_dist>0  && (Math.abs(temp_dist) < min_dist) ){
@@ -764,7 +778,7 @@ $P.ready(function(){
                     result = result.replace(/\r/gi, "\n")                   // replace \r with \n: \r is new line in Mac OS 
                     result = result.replace(/\n{3,}/gi, "\n\n")             // all multiple empty lines (>3) will become 2 empty lines
                     result_g = result
-                   
+                    result_g = result_g.replace(/&nbsp;/gi, " ").replace(/<br>/gi, "\n") 
 
 
                     reg_idx = get_reg_idx(result);
@@ -961,7 +975,7 @@ $P.ready(function(){
                         for(i=0; i<schedule_list.length; i++){
                                 if(schedule_list[i].deleted == false){
                                         curr_date =  schedule_list[i].date
-                                        sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate())
+                                        sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate()) + "/" + "2011"
                                         sch_content = schedule_list[i].content
 				        creationForm.append('<input type="hidden" name="date_' + i + '" value="' + sch_date + '" />');
 				        creationForm.append('<input type="hidden" name="objective_' + i + '" value="' + sch_content + '" />');

@@ -105,7 +105,7 @@
 }
 
 
-#info_box{
+#info_box_left{
         display: none;
         box-shadow: 2px 2px 5px #003d01;
 	font: sans-serif;
@@ -114,6 +114,23 @@
         left: 226px;
         color: #FFF;
         background-color: #F60;
+        font-size: 12px;
+        text-align: center;
+	border-radius: 4px;	
+        width: 120px;
+        height: 30px;
+        left: -100px;
+}
+
+#info_box_right{
+        display: none;
+        box-shadow: 2px 2px 5px #003d01;
+	font: sans-serif;
+	position:absolute;
+        top: 10px;
+        left: 1600px;
+        color: #FFF;
+        background-color: #09F;
         font-size: 12px;
         text-align: center;
 	border-radius: 4px;	
