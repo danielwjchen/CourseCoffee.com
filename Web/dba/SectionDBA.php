@@ -34,6 +34,13 @@ class SectionDBA implements DBAInterface{
 						'not null' => TRUE,
 						'description' => 'The primary key',
 					),
+					'institution_id' => array(
+						'type' => 'int',
+						'size' => 'normal',
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The institution which this section belongs.',
+					),
 					'course_id' => array(
 						'type' => 'int',
 						'size' => 'normal',
@@ -69,6 +76,7 @@ class SectionDBA implements DBAInterface{
 				),
 				'primary' => array('id'),
 				'index' => array(
+					'institution_id' => array('institution_id'),
 					'course_id' => array('course_id'),
 					'num' => array('num'),
 					'syllabus_id' => array('syllabus_id'),

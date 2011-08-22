@@ -76,15 +76,23 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 * Suggest a list of classes based on user input
 	 */
 	public function suggestClass() {
-		/*
-		$institution_id = Input::Post('institution_id');
-		$year_id        = Input::Post('year_id');
-		$term_id        = Input::Post('term_id');
-		*/
-		$institution_id = 1;
-		$year_id        = 1;
-		$term_id        = 1;
+		$user_session = new UserSessionModel();
+		$user_setting = $user_session->GetUserSetting();
+		if (empty($user_setting)) {
+			$institution_id = Input::Post('institution_id');
+			$year_id        = Input::Post('year_id');
+			$term_id        = Input::Post('term_id');
+
+		} else {
+			$institution_id = $user_setting['institution_id'];
+			$year_id        = $user_setting['year_id'];
+			$term_id        = $user_setting['term_id'];
+		}
 		$string         = Input::Post('term');
+
+		// debug
+		// error_log(__METHOD__ . print_r($user_setting, true));
+
 
 		$class_suggestion = new CollegeClassListModel();
 

@@ -93,7 +93,7 @@ class TaskController extends Controller implements ControllerInterface {
 	public function handleTaskCreation() {
 		$task = new TaskCreateFormModel();
 
-		$user_id     = Session::Get('user_id');
+		$user_id     = $this->getUserId();
 		$token       = Input::Post('token');
 		$objective   = Input::Post('objective');
 		$due_date    = Input::Post('due_date');

@@ -16,7 +16,7 @@ window.ClassSuggest = function(formName, inputName, callback) {
 			$.ajax({
 				url: '/college-class-suggest',
 				type: 'post',
-				data: 'term=' + request.term,
+				data: 'term=' + request.term + '&' + form.serialize(),
 				success: function(data) {
 					if (data.error) {
 						return;

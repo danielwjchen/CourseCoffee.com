@@ -58,7 +58,7 @@ class UserEnrollClassModel extends Model {
 	 *
 	 * @return mixed
 	 */
-	protected function createLinkage($user_id, $section_id) {
+	public function createLinkage($user_id, $section_id) {
 		return $this->linkage->create(array(
 			'user_id'    => $user_id,
 			'section_id' => $section_id,
@@ -105,7 +105,7 @@ class UserEnrollClassModel extends Model {
 		if ($linkage_id != false) {
 			Logger::Write(self::EVENT_NEW_ENROLL);
 			$this->class_dao->read(array('id' => $section_id));
-			$has_syllabus = $this->class_dao->syllabus_id != null;
+			$has_syllabus = $this->class_dao->syllabus_id != 0;
 			$result = $this->class_dao->attribute;
 			$redirect = '/class/' . $result['institution_uri'] . '/' . $result['year'] . '/' . $result['term'] . '/' . $result['subject_abbr'] . '/' . $result['course_num'] . '/' . $result['section_num'];
 

@@ -955,6 +955,7 @@ $P.ready(function(){
 				cache: false,
 				data: creationForm.serialize() + '&section_id=' + $('#section-id', selectionForm).val(),
 				success: function(response) {
+					var section_id = $('#section-id', selectionForm).val();
 					content = '<h3>' + response.message + '</h3>' + 
 					'<hr />' +
 					'<div class="suggested-reading">' +
@@ -969,7 +970,13 @@ $P.ready(function(){
 					 * @see js/model/register.js
 					 */
 					if (processState == 'sign-up') {
-						content += SignUp.getOptions();
+						content += '<div class="sign-up-option">' +
+							'<a class="facebook button" href="/facebook-sign-up?section_id=' + section_id + '">sign up with facebook</a>' +
+							'<div class="alternative">' +
+								'<p>Or, you can always manually create an account...</p>' +
+								'<span><a href="/sign-up?section_id=' + section_id + '">sign up</a></span>' +
+							'</div>' +
+						'</div>';
 
 					// otherwise, the user is an existing user and needs to be added to the
 					// class

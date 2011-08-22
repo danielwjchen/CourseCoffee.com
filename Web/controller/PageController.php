@@ -85,6 +85,11 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get signup page for visiters
 	 */
 	public function getSignUpPage() {
+		$section_id = Input::Get('section_id');
+		if (!empty($section_id)) {
+			Session::Set('section_id', $section_id);
+		}
+
 		$user_register = new UserRegisterFormModel();
 		$college       = new CollegeModel();
 		$this->page = new SignUpPageView(array(
@@ -97,6 +102,11 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get facebook signup page for visiters
 	 */
 	public function getFBSignUpPage() {
+		$section_id = Input::Get('section_id');
+		if (!empty($section_id)) {
+			Session::Set('section_id', $section_id);
+		}
+
 		$fb_model = new FBModel();
 		$form_fields = $fb_model->generateSignUpForm();
 		$this->page = new FBSignUpPageView($form_fields);

@@ -11,20 +11,20 @@ class CollegeModel extends Model {
 	/**
 	 * Access to college record
 	 */
-	private $institution_dao;
+	private $college_list;
 
 	/**
 	 * Extend Model::__construct()
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->institution_dao = new InstitutionDAO($this->db);
+		$this->college_list = new CollegeListDAO($this->db);
 	}
 
 	public function getCollege($institution_id) {
-		$this->institution_dao->read(array('id' => $institution_id));
+		$this->college_list->read(array('id' => $institution_id));
 
-		return $this->institution_dao->attribute;
+		return $this->college_list->attribute;
 	}
 
 
@@ -44,8 +44,8 @@ class CollegeModel extends Model {
 	 *   - meessage:
 	 */
 	public function getCollegeOption() {
-		$this->institution_dao->read(array('all' => true));
-		$records = $this->institution_dao->list;
+		$this->college_list->read(array('all' => true));
+		$records = $this->college_list->list;
 		$list = array();
 
 		// if there is only one school
@@ -55,7 +55,7 @@ class CollegeModel extends Model {
 			);
 		}
 
-		foreach ($list as $key => $value) {
+		foreach ($records as $key => $value) {
 			$list[$value['id']] = $value['name'];
 		}
 
