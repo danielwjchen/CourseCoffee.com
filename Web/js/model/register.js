@@ -112,7 +112,7 @@ SignUp.getOptions = function() {
 		'<a class="facebook button" href="/facebook-sign-up">sign up with facebook</a>' +
 		'<div class="alternative">' +
 			'<p>Or, you can always manually create an account...</p>' +
-			'<span><a href="/sign-up">sign up</a></span>' +
+			'<span class="double-underline"><a href="/sign-up">sign up</a></span>' +
 		'</div>' +
 	'</div>';
 

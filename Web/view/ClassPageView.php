@@ -15,7 +15,9 @@ class ClassPageView extends PageView implements PageViewInterface {
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
-		$this->buildClassList($content['class_list']);
+		if (is_array($content['class_list'])) {
+			$this->buildClassList($content['class_list']);
+		}
 
 		$this->addJS('model/panel.js');
 		$this->addJS('model/task.js');
@@ -113,8 +115,10 @@ HTML;
 	public function getContent() {
 		extract($this->data);
 		$option = '';
-		foreach ($class_list as $section_id => $section_code) {
-			$option .= "<option value='{$section_id}'>{$section_code}</option>";
+		if (is_array($class_list)) {
+			foreach ($class_list as $section_id => $section_code) {
+				$option .= "<option value='{$section_id}'>{$section_code}</option>";
+			}
 		}
 		$class_select = <<<HTML
 <select name="section_id" class="class-list">

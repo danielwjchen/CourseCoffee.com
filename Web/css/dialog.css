@@ -25,7 +25,7 @@
 .dialog{
 	z-index: 9999;
 	margin: 50px auto 0;
-	width: 480px;
+	width: 500px;
 	height: 480px;
 	position: relative;
 }
@@ -125,6 +125,7 @@
  * Define styles for enrollment dialog
  */
 .enroll.dialog {
+	margin: 0 auto;
 }
 
 .enroll .dialog-inner {
@@ -145,6 +146,16 @@
 .enroll #book-list {
 	height: 450px!important;
 	overflow: auto;
+}
+
+.enroll .double-underline {
+	margin: 15px 5px 0 0;
+	float: right;
+	width: 76px;
+}
+.enroll .cancel {
+	width: 76px;
+	font-size: 12px;
 }
 
 /**
@@ -298,19 +309,4 @@
 	padding-right: 10px;
 	height: 14px;
 	line-height: 14px;
-}
-.sign-up-option span {
-	border-bottom: 1px #3f6c19 solid;
-	display: block;
-	width: 45px;
-	text-align:center;
-}
-.sign-up-option span a {
-	font-weight: bold;
-	color: #3f6c19;
-	display: block;
-	width: 45px;
-}
-.sign-up-option span a:active {
-	color: #3f6c19;
 }
