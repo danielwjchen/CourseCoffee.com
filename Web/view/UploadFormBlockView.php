@@ -1,14 +1,15 @@
 <?php
 /**
  * @file
- * Define upload form
+ * Define upload form block
  */
 class UploadFormBlockView extends BlockView implements BlockViewInterface {
 
 	/**
-	 * Implement BlockViewInterface::render()
+	 * Implement BlockViewInterface::gEtcontentlear()
 	 */
-	public function render() {
+	public function getContent() {
+		$this->addJS('model/doc.js');
 		return <<<HTML
 <div class="upload-form">
 	<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">

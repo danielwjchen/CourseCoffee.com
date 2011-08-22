@@ -24,6 +24,17 @@ class SignUpPageView extends PageView implements PageViewInterface {
 	}
 
 	/**
+	 * Implement PageViewInterface::getBlocks()
+	 */
+	public function getBlocks() {
+		return array(
+			'footer' => array(
+				'FooterBlockView',
+			),
+		);
+	}
+
+	/**
 	 * Implement PageViewInterface::getContent()
 	 */
 	public function getContent() {
@@ -112,7 +123,7 @@ HTML;
 </div>
 <div class="footer">
 	<div class="footer-inner">
-		{$footer['block']}
+		{$footer}
 	</div>
 </div>
 HTML;

@@ -17,17 +17,11 @@ class ClassPageView extends PageView implements PageViewInterface {
 
 		$this->buildClassList($content['class_list']);
 
-		$this->addJS('model/logout.js');
 		$this->addJS('model/panel.js');
 		$this->addJS('model/task.js');
-		$this->addJS('model/doc.js');
-		$this->addJS('model/book-suggest.js');
-		$this->addJS('model/class-suggest.js');
-		$this->addJS('model/class-enroll.js');
 		$this->addJS('model/class-info.js');
 		$this->addJS('timer.js');
 		$this->addJS('controller/class.js');
-		$this->addJS('controller/navigation.js');
 		$this->addCSS('dialog.css');
 		$this->addCSS('class.css');
 		$this->addCSS('panel.css');
@@ -40,6 +34,23 @@ class ClassPageView extends PageView implements PageViewInterface {
 	 */
 	protected function getHeader() {
     header(self::STATUS_OK);
+	}
+
+	/**
+	 * Implement PageViewInterface::getBlocks()
+	 */
+	public function getBlocks() {
+		return array(
+			'header' => array(
+				'NavigationBlockView',
+			),
+			'upload_form' => array(
+				'UploadFormBlockView',
+			),
+			'footer' => array(
+				'FooterBlockView',
+			),
+		);
 	}
 
 	/**
@@ -114,36 +125,12 @@ HTML;
 	
 		$class_option = $this->getClassOption($default_class);
 
-		$upload_form_block_view = new UploadFormBlockView();
-		$upload_form = $upload_form_block_view->render();
-
 		return <<<HTML
 <div class="class container">
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
-				<ul id="navigation-menu">
-					<li class="home">
-						<a class="home button" href="/home">Home</a>
-					</li>
-					<li class="calendar">
-						<a class="calendar button" href="/calendar">Calendar</a>
-					</li>
-					<li class="class active">
-						<a class="class button" href="/class">Class</a>
-					</li>
-					<li class="class-suggest">
-						<div class="class-suggest-inner">
-							<form id="class-suggest-form" name="class-suggest" action="college-class-suggest" method="post">
-								<input type="text" name="string" id="suggest-input" value="e.g. CSE231001" />
-								<input type="hidden" id="section-id" name="section_id" />
-								<a class="button suggest" href="#">add</a>
-							</form>
-					</li>
-					<li class="logout">
-						<a class="logout button" href="#">logout</a>
-					</li>
-				</ul>
+				{$header}
 			</div>
 		</div>
 		<div class="class body">
@@ -214,7 +201,7 @@ HTML;
 </div>
 <div class="footer">
 	<div class="footer-inner">
-		{$footer['block']}
+		{$footer}
 	</div>
 </div>
 HTML;

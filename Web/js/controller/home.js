@@ -28,7 +28,7 @@ $P.ready(function() {
 	}
 	*/
 
-	var domain = window.location.origin;
+	var domain = window.location.protocol + '//' + window.location.hostname;
 	$('.panel-02 .panel-inner').append('<fb:activity site="' + domain + '" width="460" height="300" header="false" recommendations="true">' +
 	'</fb:activity>');
 	//<fb:comments href="' + domain + '" num_posts="10" width="459"></fb:comments>');

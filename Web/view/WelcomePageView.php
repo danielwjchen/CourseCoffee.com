@@ -20,6 +20,17 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	}
 
 	/**
+	 * Implement PageViewInterface::getBlocks()
+	 */
+	public function getBlocks() {
+		return array(
+			'footer' => array(
+				'FooterBlockView',
+			),
+		);
+	}
+
+	/**
 	 * Implement PageViewInterface::getContent()
 	 */
 	public function getContent() {
@@ -65,7 +76,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 					<div class="panel-inner">
 						<div class="upload-form">
 							<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
-								<input type="hidden" name="token" value="{$file_token}" />
+								<input type="hidden" name="token" />
 								<input type="file" name="document" />
 								<div class="error hidden"></div>
 								<a class="button submit" href="#">upload</a>
@@ -80,7 +91,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 </div>
 <div class="footer">
 	<div class="footer-inner">
-		{$footer['block']}
+		{$footer}
 	</div>
 </div>
 HTML;
