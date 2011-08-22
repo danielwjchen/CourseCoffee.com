@@ -518,7 +518,7 @@ $P.ready(function(){
 
             function update_msg_board(){
                     if(min_var > 2000){ // parsing is too bad
-                            $("#msg_board").html($("#msg_board").html() + "<li>If the document has been inccorrectly processed, click <a href='#' class='delete_all'>here</a> to delete all assignments and edit manually!</li>")
+                            $("#msg_board").html($("#msg_board").html() + "<li class='emph'>If the document has been inccorrectly processed, click <a href='#' class='delete_all'>here</a> to delete all assignments and edit manually!</li>")
                     }
             }
             
