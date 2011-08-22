@@ -35,7 +35,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 					ON qd_linkage.quest_id = q.id
 				INNER JOIN date qd
 					ON qd.id = qd_linkage.date_id
-				INNER JOIN quest_user_linkage qu_linkage
+				LEFT JOIN quest_user_linkage qu_linkage
 					ON qu_linkage.user_id = :quest_user_id
 					AND qu_linkage.quest_id = q.id
 				LEFT JOIN (

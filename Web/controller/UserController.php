@@ -108,9 +108,9 @@ class UserController extends Controller implements ControllerInterface {
 			// debug 
 			// error_log(__METHOD__ . ' : user_record - ' . print_r($user_record, true));
 
-			$this->user_session_model->setUserSessionCookie($result['user_id'], $email, $password);
-			$this->user_session_model->setUserProfile($result['profile']);
-			$this->user_session_model->setUserSetting($result['setting']);
+			$this->user_session_model->setUserSessionCookie($user_record['user_id'], $email, $password);
+			$this->user_session_model->setUserProfile($user_record['profile']);
+			$this->user_session_model->setUserSetting($user_record['setting']);
 
 			$class_list = array();
 			if (!empty($section_id)) {
@@ -123,7 +123,7 @@ class UserController extends Controller implements ControllerInterface {
 
 					$user_enroll_class_model = new UserEnrollClassModel();
 					$user_enroll_class_model->createLinkage(
-						$result['user_id'], 
+						$user_record['user_id'], 
 						$section_id
 					);
 					$class_list[$section_id] = $class_info['content']['section_code'];
@@ -133,11 +133,11 @@ class UserController extends Controller implements ControllerInterface {
 
 			}
 
-			unset($result['profile']);
-			unset($result['setting']);
+			unset($user_record['profile']);
+			unset($user_record['setting']);
 		}
 
-		$this->clientRedirect($result['redirect']);
+		$this->clientRedirect($user_record['redirect']);
 
 	}
 
