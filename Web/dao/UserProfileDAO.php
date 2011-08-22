@@ -94,8 +94,6 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				u.id,
 				p.first_name,
 				p.last_name,
-				f.path,
-				f.mime,
 				i.name AS institution,
 				i.uri AS institution_uri,
 				iy.period AS year,
@@ -116,22 +114,18 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				ON iy_linkage.year_id = iy.id
 			LEFT JOIN `institution_term` it
 				ON iy.id = it.year_id
-			LEFT JOIN (`file` f,  `file_type` ft)
-				ON u.id = f.user_id
-				AND f.type_id = ft.id
-				AND ft.name = :file_type
 		";
 
 		if (isset($params['user_id'])) {
-			$sql .= "WHERE u.id = :user_id";
+			$sql .= "WHERE u.id = :user_id GROUP BY u.id";
 			$data = $this->db->fetch($sql, array(
 				'user_id' => $params['user_id'],
-				'file_type' => FileType::PROFILE_IMAGE,
 			));
 		} elseif (isset($params['email']) && isset($params['password'])) {
 			$sql .= "
 				WHERE u.account = :email
 					AND u.password = :password
+			 GROUP BY u.id
 			";
 			$data = $this->db->fetch($sql, array(
 				'file_type' => FileType::PROFILE_IMAGE,

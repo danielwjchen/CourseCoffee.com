@@ -61,10 +61,6 @@ class UserController extends Controller implements ControllerInterface {
 		return Cookie::Get(USerSessionModel::COOKIE_AUTO_LOGIN); 
 	}
 
-
-	private function registerUser($fist_name, $last_name, $institution_id, $section_id, $course_code, $year, $term, $token, $password, $confirm) {
-	}
-
 	/**
 	 * Register user via facebook
 	 *
@@ -112,29 +108,33 @@ class UserController extends Controller implements ControllerInterface {
 			// debug 
 			// error_log(__METHOD__ . ' : user_record - ' . print_r($user_record, true));
 
-			$this->user_session_model->setUserSessionCookie($user_record['user_id'], $email, $password);
-			$this->user_session_model->setUserProfile($user_record['profile']);
-			$this->user_session_model->setUserSetting($user_record['setting']);
+			$this->user_session_model->setUserSessionCookie($result['user_id'], $email, $password);
+			$this->user_session_model->setUserProfile($result['profile']);
+			$this->user_session_model->setUserSetting($result['setting']);
 
 			$class_list = array();
-			if (!empty($section_id) && !empty($course_code)) {
+			if (!empty($section_id)) {
 				Session::Del('section_id');
-				Session::Del('course_code');
+				$section_code  = Session::Get('section_code');
+				$college_class = new CollegeClassModel();
+				$class_info = $college_class->getClassById($section_id);
 
-				$user_enroll_class_model = new UserEnrollClassModel();
-				$user_enroll_class_model->createLinkage(
-					$user_record['user_id'], 
-					$section_id
-				);
-				$class_list = array(
-					'section_id' => $section_id, 
-					'course_code' => $course_code
-				);
+				if (isset($class_info['content'])) {
+
+					$user_enroll_class_model = new UserEnrollClassModel();
+					$user_enroll_class_model->createLinkage(
+						$result['user_id'], 
+						$section_id
+					);
+					$class_list[$section_id] = $class_info['content']['section_code'];
+				}
+				$this->user_session_model->setUserClassList($class_list);
+
+
 			}
-			$this->user_session_model->setUserClassList($class_list);
 
-			unset($user_record['profile']);
-			unset($user_record['setting']);
+			unset($result['profile']);
+			unset($result['setting']);
 		}
 
 		$this->clientRedirect($result['redirect']);
@@ -151,7 +151,6 @@ class UserController extends Controller implements ControllerInterface {
 		$last_name      = Input::Post('last-name');
 		$institution_id = Input::Post('school');
 		$section_id     = Session::Get('section_id');
-		$course_code    = Session::Get('course_code');
 		$year           = '2011';
 		$term           = 'fall';
 		$token          = Input::Post('token');
@@ -179,25 +178,28 @@ class UserController extends Controller implements ControllerInterface {
 			$this->user_session_model->setUserSetting($result['setting']);
 
 			$class_list = array();
-			if (!empty($section_id) && !empty($course_code)) {
+			if (!empty($section_id)) {
 				Session::Del('section_id');
-				Session::Del('course_code');
+				$section_code  = Session::Get('section_code');
+				$college_class = new CollegeClassModel();
+				$class_info = $college_class->getClassById($section_id);
 
-				$user_enroll_class_model = new UserEnrollClassModel();
-				$user_enroll_class_model->createLinkage(
-					$result['user_id'], 
-					$section_id
-				);
-				$class_list = array(
-					'section_id' => $section_id, 
-					'course_code' => $course_code
-				);
+				if (isset($class_info['content'])) {
+
+					$user_enroll_class_model = new UserEnrollClassModel();
+					$user_enroll_class_model->createLinkage(
+						$result['user_id'], 
+						$section_id
+					);
+					$class_list[$section_id] = $class_info['content']['section_code'];
+				}
+				$this->user_session_model->setUserClassList($class_list);
+
+
 			}
-			$this->user_session_model->setUserClassList($class_list);
 
 			unset($result['profile']);
 			unset($result['setting']);
-
 		}
 
 		$this->output = new JSONView($result);

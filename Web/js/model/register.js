@@ -100,7 +100,8 @@ window.register = {
 /**
  * Handle user registration
  */
-var SignUp = function() {
+var SignUp = function(url_param) {
+	var _param = url_param;
 };
 
 /**
