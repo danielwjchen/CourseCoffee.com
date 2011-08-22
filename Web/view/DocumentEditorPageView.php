@@ -86,9 +86,10 @@ HTML;
               <td id='table_title_right' >parsed data</td>
             </tr>
             <tr>
-              <td class='data_col_left'><div id='orig_syl'></div><div id="info_box"></div></td>
-              <td class='data_col_right'><div id='parsed_data'></div>
-                    <div id="tool_box">
+              <td class='data_col_left'><div id='orig_syl'></div><div id="info_box_left"></div></td>
+              <td class='data_col_right'><div id="info_box_right"></div>
+<div id='parsed_data'></div>  
+                  <div id="tool_box">
 			<table>
                             <tr>    
 		                <td>
