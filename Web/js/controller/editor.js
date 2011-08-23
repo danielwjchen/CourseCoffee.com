@@ -240,7 +240,7 @@ $P.ready(function(){
                     update_schedule();                   
                     save_history()
             });
-
+            /*
             $(".toggle_del_sch").live("mouseenter",function(e){
                     this_height =  $(this).position().top
                     $("#info_box_right").css("top", this_height)
@@ -249,7 +249,7 @@ $P.ready(function(){
                     $("#info_box_right").show()
                     $("#info_box_right").fadeTo("slow", 0.8)    
 
-            });
+            });*/
 
             $(".toggle_del_sch").live("mouseleave",function(e){
                     $("#info_box_right").fadeOut()
@@ -971,14 +971,15 @@ $P.ready(function(){
 				creationForm.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
 			});*/
                         
-                       
+                        cnt = 0; 
                         for(i=0; i<schedule_list.length; i++){
                                 if(schedule_list[i].deleted == false){
                                         curr_date =  schedule_list[i].date
                                         sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate()) + "/" + "2011"
                                         sch_content = schedule_list[i].content
-				        creationForm.append('<input type="hidden" name="date_' + i + '" value="' + sch_date + '" />');
-				        creationForm.append('<input type="hidden" name="objective_' + i + '" value="' + sch_content + '" />');
+				        creationForm.append('<input type="hidden" name="date_' + cnt + '" value="' + sch_date + '" />');
+				        creationForm.append('<input type="hidden" name="objective_' + cnt + '" value="' + sch_content + '" />');
+                                        cnt = cnt + 1
                                 }
                         }
 			var content = '';
