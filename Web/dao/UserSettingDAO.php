@@ -10,8 +10,8 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	 */
 	function __construct($db, $params = NULL) {
 		$attr = array(
-			'id',
 			'user_id',
+			'tou_vid',
 			'institution_id',
 			'year_id',
 			'term_id',
@@ -26,6 +26,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	public function create($params) {
 		if (
 			!isset($params['user_id']) || 
+			!isset($params['tou_vid']) ||
 			!isset($params['institution_id']) ||
 			!isset($params['year_id']) ||
 			!isset($params['term_id'])
@@ -36,10 +37,13 @@ class UserSettingDAO extends DAO implements DAOInterface{
 		}else{
 			return $this->db->insert("
 				INSERT INTO `user_setting` (
-					`user_id`, `institution_id`, `year_id`, `term_id`
-				) VALUES (:user_id, :institution_id, :year_id, :term_id)",
+					`user_id`, `tou_vid`, `institution_id`, `year_id`, `term_id`
+				) VALUES (
+					:user_id, :tou_vid, :institution_id, :year_id, :term_id)
+				",
 			array(
 				'user_id'        => $params['user_id'], 
+				'tou_vid'        => $params['tou_vid'],
 				'institution_id' => $params['institution_id'],
 				'year_id'        => $params['year_id'],
 				'term_id'        => $params['term_id'],
@@ -56,11 +60,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 		$sql = "SELECT * FROM `user_setting` us ";
 		$sql_param = array();
 		
-		if (isset($params['id'])) {
-			$sql      .= "WHERE us.`id` = :id";
-			$sql_param = array('id' => $params['id']);
-
-		} elseif (isset($params['user_id'])) {
+		if (isset($params['user_id'])) {
 			$sql      .= "WHERE us.`user_id` = :user_id";
 			$sql_param = array('user_id' => $params['user_id']);
 
@@ -84,6 +84,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	public function update() {
 		$sql = "
 			UPDATE `user_setting` SET
+				`tou_vid` = :tou_vid
 				`institution_id` = :institution_id,
 				`year_id` = :year_id,
 				`term_id` = :term_id
@@ -92,6 +93,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 		$this->db->perform($sql, array(
 			'id'             => $this->attr['id'],
 			'user_id'        => $this->attr['user_id'], 
+			'tou_vid'        => $this->attr['tou_vid'], 
 			'institution_id' => $this->attr['institution_id'],
 			'term_id'        => $this->attr['term_id'],
 			'year_id'        => $this->attr['year_id'],
@@ -103,8 +105,8 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	 * Extend DAO::destroy().
 	 */
 	public function destroy() {
-		$sql = "DELETE FROM `user_setting` WHERE `id` = :id";
-		$this->db->perform($sql, array('id' => $this->attr['id']));
+		$sql = "DELETE FROM `user_setting` WHERE `user_id` = :user_id";
+		$this->db->perform($sql, array('user_id' => $this->attr['user_id']));
 
 	}
 }

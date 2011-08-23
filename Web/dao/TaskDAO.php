@@ -153,14 +153,17 @@ class TaskDAO extends DAO implements DAOInterface{
 
 	/**
 	 * Extend DAO::update()
+	 *
+	 * This is not tested!
 	 */
 	public function update() {
-		$this->quest->update($this->attr);
-		$this->date->update(array(
-			'id' => $this->date->id,
-			'type' => $this->date->type,
-			'timestamp' => $this->attr['due_date']
-		));
+		foreach ($this->quest->attribute as $attr => $value) {
+			$this->quest->$attr = $this->attr[$attr];
+		};
+		$this->quest->update();
+
+		$this->date->timestamp = $this->attr['due_date'];
+		$this->date->update();
 	}
 
 	/**
