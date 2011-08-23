@@ -15,7 +15,6 @@ require_once INCLUDES_PATH . '/Config.php';
 require_once INCLUDES_PATH . '/Settings.php';
 require_once INCLUDES_PATH . '/Session.php';
 require_once INCLUDES_PATH . '/DB.php';
-require_once INCLUDES_PATH . '/DBAInvoker.php';
 require_once INCLUDES_PATH . '/File.php';
 require_once INCLUDES_PATH . '/Router.php';
 require_once INCLUDES_PATH . '/Logger.php';
