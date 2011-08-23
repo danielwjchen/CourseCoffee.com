@@ -240,7 +240,7 @@ $P.ready(function(){
                     update_schedule();                   
                     save_history()
             });
-
+            /*
             $(".toggle_del_sch").live("mouseenter",function(e){
                     this_height =  $(this).position().top
                     $("#info_box_right").css("top", this_height)
@@ -249,7 +249,7 @@ $P.ready(function(){
                     $("#info_box_right").show()
                     $("#info_box_right").fadeTo("slow", 0.8)    
 
-            });
+            });*/
 
             $(".toggle_del_sch").live("mouseleave",function(e){
                     $("#info_box_right").fadeOut()
