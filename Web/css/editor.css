@@ -59,15 +59,15 @@
         border-color: #FFF;
         top: -125px;
         width: 450px; 
-        height: 30px;
         text-align: center;
         box-shadow: 2px 2px 5px #003d01;
-
 
 	}
         
 .toolbox_btn{
         vertical-align: middle;
+        width: 105px;
+        height: 30px;
 	color:#09F;
 	background-color:#FFF;
 	border-radius: 4px;	
@@ -185,6 +185,11 @@
         box-shadow: 2px 2px 5px #003d01;
         background-color: #F60;
 	filter: alpha(opacity=80);
+}
+
+.emph{
+    color: #FF0;
+    font-weight: bold;
 }
 
 

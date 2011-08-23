@@ -4,14 +4,16 @@
  * page
  */
 $P.ready(function() {
+	var fbUid = '';
 	$FB(function() {
 		FB.getLoginStatus(function(response) {
 			if (response.authResponse) {
+				fbUid = response.authResponse.userID;
 				$.ajax({
 					url: '/user-login-fb',
 					type: 'post',
 					cache: false,
-					data: 'fb_uid=' + response.authResponse.userID,
+					data: 'fb_uid=' + fbUid,
 					success: function(response) {
 						if (response.success) {
 							window.location = response.redirect;
@@ -43,11 +45,16 @@ $P.ready(function() {
 				e.preventDefault();
 				dialog.close();
 			});
-		} else if (target.hasClass('regular') || target.hasClass('facebook')) {
-			window.location = target.attr('href');
+
 		} else if (target.hasClass('upload')) {
 			doc.init();
-		} else if (target.hasClass('enroll')) {
+		}
+	});
+	welcome.delegate('a.sign-up', 'click', function(e) {
+		e.preventDefault();
+		var target = $(this);
+		if (target.hasClass('facebook')) {
+			window.location = target.attr('href') + '?fb=true&fb_uid=' + fbUid;
 		}
 	});
 });

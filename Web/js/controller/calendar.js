@@ -12,7 +12,7 @@ $P.ready(function() {
 
 	// Load tasks
 	var userTaskOption = $('#user-list-task-option');
-	var agendaPanel = $('.panel-02 .panel-inner .task-list');
+	var agendaPanel = $('#calendar-task-list');
 
 	// Apply scrollbar to the calendar 
 	$('.calendar-display').scrollBar();

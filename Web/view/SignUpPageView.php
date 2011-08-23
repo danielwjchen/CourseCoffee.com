@@ -24,10 +24,26 @@ class SignUpPageView extends PageView implements PageViewInterface {
 	}
 
 	/**
+	 * Implement PageViewInterface::getBlocks()
+	 */
+	public function getBlocks() {
+		return array(
+			'footer' => array(
+				'FooterBlockView',
+			),
+		);
+	}
+
+	/**
 	 * Implement PageViewInterface::getContent()
 	 */
 	public function getContent() {
 		extract($this->data);
+		if ($error) {
+			$error_message = '<div class="row error">' . $error . '</div>';
+		} else {
+			$error_message = '<div class="row error hidden"></div>';
+		}
 		$option = '';
 		foreach ($college_option as $key => $value) {
 			$option .= "<option value='{$key}'>{$value}</option>";
@@ -54,7 +70,7 @@ HTML;
 				<div class="content"> 
 					<form id="user-register-form" name="registration" action="user-register" method="post"> 
 						<input type="hidden" name="token" value="{$register_token}" /> 
-						<div class="row error hidden"></div> 
+						{$error_message}
 						<div class="row"> 
 							<div class="title"> 
 								<label for="first-name">first name: </label> 
@@ -84,7 +100,7 @@ HTML;
 								<label for="user-account">email: </label> 
 							</div> 
 							<div class="field"> 
-								<input type="text" name="email" /> 
+								<input type="email" name="email" /> 
 							</div> 
 						</div> 
 						<div class="row"> 
@@ -112,7 +128,7 @@ HTML;
 </div>
 <div class="footer">
 	<div class="footer-inner">
-		{$footer['block']}
+		{$footer}
 	</div>
 </div>
 HTML;

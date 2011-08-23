@@ -1,0 +1,13 @@
+/**
+ * Define style for footer
+ */
+.footer {
+}
+.footer-inner {
+	color: #d2d2cd;
+}
+.footer-inner .copyright {
+	padding: 5px;
+	display: block;
+}
+

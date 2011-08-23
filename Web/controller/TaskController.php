@@ -66,24 +66,32 @@ class TaskController extends Controller implements ControllerInterface {
 	 */
 	public function handleTaskCreationFromDoc() {
 		$task_model  = new TaskCreateFormModel();
+		$class_model = new CollegeClassModel();
 		$task_count = Input::Post('task_count');
 		$file_id    = Input::Post('file_id');
 		$section_id = Input::Post('section_id');
 		$user_id = $this->GetUserId();
 		$creator_id = ($user_id !== false) ? $user_id : 1;// super user id
 
-		for ($i = 0; $i < $task_count; $i++) {
-			$date      = Input::Post('date_' . $i);
-			$objective = preg_replace('/[^(\x20-\x7F)\x0A]*/', '', Input::Post('objective_' . $i));
-			$task_model->createTask($creator_id, $objective, strtotime($date), $section_id);
-		}
+		if ($class_model->hasClassSyllabus($section_id)) {
+			Logger::Write(CollegeClassModel::EVENT_ALREADY_HAS_SYLLABUS);
+			$message = CollegeClassModel::ERROR_ALREADY_HAS_SYLLABUS;
+		} else {
+			for ($i = 0; $i < $task_count; $i++) {
+				$date      = Input::Post('date_' . $i);
+				$objective = trim(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', Input::Post('objective_' . $i)));
+				$task_model->createTask($creator_id, $objective, strtotime($date), $section_id);
+			}
 
-		$processor = new DocumentProcessorFormModel();
-		$processor->setSectionSyllabus($section_id, $file_id);
+			$processor = new DocumentProcessorFormModel();
+			$processor->setSectionSyllabus($section_id, $file_id);
+			$message = CollegeClassModel::SYLLABUS_SUCCESS;
+
+		}
 
 		$this->output = new JSONView(array(
 			'section_id' => $section_id,
-			'message'    => 'Congratulation! The syllabus is now uploaded!'
+			'message'    => $message,
 		));
 	}
 

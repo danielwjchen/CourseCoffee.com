@@ -3,6 +3,21 @@
  * Translate timestamp into more human readable and useful format
  */
 $.fn.translateTime = function() {
+
+	// time offsets
+	var yearOffset   = 365*24*60*60;
+	var monthOffset  = 30*24*60*60;
+	var weekOffset   = 7*24*60*60;
+	var dayOffset    = 24*60*60;
+	var hourOffset   = 60*60;
+	var minuteOffset = 60;
+
+	var currentDate = new Date()
+	var currTimestamp  = Math.floor(currentDate.getTime() / 1000);
+	var dueTimestamp = parseInt($(this).attr('id'));
+	var timeDiff = Math.abs(dueTimestamp - currTimestamp);
+	var string = '';
+
 	/**
 	 * Calculate offset count
 	 */
@@ -27,28 +42,16 @@ $.fn.translateTime = function() {
 	 * @param region
 	 * @param string
 	 */
-	setMessage = function(region, string) {
-		currTimestamp  = Math.floor((new Date()).getTime() / 1000);
-		dueTimestamp = parseInt($(region).attr('id'));
-		message = dueTimestamp >= currTimestamp ? 'due in over %s ' : 'was due over %s ago';
-		message = message.replace(/%s\s/, string);
+	setMessage = function(region, timeString) {
+		var _dueDateObject = new Date(dueTimestamp * 1000);
+		var _dueDateString = _dueDateObject.getMonth() + '/' + 
+			_dueDateObject.getDate() + '/' + 
+			_dueDateObject.getFullYear();
+
+		var message = dueTimestamp >= currTimestamp ? 'due in over %s ' : 'was due over %s ago';
+		message = message.replace(/%s\s/, timeString) + ' on ' + _dueDateString;
 		$(region).text(message);
 	}
-
-	// time offsets
-	var yearOffset   = 365*24*60*60;
-	var monthOffset  = 30*24*60*60;
-	var weekOffset   = 7*24*60*60;
-	var dayOffset    = 24*60*60;
-	var hourOffset   = 60*60;
-	var minuteOffset = 60;
-
-	var currentDate = new Date()
-	var currTimestamp  = Math.floor(currentDate.getTime() / 1000);
-	var dueTimestamp = parseInt($(this).attr('id'));
-	var timeDiff = Math.abs(dueTimestamp - currTimestamp);
-	var string = '';
-		
 
 	var offsetCount = 0;
 	offsetCount = calCount(yearOffset, timeDiff);

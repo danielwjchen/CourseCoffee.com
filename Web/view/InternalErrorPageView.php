@@ -23,10 +23,21 @@ class InternalErrorPageView extends PageView implements PageViewInterface {
 	}
 
 	/**
+	 * Implement PageViewInterface::getBlocks()
+	 */
+	public function getBlocks() {
+		return array(
+			'footer' => array(
+				'FooterBlockView',
+			),
+		);
+	}
+
+	/**
 	 * Implement PageViewInterface::getContent()
 	 */
 	public function getContent() {
-		extract($this->content);
+		extract($this->data);
 		return <<<HTML
 <div class="container">
 	<div class="container-inner">
@@ -56,6 +67,7 @@ class InternalErrorPageView extends PageView implements PageViewInterface {
 </div>
 <div class="footer">
 	<div class="footer-inner">
+		{$footer}
 	</div>
 </div>
 HTML;

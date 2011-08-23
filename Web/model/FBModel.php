@@ -7,12 +7,15 @@ require_once LIB_PATH . '/facebook/src/facebook.php';
 class FBModel extends Model {
 	const ERROR_FB_UNKNOWN_ALGORITHM = 'Unknown algorithm. Expected HMAC-SHA256';
 	const ERROR_FB_BAD_SIGNATURE     = 'Bad Signed JSON signature!';
+	const ERROR_FB_UID_TAKEN         = 'We are sorry, but the facebook profile you wish to register with is already taken.';
+	const EVENT_FB_UID_TAKEN         = 'Attempt to regitster with existing facebook profile.';
 
 	const FAIL_REDIRECT = '/facebook-down';
 	const REDIRECT = '/home';
 
 	private $college_list_dao;
 	private $facebook;
+	private $linkage;
 
 	function __construct() {
 		parent::__construct();
@@ -21,6 +24,7 @@ class FBModel extends Model {
 			'secret' => $config->facebook['secret'],
 		));
 		$this->college_list_dao = new CollegeListDAO($this->db);
+		$this->linkage          = new UserFacebookLinkageDAO($this->db);
 	}
 
 	private function base64UrlDecode($input) {
@@ -59,6 +63,17 @@ class FBModel extends Model {
 
 		$data['success'] = true;
 		return $data;
+	}
+
+	/**
+	 * Check if an account is already registered with the facebook user id
+	 *
+	 * @param int $fb_uid
+	 *
+	 * @return bool
+	 */
+	public function checkFBUid($fb_uid) {
+		return $this->linkage->read(array('fb_uid' => $fb_uid));
 	}
 
 	/**

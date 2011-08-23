@@ -72,7 +72,8 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 *  to call class methods within a definition to share code.
 	 */
 	var getTaskList = function() {
-		var cacheKey   = 'task-list-' + range.begin + '-' + range.end;
+		var paginate   = $('input[name=paginate]', option).val();
+		var cacheKey   = 'task-list-' + range.begin + '-' + range.end + '-' + paginate;
 		var cacheValue = cache.get(cacheKey);
 
 		/**
@@ -149,8 +150,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		}
 
 		// JQuery is having trouble selecting newly created elements, that's why
-		timeslot = $(document.getElementById(begin + '.' + end), region);
-		timeslot.html('');
+		var timeslot = $(document.getElementById(begin + '.' + end), region);
 		if (item['subject_abbr'] && item['course_num']) {
 			timeslot.html(timeslot.html() + wrap(item['subject_abbr'] + '-' + item['course_num']));
 		}

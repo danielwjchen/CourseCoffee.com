@@ -48,6 +48,21 @@ hr {
 .hidden {
 	display: none;
 }
+.double-underline {
+	border-bottom: 1px #3f6c19 solid;
+	display: block;
+	width: 45px;
+	text-align:center;
+}
+.double-underline a {
+	font-weight: bold;
+	color: #3f6c19;
+	display: block;
+	width: 45px;
+}
+.double-underline a:active {
+	color: #3f6c19;
+}
 /**
  * Define styles for sticky footer
  */
@@ -270,7 +285,8 @@ hr {
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
 }
 .footer-inner{
-	width: 100%;
+	width: 960px;
+	margin 0 auto;
 }
 
 /**

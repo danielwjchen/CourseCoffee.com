@@ -85,7 +85,7 @@ class DocumentProcessorFormModel extends FormModel{
 		}
 
 		// debug
-		error_log(__METHOD__ . ' : output - ' . print_r($output, true));
+		// error_log(__METHOD__ . ' : output - ' . print_r($output, true));
 
 		if (empty($output)) {
 			Logger::write(self::EVENT_FAIL);

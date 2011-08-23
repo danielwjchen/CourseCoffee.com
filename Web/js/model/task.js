@@ -74,6 +74,7 @@ window.Task = function(creationFormName, optionFormName) {
 		}
 
 		$.each(tasks, function(i, task) {
+			/*
 			if (task && task['subject_abbr'] && task['course_num'] && task['section_num']) {
 				tasks[i]['url'] = domain + '/class/' + 
 					institution_uri + '/' +
@@ -85,6 +86,9 @@ window.Task = function(creationFormName, optionFormName) {
 			} else if (task) {
 				tasks[i]['url'] = domain + '/task/' + task['id'];
 			}
+			*/
+
+			tasks[i]['url'] = domain + '/task/' + task['id'];
 		});
 
 		return tasks;

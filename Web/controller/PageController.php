@@ -15,7 +15,6 @@ class PageController extends Controller implements ControllerInterface {
 		return array(
 			'doc-edit'         => 'getDocumentEditorPage',
 			'sign-up'          => 'getSignUpPage',
-			'facebook-sign-up' => 'getFBSignUpPage',
 			'welcome'          => 'getWelcomePage',
 			'home'             => 'getHomePage',
 			'calendar'         => 'getCalendarPage',
@@ -86,30 +85,33 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getSignUpPage() {
 		$section_id = Input::Get('section_id');
+		$fb         = Input::Get('fb');
+		$fb_uid     = Input::Get('fb_uid');
+		$error      = null;
+
 		if (!empty($section_id)) {
 			Session::Set('section_id', $section_id);
+		}
+
+		if ($fb) {
+			$fb_model = new FBModel();
+			if (!$fb_model->checkFbUid($fb_uid)) {
+				$form_fields = $fb_model->generateSignUpForm();
+				$this->page = new FBSignUpPageView($form_fields);
+				return ;
+			} else {
+				Logger::Write(FBModel::EVENT_FB_UID_TAKEN);
+				$error = FBModel::ERROR_FB_UID_TAKEN;
+			}
 		}
 
 		$user_register = new UserRegisterFormModel();
 		$college       = new CollegeModel();
 		$this->page = new SignUpPageView(array(
+			'error'          => $error,
 			'register_token' => $user_register->initializeFormToken(),
 			'college_option' => $college->getCollegeOption(),
 		));
-	}
-
-	/**
-	 * Get facebook signup page for visiters
-	 */
-	public function getFBSignUpPage() {
-		$section_id = Input::Get('section_id');
-		if (!empty($section_id)) {
-			Session::Set('section_id', $section_id);
-		}
-
-		$fb_model = new FBModel();
-		$form_fields = $fb_model->generateSignUpForm();
-		$this->page = new FBSignUpPageView($form_fields);
 	}
 
 	/**

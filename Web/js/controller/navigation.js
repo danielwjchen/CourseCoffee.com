@@ -6,6 +6,9 @@ $P.ready(function() {
 	window.navigation = $('#navigation-menu');
 	var classEnroll = new ClassEnroll('#class-suggest-form', '#suggest-input');
 
+	var pathArray = window.location.pathname.split('/');
+	$('li.' + pathArray[1], navigation).addClass('active');
+
 
 	// hide/show the default input
 	blurInput('#user-login-form');

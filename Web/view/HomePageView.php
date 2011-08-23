@@ -16,21 +16,32 @@ class HomePageView extends PageView implements PageViewInterface {
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
-		$this->addJS('model/logout.js');
 		$this->addJS('model/panel.js');
 		$this->addJS('model/task.js');
 		$this->addJS('model/to-do.js');
-		$this->addJS('model/doc.js');
-		$this->addJS('model/book-suggest.js');
-		$this->addJS('model/class-suggest.js');
-		$this->addJS('model/class-enroll.js');
 		$this->addJS('controller/home.js');
-		$this->addJS('controller/navigation.js');
 		$this->addJS('timer.js');
 		$this->addCSS('dialog.css');
 		$this->addCSS('task.css');
 		$this->addCSS('home.css');
 		$this->addCSS('book-list.css');
+	}
+
+	/**
+	 * Implement PageViewInterface::getBlocks()
+	 */
+	public function getBlocks() {
+		return array(
+			'header' => array(
+				'NavigationBlockView',
+			),
+			'upload_form' => array(
+				'UploadFormBlockView',
+			),
+			'footer' => array(
+				'FooterBlockView',
+			),
+		);
 	}
 
 	/**
@@ -55,36 +66,12 @@ HTML;
 
 		$profile_image = empty($fb_uid) ? 'images/default-profile.png' : 'https://graph.facebook.com/' . $fb_uid . '/picture?type=large';
 
-		$upload_form_block_view = new UploadFormBlockView();
-		$upload_form = $upload_form_block_view->render();
-
 		return <<<HTML
 <div class="home container">
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
-				<ul id="navigation-menu">
-					<li class="home active">
-						<a class="home button" href="/home">Home</a>
-					</li>
-					<li class="calendar">
-						<a class="calendar button" href="/calendar">Calendar</a>
-					</li>
-					<li class="class">
-						<a class="class button" href="/class">Class</a>
-					</li>
-					<li class="class-suggest">
-						<div class="class-suggest-inner">
-							<form id="class-suggest-form" name="class-suggest" action="college-class-suggest" method="post">
-								<input type="text" name="string" id="suggest-input" value="e.g. CSE231001" />
-								<input type="hidden" id="section-id" name="section_id" />
-								<a class="button suggest" href="#">add</a>
-							</form>
-					</li>
-					<li class="logout">
-						<a class="logout button" href="#">logout</a>
-					</li>
-				</ul>
+				{$header}
 			</div>
 		</div>
 		<div class="body">
@@ -163,7 +150,7 @@ HTML;
 	</div>
 	<div class="footer">
 		<div class="footer-inner">
-			{$footer['block']}
+			{$footer}
 		</div>
 	</div>
 HTML;

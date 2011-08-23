@@ -6,7 +6,22 @@
 interface PageViewInterface {
 
 	/**
-	 * Define the data of the page
+	 * Define blocks on page
+	 *
+	 * This function defines the association of a block of information and the 
+	 * BlockView child class responsible for generating the content. It also 
+	 * specifies the params expected.
+	 *
+	 * @return array
+	 *   - block variable name: the variable name that's expected by getContent()
+	 *      - class name: the BlockView child class reponsible for generating the 
+	 *        content.
+	 *      - parameters: an array of parameters needed to generate the content.
+	 */
+	public function getBlocks();
+
+	/**
+	 * Define page content
 	 */
 	public function getContent();
 
@@ -60,53 +75,6 @@ abstract class PageView extends View implements ViewInterface {
 	 */
 	public function setPageTitle($title) {
 		$this->data['title'] = 'CourseCoffee.com - ' . $title;
-	}
-	
-	/**
-	 * Add javascript to a page
-	 *
-	 * @param string $js
-	 *  this could be either a path to a javascript file or plain inline 
-	 *  javascript
-	 * @param string $option
-	 *  a flag that indicates the type of data being based possible values:
-	 *   - file: 
-	 *      the path to a javascript file relative to /js
-	 *   - external
-	 *      the URI to a external javascript file source
-	 */
-	public function addJS($js, $option = 'file') {
-		switch ($option) {
-			case 'file':
-				$this->data['js'][] = "/js/{$js}";
-				break;
-			case 'external':
-				$this->data['js'][] = $js;
-				break;
-		}
-	}
-
-	/**
-	 * Add CSS to a page
-	 *
-	 * @param string $css
-	 *  this could be either the path to a CSS file
-	 * @param string $option
-	 *  a flag that indicates the type of data being based possible values:
-	 *   - internal: 
-	 *      the path to a CSS file relative to /css
-	 *   - external
-	 *      the URI to a external CSS file source
-	 */
-	public function addCSS($css, $option = 'internal') {
-		switch ($option) {
-			case 'internal':
-				$this->data['css'][] = "/css/{$css}";
-				break;
-			case  'external':
-				$this->data['css'][] = $css;
-				break;
-		}
 	}
 
 	/**
@@ -197,12 +165,6 @@ META;
 	}
 
 	/**
-	 * Render Meta tags
-	 */
-	protected function renderMeta() {
-	}
-
-	/**
 	 * Get Facebook Javascript SDK 
 	 *
 	 * This loads the library asynchronously and provides FBSDK() as a callback
@@ -258,9 +220,39 @@ HTML;
 	}
 
 	/**
+	 * Render block css, js and html
+	 */
+	private function renderBlocks() {
+		$blocks   = $this->getBlocks();
+		foreach ($blocks as $name => $info) {
+			$block = array();
+
+			$block_object = new $info[0];
+
+			if (isset($info[1])) {
+				$params = array_intersect_key(array_flip($this->data, $info[1]));
+				$block = $block_object->render($params);
+			} else {
+				$block = $block_object->render();
+			}
+
+			$this->data[$name] = $block['content'];
+
+			if (isset($block['js'])) {
+				$this->data['js'] = array_merge($this->data['js'], $block['js']);
+			}
+			if (isset($block['css'])) {
+				$this->data['css'] = array_merge($this->data['css'], $block['css']);
+			}
+
+		}
+	}
+
+	/**
 	 * Implement ViewInteface::render()
 	 */
 	public function render() {
+		$this->renderBlocks();
 		$js       = $this->renderJS();
 		$css      = $this->renderCSS();
 		$content  = $this->getContent();
