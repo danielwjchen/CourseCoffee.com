@@ -262,6 +262,7 @@ HTML;
 		return <<<HTML
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
 	<head>
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<meta http-equiv='data-type' data='text/html;charset=UTF-8' /> 
 		<meta http-equiv='Pragma' data='no-cache' /> 
 		<title>{$title}</title>

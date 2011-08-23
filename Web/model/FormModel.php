@@ -95,16 +95,10 @@ abstract class FormModel extends Model {
 	 * @param string $referrer
 	 */
 	public function getState($referrer) {
-		$state = preg_replace('/^http[s]?:\/\/.+\//i', '', $referrer);
-
-		switch ($state) {
-			case 'class':
-			case 'calendar':
-			case 'home':
-				return 'redirect';
-			case 'welcome':
-			default:
-				return 'sign-up';
+		if (preg_match('/[class|calendar|home]/i', $referrer)) {
+			return 'redirect';
+		} else {
+			return 'sign-up';
 		}
 	}
 

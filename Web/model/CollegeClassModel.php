@@ -113,7 +113,12 @@ class CollegeClassModel extends Model {
 	public function hasClassSyllabus($section_id) {
 		$section_dao = new SectionDAO($this->db);
 		$has_record = $section_dao->read(array('id' => $section_id));
-		return empty($section_dao->syllabus_id);
+
+		// debug
+		// error_log(__METHOD__ . ' : result ' . print_r($section_dao->attribute, true));
+
+		$result = $section_dao->attribute;
+		return $result['syllabus_id'] != 0;
 	}
 
 }

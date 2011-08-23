@@ -61,17 +61,17 @@ class CollegeClassListModel extends Model {
 
 		$string = preg_replace('/[^a-zA-Z0-9]/i', '', $string);
 		preg_match('/^[a-z]{1,12}/i', $string, $matches);
-		$subject_abbr = $matches[0];
+		$subject_abbr = is_array($matches) ? reset($matches) : '';
 
 		$course_string = str_replace($subject_abbr, '', $string);
 		preg_match('/[0-9]{1,3}[a-z]{0,1}/i', $course_string, $matches);
-		$course_num   = trim($matches[0]);
+		$course_num   = is_array($matches) ? trim(reset($matches)) : '';
 
 		$section_string = str_replace($course_num, '', $course_string);
 		$section_num = null;
 		if ($section_string != '') {
 			preg_match('/[0-9]{1,3}[a-z]{0,1}$/i', $section_string, $section_matches);
-			$section_num = $section_matches[0];
+			$section_num = is_array($section_matches) ? reset($section_matches[0]) : '';
 		}
 
 		$params = array(
