@@ -990,7 +990,7 @@ $P.ready(function(){
 				data: creationForm.serialize() + '&section_id=' + $('#section-id', selectionForm).val(),
 				success: function(response) {
 					var section_id = $('#section-id', selectionForm).val();
-					content = '<h3>' + response.message + '</h3>' + 
+					content = '<h3 class="title">' + response.message + '</h3>' + 
 					'<hr />' +
 					'<div class="suggested-reading">' +
 						'<div id="enroll-book-list" class="book-list">' + 
@@ -1004,13 +1004,27 @@ $P.ready(function(){
 					 * @see js/model/register.js
 					 */
 					if (processState == 'sign-up') {
-						content += '<div class="sign-up-option">' +
-							'<a class="facebook button" href="/facebook-sign-up?section_id=' + section_id + '">sign up with facebook</a>' +
-							'<div class="alternative">' +
-								'<p>Or, you can always manually create an account...</p>' +
-								'<span><a href="/sign-up?section_id=' + section_id + '">sign up</a></span>' +
-							'</div>' +
-						'</div>';
+						var signUpOption = SignUp.getOptions();
+						var fbUid = '';
+						$FB(function() {
+							FB.getLoginStatus(function(response) {
+								if (response.authResponse) {
+									fbUid = response.authResponse.userID;
+								}
+							});
+						});
+
+						content += '<div class="sign-up-option">' + SignUp.getOptions() + '</div>';
+						$('.dialog-inner').delegate('a.sign-up', 'click', function(e) {
+							e.preventDefault();
+							var target = $(this);
+							var url = target.attr('href') + '?section_id=' + section_id;
+							if (target.hasClass('facebook')) {
+								window.location = url + '&fb=true&fb_uid=' + fbUid;
+							} else {
+								window.location = url;
+							}
+						});
 
 					// otherwise, the user is an existing user and needs to be added to the
 					// class

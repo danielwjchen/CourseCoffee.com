@@ -12,6 +12,10 @@ class CollegeClassModel extends Model {
 	 */
 	const NO_CLASS_FOUND = 'We are sorry, but no class could be found with the provided information';
 
+	const ERROR_ALREADY_HAS_SYLLABUS = "hmmm... someone already uploaded a syllabus to this class, but that's okay!";
+	const EVENT_ALREADY_HAS_SYLLABUS = 'Attempt to upload syllabus to a class already has one';
+	const SYLLABUS_SUCCESS = 'Congratulation! The syllabus is now uploaded!';
+
 	/**
 	 * Access to college class records
 	 */
@@ -96,6 +100,20 @@ class CollegeClassModel extends Model {
 			'section_num'      => strtoupper($section_num),
 		));
 		return $this->returnResult($has_record);
+	}
+
+	/**
+	 * Check if class already has syllabus uploaded
+	 *
+	 * @param int $section_id
+	 *
+	 * @return bool
+	 *  return false where there is no syllabus
+	 */
+	public function hasClassSyllabus($section_id) {
+		$section_dao = new SectionDAO($this->db);
+		$has_record = $section_dao->read(array('id' => $section_id));
+		return empty($section_dao->syllabus_id);
 	}
 
 }

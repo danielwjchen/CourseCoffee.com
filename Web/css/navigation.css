@@ -10,13 +10,16 @@
 #navigation-menu ul{
 }
 #navigation-menu li{
-	float:left;
-	padding:5px 0 5px 30px;
-	height:35px;
-	display:block;
+	float: left;
+	padding: 5px;
+	margin-top: 3px;
+	margin-right: 20px;
+	height: 35px;
+	display: block;
 }
 #navigation-menu li.active{
-	background: url('../images/plus.png') 12px 15px no-repeat;
+	margin-top: 0;
+	border-top: 3px solid #da3838;
 }
 #navigation-menu .button{
 	color: white;

@@ -126,11 +126,11 @@ class TaskListModel extends Model {
 			/**
 			 * We don't do pagination for now, because tasks should be limited by the 
 			 * date range
+			 */
 			'limit'   => array(
-				'offset' => $paginate * self::COUNT,
-				'count'  => self::COUNT,
+				'offset' => $paginate * self::COUNT * 10,
+				'count'  => self::COUNT * 10,
 			),
-			*/
 		));
 		if ($has_record) {
 			$record_list = $this->task_list_dao->list;

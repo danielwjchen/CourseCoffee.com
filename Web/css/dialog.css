@@ -170,6 +170,11 @@
 	width: 458px;
 	height: auto;
 }
+.confirm-class .title {
+	width: 400px;
+	margin: 0 auto;
+	text-align: left;
+}
 .confirm-class .error{
 	color: red;
 	text-align: center;

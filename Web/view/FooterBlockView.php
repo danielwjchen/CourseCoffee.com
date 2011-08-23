@@ -9,8 +9,9 @@ class FooterBlockView extends BlockView implements BlockViewInterface {
 	 * Implement BlockViewInterface::gEtcontentlear().
 	 */
 	public function getContent() {
+		$this->addCSS('footer.css');
 		return <<<HTML
-<span>CourseCoffee.com &copy;</span>
+<span class="copyright">CourseCoffee.com &copy;</span>
 <ul>
 </ul>
 HTML;

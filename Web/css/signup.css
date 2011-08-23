@@ -19,7 +19,8 @@
 }
 .sign-up #user-register-form .error{
 	color: red;
-	text-align :center;
+	text-align: center;
+	width: 375px;
 }
 .sign-up #user-register-form .title{
 	float: left;

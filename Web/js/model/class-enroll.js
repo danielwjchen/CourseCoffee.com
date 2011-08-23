@@ -53,7 +53,10 @@ window.ClassEnroll = function(formName, inputName) {
 						if (!response.has_syllabus) {
 							$('.suggested-reading').after('<hr />');
 							doc.createForm('.dialog-inner', 'It seems no one has uploaded a syllabus for this class yet. Would you care to help us out?');
-							$('#doc-upload-form').after('<span class="double-underline"><a class="cancel" href="#">no, thanks :-)</a></span>');
+							$('#doc-upload-form').after('<span class="double-underline"><a class="cancel" href="#">no, thanks</a></span>');
+
+						} else {
+							$('#doc-upload-form').after('<a class="class redirect" href="#">go to class page</a>');
 						}
 
 						bookList = new BookSuggest('#enroll-book-list');

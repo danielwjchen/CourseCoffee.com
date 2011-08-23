@@ -285,7 +285,8 @@ hr {
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
 }
 .footer-inner{
-	width: 100%;
+	width: 960px;
+	margin 0 auto;
 }
 
 /**
