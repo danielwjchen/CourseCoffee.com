@@ -72,7 +72,47 @@ class DB{
 			return empty($rows) ? null : $rows;
 
 		} catch (PDOException $e) {
-			echo 'Fail to fetch: ' . $e->getMessage();
+			Logger::Write("PDO Exception: " . $e->getMessage());
+		}
+	}
+
+	/**
+	 * Execute a database query and return the result
+	 *
+	 * @param string $sql
+	 *  a SQL query
+	 * @param array $arg
+	 *  an associatve array of arugument to be binded to the statment. default 
+	 *  to null.
+	 *
+	 * @return array $result
+	 *  result of the query operation. 
+	 */
+	public function fetchList($sql, array $arg = NULL) {
+		try { 
+			$sth = $this->pdo->prepare($sql);
+			if (empty($arg)) {
+				$result = $sth->execute();
+
+			} else {
+				$result = $sth->execute($arg);
+
+			}
+
+			if ($result === false) {
+				Logger::Write("PDO::errorInfo(): " . print_r($sth->errorInfo(), true));
+				return false;
+				
+			} 
+			$rows = array();
+			while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+				$rows[] = $row;
+			}
+
+			return empty($rows) ? null : $rows;
+
+		} catch (PDOException $e) {
+			Logger::Write("PDO Exception: " . $e->getMessage());
 		}
 	}
 

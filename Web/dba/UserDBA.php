@@ -3,7 +3,6 @@
  * @file
  * Create table schema for User and populate default types
  */
-
 class UserDBA implements DBAInterface{
 
 	/**
@@ -14,7 +13,7 @@ class UserDBA implements DBAInterface{
 	public function schema() {
 		return array(
 			'user' => array(
-				'description' => 'define a user',
+				'description' => 'define user',
 				'column' => array(
 					'id' => array(
 						'type' => 'serial',
@@ -38,6 +37,23 @@ class UserDBA implements DBAInterface{
 				'primary' => array('id'),
 				'unique' => array('account' => array('account')),
 				'index' => array('password' => array('password')),
+			),
+			'user_session' => array(
+				'description' => "store user's session",
+				'column' => array(
+					'user_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a user',
+					),
+					'session' => array(
+						'type' => 'text',
+						'not null' => TRUE,
+						'description' => 'serialized user session',
+					),
+				),
+				'primary' => array('user_id'),
 			),
 			'user_cookie' => array(
 				'description' => "store user's cookie signature",
@@ -63,12 +79,6 @@ class UserDBA implements DBAInterface{
 			'user_setting' => array(
 				'description' => 'store user setting',
 				'column' => array(
-					'id' => array(
-						'type' => 'serial',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'description' => 'the primary key that identifies a user',
-					),
 					'user_id' => array(
 						'type' => 'int',
 						'signed' => TRUE,
@@ -93,36 +103,89 @@ class UserDBA implements DBAInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies a term',
 					),
-				),
-				'primary' => array('id'),
-				'unique'  => array(
-					'user_id' => array('user_id')
-				),
-				'index' => array(
-					'institution_id' => array('institution_id'),
-					'year_id' => array('year_id'),
-					'term_id' => array('term_id'),
-				),
-			),
-			'user_cookie' => array(
-				'description' => "store user's cookie signature",
-				'column' => array(
-					'user_id' => array(
+					'language_id' => array(
 						'type' => 'int',
 						'signed' => TRUE,
 						'default' => 0,
-						'description' => 'the primary key that identifies a user',
+						'description' => 'the primary key that identifies a supported language',
 					),
-					'signature' => array(
+					/**
+					 * To-do
+					 *
+					'status_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies user status',
+					),
+					'role_id' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies user role',
+					),
+					*/
+					'tou_vid' => array(
+						'type' => 'int',
+						'signed' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a version of terms of use',
+					),
+				),
+				'primary' => array('user_id'),
+				'index' => array(
+					'institution_id' => array('institution_id'),
+					'year_id' => array('year_id'),
+					/**
+					 * To do
+					 *
+					'status_id' => array('status_id'),
+					'role_id'   => array('role_id'),
+					 */
+					'term_id' => array('term_id'),
+					'tou_vid' => array('tou_vid'),
+				),
+			),
+			'user_status' => array(
+				'description' => "define user status",
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'description' => 'the primary key that identifies a user status',
+					),
+					'name' => array(
 						'type' => 'char',
-						'length' => 255,
+						'length' => 64,
 						'not null' => TRUE,
 						'description' => 'the signature generated for the user',
 					),
 				),
-				'primary' => array('user_id'),
+				'primary' => array('id'),
 				'unique' => array(
-					'signature' => array('signature'),
+					'name' => array('name'),
+				),
+			),
+			'user_role' => array(
+				'description' => "define user role",
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'description' => 'the primary key that identifies a user role',
+					),
+					'name' => array(
+						'type' => 'char',
+						'length' => 64,
+						'not null' => TRUE,
+						'description' => 'role name',
+					),
+				),
+				'primary' => array('id'),
+				'unique' => array(
+					'name' => array('name'),
 				),
 			),
 			'user_section_linkage' => array(
@@ -218,23 +281,6 @@ class UserDBA implements DBAInterface{
 					'user_id' => array('user_id'),
 					'fb_uid' => array('fb_uid'),
 				),
-			),
-			'user_session' => array(
-				'description' => "store user's session",
-				'column' => array(
-					'user_id' => array(
-						'type' => 'int',
-						'signed' => TRUE,
-						'default' => 0,
-						'description' => 'the primary key that identifies a user',
-					),
-					'session' => array(
-						'type' => 'text',
-						'not null' => TRUE,
-						'description' => 'serialized user session',
-					),
-				),
-				'primary' => array('user_id'),
 			),
 		);
 	}

@@ -12,16 +12,11 @@ class NotFoundPageView extends PageView implements PageViewInterface {
 		parent::__construct($data);
 		$this->setPageTitle('404 Page not found.');
 		$this->addJQuery();
-		$this->addJQueryUI();
-		$this->addJS('model/login.js');
-		$this->addJS('controller/not-found.js');
-		$this->addJS('controller/navigation.js');
-		$this->addJS('model/class-suggest.js');
 		$this->addCSS('not-found.css');
 	}
 
 	/**
-	 * Implement View::getHeader()
+	 * Override View::getHeader()
 	 */
 	protected function getHeader() {
     header(self::NOT_FOUND);

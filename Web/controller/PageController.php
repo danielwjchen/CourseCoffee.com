@@ -1,12 +1,12 @@
 <?php
 /**
  * @file
- * Manage some default page
+ * Manage some default output
  */
 
 class PageController extends Controller implements ControllerInterface {
 
-	private $page;
+	private $output;
 
 	/**
 	 * Implement ControllerInterface::path()
@@ -21,6 +21,7 @@ class PageController extends Controller implements ControllerInterface {
 			'class'            => 'getClassPage',
 			'page-not-found'   => 'get404Page',
 			'all-system-down'  => 'get500Page',
+			'terms-of-use'     => 'getTermsOfUsePage',
 		);
 	}
 
@@ -35,11 +36,11 @@ class PageController extends Controller implements ControllerInterface {
 	 * Implement ControllerInterface::afterAction()
 	 */
 	public function afterAction() {
-		echo $this->page->render();
+		echo $this->output->render();
 	}
 
 	/**
-	 * Get the welcome page
+	 * Get the welcome output
 	 *
 	 * we redirect if the user is logged in
 	 */
@@ -52,7 +53,7 @@ class PageController extends Controller implements ControllerInterface {
 		$register_form = new UserRegisterFormModel();
 		$file_form     = new FileFormModel();
 
-		$this->page = new WelcomePageView(array(
+		$this->output = new WelcomePageView(array(
 			'login_token'    => $login_form->initializeFormToken(),
 			'register_token' => $register_form->initializeFormToken(),
 			'file_token'     => $file_form->initializeFormToken()
@@ -60,7 +61,7 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Get the home page for a user
+	 * Get the home output for a user
 	 */
 	public function getHomePage() {
 		$this->redirectUnknownUser();
@@ -71,7 +72,7 @@ class PageController extends Controller implements ControllerInterface {
 		$user_session_model = new UserSessionModel();
 		$profile = $user_session_model->getUserProfile();
 		$class_list = $user_session_model->getUserClassList();
-		$this->page = new HomePageView(array(
+		$this->output = new HomePageView(array(
 			'fb_uid'     => $user_session_model->getFbUserId(),
 			'user_id'    => $user_session_model->getUserId(),
 			'profile'    => $profile,
@@ -81,7 +82,7 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Get signup page for visiters
+	 * Get signup output for visiters
 	 */
 	public function getSignUpPage() {
 		$section_id = Input::Get('section_id');
@@ -97,7 +98,7 @@ class PageController extends Controller implements ControllerInterface {
 			$fb_model = new FBModel();
 			if (!$fb_model->checkFbUid($fb_uid)) {
 				$form_fields = $fb_model->generateSignUpForm();
-				$this->page = new FBSignUpPageView($form_fields);
+				$this->output = new FBSignUpPageView($form_fields);
 				return ;
 			} else {
 				Logger::Write(FBModel::EVENT_FB_UID_TAKEN);
@@ -107,7 +108,7 @@ class PageController extends Controller implements ControllerInterface {
 
 		$user_register = new UserRegisterFormModel();
 		$college       = new CollegeModel();
-		$this->page = new SignUpPageView(array(
+		$this->output = new SignUpPageView(array(
 			'error'          => $error,
 			'register_token' => $user_register->initializeFormToken(),
 			'college_option' => $college->getCollegeOption(),
@@ -115,7 +116,7 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Get the calendar page for a user
+	 * Get the calendar output for a user
 	 */
 	public function getCalendarPage() {
 		$this->redirectUnknownUser();
@@ -124,7 +125,7 @@ class PageController extends Controller implements ControllerInterface {
 		$class_list    = $user_session_model->getUserClassList();
 		$user_profile  = $user_session_model->getUserProfile(); 
 
-		$this->page = new CalendarPageView(array(
+		$this->output = new CalendarPageView(array(
 			'user_id'    => $user_session_model->getUserId(),
 			'timestamp' => time(),
 			'class_list' => $class_list,
@@ -135,7 +136,7 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Get the class page for a user
+	 * Get the class output for a user
 	 *
 	 * @param array $params
 	 *  optional, but when presnet it expects values to be in the following order
@@ -168,27 +169,34 @@ class PageController extends Controller implements ControllerInterface {
 
 		}
 
-		$this->page = new ClassPageView($result);
+		$this->output = new ClassPageView($result);
 	}
 
 	/**
-	 * Get the 404 page
+	 * Get the 404 output
 	 */
 	public function get404Page() {
 		$login_form = new UserLoginFormModel();
-		$this->page = new NotFoundPageView(array(
+		$this->output = new NotFoundPageView(array(
 			'login_token' => $login_form->initializeFormToken(),
 		));
 	}
 
 	/**
-	 * Get the 500 page
+	 * Get the 500 output
 	 */
 	public function get500Page() {
 		$login_form = new UserLoginFormModel();
-		$this->page = new InternalErrorPageView(array(
+		$this->output = new InternalErrorPageView(array(
 			'login_token' => $login_form->initializeFormToken(),
 		));
+	}
+
+	/**
+	 * Get the terms of use page() {
+	 */
+	public function getTermsOfUsePage() {
+		$this->output = new TermsOfUsePageView(array());
 	}
 
 	/**
@@ -201,7 +209,7 @@ class PageController extends Controller implements ControllerInterface {
 		$document = Input::Get('document');
 		$file_id  = Input::Get('file_id');
 		$mime     = Input::Get('doc-type');
-		$this->page = new DocumentEditorPageView(array(
+		$this->output = new DocumentEditorPageView(array(
 			'process_state'   => $processor->getState($referrer),
 			'document'        => $document,
 			'file_id'         => $file_id,

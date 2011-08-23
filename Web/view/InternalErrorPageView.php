@@ -8,15 +8,13 @@ class InternalErrorPageView extends PageView implements PageViewInterface {
 	/**
 	 * Extend PageView::__construct().
 	 */
-	function __construct($content = null) {
-		parent::__construct($content);
-		$this->addJS('model/login.js');
-		$this->addJS('controller/navigation.js');
+	function __construct($data = null) {
+		parent::__construct($data);
 		$this->addCSS('internal-error.css');
 	}
 
 	/**
-	 * Implement View::getHeader()
+	 * Override View::getHeader()
 	 */
 	protected function getHeader() {
     header(self::INTERNAL_ERROR);

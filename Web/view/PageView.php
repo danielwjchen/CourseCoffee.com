@@ -252,6 +252,7 @@ HTML;
 	 * Implement ViewInteface::render()
 	 */
 	public function render() {
+		$this->setHeader();
 		$this->renderBlocks();
 		$js       = $this->renderJS();
 		$css      = $this->renderCSS();

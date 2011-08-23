@@ -61,6 +61,40 @@ class SystemDBA implements DBAInterface {
 				),
 				'primary' => array('id'),
 			),
+			'cache' => array(
+				'description' => 'implement database based caching system',
+				'column' => array(
+					'key' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'cache key',
+					),
+					'value' => array(
+						'type' => 'text',
+						'not null' => TRUE,
+						'value' => 'cache value',
+					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is created',
+					),
+					'expire' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is expire',
+					),
+				),
+				'primary' => array('key'),
+				'index' => array(
+					'expire' => array('expire'),
+				),
+			),
 			'autoload' => array(
 				'description' => 'register a class and the file path',
 				'column' => array(
