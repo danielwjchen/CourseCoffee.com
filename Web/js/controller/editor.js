@@ -971,14 +971,15 @@ $P.ready(function(){
 				creationForm.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
 			});*/
                         
-                       
+                        cnt = 0; 
                         for(i=0; i<schedule_list.length; i++){
                                 if(schedule_list[i].deleted == false){
                                         curr_date =  schedule_list[i].date
                                         sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate()) + "/" + "2011"
                                         sch_content = schedule_list[i].content
-				        creationForm.append('<input type="hidden" name="date_' + i + '" value="' + sch_date + '" />');
-				        creationForm.append('<input type="hidden" name="objective_' + i + '" value="' + sch_content + '" />');
+				        creationForm.append('<input type="hidden" name="date_' + cnt + '" value="' + sch_date + '" />');
+				        creationForm.append('<input type="hidden" name="objective_' + cnt + '" value="' + sch_content + '" />');
+                                        cnt = cnt + 1
                                 }
                         }
 			var content = '';
