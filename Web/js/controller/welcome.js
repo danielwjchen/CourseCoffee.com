@@ -55,6 +55,8 @@ $P.ready(function() {
 		var target = $(this);
 		if (target.hasClass('facebook')) {
 			window.location = target.attr('href') + '?fb=true&fb_uid=' + fbUid;
+		} else if(target.hasClass('regular')) {
+			window.location = target.attr('href');
 		}
 	});
 });
