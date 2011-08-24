@@ -100,6 +100,8 @@ class UserRegisterFormModel extends FormModel {
 	 *  a string of email address to be user as account
 	 * @param string $password
 	 *  a string to identifer the user as the owner of the account
+	 * @param int $tou_vid
+	 *  terms of use agreement verion number
 	 * @param int $fb_uid
 	 *  user's facebook uid, only exists when the user is registered through 
 	 *  facebook
@@ -119,7 +121,7 @@ class UserRegisterFormModel extends FormModel {
 	 *   - password
 	 *   - redirect
 	 */
-	public function createUserAccount($first_name, $last_name, $institution_id, $year, $term, $email, $password, $fb_uid = null) {
+	public function createUserAccount($first_name, $last_name, $institution_id, $year, $term, $email, $password, $tou_vid, $fb_uid = null) {
 		// create record
 		$has_record = $this->user_dao->read(array('account' => $email));
 		if ($has_record) {
@@ -191,6 +193,7 @@ class UserRegisterFormModel extends FormModel {
 			'institution_id' => $institution_id,
 			'year_id'        => $year_id,
 			'term_id'        => $term_id,
+			'tou_vid'        => $tou_vid,
 		));
 
 		Logger::write(self::EVENT_NEW_USER);
@@ -239,6 +242,8 @@ class UserRegisterFormModel extends FormModel {
 	 *  a string that should be identical to $password
 	 * @param string $token
 	 *  a uniquely generated token to counter CSR attacks
+	 * @param int $tou_vid
+	 *  terms of use agreement verion number
 	 * @param int $fb_uid
 	 *  user's facebook uid, only exists when the user is registered through 
 	 *  facebook
@@ -258,7 +263,7 @@ class UserRegisterFormModel extends FormModel {
 	 *   - password
 	 *   - redirect
 	 */
-	public function processForm($first_name, $last_name, $institution_id, $year, $term, $email, $password, $confirm, $token, $fb_uid = null) {
+	public function processForm($first_name, $last_name, $institution_id, $year, $term, $email, $password, $confirm, $tou_vid, $token, $fb_uid = null) {
 		// if the form is new
 		if (empty($token)) {
 			$token = $this->initializeFormToken();
@@ -342,6 +347,7 @@ class UserRegisterFormModel extends FormModel {
 			$term, 
 			$email, 
 			$password, 
+			$tou_vid,
 			$fb_uid
 		);
 

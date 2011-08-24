@@ -79,4 +79,7 @@
 	font-weight: bold;
 	font-size: 16px;
 	float: right;
+	text-shadow: 0 0 4px #D5D4D2;
+	-moz-text-shadow: 0 0 4px #D5D4D2;
+	-webkit-text-shadow: 0 0 4px #D5D4D2;
 }

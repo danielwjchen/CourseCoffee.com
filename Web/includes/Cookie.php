@@ -10,7 +10,7 @@ class Cookie {
 	 * This defines a period of time which the cookie expires
 	 */
 
-	const EXPIRE_SESSION = 0;
+	const EXPIRE_SESSION = 60;
 	const EXPIRE_HOUR    = 60;
 	const EXPIRE_DAY     = 1440;
 	const EXPIRE_WEEK    = 10080;
@@ -26,7 +26,11 @@ class Cookie {
 	 * Remember to encrypt your data!
 	 */
 	public static function Set($key, $value, $expire = self::EXPIRE_SESSION, $path = '/', $domain = '') {
-		setcookie($key, $value, time() + $expire, $path, $domain);
+		if ($expire = self::EXPIRE_SESSION) {
+			setcookie($key, $value);
+		} else {
+			setcookie($key, $value, time() + $expire, $path, $domain);
+		}
 	}
 
 	/**

@@ -80,8 +80,8 @@ class UserClassListDAO extends DAO {
 		$this->list = $this->db->fetch($sql, $sql_param);
 
 		// debug
-		error_log(__METHOD__ . ' : user class list param - ' . print_r($params, true));
-		error_log(__METHOD__ . ' : user class list - ' . print_r($this->list, true));
+		// error_log(__METHOD__ . ' : user class list param - ' . print_r($params, true));
+		// error_log(__METHOD__ . ' : user class list - ' . print_r($this->list, true));
 
 		return !empty($this->list);
 	}

@@ -173,8 +173,8 @@ class UserSessionModel extends Model {
 		$user_id = Session::Get('user_id');
 		$this->user_cookie_dao->read(array('user_id' => $user_id));
 		$this->user_cookie_dao->destroy();
-		Cookie::del(self::COOKIE_SIGNATURE);
-		Cookie::del(self::COOKIE_AUTO_LOGIN);
+		Cookie::Del(self::COOKIE_SIGNATURE);
+		Cookie::Set(self::COOKIE_AUTO_LOGIN, 'false');
 		session_destroy();
 	}
 
