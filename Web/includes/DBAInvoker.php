@@ -144,10 +144,10 @@ class DBAInvoker{
 		$key_array = array();
 		foreach ($keys as $key) {
 			if (is_array($key)) {
-				$key_array[] = $key[0] . '(' . $key[1] . ')';
+				$key_array[] = $key[0] . '(`' . $key[1] . '`)';
 
 			} else {
-				$key_array[] = $key;
+				$key_array[] = '`' . $key . '`';
 			}
 		}
 
@@ -245,11 +245,11 @@ class DBAInvoker{
 		$encoded_schema = json_encode($dba_schema);
 
 		$sql = '';
-		if (!isset($dba_record['schema'])) {
+		if (empty($dba_record['schema'])) {
 			self::Create($dba_schema);
 			$sql = '
-				INSERT INTO DBA (`request`, `schema`, `script`, `timestamp`)
-				VALUES (:request, :schema, :script, UNIX_TIMESTAMP())
+				INSERT INTO DBA (`request`, `schema`, `timestamp`)
+				VALUES (:request, :schema, UNIX_TIMESTAMP())
 			';
 			
 		} else {
@@ -257,11 +257,14 @@ class DBAInvoker{
 			$sql = '
 				UPDATE DBA SET
 					`schema` = :schema,
-					`script` = :script,
 					`timestamp` = UNIX_TIMESTAMP()
 				WHERE `request` = :request
 			';
 		}
+		self::$db->perform($sql, array(
+			'schema'  => $encoded_schema,
+			'request' => $dba_request,
+		));
 
 		$encoded_script = '';
 		if (method_exists($dba_request, 'script')) {
@@ -274,13 +277,19 @@ class DBAInvoker{
 			} else {
 				$encoded_script = $dba_record['script'];
 			}
+			self::$db->perform("
+				UPDATE DBA SET
+					`script` = :script,
+					`timestamp` = UNIX_TIMESTAMP()
+				WHERE `request` = :request
+				",
+				array(
+					'script'  => $encoded_script,
+					'request' => $dba_request,
+				)
+			);
 		}
 
-		self::$db->perform($sql, array(
-			'schema'  => $encoded_schema,
-			'script'  => $encoded_script,
-			'request' => $dba_request,
-		));
 	}
 
 	/**
@@ -381,20 +390,20 @@ class DBAInvoker{
 		$request_tables = array_keys($schema_new); 
 		$request_tables = is_array($request_tables) ? $request_tables : array();
 		$update_tables  = array_intersect($exist_tables, $request_tables);
-		if (!empty($update_tables)) {
-			$add_tables = array_diff($request_tables, $update_tables);
-			if (!empty($add_tables)) {
-				foreach ($add_tables as $table_name) {
-					self::CreateTable($table_name, $schema_new[$table_name]);
-				}
+		$add_tables = array_diff($request_tables, $update_tables);
+		if (!empty($add_tables)) {
+			foreach ($add_tables as $table_name) {
+				self::CreateTable($table_name, $schema_new[$table_name]);
 			}
+		}
 
-			$drop_tables = array_diff($exist_tables, $update_tables);
-			if (!empty($drop_tables)) {
-				foreach ($drop_tables as $table_name) {
-					self::$db->perform('DROP TABLE `' . $table_name . '`');
-				}
+		$drop_tables = array_diff($exist_tables, $update_tables);
+		if (!empty($drop_tables)) {
+			foreach ($drop_tables as $table_name) {
+				self::$db->perform('DROP TABLE `' . $table_name . '`');
 			}
+		}
+		if (!empty($update_tables)) {
 
 			foreach ($update_tables as $table_name) {
 				$request_cols = array_keys($schema_new[$table_name]['column']);
@@ -411,7 +420,7 @@ class DBAInvoker{
 
 				foreach ($add_cols as $col_name) {
 					$dba_sql[] = '
-						ADD `' . $col_name . '` ' . 
+						ADD ' . 
 						self::create_column_sql($col_name, self::process_column($schema_new[$table_name]['column'][$col_name])) .
 					"\n";
 				}

@@ -103,15 +103,15 @@ class UserDBA implements DBAInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies a term',
 					),
+					/**
+					 * To-do
+					 *
 					'language_id' => array(
 						'type' => 'int',
 						'signed' => TRUE,
 						'default' => 0,
 						'description' => 'the primary key that identifies a supported language',
 					),
-					/**
-					 * To-do
-					 *
 					'status_id' => array(
 						'type' => 'int',
 						'signed' => TRUE,

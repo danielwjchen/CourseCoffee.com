@@ -9,19 +9,17 @@ require_once __DIR__ . '/config.php';
 
 
 /**
- * We rebuild table schemas each time if this is a development environment
+ * Rebuild table schemas
  */
-if ($config->refresh) {
-	require_once INCLUDES_PATH . '/DBAInvoker.php';
-	DBAInvoker::Init($config->db);
-	$dbas = File::ScanDirectory(DBA_PATH, '/DBA\.php$/');
-	foreach ($dbas as $path => $dba) {
-		try {
-			DBAInvoker::Request($dba->name, $dba->uri);
-		} catch (Exception $e) {
-			echo $e->Message();
+require_once INCLUDES_PATH . '/DBAInvoker.php';
+DBAInvoker::Init($config->db);
+$dbas = File::ScanDirectory(DBA_PATH, '/DBA\.php$/');
+foreach ($dbas as $path => $dba) {
+	try {
+		DBAInvoker::Request($dba->name, $dba->uri);
+	} catch (Exception $e) {
+		echo $e->Message();
 		}
-	}
 }
 
 /**
