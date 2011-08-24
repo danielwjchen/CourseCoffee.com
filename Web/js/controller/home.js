@@ -36,6 +36,11 @@ $P.ready(function() {
 		FB.XFBML.parse(document.getElementById(id));
 	}
 
+	/**
+	if ($('.profile img').height() > 0) {
+	}
+	*/
+
 	// Initilize the date-time selector
 	$('#time-picker').datetime({  
 		duration: '15',  

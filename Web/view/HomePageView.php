@@ -79,8 +79,8 @@ HTML;
 				<div class="content">
 					<div class="panel-top">
 						<div class="panel-inner">
-							<div class="profile">
-								<img src="{$profile_image}" />
+							<img class="profile-image" src="{$profile_image}" />
+							<div class="profile-info">
 								<div class="name">{$profile['first_name']} {$profile['last_name']}</div>
 								<div class="school">{$profile['institution']}</div>
 								<div class="semester">{$profile['term']} {$profile['year']}</div>
