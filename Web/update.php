@@ -10,6 +10,9 @@ require_once __DIR__ . '/config.php';
 
 /**
  * Rebuild table schemas
+ *
+ * This is not 100% reliable.... It checks with the existing DAB schema entries 
+ * but not the actual table schemas.
  */
 require_once INCLUDES_PATH . '/DBAInvoker.php';
 DBAInvoker::Init($config->db);

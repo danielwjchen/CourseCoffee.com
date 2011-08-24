@@ -60,7 +60,7 @@ class TaleDBA implements DBAInterface{
 					'user_id' => array('user_id'),
 					'vid' => array('vid'),
 				),
-				'tale' => array(
+				'unique' => array(
 					'title' => array('title'),
 				),
 			),

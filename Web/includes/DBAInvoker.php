@@ -157,13 +157,11 @@ class DBAInvoker{
 	/**
 	 * Create the SQL query for the key columns
 	 *
-	 * @param string $type
-	 *  type of key, i.e primary, unique, index.
 	 * @param object $db
 	 *  A database connection object.
-	 * @param array $schema_new
+	 * @param array $table_new
 	 *  An associative array that mirrors the table sctructure
-	 * @param array $schema_old
+	 * @param array $table_old
 	 *  An associative array that mirrors the table sctructure
 	 * @param string $dba_path
 	 *  an optional string to specify the DBA file path if different from default
@@ -171,47 +169,80 @@ class DBAInvoker{
 	 * @return array $dba_sql
 	 *  an array of key clause SQL queries
 	 */
-	static private function alter_key($type, $schema_new, $schema_old) {
+	static private function alter_key_sql($table_new, $table_old) {
 		$dba_sql  = array();
 		$add_sql  = array();
 		$drop_sql = array();
-		$sql_key = strtoupper($type);
-		$sql_key = $sql_key == 'PRIMARY' ? $sql_key .' KEY' : strtoupper($sql_key);
+		$key_type = array('primary', 'unique', 'index');
 
-		$request_key = isset($schema_new[$type]) ? $schema_new[$type] : array();
-		$exist_key   = isset($schema_old[$type]) ? $schema_old[$type] : array();
-		$same_key    = array_intersect($request_key, $exist_key);
-		$add_key     = array();
-		$drop_key    = array();
-		if (empty($same_key)) {
-			if (empty($request_key)) {
-				$drop_key = $exist_key;
-			}
+		foreach ($key_type as $type) {
+			$sql_key = strtoupper($type);
+			$sql_key = $sql_key == 'PRIMARY' ? $sql_key .' KEY ' : $sql_key;
 
-			if (empty($exist_key)) {
-				$add_key = $exist_key;
-			}
-		} else {
+			$request_key = isset($table_new[$type]) ? array_keys($table_new[$type]) : array();
+			$exist_key   = isset($table_old[$type]) ? array_keys($table_old[$type]) : array();
+			$same_key    = array_intersect($request_key, $exist_key);
 			$drop_key = array_diff($exist_key, $same_key);
 			$add_key  = array_diff($request_key, $same_key);
-		}
 
 
-		if (!empty($drop_key)) {
+			if (!empty($drop_key)) {
 
-			if ($type == 'primary' ) {
-				$dba_sql[] = 'DROP ' . $sql_key;
-			} else {
-				$dba_sql[] = 'DROP ' . $sql_key .' (' . implode(', ', $drop_key) . ')';
+				if ($type == 'primary' ) {
+					$dba_sql[] = ' DROP ' . $sql_key . ' `' . $drop_key . '` ';
+				} else {
+					$dba_sql[] = ' DROP ' . $sql_key .' ' . implode(', ', $drop_key) . '';
+				}
+			}
+
+			if (!empty($add_key)) {
+				if ($type == 'primary' ) {
+					$dba_sql[] = ' ADD ' . $sql_key . ' `' . $add_key . '` ';
+				} else {
+					foreach ($add_key as $key_name) {
+						$dba_sql[] = 'ADD ' . $sql_key .' `' . $key_name . '` (' . implode(', ', $table_new[$type][$key_name]) . ')';
+					}
+				}
 			}
 		}
-
-		if (!empty($add_key)) {
-			$dba_sql[] = 'ADD ' . $sql_key .' (' . implode(', ', $add_key) . ')';
-		}
-
 		return $dba_sql;
 	}
+
+
+	/**
+	 * Rebuild DBA schema array from actual table schema
+	 *
+	 * This is not finished...
+	 *
+	 * @param string $table_name
+	 *
+	static private function BuildSchemaFromDB($table_name) {
+		$table_def = self::$db->fetchList('DESCRIBE `' . $table_name .'`');
+		$unique  = array();
+		$index   = array();
+		$primary = array();
+		$column  = array();
+
+		$type = '';
+		$size = '';
+		foreach ($table_def as $i => $col) {
+			if ($col['Extra']) {
+				$type = 'serial';
+			} elseif (strpos($col['Type'], 'int(11)')) {
+				$type = 'int';
+			} elseif (strpos($col['Type'], 'char')) {
+				$type = 'int';
+				preg_match('/[0-9]{0,5}/', $col['Type'], $matches);
+				$size = reset($matches);
+			} 
+
+			$column[$col['Field']] = array(
+				'type' => $type,
+			);
+		}
+
+	}
+	*/
 
 	/**
 	 * Initialize the DBAInvoker
@@ -365,8 +396,6 @@ class DBAInvoker{
 	/**
 	 * Alter a table from schema
 	 *
-	 * THIS METHOD IS BROKEN!!1!!
-	 *
 	 * This method compares the new schema with the old (existing) one and computes
 	 * a series of queries the modify the table. It doesn't handle DROP operation.
 	 *
@@ -432,10 +461,7 @@ class DBAInvoker{
 					"\n";
 				}
 
-				$dba_sql = array_merge($dba_sql, self::alter_key('primary', $schema_new[$table_name], $schema_old[$table_name]));
-				$dba_sql = array_merge($dba_sql, self::alter_key('unique', $schema_new[$table_name], $schema_old[$table_name]));
-				$dba_sql = array_merge($dba_sql, self::alter_key('index', $schema_new[$table_name], $schema_old[$table_name]));
-
+				$dba_sql = array_merge($dba_sql, self::alter_key_sql($schema_new[$table_name], $schema_old[$table_name]));
 
 				$sql = 'ALTER TABLE `' . $table_name . '` ' . implode(', ', $dba_sql);
 
