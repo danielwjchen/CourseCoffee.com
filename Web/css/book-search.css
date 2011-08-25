@@ -9,7 +9,7 @@
 .book-search .visitor-navigation {
 	float: left;
 	text-align: left;
-  margin: 0 -960px -50px 460px;
+  margin: 0 -960px -50px 660px;
 	width: 500px;
   height: 45px;
 	background: #313131;
@@ -23,7 +23,7 @@
 }
 .book-search .simplified-navigation {
 	width: 400px;
-  margin: 0 -960px -50px 560px;
+  margin: 0 -960px -50px 760px;
 }
 .book-search #navigation-menu {
 	width: 310px;
