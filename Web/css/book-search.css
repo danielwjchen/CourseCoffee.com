@@ -87,7 +87,7 @@
  * Define style for search block
  */
 .book-search .search-block {
-	margin: 100px auto 0;
+	margin: 60px auto 0;
 	width: 550px;
 }
 .book-search .search-block .logo {
@@ -164,8 +164,8 @@
 }
 .ui-autocomplete {
 	z-index: 99999!important;
-	height: 400px !important;
-	overflow: hidden !important;
+	height: 300px !important;
+	overflow: auto !important;
 	font-size: 14px;
 }
 .ui-autocomplete a,
@@ -174,7 +174,7 @@
 	float: left;
 }
 .ui-autocomplete a {
-	width: 100%;
+	width: 400px;
 }
 .ui-autocomplete .course-code {
 	clear: right;

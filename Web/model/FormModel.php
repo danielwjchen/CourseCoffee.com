@@ -95,7 +95,7 @@ abstract class FormModel extends Model {
 	 * @param string $referrer
 	 */
 	public function getState($referrer) {
-		if (preg_match('/[class|calendar|home]/i', $referrer)) {
+		if (preg_match('/(class|calendar|home)/i', $referrer)) {
 			return 'redirect';
 		} else {
 			return 'sign-up';

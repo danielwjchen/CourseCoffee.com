@@ -15,6 +15,7 @@ class FooterBlockView extends BlockView implements BlockViewInterface {
 <span class="copyright">CourseCoffee.com &copy; {$current_year}</span>
 <div class="directory">
 	<ul>
+		<li>&sdot; <a href="/">home</a></li>
 		<li>&sdot; <a href="book-search">book search</a></li>
 		<li>&sdot; <a href="how-to-find-syllabus">how to</a></li>
 		<li>&sdot; <a href="terms-of-use">terms of use</a></li>

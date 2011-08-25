@@ -167,7 +167,7 @@
 
 .confirm-class .dialog-inner {
 	margin: 25px auto 0;
-	width: 458px;
+	width: 500px;
 	height: auto;
 }
 .confirm-class .title {
@@ -229,7 +229,7 @@
 .confirm-class .row input {
 	border: 1px solid #313131;
 	font-size: 20px;
-	width: 333px;
+	width: 330px;
 }
 .confirm-class select {
 	font-size: 18px;
