@@ -148,7 +148,42 @@
 .book-search #class-suggest-form .message {
 	top: 32px !important;
 }
+#class-suggest-form .message {
+	position: absolute;
+	top: 36px;
+	text-align:center;
+	border: 1px solid #585656;
+	padding: 10px 5px;
+	border-radius: 0 0 4px 4px;
+	-moz-box-shadow: 1px 1px #003d01;
+	-webkit-box-shadow: 1px 1px 5px #003d01;
+	box-shadow: 1px 1px 5px #003d01;
+	background: white;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
 .ui-autocomplete {
+	z-index: 99999!important;
 	height: 400px !important;
 	overflow: hidden !important;
+	font-size: 14px;
+}
+.ui-autocomplete a,
+.ui-autocomplete span {
+	display: block;
+	float: left;
+}
+.ui-autocomplete a {
+	width: 100%;
+}
+.ui-autocomplete .course-code {
+	clear: right;
+	font-weight: bold;
+	width: 100%;
+}
+.ui-autocomplete .course-title {
+	padding-right: 20px;
+}
+.ui-autocomplete .institution {
+	color: #6B6B6B;
 }
