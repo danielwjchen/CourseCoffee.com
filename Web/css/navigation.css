@@ -30,10 +30,13 @@
 	text-align: center;
 	padding: 8px 12px;
 	display: block;
+	background: none;
+	border: none;
 }
 #navigation-menu .button:hover {
-	background: #5c5c5c;
 	border-radius: 8px;
+	text-shadow: none;
+	background: #5c5c5c;
 	-moz-box-shadow: 2px 2px #444444;
 	-webkit-box-shadow: 2px 2px 5px #444444;
 	box-shadow: 2px 2px 5px #444444;
@@ -172,6 +175,11 @@
 	font-weight: bold;
 }
 .ui-autocomplete .course-title {
+	display: block;
+	float: left;
+	clear: both;
+}
+.ui-autocomplete .institution {
 	display: block;
 	float: left;
 	clear: both;

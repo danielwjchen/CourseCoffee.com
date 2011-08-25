@@ -71,7 +71,7 @@ class CollegeClassListModel extends Model {
 		$section_num = null;
 		if ($section_string != '') {
 			preg_match('/[0-9]{1,3}[a-z]{0,1}$/i', $section_string, $section_matches);
-			$section_num = is_array($section_matches) ? reset($section_matches[0]) : '';
+			$section_num = is_array($section_matches) ? reset($section_matches) : '';
 		}
 
 		$params = array(

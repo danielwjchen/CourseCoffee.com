@@ -28,6 +28,12 @@ class SignUpPageView extends PageView implements PageViewInterface {
 	 */
 	public function getBlocks() {
 		return array(
+			'header' => array(
+				'LogoHeaderBlockView',
+			),
+			'legal' => array(
+				'UserAgreementBlockView',
+			),
 			'footer' => array(
 				'FooterBlockView',
 			),
@@ -58,11 +64,7 @@ HTML;
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
-				<ul id="navigation-menu">
-					<li class="home active">
-						<a class="home button" href="/home">Home</a>
-					</li>
-				</ul>
+				{$header}
 			</div>
 		</div>
 		<div class="body">
@@ -121,6 +123,7 @@ HTML;
 						</div> 
 						<a href="#" class="button sign-up">Join</a> 
 					</form> 
+					{$legal}
 				</div>
 			</div>
 		</div>

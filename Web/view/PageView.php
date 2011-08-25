@@ -64,7 +64,6 @@ abstract class PageView extends View implements ViewInterface {
 		$this->addJS('main.js');
 		$this->addCSS('layout.css');
 		$this->addCSS('main.css');
-		$this->addCSS('navigation.css');
 	}
 
 	/**

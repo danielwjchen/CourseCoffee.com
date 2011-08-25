@@ -118,6 +118,10 @@
 
 		public function getLowestUsedPrice(){
 			$price = '';
+			if (!is_array($this->result->book->prices->purchase_price)) {
+				return $price;
+			}
+
 			foreach($this->result->book->prices->purchase_price as $purchase ){
 				if($purchase->attributes() == "used") $price = $purchase;
 			};
@@ -132,6 +136,10 @@
 
 		public function getLowestRentalPrice(){
 			$price = '';
+			if (!is_array($this->result->book->prices->rental_price)) {
+				return $price;
+			}
+
 			foreach($this->result->book->prices->rental_price as $rental ){
 				if($rental->attributes() == "90") $price = $rental;
 			};

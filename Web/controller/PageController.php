@@ -13,15 +13,18 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public static function path() {
 		return array(
-			'doc-edit'         => 'getDocumentEditorPage',
-			'sign-up'          => 'getSignUpPage',
-			'welcome'          => 'getWelcomePage',
-			'home'             => 'getHomePage',
-			'calendar'         => 'getCalendarPage',
-			'class'            => 'getClassPage',
-			'page-not-found'   => 'get404Page',
-			'all-system-down'  => 'get500Page',
-			'terms-of-use'     => 'getTermsOfUsePage',
+			'doc-edit'        => 'getDocumentEditorPage',
+			'sign-up'         => 'getSignUpPage',
+			'welcome'         => 'getWelcomePage',
+			'home'            => 'getHomePage',
+			'calendar'        => 'getCalendarPage',
+			'class'           => 'getClassPage',
+			'book-search'     => 'getBookSearchPage',
+			'page-not-found'  => 'get404Page',
+			'all-system-down' => 'get500Page',
+			'terms-of-use'    => 'getTermsOfUsePage',
+			'privacy-policy'  => 'getPrivacyPage',
+			'how-to-find-syllabus' => 'getTutorialPage',
 		);
 	}
 
@@ -193,10 +196,34 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Get the terms of use page() {
+	 * Get the terms of use page
 	 */
 	public function getTermsOfUsePage() {
 		$this->output = new TermsOfUsePageView(array());
+	}
+
+	/**
+	 * Get the tutorial page
+	 */
+	public function getTutorialPage() {
+		$this->output = new TutorialPageView(array());
+	}
+
+
+	/**
+	 * Get the privacy page
+	 */
+	public function getPrivacyPage() {
+		$this->output = new PrivacyPolicyPageView(array());
+	}
+
+	/**
+	 * Get the book search page
+	 */
+	public function getBookSearchPage() {
+		$this->output = new BookSearchPageView(array(
+			'is_loggedIn' => $this->getUserId(),
+		));
 	}
 
 	/**

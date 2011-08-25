@@ -7,6 +7,10 @@
 window.ClassSuggest = function(formName, inputName, callback) {
 	var form  = $(formName);
 	var input = $(inputName, form);
+	form.append('<div id="hint-message" class="message hidden">' +
+		'<strong>Please enter section number.</strong>' +
+	'</div>');
+	var _message = $('#hint-message');
 
 	/**
 	 * Class suggest
@@ -34,6 +38,7 @@ window.ClassSuggest = function(formName, inputName, callback) {
 					if (list['subject_abbr'] != undefined) {
 						fixedData  = {
 							0 : {
+								'institution' : list['institution'],
 								'subject_abbr' : list['subject_abbr'],
 								'course_num' : list['course_num'],
 								'section_num' : list['section_num'],
@@ -44,6 +49,7 @@ window.ClassSuggest = function(formName, inputName, callback) {
 						response( $.map(fixedData, function(item) {
 							return {
 								courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
+								institution : item['institution'],
 								title: item['course_title'],
 								section_id : item['section_id'],
 								value: item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num']
@@ -54,6 +60,7 @@ window.ClassSuggest = function(formName, inputName, callback) {
 							if (item['section_num'] != undefined) {
 								return {
 									courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
+									institution : item['institution'],
 									title: item['course_title'],
 									section_id : item['section_id'],
 									value: item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num']
@@ -61,6 +68,7 @@ window.ClassSuggest = function(formName, inputName, callback) {
 							} else {
 								return {
 									courseCode : item['subject_abbr'] + ' ' + item['course_num'],
+									institution : item['institution'],
 									title: item['course_title'],
 									value: item['subject_abbr'] + ' ' + item['course_num']
 								}
@@ -71,17 +79,16 @@ window.ClassSuggest = function(formName, inputName, callback) {
 			})
 		},
 		select: function(event, ui) {
-			$('.message', form).remove();
-			callback(ui.item.section_id);
+			if (ui.item.section_id != undefined) {
+				_message.remove();
+				callback(ui.item.section_id);
+			}
 		},
 		open: function(event, ui) {
-			$('.message', form).remove();
 		},
 		close: function(event, ui) {
 			if ($('input[name=section_id]', form).val() == '') {
-				form.append('<div class="message">' +
-					'<strong>Please enter section number.</strong>' +
-				'</div>');
+				$(_message).removeClass('hidden');
 
 				return ;
 			}
@@ -92,7 +99,8 @@ window.ClassSuggest = function(formName, inputName, callback) {
 			.data( "item.autocomplete", item )
 			.append('<a href="#">' +
 				'<span class="course-code">' + item.courseCode + '</span>' +
-				'<span class="course-title">' + item.title+ '</span>' + 
+				'<span class="course-title">' + item.title + '</span>' + 
+				'<span class="institution">' + item.institution + '</span>' + 
 			'</a>')
 			.appendTo( ul );
 	};

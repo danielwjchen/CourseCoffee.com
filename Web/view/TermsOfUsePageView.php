@@ -11,7 +11,7 @@ class TermsOfUsePageView extends PageView implements PageViewInterface {
 	function __construct($data = null) {
 		parent::__construct($data);
 		$this->setPageTitle('terms of use');
-		$this->addCSS('terms-of-use.css');
+		$this->addCSS('tale.css');
 	}
 
 	/**
@@ -41,7 +41,7 @@ class TermsOfUsePageView extends PageView implements PageViewInterface {
 				{$header}
 			</div>
 		</div>
-		<div class="terms-of-use body">
+		<div class="tale body">
 			<div class="body-inner">
 				<div class="content">
 					<h2>Conditions of Use</h2>

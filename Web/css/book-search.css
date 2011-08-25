@@ -1,0 +1,154 @@
+/**
+ * @file
+ * Define styles for book search page
+ */
+/**
+ * Define styles for login
+ */
+.book-search .simplified-navigation,
+.book-search .visitor-navigation {
+	float: left;
+	text-align: left;
+  margin: 0 -960px -50px 460px;
+	width: 500px;
+  height: 45px;
+	background: #313131;
+	background-image: -moz-linear-gradient(#313131, #5e5b5b);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
+  border: #313131 1px solid;
+  border-radius: 0 0 8px 8px;
+	-moz-box-shadow: 0 0 15px #333;
+	-webkit-box-shadow: 0 0 15px #333;
+	box-shadow: 0 0 15px #333;
+}
+.book-search .simplified-navigation {
+	width: 400px;
+  margin: 0 -960px -50px 560px;
+}
+.book-search #navigation-menu {
+	width: 310px;
+	margin: 0 auto;
+	text-align: center;
+}
+.book-search .login.error{
+	color: white;
+	position: absolute;
+	top: 50px;
+	left: 480px;
+	width: 480px;
+	text-align: center;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
+}
+.book-search .visitor-navigation .error p{
+	margin: 0;
+	padding: 0 5px;
+}
+.book-search .visitor-navigation a{
+	color: white;
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	padding: 8px 12px;
+	display: block;
+}
+.book-search .visitor-navigation .login-form{
+  padding-top: 3px;
+	margin: 0 auto;
+	width: 480px;
+}
+.book-search .visitor-navigation input{
+	color: #787474;
+	font-size: 12px;
+	line-height: 18px;
+	height: 28px;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	margin: 5px 10px 5px 0;
+	float: left;
+	padding: 0 4px;
+}
+.book-search .visitor-navigation input[name=email] {
+	width: 168px;
+}
+.book-search .visitor-navigation input[name=password] {
+	width: 108px;
+}
+.book-search .visitor-navigation .button{
+	float: left;
+}
+.book-search .visitor-navigation .sign-up {
+	margin-left: 10px;
+}
+/**
+ * Define style for search block
+ */
+.book-search .search-block {
+	margin: 100px auto 0;
+	width: 550px;
+}
+.book-search .search-block .logo {
+	margin: 0 auto 15px;
+	width: 410px;
+	display: block;
+}
+.book-search .search-block input {
+	width: 550px;
+	margin: 5px 10px 5px 0;
+	clear: both;
+	padding: 0 4px;
+	color: #787474;
+	font-size: 12px;
+	line-height: 18px;
+	height: 28px;
+	border: 1px solid #457319;
+	float: left;
+	background: white;
+	-moz-box-shadow: 0 0 25px 0 #457319;
+	-webkit-box-shadow: 0 0 25px 0 #457319;
+	box-shadow: 0 0 25px 0 #457319;
+}
+.book-search .search-block .row {
+	width: 550px;
+	float: left;
+}
+.book-search .search-block .button {
+	clear: both;
+	width: 150px;
+	margin: 20px auto;
+	padding: 5px 0;
+}
+/**
+ * Define styles for book list
+ */
+.book-search .content {
+	width: 600px;
+	margin: 0 auto;
+	float: none;
+	clear: both;
+}
+.book-search .book-list {
+	width: 560px;
+	min-height: 200px;
+	margin: 20px auto;
+}
+.book-search .book-list h3 {
+	text-align: center;
+}
+.book-search .book-list ul {
+	width: 440px;
+	margin: 0 auto;
+}
+/**
+ * Define styles for autocomplete
+ */
+.book-search #class-suggest-form .message {
+	top: 32px !important;
+}
+.ui-autocomplete {
+	height: 400px !important;
+	overflow: hidden !important;
+}

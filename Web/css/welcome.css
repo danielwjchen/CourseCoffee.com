@@ -33,34 +33,6 @@
 }
 
 /**
- * Define styles for orange buttons
- */
-.welcome .button{
-	color: white;
-	display: block;
-	border: 1px solid #ff8400;
-	border-radius: 4px;
-	text-align: center;
-	font-weight: bold;
-	text-decoration: none;
-	text-shadow: 0 0 6px #8a4c0a;
-	-moz-text-shadow: 0 0 6px #8a4c0a;
-	-webkit-text-shadow: 0 0 6px #8a4c0a;
-	background: #ff8400;
-	background-image: -moz-linear-gradient(#ff8400, #d06e06);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
-}
-.welcome .button:hover{
-	text-shadow: 0 0 3px #fff;
-	-moz-text-shadow: 0 0 3px #fff;
-	-webkit-text-shadow: 0 0 3px #fff;
-}
-.welcome .button:active{
-	-moz-box-shadow: inset 0 0 15px 15px #d06e06;
-	-webkit-box-shadow: inset 0 0 15px 15px#d06e06;
-	box-shadow: inset 0 0 15px 15px #d06e06;
-}
-/**
  * Define styles for login
  */
 .welcome .user-login{
@@ -74,6 +46,9 @@
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
   border: #313131 1px solid;
   border-radius: 0 0 8px 8px;
+	-moz-box-shadow: 0 0 15px #333;
+	-webkit-box-shadow: 0 0 15px #333;
+	box-shadow: 0 0 15px #333;
 }
 .welcome .login.error{
 	color: white;
@@ -141,7 +116,7 @@
 }
 .welcome .button.fb-login:active {
 	-moz-box-shadow: inset 0 0 15px 15px #1A3C6C;
-	-webkit-box-shadow: inset 0 0 15px 15px#1A3C6C;
+	-webkit-box-shadow: inset 0 0 15px 15px #1A3C6C;
 	box-shadow: inset 0 0 15px 15px #1A3C6C;
 }
 */
@@ -179,7 +154,6 @@
 .welcome .panel-01 h2{
 	color: white;
 	margin-top: 20px;
-	text-align: center;
   font-size: 24px;
 	text-shadow: 0 0 6px #000;
 	-moz-text-shadow: 0 0 6px #000;
@@ -222,6 +196,10 @@
 	float: right;
 	margin-top: 20px;
 	width: 220px;
+}
+.welcome .tutorial {
+	text-decoration: underline;
+	text-align: center;
 }
 .welcome .panel-01 .sign-up-shortcut p{
 	width: 150px;

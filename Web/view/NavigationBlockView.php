@@ -9,6 +9,7 @@ class NavigationBlockView extends BlockView implements BlockViewInterface {
 	 * Implement BlockViewInterface::gEtcontentlear().
 	 */
 	public function getContent() {
+		$this->addCSS('navigation.css');
 		$this->addJS('model/logout.js');
 		$this->addJS('controller/navigation.js');
 		$this->addJS('model/book-suggest.js');
@@ -32,6 +33,7 @@ class NavigationBlockView extends BlockView implements BlockViewInterface {
 				<input type="hidden" id="section-id" name="section_id" />
 				<a class="button suggest" href="#">add</a>
 			</form>
+		</div>
 	</li>
 	<li class="logout">
 		<a class="logout button" href="#">logout</a>

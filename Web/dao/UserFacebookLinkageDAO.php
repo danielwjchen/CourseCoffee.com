@@ -47,8 +47,8 @@ class UserFacebookLinkageDAO extends LinkageDAO{
 			$sql .= "{$this->column[1]} = :{$this->column[1]}";
 
 		} else {
-			throw new Exception("unknown {$this->linkage} identifier - " . print_r($params, true));
-			return ;
+			Logger::Write("unknown {$this->linkage} identifier - " . print_r($params, true));
+			return false;
 
 		}
 

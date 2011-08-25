@@ -4,7 +4,7 @@
  * page
  */
 $P.ready(function() {
-	window.signUp = $('.sign-up');
+	window.signUp = $('.sign-up .content');
 
 	signUp.delegate('a.button', 'click', function(e) {
 		e.preventDefault();
