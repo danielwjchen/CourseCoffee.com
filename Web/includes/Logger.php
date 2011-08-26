@@ -46,6 +46,6 @@ class Logger {
 	 *  a string that describes the severity of the event, default to NOTE
 	 */
 	public static function Write($event, $severity = self::SEVERITY_NOTICE) {
-		error_log($severity . ' - ' . $event);
+		error_log($severity . ' - ' . $event . ' IP - ' . $_SERVER['REMOTE_ADDR']);
 	}
 }
