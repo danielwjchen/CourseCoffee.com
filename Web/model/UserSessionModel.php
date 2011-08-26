@@ -10,6 +10,7 @@
  *  - user_id
  *  - signature
  *  - profile
+       - account/email
  *     - first_name
  *     - last_name
  *     - institution
@@ -21,6 +22,9 @@
  *     - year_id
  *     - term_id
  *     - fb_uid
+ *     - tou_vid: version id for terms of use
+ *     - created: timestamp of moment account created
+ *     - updated: timestamp of moment account updated
  *  - class_list:
  *     - section_id: the primary key that identifies a section
  *        - section_code: a string that contains a class's subject abbreviation, 
@@ -31,6 +35,9 @@ class UserSessionModel extends Model {
 	const USER_PROFILE    = 'profile';
 	const USER_SETTING    = 'setting';
 	const USER_CLASS_LIST = 'class_list';
+
+	// we difned a user has just registered by a 1 hour window
+	const USER_NEWLY_REGISTERED = 3600;
 
 	/**
 	 * Name to be used for the cookie
@@ -56,6 +63,28 @@ class UserSessionModel extends Model {
 		parent::__construct();
 		$this->user_cookie_dao = new UserCookieDAO($this->db);
 		$this->user_session_dao = new UserSessionDAO($this->db);
+	}
+
+	/**
+	 * Check is the user is newly registered
+	 *
+	 * This is used mainly to controll access to accoount creation confirmation
+	 * page.
+	 *
+	 * @return bool
+	 */
+	public function isNewlyRegistered() {
+		$setting = Session::Get(self::USER_SETTING);
+		if (!isset($setting['created'])) {
+			return false;
+		}
+
+		if ($setting['created'] + self::USER_NEWLY_REGISTERED <= time()) {
+			return false;
+		}
+
+		return true;
+
 	}
 
 	/**
@@ -101,6 +130,7 @@ class UserSessionModel extends Model {
 		$user_profile_dao = new UserProfileDAO($this->db);
 		$user_profile_dao->read(array('user_id' => $user_id));
 		$user_profile = $user_profile_dao->attribute;;
+		$user_profile['account'] = $email;
 		unset($user_profile['id']);
 
 		// debug

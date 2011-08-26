@@ -1,0 +1,75 @@
+/**
+ * @file
+ * Define style for account creation confirmation page
+ */
+.account-created {
+}
+.account-created .panel-top {
+}
+.account-created .panel-top h1 {
+	margin: 20px 0 20px 80px;
+	width: 800px;
+	font-size: 30px;
+}
+.account-created .panel-top p {
+	width: 700px;
+	display: block;
+	margin: 10px auto;
+}
+.account-created .panel-01 {
+}
+.account-created .panel-01 h2 {
+	width: 440px;
+	text-align: left;
+	margin-left: 40px;
+}
+.account-created .panel-01 ul,
+.account-created .panel-01 li{
+  font-size: 14px;
+	line-height: 20px;
+  list-style: none;
+}
+.account-created .panel-01 ul{
+	width: 325px;
+  margin: 0 auto 40px;
+}
+.account-created .panel-01 li{
+  padding: 20px 0 20px 50px;
+	height: 40px;
+}
+.account-created .panel-01 li.calendar {
+	background: url('/images/calendar.png') left center no-repeat;
+}
+.account-created .panel-01 li.text-book {
+	background: url('/images/text-book.png') left center no-repeat;
+}
+.account-created .panel-01 li.facebook {
+	background: url('/images/facebook.png') left center no-repeat;
+}
+.account-created .panel-01 a{
+  text-decoration: none;
+  color: #313131;
+}
+.account-created .panel-01 a:hover{
+	text-shadow: 0 0 3px #fff;
+	-moz-text-shadow: 0 0 3px #fff;
+	-webkit-text-shadow: 0 0 3px #fff;
+}
+.account-created .panel-01 .tutorial {
+	font-weight: bold;
+	text-decoration: underline;
+	text-align: center;
+}
+.account-created .panel-02 {
+}
+.account-created .panel-02 .panel-inner{
+  height: 475px;
+  background: url('../images/syllabus-icon.png') center center no-repeat;
+}
+.account-created .panel-02 .button{
+  margin: 220px auto;
+  width: 200px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 24px;
+}

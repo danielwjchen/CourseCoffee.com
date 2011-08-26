@@ -15,6 +15,8 @@ class UserSettingDAO extends DAO implements DAOInterface{
 			'institution_id',
 			'year_id',
 			'term_id',
+			'created',
+			'updated',
 		);
 		parent::__construct($db, $attr, $params);
 
@@ -37,9 +39,9 @@ class UserSettingDAO extends DAO implements DAOInterface{
 		}else{
 			return $this->db->insert("
 				INSERT INTO `user_setting` (
-					`user_id`, `tou_vid`, `institution_id`, `year_id`, `term_id`
+					`user_id`, `tou_vid`, `institution_id`, `year_id`, `term_id`, `created`, `updated`
 				) VALUES (
-					:user_id, :tou_vid, :institution_id, :year_id, :term_id)
+					:user_id, :tou_vid, :institution_id, :year_id, :term_id, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
 				",
 			array(
 				'user_id'        => $params['user_id'], 
@@ -87,7 +89,8 @@ class UserSettingDAO extends DAO implements DAOInterface{
 				`tou_vid` = :tou_vid
 				`institution_id` = :institution_id,
 				`year_id` = :year_id,
-				`term_id` = :term_id
+				`term_id` = :term_id,
+				`update`  = UNIX_TIMESTAMP()
 			WHERE `id` = :id
 		";
 		$this->db->perform($sql, array(

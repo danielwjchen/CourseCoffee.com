@@ -19,6 +19,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	function __construct($db, $params = NULL) {
 		$attr = array(
 			'id',
+			'account',
 			'first_name',
 			'last_name',
 			'institution',
@@ -92,6 +93,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 		$sql = "
 			SELECT 
 				u.id,
+				u.account,
 				p.first_name,
 				p.last_name,
 				i.name AS institution,

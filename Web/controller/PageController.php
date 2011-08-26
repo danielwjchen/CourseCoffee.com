@@ -19,6 +19,7 @@ class PageController extends Controller implements ControllerInterface {
 			'home'            => 'getHomePage',
 			'calendar'        => 'getCalendarPage',
 			'class'           => 'getClassPage',
+			'account-created' => 'getUserCreatedPage',
 			'book-search'     => 'getBookSearchPage',
 			'page-not-found'  => 'get404Page',
 			'all-system-down' => 'get500Page',
@@ -223,6 +224,28 @@ class PageController extends Controller implements ControllerInterface {
 	public function getBookSearchPage() {
 		$this->output = new BookSearchPageView(array(
 			'is_loggedIn' => $this->getUserId(),
+		));
+	}
+
+	/**
+	 * Get user creation confirmation page
+	 */
+	public function getUserCreatedPage() {
+		$user_session = new UserSessionModel();
+
+		if (!$this->getUserId()) {
+			$this->redirect('/welcome');
+		}
+
+		if (!$user_session->isNewlyRegistered()) {
+			$this->redirect('/home');
+		}
+
+		$profile = $user_session->getUserProfile();
+
+		$this->output = new UserCreationConfirmPageView(array(
+			'first_name' => $profile['first_name'],
+			'account'      => $profile['account'],
 		));
 	}
 

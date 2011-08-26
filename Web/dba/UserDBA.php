@@ -103,6 +103,20 @@ class UserDBA implements DBAInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies a term',
 					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is created',
+					),
+					'updated' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is updated',
+					),
 					/**
 					 * To-do
 					 *
