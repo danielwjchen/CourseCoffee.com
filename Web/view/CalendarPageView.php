@@ -58,8 +58,10 @@ class CalendarPageView extends PageView implements PageViewInterface {
 	public function getContent() {
 		extract($this->data);
 		$option = '';
-		foreach ($class_list as $section_id => $section_code) {
-			$option .= "<option value='{$section_id}'>{$section_code}</option>";
+		if (is_array($class_list)) {
+			foreach ($class_list as $section_id => $section_code) {
+				$option .= "<option value='{$section_id}'>{$section_code}</option>";
+			}
 		}
 		$class_select = <<<HTML
 <select name="section_id" class="class-list">
