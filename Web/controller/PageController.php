@@ -19,6 +19,7 @@ class PageController extends Controller implements ControllerInterface {
 			'home'            => 'getHomePage',
 			'calendar'        => 'getCalendarPage',
 			'class'           => 'getClassPage',
+			'task'            => 'getTaskPage',
 			'account-created' => 'getUserCreatedPage',
 			'book-search'     => 'getBookSearchPage',
 			'page-not-found'  => 'get404Page',
@@ -246,6 +247,15 @@ class PageController extends Controller implements ControllerInterface {
 		$this->output = new UserCreationConfirmPageView(array(
 			'first_name' => $profile['first_name'],
 			'account'      => $profile['account'],
+		));
+	}
+
+	/**
+	 * Get task page
+	 */
+	public function getTaskPage() {
+		$this->output = new BookSearchPageView(array(
+			'is_loggedIn' => $this->getUserId(),
 		));
 	}
 

@@ -87,7 +87,6 @@ class ClassPageView extends PageView implements PageViewInterface {
 	<input type="hidden" name="subject-abbr" value="{$subject_abbr}" />
 	<input type="hidden" name="course-title" value="{$course_title}" />
 	<input type="hidden" name="course-num" value="{$course_num}" />
-	<input type="hidden" name="course-description" value="{$course_description}" />
 	<input type="hidden" name="section-num" value="{$section_num}" />
 	<input type="hidden" name="section-id" value="{$section_id}" />
 	<input type="hidden" name="syllabus-id" value="{$syllabus_id}" />
@@ -101,7 +100,6 @@ HTML;
 	<input type="hidden" name="subject-abbr" value="" />
 	<input type="hidden" name="course-title" value="" />
 	<input type="hidden" name="course-num" value="" />
-	<input type="hidden" name="course-description" value="" />
 	<input type="hidden" name="section-num" value="" />
 	<input type="hidden" name="section-id" value="{$section_id}" />
 	<input type="hidden" name="syllabus-id" value="" />
@@ -152,8 +150,13 @@ HTML;
 					<div class="panel-01">
 						<div class="panel-inner">
 							<div class="class-section-info"></div>
-							<hr />
-							<div id="class-book-list" class="book-list" ></div>
+							<div id="class-info-menu">
+								<ul>
+									<li id="option-book" class="active">books</li>
+									<li id="option-comment" >comments</li>
+								</u>
+							</div>
+							<div id="class-book-list" class="book-list class-info-content" ></div>
 						</div>
 					</div>
 					<div class="panel-02">

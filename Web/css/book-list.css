@@ -8,7 +8,7 @@
 	height: 200px;
 }
 .book-list#class-book-list {
-	height: 450px;
+	height: none;
 }
 .book-list h3 {
 	font-size: 18px;

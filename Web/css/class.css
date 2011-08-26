@@ -39,6 +39,53 @@
 	-moz-text-shadow: 0 0 2px #787474;
 	-webkit-text-shadow: 0 0 2px #787474;
 }
+/**
+ * Define styles for class info menu and class info
+ */
+.class #class-info-menu,
+.class .class-info-content {
+	width: 459px;
+	clear: both;
+	float: left;
+}
+.class #class-info-menu {
+	margin-top: 20px;
+}
+.class #class-info-menu ul,
+.class #class-info-menu li {
+	float: left;
+	list-style: none;
+}
+.class #class-info-menu ul {
+	margin-left: 10px;
+	width: 449px;
+}
+.class #class-info-menu li {
+	padding: 3px 8px 0;
+	font-weight: bold;
+	text-shadow: 0 0 4px #787474;
+	-moz-text-shadow: 0 0 4px #787474;
+	-webkit-text-shadow: 0 0 4px #787474;
+	margin-bottom: -1px;
+	margin-right: 10px;
+	z-index: 10;
+}
+.class #class-info-menu li.active{
+	color: #333333;
+	background: #fefefe;
+	border: solid #d5d4d2;
+	border-width: 1px 1px 0 1px;
+	border-radius: 8px 8px 0 0;
+	text-shadow: 0 0 2px #787474;
+	-moz-text-shadow: 0 0 2px #787474;
+	-webkit-text-shadow: 0 0 2px #787474;
+}
+.class .class-info-content {
+	z-index: -9;
+	padding-top: 20px;
+	border: solid #d5d4d2;
+	border-width: 1px 0 0;
+}
 
 /**
  * Define styles for button
@@ -54,25 +101,6 @@
 	font-size: 20px;
 	height: 26px;
 	line-height: 26px;
-	text-align: center;
-	font-weight: bold;
-	text-decoration: none;
-	text-shadow: 0 0 6px #8a4c0a;
-	-moz-text-shadow: 0 0 6px #8a4c0a;
-	-webkit-text-shadow: 0 0 6px #8a4c0a;
-	background: #ff8400;
-	background-image: -moz-linear-gradient(#ff8400, #d06e06);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
-}
-.class .body a.button:hover{
-	text-shadow: 0 0 3px #fff;
-	-moz-text-shadow: 0 0 3px #fff;
-	-webkit-text-shadow: 0 0 3px #fff;
-}
-.class .body .button:active{
-	-moz-box-shadow: inset 0 0 15px 15px #d06e06;
-	-webkit-box-shadow: inset 0 0 15px 15px#d06e06;
-	box-shadow: inset 0 0 15px 15px #d06e06;
 }
 
 /**

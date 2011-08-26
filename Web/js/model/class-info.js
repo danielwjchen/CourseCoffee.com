@@ -104,7 +104,6 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 		$('input[name=subject-abbr]', option).val(data.subject_abbr);
 		$('input[name=course-id]', option).val(data.course_id);
 		$('input[name=course-title]', option).val(data.course_title);
-		$('input[name=course-description]', option).val(data.course_description);
 		$('input[name=course-num]', option).val(data.course_num);
 		$('input[name=section-id]', option).val(data.section_id);
 		$('input[name=section-num]', option).val(data.section_num);
@@ -116,8 +115,6 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	 */
 	var displayClassInfo = function() {
 		var content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>';
-		var courseInfo = $('input[name=course-description]', option).val();
-		content += courseInfo != undefined ? '<p>' + courseInfo + '</p>' : '';
 		if ($('input[name=syllabus-id]', option).val() != 0) {
 			$('a.button.upload').addClass('disabled');
 		} else {
