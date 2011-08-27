@@ -66,6 +66,7 @@
 			$book = $this->getBuyPrice();
 			$price = $book->condition[0]->bestPrice;
 
+			$price = substr($price,1,strlen($price));
 			return $price;
 		}
 

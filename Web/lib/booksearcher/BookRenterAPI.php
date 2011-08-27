@@ -109,6 +109,7 @@
 				if($purchase->attributes() == "new") $price = $purchase;
 			};
 
+			$price = substr($price,1,strlen($price));
 			return $price;
 		}
 
@@ -126,6 +127,7 @@
 				if($purchase->attributes() == "used") $price = $purchase;
 			};
 
+			$price = substr($price,1,strlen($price));
 			return $price;
 		}
 
@@ -144,6 +146,7 @@
 				if($rental->attributes() == "90") $price = $rental;
 			};
 
+			$price = substr($price,1,strlen($price));
 			return $price;
 		}
 
