@@ -163,11 +163,13 @@
 		}
 
 		public function getListPrice(){
-			return $this->book->ItemAttributes->ListPrice->FormattedPrice;
+			$price = substr($this->book->ItemAttributes->ListPrice->FormattedPrice,1,strlen($this->book->ItemAttributes->ListPrice->FormattedPrice));
+			return $price;
 		}
 
 		public function getLowestNewPrice(){
-			return $this->book->Offers->Offer->OfferListing->Price->FormattedPrice;
+			$price = substr($this->book->Offers->Offer->OfferListing->Price->FormattedPrice,1,strlen($this->book->Offers->Offer->OfferListing->Price->FormattedPrice));
+			return $price;
 		}
 
 		public function getLowestNewLink(){
@@ -175,11 +177,13 @@
 		}
 
 		public function getMarketPlaceLowestNewPrice(){
-			return $this->book->OfferSummary->LowestNewPrice->FormattedPrice;
+			$price = substr($this->book->OfferSummary->LowestNewPrice->FormattedPrice,1,strlen($this->book->OfferSummary->LowestNewPrice->FormattedPrice));
+			return $price;
 		}
 
 		public function getMarketPlaceLowestUsedPrice(){
-			return $this->book->OfferSummary->LowestUsedPrice->FormattedPrice;
+			$price = substr($this->book->OfferSummary->LowestUsedPrice->FormattedPrice,1,strlen($this->book->OfferSummary->LowestUsedPrice->FormattedPrice));
+			return $price;
 		}
 
 		//sth wrong with this function

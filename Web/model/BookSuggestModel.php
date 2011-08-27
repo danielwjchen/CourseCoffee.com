@@ -142,14 +142,13 @@ class BookSuggestModel extends Model {
 		$bookrenterSearch = new BookRenterAPI($isbn);
 		$valorebookSearch = new ValoreBooksAPI($isbn);
 
-		//start to querysubstr($ecampusSearch->getLowestNewPrice(),0,strlen($ecampusSearch->getLowestNewPrice())),
 		//new
 		$newprice = array(
-			'Amazon'	=> substr($this->amazonSearch->getLowestNewPrice(),1,strlen($this->amazonSearch->getLowestNewPrice())),
-			'eCampus'	=> substr($ecampusSearch->getLowestNewPrice(),0,strlen($ecampusSearch->getLowestNewPrice())),
-			'BookRenter'	=> substr($bookrenterSearch->getLowestNewPrice(),1,strlen($bookrenterSearch->getLowestNewPrice())),
-			'ValoreBooks'   => substr($valorebookSearch->getLowestNewPrice(),1,strlen($valorebookSearch->getLowestNewPrice())),
-			'AmazonMarket'  => substr($this->amazonSearch->getMarketPlaceLowestNewPrice(),1,strlen($this->amazonSearch->getMarketPlaceLowestNewPrice()))
+			'Amazon'	=> $this->amazonSearch->getLowestNewPrice(),
+			'eCampus'	=> $ecampusSearch->getLowestNewPrice(),
+			'BookRenter'	=> $bookrenterSearch->getLowestNewPrice(),
+			'ValoreBooks'   => $valorebookSearch->getLowestNewPrice(),
+			'AmazonMarket'  => $this->amazonSearch->getMarketPlaceLowestNewPrice()
 		);
 
 		$newlink = array(
@@ -162,10 +161,10 @@ class BookSuggestModel extends Model {
 
 		//used
 		$usedprice = array(
-			'eCampus'	=> substr($ecampusSearch->getLowestUsedPrice(),0,strlen($ecampusSearch->getLowestUsedPrice())),
-			'BookRenter'	=> substr($bookrenterSearch->getLowestUsedPrice(),1,strlen($bookrenterSearch->getLowestUsedPrice())),
-			'AmazonMarket'  => substr($this->amazonSearch->getMarketPlaceLowestUsedPrice(),1,strlen($this->amazonSearch->getMarketPlaceLowestUsedPrice())),
-			'eCampusMArket' => substr($ecampusSearch->getLowestMarketPlacePrice(),0,strlen($ecampusSearch->getLowestMarketPlacePrice()))	
+			'eCampus'	=> $ecampusSearch->getLowestUsedPrice(),
+			'BookRenter'	=> $bookrenterSearch->getLowestUsedPrice(),
+			'AmazonMarket'  => $this->amazonSearch->getMarketPlaceLowestUsedPrice(),
+			'eCampusMArket' => $ecampusSearch->getLowestMarketPlacePrice()	
 		);
 		$usedlink = array(
 			'eCampus'	=> (string)$ecampusSearch->getLowestUsedLink(),
@@ -176,8 +175,8 @@ class BookSuggestModel extends Model {
 
 		//rental
 		$rentalprice = array(
-			'eCampus'	=> substr($ecampusSearch->getLowestRentalPrice(),0,strlen($ecampusSearch->getLowestRentalPrice())),
-			'BookRenter'	=> substr($bookrenterSearch->getLowestRentalPrice(),1,strlen($bookrenterSearch->getLowestRentalPrice()))			
+			'eCampus'	=> $ecampusSearch->getLowestRentalPrice(),
+			'BookRenter'	=> $bookrenterSearch->getLowestRentalPrice()			
 		);
 		$rentallink = array(
 			'eCampus'	=> (string)$ecampusSearch->getLowestRentalLink(),
@@ -216,7 +215,7 @@ class BookSuggestModel extends Model {
 			'new'       => $new,
 			'used'      => $used,
 			'rental'    => $rental,
-			'listPrice' => substr($this->amazonSearch->getListPrice(),1,strlen($this->amazonSearch->getListPrice()))
+			'listPrice' => $this->amazonSearch->getListPrice()
 		);
 
 		return $rankList;
