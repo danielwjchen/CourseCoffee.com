@@ -270,6 +270,7 @@ TaskUpdater = function(regionName) {
 			success: function(response) {
 				if (response.success) {
 					target.html(response.stats + " done!");
+					target.removeClass('button');
 				}
 			}
 		});

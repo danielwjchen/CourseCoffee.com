@@ -81,6 +81,7 @@ window.register = {
 
 				return true;
 			},
+			/*
 			'validateName' : function() {
 				var rule  = /^[a-z]{3,17}$/;
 				var first = $('input[name=first-name]').val();
@@ -89,6 +90,7 @@ window.register = {
 				register.error('Please enter a valid first or last name.');
 				return first.match(rule) && last.match(rule);
 			},
+			*/
 			'password' : function() {
 				var password = $('input[name=password]').val();
 				var confirm  = $('input[name=confirm]').val();

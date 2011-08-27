@@ -133,7 +133,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * This is a helper/private method.
 	 */
 	var findTimeInterval = function(item) {
-		date = new Date(item['due_date'] * 1000);
+		var date = new Date(item['due_date'] * 1000);
 		date.setMinutes(0, 0, 0);
 
 		if (type.indexOf('day') > 0) {
@@ -272,7 +272,8 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 
 		html += '</div><div class="week row">';
 
-		var firstDayInWeek = (new Date(range.begin * 1000)).getDay();
+		var date = new Date(range.begin * 1000);
+		var firstDayInWeek = date.getDay() +1;
 		// create padding between the first day of the week and the beginning of 
 		// the month
 		var colType = '';
@@ -319,7 +320,6 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	var calculateDayRange = function(number) {
 		var date = new Date(timestamp * 1000);
 		date.setHours(0, 0, 0, 0);
-		console.log(date);
 		range.begin = toTimestamp(date);
 		date.setDate(date.getDate() + number);
 		range.end = toTimestamp(date);
