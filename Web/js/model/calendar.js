@@ -82,7 +82,6 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		 * A helper function to populate calendar timeslot
 		 */
 		var populateTimeSlot = function(itemList) {
-			$('span.event').remove();
 
 			if (itemList && itemList['id']) {
 				findTimeInterval(itemList);
@@ -103,6 +102,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		}
 
 		list.addClass('loading');
+		$('span.event').remove();
 		$.ajax({
 			url: '/calendar-list-task',
 			type: 'POST',
@@ -133,11 +133,17 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * This is a helper/private method.
 	 */
 	var findTimeInterval = function(item) {
-		var date = new Date(item['due_date'] * 1000);
+		var date  = new Date(item['due_date'] * 1000);
+		var begin = '';
+		var end   = '';
+
+		// debug
+		// console.log(date);
+
 		date.setMinutes(0, 0, 0);
 
 		if (type.indexOf('day') > 0) {
-			date.setHours(date.getHours() + 1);
+			date.setHours(date.getHours());
 			begin = toTimestamp(date);
 			date.setHours(date.getHours() + 1 * hourInterval);
 			end   = toTimestamp(date);
@@ -148,6 +154,10 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 			date.setTime(date.getTime() + 86400000);
 			end   = toTimestamp(date);
 		}
+
+		// debug
+		// console.log(begin);
+		// console.log(end);
 
 		// JQuery is having trouble selecting newly created elements, that's why
 		var timeslot = $(document.getElementById(begin + '.' + end), region);
@@ -206,11 +216,11 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * This is a helper/private method.
 	 */
 	var displayDay = function() {
-		date = new Date();
-		currentMonth = '';
-		currentDate  = '';
+		var date = new Date();
+		var currentMonth = '';
+		var currentDate  = '';
 
-		html = '<div class="day calendar-display-inner">' +
+		var html = '<div class="day calendar-display-inner">' +
 			'<div class="col hour-interval">';
 
 		for (i = 0; i < 24 / hourInterval; i++) {
