@@ -67,7 +67,7 @@ class UserController extends Controller implements ControllerInterface {
 	 * This is a helper function to share code among registerUserByFB() and
 	 * registerUserByUs()
 	 */
-	private function processRegistration($user_record) {
+	private function processRegistration($user_record, $section_id) {
 		$this->user_session_model->setUserSessionCookie($user_record['user_id'], $email, $password);
 		$this->user_session_model->setUserProfile($user_record['profile']);
 		$this->user_session_model->setUserSetting($user_record['setting']);
@@ -75,10 +75,10 @@ class UserController extends Controller implements ControllerInterface {
 		$class_list = array();
 		if (!empty($section_id)) {
 			Session::Del('section_id');
-			$section_code  = Session::Get('section_code');
 			$college_class = new CollegeClassModel();
 			$class_info = $college_class->getClassById($section_id);
 
+			// check if the requested section id is valid
 			if (isset($class_info['content'])) {
 
 				$user_enroll_class_model = new UserEnrollClassModel();
@@ -119,7 +119,6 @@ class UserController extends Controller implements ControllerInterface {
 			$last_name      = $result['last_name'];
 			$institution_id = $result['school'];
 			$section_id     = Session::Get('section_id');
-			$course_code    = Session::Get('course_code');
 			$year           = '2011';
 			$term           = 'fall';
 			$email          = $result['email'];
@@ -138,7 +137,7 @@ class UserController extends Controller implements ControllerInterface {
 			);
 
 			if (isset($user_record['success'])) {
-				$this->processRegistration($user_record);
+				$this->processRegistration($user_record, $section_id);
 			}
 		}
 
@@ -181,7 +180,7 @@ class UserController extends Controller implements ControllerInterface {
 		);
 		
 		if (isset($user_record['success'])) {
-			$this->processRegistration($user_record);
+			$this->processRegistration($user_record, $section_id);
 		}
 
 		unset($user_record['profile']);

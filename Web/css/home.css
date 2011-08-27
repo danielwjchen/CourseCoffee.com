@@ -111,14 +111,9 @@
 	margin-left: 200px;
 	width: 725px;
 }
-.task-create-form{
-}
 .task-create-form .row{
-	clear: both;
-	float: left;
-	padding: 5px 0;
-}
-.task-create-form label{
+	width: 695px;
+	margin-right: -695px;
 }
 .task-create-form select,
 .task-create-form input {
@@ -154,76 +149,22 @@
 	padding: 0 0 0 5px;
 }
 .task-create-form textarea{
-	font-family: Sans-Serif;
 	width: 685px;
-	color: #787474;
-	font-weight: bold;
-	float: left;
-	border: 1px solid #457319;
-	border-radius: 4px;
-	padding: 0 5px;
-	margin: 0;
-	line-height: 16px;
-	font-size: 16px;
-}
-.task-create-form legend{
-	font-weight: bold;
-	font-size: 18px;
-	color: #333333;
-}
-.task-create-form fieldset{
-	border: 1px solid #5e5b5b;
-	border-radius: 4px;
-	padding: 0 15px;
-	/**
-	 * This is commented out because firefox does not know how to render fieldset
-	 * box-shadow correctly.
-	 *
-	-moz-box-shadow: 1px 3px #5e5b5b;
-	-webkit-box-shadow: 1px 1px 3px #5e5b5b;
-	box-shadow: 1px 1px 3px #5e5b5b;
-	*/
-}
-.task-create-form .required{
-	border: 1px 1px 0 1px;
-}
-.task-create-form .optional{
-	border: 0 1px 0 1px;
-	border-radius:  0 0 4px 4px;
 }
 .task-create-form a.button.show-detail{
+	position: absolute;
+	left: 585px;
 	width: 100px;
-	margin: 0 0 0 25px;
-	clear: none;
 	font-size: 16px;
 }
 .task-create-form a.button.submit{
 	width: 685px;
 }
-.task-list dd.comment {
-	display: none;
-}
 
-/**
- * Define styles for panels
- */
-.home p{
-	padding: 0 0 0 10px;
-	margin: 0;
-	color: #333333;
-	font-size: 12px;
-}
-.home ul,
-.home ul li{
-	list-style: none;
-}
-.home ul li{
-	margin-bottom: 15px;
-}
 /**
  * Define styles for to-do panel
  */
-.home .panel-01 .panel-inner{
+.home .panel-02 .panel-inner{
 	min-height: 400px;
 }
 

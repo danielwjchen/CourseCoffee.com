@@ -209,6 +209,11 @@ Task.generateList = function(list, region) {
 		html += "<dd id='" + item['due_date'] + "' class='due_date count-down'>" + item['due_date'] + "</dd>";
 		html += item['location'] != null ? "<dd class='location'>" + item['location'] + "</dd>" : "";
 		html += "<dd class='comment'><a href='" + item['url'] + "' id='" + item['id'] + "' class='fb-comment'>comments &#187;</a></dd>";
+		if (item['status'] == 'done') {
+			html += "<dd class='status done'>" + item['stats'] + " done!</dd>";
+		} else {
+			html += "<dd class='status button'><a href='#' taskId='" + item['id'] + "'>&#10004; done</a></dd>";
+		}
 		html += item['description'] != null ? "<dd class='description'>" + item['description'] + "</dd>" : "";
 			
 		html += "</dl></li>";
@@ -246,3 +251,30 @@ Task.generateList = function(list, region) {
 	var commentPanel = new CommentPanel();
 
 };
+
+/**
+ * Update task status
+ */
+TaskUpdater = function(regionName) {
+	var _region = $(regionName);
+	$('dd.status.button', _region).click( function(e) {
+		e.preventDefault();
+		var target = $(this);
+		var taskId = $('a', target).attr('taskId');
+		target.removeClass('button').addClass('done');
+		$.ajax({
+			url: '/task-status-update',
+			type: 'POST',
+			cache: false,
+			data: 'task_id=' + taskId,
+			success: function(response) {
+				if (response.success) {
+					target.html(response.stats + " done!");
+				}
+			}
+		});
+
+
+	});
+
+}

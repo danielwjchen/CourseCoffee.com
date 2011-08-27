@@ -29,6 +29,7 @@ class BookSuggestModel extends Model {
 	 */
 	private $book_list;
 	private $list;
+	private $cache;
 
 	/**
 	 * Extend Model::__construct()
@@ -36,6 +37,7 @@ class BookSuggestModel extends Model {
 	function __construct() {
 		parent::__construct();
 		$this->amazonSearch = new AmazonAPI();
+		$this->cache = new DBCache();
 	}
 
 
@@ -65,6 +67,14 @@ class BookSuggestModel extends Model {
 			//return $this->list;
 			return array('message' => self::BOOK_FOUND_NONE);
 		}
+
+		$cacheKey = 'bookList' . $section_id;
+
+		$cacheValue = $this->cache->get($cacheKey);
+		if ($cacheValue) {
+			return json_decode($cacheValue['value'], true);
+		}
+
 		// the system truncates the list if there is only one record... we need to 
 		// restore it back
 		$record  = array();
@@ -105,11 +115,16 @@ class BookSuggestModel extends Model {
 		// debug
 		// error_log('book suggest result - ' . print_r($this->list, true));
 
-		return array(
+		$result = array(
 			'success' => true,
 			'message' => $message,
 			'list'    => $this->list
 		);
+		
+		$this->cache->set($cacheKey, json_encode($result));
+
+		return $result;
+
 	}
 
 

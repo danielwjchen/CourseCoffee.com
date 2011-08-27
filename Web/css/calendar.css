@@ -242,12 +242,3 @@
 .calendar .month .event {
 	text-align: right;
 }
-
-/**
- * Define styles for task list
- */
-.calendar .task-list {
-	clear: both;
-	width: 459px;
-}
-

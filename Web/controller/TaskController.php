@@ -27,6 +27,7 @@ class TaskController extends Controller implements ControllerInterface {
 			'task-remove'        => 'removeTask',
 			'task-search'        => 'searchTask',
 			'task-detail'        => 'getTaskDetail',
+			'task-status-update' => 'updateTaskStatus',
 			'user-list-task'     => 'getTaskBelongToUser',
 			'class-list-task'    => 'getTaskBelongToClass',
 			'calendar-list-task' => 'getTaskBelongToDate',
@@ -55,6 +56,29 @@ class TaskController extends Controller implements ControllerInterface {
 		$this->output = new JSONView(array(
 			'token' => $task->initializeFormToken(),
 		));
+	}
+
+	/**
+	 * update task status
+	 *
+	 * This really needs to be authenticated
+	 */
+	public function updateTaskStatus() {
+		$task_id = Input::Post('task_id');
+		$user_id = $this->getUserId();
+		$type = 'status';
+		$value = 'done';
+		$task_updater = new TaskStatusDAO();
+		$result = $task_updater->set($user_id, $task_id, $type, $value);
+		if ($result) {
+			$result['success'] = true;
+			$this->output = new JSONView($result);
+		} else {
+			$this->output = new JSONView(array(
+				'error' => true,
+				'stats' => $result
+			));
+		}
 	}
 
 	/**
@@ -149,9 +173,10 @@ class TaskController extends Controller implements ControllerInterface {
 	public function getTaskBelongToUser() {
 		$user_id  = Input::Post('user_id');
 		$begin    = Input::Post('begin');
+		$filter   = Input::Post('filter');
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
-		$result = $list_model->fetchUserToDoList($user_id, $begin, $paginate);
+		$result = $list_model->fetchUserToDoList($user_id, $begin, $filter, $paginate);
 		$this->output = new JSONView($result);
 	}
 
@@ -161,9 +186,10 @@ class TaskController extends Controller implements ControllerInterface {
 	public function getTaskBelongToClass() {
 		$user_id    = Input::Post('user_id');
 		$section_id = Input::Post('section_id');
+		$filter   = Input::Post('filter');
 		$paginate   = Input::Post('paginate');
 		$list_model = new TaskListModel();
-		$result = $list_model->fetchUserClassList($user_id, $section_id, $paginate);
+		$result = $list_model->fetchUserClassList($user_id, $section_id, $filter, $paginate);
 		$this->output = new JSONView($result);
 	}
 
@@ -174,9 +200,10 @@ class TaskController extends Controller implements ControllerInterface {
 		$user_id  = Input::Post('user_id');
 		$begin    = Input::Post('begin');
 		$end      = Input::Post('end');
+		$filter   = Input::Post('filter');
 		$paginate = Input::Post('paginate');
 		$list_model = new TaskListModel();
-		$result = $list_model->fetchUserCalendarList($user_id, $begin, $end, $paginate);
+		$result = $list_model->fetchUserCalendarList($user_id, $begin, $end, $filter, $paginate);
 		$this->output = new JSONView($result);
 	}
 

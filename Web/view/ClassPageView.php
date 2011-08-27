@@ -142,6 +142,7 @@ HTML;
 						<div class="panel-menu-inner">
 							<form name="class-option" id="class-option-form">
 								{$class_option}
+								<input type="hidden" name="filter" value="pending" />
 								<input type="hidden" name="paginate" value="0" />
 							</form>
 							{$panel_menu}
@@ -195,6 +196,13 @@ HTML;
 										</div>
 									</fieldset>
 								</form>
+							</div>
+							<div id="task-info-menu">
+								<ul>
+									<li id="option-pending" class="active">to-do</li>
+									<li id="option-finished" >finished</li>
+									<li id="option-all">all</li>
+								</ul>
 							</div>
 							<div id="class-task-list" class="task-list">
 							</div>

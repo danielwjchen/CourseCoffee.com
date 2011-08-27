@@ -7,10 +7,12 @@
  */
 .book-search .simplified-navigation,
 .book-search .visitor-navigation {
+	width: 960px;
+  margin: 0 auto;
+}
+.book-search .navigation-inner {
 	float: left;
 	text-align: left;
-  margin: 0 -960px -50px 660px;
-	width: 500px;
   height: 45px;
 	background: #313131;
 	background-image: -moz-linear-gradient(#313131, #5e5b5b);
@@ -21,14 +23,19 @@
 	-webkit-box-shadow: 0 0 15px #333;
 	box-shadow: 0 0 15px #333;
 }
-.book-search .simplified-navigation {
-	width: 400px;
-  margin: 0 -960px -50px 760px;
+.book-search .simplified-navigation .navigation-inner {
+  margin: 0 -960px -50px 660px;
+	width: 300px;
+}
+.book-search .visitor-navigation .navigation-inner {
+  margin: 0 -960px -50px 450px;
+	width: 510px;
 }
 .book-search #navigation-menu {
 	width: 310px;
 	margin: 0 auto;
 	text-align: center;
+	float: left;
 }
 .book-search .login.error{
 	color: white;

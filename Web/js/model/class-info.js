@@ -25,6 +25,8 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	 */
 	var task = new Task(creationFormName, optionFormName);
 
+	var _taskUpdater = '';
+
 	/**
 	 * Process default class data if specified
 	 */
@@ -47,44 +49,31 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	 */
 	var getTaskList = function() {
 		var sectionId  = $('input[name=section-id]', option).val();
+		var filter     = $('input[name=filter]', option).val();
 		var paginate   = $('input[name=paginate]', option).val();
-		var cacheKey   = 'task-list-' + sectionId + paginate;
-		var cacheValue = cache.get(cacheKey);
+		list.addClass('loading');
+		$.ajax({
+			url: '/class-list-task',
+			type: 'POST',
+			cache: false,
+			data: 'section_id=' + sectionId + '&paginate=' + paginate + '&filter=' + filter,
+			success: function(response) {
+				list.removeClass('loading');
+				if (response.success) {
 
-		if (cacheValue) {
-			// debug
-			// console.log('getTaskList cache');
-			// console.log(cacheValue);
-			Task.generateList(cacheValue, list);
-		} else {
-			list.addClass('loading');
+					// debug
+					// console.log(response.list);
+					var tasks = task.AddUrlToTask(response.list);
 
-			// debug
-			// console.log(option);
-
-			$.ajax({
-				url: '/class-list-task',
-				type: 'POST',
-				cache: false,
-				data: 'section_id=' + sectionId + '&paginate=' + paginate,
-				success: function(response) {
-					list.removeClass('loading');
-					if (response.success) {
-
-						// debug
-						// console.log(response.list);
-						tasks = task.AddUrlToTask(response.list);
-
-						cache.set(cacheKey, tasks);
-						Task.generateList(tasks, list);
-					}
-
-					if (response.error) {
-						task.setError(response.message, list);
-					}
+					Task.generateList(tasks, list);
+					_taskUpdater = new TaskUpdater(listName);
 				}
-			});
-		}
+
+				if (response.error) {
+					task.setError(response.message, list);
+				}
+			}
+		});
 	};
 
 	/**
@@ -115,6 +104,7 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	 */
 	var displayClassInfo = function() {
 		var content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>';
+			//'<a href="#" class="remove">&times;</a>';
 		if ($('input[name=syllabus-id]', option).val() != 0) {
 			$('a.button.upload').addClass('disabled');
 		} else {

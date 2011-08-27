@@ -92,6 +92,7 @@ HTML;
 								<input type="hidden" name="begin" />
 								<input type="hidden" name="end" />
 								<input type="hidden" name="user_id" value="{$user_id}" />
+								<input type="hidden" name="filter" value="pending" />
 								<input type="hidden" name="paginate" value="0" />
 							</form>
 							<ul>
@@ -144,6 +145,13 @@ HTML;
 										</div>
 									</fieldset>
 								</form>
+							</div>
+							<div id="task-info-menu">
+								<ul>
+									<li id="option-pending" class="active">to-do</li>
+									<li id="option-finished" >finished</li>
+									<li id="option-all">all</li>
+								</ul>
 							</div>
 							<div id="calendar-task-list" class="task-list">
 							</div>

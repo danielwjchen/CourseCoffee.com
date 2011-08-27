@@ -11,15 +11,24 @@ $P.ready(function() {
 	var panelMenu = $('.panel-menu');
 	var classInfoMenu = $('#class-info-menu');
 	var classBookList = $('#class-book-list');
+	var classTaskList = $('#class-task-list');
 
 	var classInfo = new ClassInfo('.class-section-info', '#class-option-form', '#class-task-list', '#class-task-creation-form');
 
+
+	var taskInfoMenu = $('#task-info-menu');
+	var filter = $('#class-option-form input[name=filter]');
+	var resetTaskInfoMenu = function(active) {
+		$('li', taskInfoMenu).removeClass('active');
+		$('#' + active, taskInfoMenu).addClass('active');
+	}
 	// mark the first item in class list as active on page load
 	var defaultMenuOption = 'a:first';
 	var defaultClassId = classInfo.getClassId();
 	if (defaultClassId) {
 		defaultMenuOption = '#' + defaultClassId;
 	}
+
 	/**
 	 * remove all active options in class info menu and rest it
 	 */
@@ -42,7 +51,9 @@ $P.ready(function() {
 	panelMenu.delegate('a', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);
+		filter.val('pending');
 		resetClassInfoMenu('option-book');
+		resetTaskInfoMenu('option-pending');
 
 		var selectedSectionId = target.attr('id');
 		classInfo.getClassInfo(selectedSectionId);
@@ -54,8 +65,6 @@ $P.ready(function() {
 		$('.option', panelMenu).removeClass('active');
 		target.addClass('active');
 	});
-
-	var bookCache = new Cache();
 
 
 	classInfoMenu.delegate('li', 'click', function(e) {
@@ -89,10 +98,30 @@ $P.ready(function() {
 		}
 	});
 
+	/**
+	 * Filter task by option
+	 */
+	taskInfoMenu.delegate('li', 'click', function(e) {
+		var target = $(this);
+		var selected = target.attr('id');
+		var optionForm = $('#class-option-form');
+		resetTaskInfoMenu(selected);
+		if (selected == 'option-pending') {
+			filter.val('pending');
+		} else if(selected == 'option-finished') {
+			filter.val('finished');
+		} else if(selected == 'option-all') {
+			filter.val('all');
+		}
+		
+		classTaskList.empty();
+		classInfo.populate();
+	});
+
 	blurInput(body);
 
 	// Over see inputs in task panel
-	$('.panel-02', body).delegate('a', 'click', function(e) {
+	$('.panel-02').delegate('a', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);
 

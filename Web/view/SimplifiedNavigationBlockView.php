@@ -12,17 +12,19 @@ class SimplifiedNavigationBlockView extends BlockView implements BlockViewInterf
 		$this->addCSS('navigation.css');
 		return <<<HTML
 <div class="simplified-navigation">
-	<ul id="navigation-menu">
-		<li class="home">
-			<a class="home button" href="/home">Home</a>
-		</li>
-		<li class="calendar">
-			<a class="calendar button" href="/calendar">Calendar</a>
-		</li>
-		<li class="class">
-			<a class="class button" href="/class">Class</a>
-		</li>
-	</ul>
+	<div class="navigation-inner">
+		<ul id="navigation-menu">
+			<li class="home">
+				<a class="home button" href="/home">Home</a>
+			</li>
+			<li class="calendar">
+				<a class="calendar button" href="/calendar">Calendar</a>
+			</li>
+			<li class="class">
+				<a class="class button" href="/class">Class</a>
+			</li>
+		</ul>
+	</div>
 </div>
 HTML;
 	}

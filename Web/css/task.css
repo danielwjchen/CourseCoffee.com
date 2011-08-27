@@ -1,10 +1,154 @@
 /**
  * Define styles for task list
  */
-.task-list {
-	width: 450px;
-	min-height: 400px;
+/**
+ * Define styles for class info menu and class info
+ */
+.task-create-form-wrapper{
 	float: left;
+	width: 450px;
+	margin-bottom: 20px;
+}
+.task-create-form{
+}
+.task-create-form .row{
+	clear: both;
+	float: left;
+	padding: 5px 0;
+	width: 420px;
+}
+.task-create-form label{
+}
+.task-create-form input{
+	color: #787474;
+	font-weight: bold;
+	float: left;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	padding: 0 5px;
+	margin: 0;
+	height: 26px;
+	line-height: 20px;
+	font-size: 16px;
+}
+.task-create-form label{
+	width: 60px;
+	float: left;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 26px;
+	height: 26px;
+	color: #333333;
+}
+.task-create-form input.objective{
+	width: 420px;
+}
+.task-create-form input.due_date{
+	width: 195px;
+	margin-right: 15px;
+}
+.task-create-form select.class-list {
+	width: 195px;
+}
+.task-create-form .button.show-detail {
+	width: 150px;
+	position: absolute;
+	top: -1px;
+	left: 270px;
+}
+.task-create-form textarea{
+	font-family: Sans-Serif;
+	width: 420px;
+	color: #787474;
+	font-weight: bold;
+	float: left;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	padding: 0 5px;
+	margin: 0;
+	line-height: 16px;
+	font-size: 16px;
+}
+.task-create-form legend{
+	font-weight: bold;
+	font-size: 18px;
+	color: #333333;
+}
+.task-create-form fieldset{
+	border: 1px solid #5e5b5b;
+	border-radius: 4px;
+	padding: 0 15px;
+	/**
+	 * This is commented out because firefox does not know how to render fieldset
+	 * box-shadow correctly.
+	 *
+	-moz-box-shadow: 1px 3px #5e5b5b;
+	-webkit-box-shadow: 1px 1px 3px #5e5b5b;
+	box-shadow: 1px 1px 3px #5e5b5b;
+	*/
+}
+.task-create-form .required{
+	border: 1px 1px 0 1px;
+}
+.task-create-form .optional{
+	border: 0 1px 0 1px;
+	border-radius:  0 0 4px 4px;
+}
+.task-create-form .submit{
+	width: 420px;
+}
+
+#task-info-menu,
+.task-list {
+	width: 459px;
+	clear: both;
+	float: left;
+}
+#task-info-menu {
+	margin-top: 10px;
+}
+#task-info-menu ul,
+#task-info-menu li {
+	float: left;
+	list-style: none;
+	z-index: 20;
+}
+#task-info-menu ul {
+	margin-left: 10px;
+	width: 449px;
+}
+#task-info-menu li {
+	padding: 3px 8px 0;
+	font-weight: bold;
+	text-shadow: 0 0 2px #787474;
+	-moz-text-shadow: 0 0 2px #787474;
+	-webkit-text-shadow: 0 0 2px #787474;
+	margin-right: 10px;
+	z-index: 30;
+}
+#task-info-menu li.active {
+	padding-bottom: 2px;
+	color: #333333;
+	background: #fefefe;
+	border: solid #d5d4d2;
+	border-width: 1px 1px 0 1px;
+	border-radius: 8px 8px 0 0;
+	text-shadow: 0 0 2px #787474;
+	-moz-text-shadow: 0 0 2px #787474;
+	-webkit-text-shadow: 0 0 2px #787474;
+}
+#task-info-menu li:hover {
+	cursor: pointer; 
+	cursor: hand;
+}
+.task-info-content {
+}
+.task-list {
+	z-index: 9;
+	min-height: 400px;
+	padding-top: 20px;
+	border: solid #d5d4d2;
+	border-width: 1px 0 0;
 }
 .task-list .task-list-inner{
 }
@@ -25,6 +169,9 @@
 	width: 100%;
 	height: 20px;
 }
+.task-list dl {
+	position: relative;
+}
 .task-list dt {
 	font-weight: bold;
 	font-size: 14px;
@@ -39,4 +186,29 @@
 }
 .task-list dd.comment a:active {
 	color: #1A3C6C;
+}
+.task-list dd.status {
+	position: absolute;
+	bottom: -2px;
+	right: 80px;
+	padding: 0 4px;
+}
+.task-list dd.status a {
+	color: white;
+	text-decoration: none;
+}
+.task-list dd.status.done {
+	color: white;
+	display: block;
+	border: 1px solid #ff8400;
+	border-radius: 4px;
+	text-align: center;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 0 6px #8a4c0a;
+	-moz-text-shadow: 0 0 6px #8a4c0a;
+	-webkit-text-shadow: 0 0 6px #8a4c0a;
+	background: #ff8400;
+	background-image: -moz-linear-gradient(#ff8400, #d06e06);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
 }

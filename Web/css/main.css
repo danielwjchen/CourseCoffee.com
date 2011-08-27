@@ -92,7 +92,7 @@ hr {
 }
 .container-inner{
   overflow:auto;
-  padding-bottom: 150px;
+  padding-bottom: 160px;
 	background: #457319;
 	background-image: -moz-linear-gradient(#9cc24c, #457319);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#9cc24c), to(#457319)); 
@@ -178,6 +178,7 @@ hr {
 .panel-03 .panel-inner{
 	padding: 5px;
 	width: 459px;
+	float: left;
 }
 
 .panel-01 {

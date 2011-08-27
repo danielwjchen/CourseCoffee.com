@@ -6,26 +6,26 @@
 
 interface CacheInterface {
 	/**
-	 * Get the cached value from given key
+	 * get the cached value from given key
 	 *
 	 * @param string $key
 	 */
-	public function Get($key) ;
+	public function get($key) ;
 
 	/**
-	 * Set cache for the given key and value
+	 * set cache for the given key and value
 	 *
 	 * @param string $key
 	 * @param string $value
 	 */
-	public function Set($key, $value) ;
+	public function set($key, $value) ;
 
 	/**
-	 * Delete cached value
+	 * delete cached value
 	 *
 	 * @param string $key
 	 */
-	public function Del($key);
+	public function del($key);
 }
 
 /**
@@ -45,29 +45,30 @@ class DBCache implements CacheInterface {
 	}
 
 	/**
-	 * Implement CacheInterface::Get();
+	 * Implement CacheInterface::get();
 	 */
-	public function Get($key) {
-		return $this->db->fetchList(
+	public function get($key) {
+		return $this->db->fetch(
 			'SELECT `value` FROM `cache` WHERE `key` = :key',
 			array('key' => $key)
 		);
 	}
 
 	/**
-	 * Implement CacheInterface::Set();
+	 * Implement CacheInterface::set();
 	 */
-	public function Set($key, $value) {
+	public function set($key, $value, $expire = 0) {
 		$this->db->perform(
-			'INSERT INTO `cache` (`key`, `value`) VALUES (:key, :value)',
-			array('key' => $key, 'value' => $value)
+			'INSERT INTO `cache` (`key`, `value`, `created`, `expire`) 
+			VALUES (:key, :value, UNIX_TIMESTAMP(), :expire)',
+			array('key' => $key, 'value' => $value, 'expire' => $expire)
 		);
 	}
 
 	/**
-	 * Implement CacheInterface::Del();
+	 * Implement CacheInterface::del();
 	 */
-	public function Del($key) {
+	public function del($key) {
 		$this->db->perform(
 			'DELETE FROM `cache` WHERE `key` = :key', 
 			array('key',  $key)

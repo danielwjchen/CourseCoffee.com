@@ -6,6 +6,8 @@
  */
 window.Calendar = function(regionName, optionFormName, listName, creationFormName) {
 
+	var _taskUpdater = '';
+
 	/**
 	 * HTML region to be populated with the calendar
 	 */
@@ -73,13 +75,15 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 */
 	var getTaskList = function() {
 		var paginate   = $('input[name=paginate]', option).val();
-		var cacheKey   = 'task-list-' + range.begin + '-' + range.end + '-' + paginate;
-		var cacheValue = cache.get(cacheKey);
+		$('.has-event').removeClass('has-event');
+		list.empty();
 
 		/**
 		 * A helper function to populate calendar timeslot
 		 */
 		var populateTimeSlot = function(itemList) {
+			$('span.event').remove();
+
 			if (itemList && itemList['id']) {
 				findTimeInterval(itemList);
 			} else if (itemList) {
@@ -98,35 +102,29 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 			}
 		}
 
-		if (cacheValue) {
-			Task.generateList(cacheValue, list);
-			populateTimeSlot(cacheValue);
+		list.addClass('loading');
+		$.ajax({
+			url: '/calendar-list-task',
+			type: 'POST',
+			cache: false,
+			data: option.serialize(),
+			success: function(response) {
+				list.removeClass('loading');
+				if (response.success) {
+					var tasks = task.AddUrlToTask(response.list);
 
-		} else {
-			list.addClass('loading');
-			$.ajax({
-				url: '/calendar-list-task',
-				type: 'POST',
-				cache: false,
-				data: option.serialize(),
-				success: function(response) {
-					list.removeClass('loading');
-					if (response.success) {
-						tasks = task.AddUrlToTask(response.list);
+					Task.generateList(tasks, list);
+					populateTimeSlot(tasks);
 
-						Task.generateList(tasks, list);
-						populateTimeSlot(tasks);
-
-						cache.set(cacheKey, tasks);
-						
-					}
-
-					if (response.error) {
-						task.setError(response.message, list);
-					}
+					_taskUpdater = new TaskUpdater(listName);
+					
 				}
-			});
-		}
+
+				if (response.error) {
+					task.setError(response.message, list);
+				}
+			}
+		});
 	}
 
 	/**
@@ -140,13 +138,15 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 
 		if (type.indexOf('day') > 0) {
 			date.setHours(date.getHours() + 1);
-			begin = date.getTime() / 1000;
-			end   = (date.setHours(date.getHours() + 1 * hourInterval))/ 1000;
+			begin = toTimestamp(date);
+			date.setHours(date.getHours() + 1 * hourInterval);
+			end   = toTimestamp(date);
 
 		} else if (type == 'month') {
 			date.setHours(0, 0, 0, 0);
-			begin = date.getTime() / 1000;
-			end   = (date.setTime(date.getTime() + 86400000))/ 1000;
+			begin = toTimestamp(date) ;
+			date.setTime(date.getTime() + 86400000);
+			end   = toTimestamp(date);
 		}
 
 		// JQuery is having trouble selecting newly created elements, that's why
@@ -197,7 +197,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 *  UNIX timestamp
 	 */
 	var toTimestamp = function(date) {
-		return Math.round(date.getTime() / 1000);
+		return Math.round(date.getTime() / 1000) - (date.getTimezoneOffset() * 60);
 	};
 
 	/**
@@ -224,7 +224,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		html += '</div>';
 
 		for (i = range.begin; i < range.end; i += 86400) {
-			date.setTime(i * 1000);
+			date.setTime((i + date.getTimezoneOffset() * 60) * 1000);
 			currentMonth = date.getMonth() + 1;
 			currentDate  = date.getDate();
 			html += '<div class="col day-interval"><div class="label row">' +
@@ -261,7 +261,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	var displayMonth = function() {
 		var html = '<div class="month calendar-display-inner">' + 
 			'<div class="month-label">' +
-			monthArray[((new Date(range.begin * 1000)).getMonth())] +
+			monthArray[((new Date(range.begin * 1000)).getMonth() + 1)] +
 			'</div>' +
 		'<div class="week-day-interval row">';
 
@@ -283,7 +283,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 
 		// cycle through the days
 		for (k = range.begin; k <= range.end; k += 86400) {
-			curDate = new Date(k * 1000);
+			curDate = new Date((k + (new Date()).getTimezoneOffset() * 60) * 1000);
 			colType = (curDate.getDate() % 2 == 0) ? 'even' : 'odd';
 			html += '<div id="' + k + '.' + (k + 86400) + '" class="day col ' + colType + '">' + 
 				'<span class="day-label">' + curDate.getDate() + '</span>' + 
@@ -319,6 +319,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	var calculateDayRange = function(number) {
 		var date = new Date(timestamp * 1000);
 		date.setHours(0, 0, 0, 0);
+		console.log(date);
 		range.begin = toTimestamp(date);
 		date.setDate(date.getDate() + number);
 		range.end = toTimestamp(date);
@@ -343,7 +344,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		date.setHours(0, 0, 0, 0);
 		date.setTime(date.getTime() - ((date.getDay() * 86400) * 1000));
 		range.begin = toTimestamp(date);
-		date.setTime(date.getTime() + 7 *86400 * 1000);
+		date.setTime(date.getTime() + 6 *86400 * 1000);
 		range.end = toTimestamp(date);
 		return range;
 	};

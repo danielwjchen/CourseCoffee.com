@@ -6,15 +6,34 @@
 class TaskListDAO extends ListDAO implements ListDAOInterface{
 
 	/**
+	 * Compound the where clause based on given filter value
+	 */
+	private function makeFilterCondition($filter) {
+		if ($filter == 'pending') {
+			return " AND qa.value IS NULL ";
+
+		} elseif ($filter == 'finished') {
+			return " AND qa.value = 'done' ";
+		}
+
+		return '';
+	}
+
+	/**
 	 * Extend DAO::read()
 	 */
 	public function read($params) {
 
+		$filter = isset($params['filter']) ? $params['filter'] : 'pending';
+
 		$data = array();
+		$sql_params = array();
 		$sql = "
 			SELECT 
-				q.id,
+				DISTINCT q.id,
 				q.user_id AS creator_id,
+				qa.value AS status,
+				COUNT(qa.id) AS stats,
 				sec.id AS section_id,
 				sec.num AS section_num,
 				crs.num AS course_num,
@@ -27,6 +46,8 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 			INNER JOIN quest_type qt
 				ON q.type_id = qt.id
 				AND qt.name = '" . QuestType::TASK . "'
+			LEFT JOIN (quest_attribute qa, quest_attribute_type qat)
+				ON q.id = qa.quest_id
 			INNER JOIN quest_date_linkage qd_linkage
 				ON qd_linkage.quest_id = q.id
 			INNER JOIN date qd
@@ -82,35 +103,40 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 					WHERE qd.timestamp >= :begin_date
 						AND qd.timestamp <= :end_date
 				";
+
+				$where_clause .= $this->makeFilterCondition($filter);
+
 				$sql = sprintf($sql, $where_clause, $where_clause);
-				$data = $this->db->fetch($sql, array(
+				$sql_params =  array(
 					'begin_date' => $params['range']['begin_date'],
 					'end_date' => $params['range']['end_date'],
 					'section_user_id' => $params['user_id'],
 					'quest_user_id' => $params['user_id'],
-				));
+				);
 			// all tasks due before
 			} elseif (isset($params['range']['end_date'])) {
-				$where_clause = "
-					WHERE qd.timestamp <= :end_date
-				";
+
+				$where_clause = "WHERE qd.timestamp <= :end_date";
+				$where_clause .= $this->makeFilterCondition($filter);
+
 				$sql = sprintf($sql, $where_clause, $where_clause);
-				$data = $this->db->fetch($sql, array(
+				$sql_params = array(
 					'end_date' => $params['range']['end_date'],
 					'section_user_id' => $params['user_id'],
 					'quest_user_id' => $params['user_id'],
-				));
+				);
 			// all tasks due after
 			} elseif (isset($params['range']['begin_date'])) {
-				$where_clause = "
-					WHERE qd.timestamp >= :begin_date
-				";
+
+				$where_clause = "WHERE qd.timestamp >= :begin_date";
+				$where_clause .= $this->makeFilterCondition($filter);
+
 				$sql = sprintf($sql, $where_clause, $where_clause);
-				$data = $this->db->fetch($sql, array(
+				$sql_params = array(
 					'begin_date' => $params['range']['begin_date'],
 					'section_user_id' => $params['user_id'],
 					'quest_user_id' => $params['user_id'],
-				));
+				);
 			} else {
 				throw new Exception("unknown task identifier - " . print_r($params, true));
 			}
@@ -127,30 +153,37 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 					AND qs_linkage.section_id = sec.id
 					AND sec.course_id = crs.id
 					AND crs.subject_id = sub.id
-				WHERE qs_linkage.section_id = :section_id
+				%s
 				GROUP BY q.id
 				ORDER BY due_date ASC
 			";
 
+			$where_clause = "WHERE qs_linkage.section_id = :section_id";
+
+			$where_clause .= $this->makeFilterCondition($filter);
+
+			$sql = sprintf($sql, $where_clause);
+
 			$sql = isset($params['limit']) ? $this->setLimit($sql, $params['limit']) : $sql;
 
-			$data = $this->db->fetch($sql, array(
-				'section_id' => $params['section_id'],
-			));
+			$sql_params = array('section_id' => $params['section_id']);
 
 		// get tasks belong to user
 		} elseif (isset($params['user_id'])) {
+
 			$where_clause = "WHERE qu_linkage.user_id = :user_id";
+			$where_clause .= $this->makeFilterCondition($filter);
+			
 			$sql = sprintf($sql, $where_clause);
-			$data = $this->db->fetch($sql, array(
-				'user_id' => $params['user_id'],
-			));
+			$sql_params = array('user_id' => $params['user_id']);
 
 
 		} else {
 			throw new Exception("unknown task identifier - " . print_r($params, true));
 
 		}
+
+		$data = $this->db->fetch($sql, $sql_params);
 
 		// debug
 		// error_log(__METHOD__ . ' : data - ' . print_r($data, true));

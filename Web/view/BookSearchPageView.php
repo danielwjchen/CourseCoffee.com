@@ -58,7 +58,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 			<div class="body">
 				<div class="body-inner">
 					<div class="search-block">
-						<img src="images/logo.png" class="logo" />
+						<img src="/images/logo.png" class="logo" />
 						<div class="class-suggest-inner">
 							<form id="class-suggest-form" name="class-suggest" action="college-class-suggest" method="post">
 								<input type="hidden" name="term_id" value="1" />

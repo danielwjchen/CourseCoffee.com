@@ -26,7 +26,6 @@ $P.ready(function() {
 	if (window.FB !== undefined) {
 		FB.XFBML.parse(document.getElementById(id));
 	}
-	*/
 
 	var domain = window.location.protocol + '//' + window.location.hostname;
 	$('.panel-02 .panel-inner').append('<fb:activity site="' + domain + '" width="460" height="300" header="false" recommendations="true">' +
@@ -35,6 +34,7 @@ $P.ready(function() {
 	if (window.FB !== undefined) {
 		FB.XFBML.parse(document.getElementById(id));
 	}
+	*/
 
 	/**
 	if ($('.profile img').height() > 0) {
@@ -42,26 +42,48 @@ $P.ready(function() {
 	*/
 
 	// Initilize the date-time selector
-	$('#time-picker').datetime({  
-		duration: '15',  
-		showTime: true,  
-		constrainInput: false,  
-		stepMinutes: 1,  
-		stepHours: 1,  
-		time24h: false  
-	});  
 
 	// Load to-dos
-	toDo = new ToDo('#to-do-option', '#to-do-list', '#to-do-creation-form');
+	var panelMenu = $('.panel-menu');
+	var taskInfoMenu = $('#task-info-menu');
+	var toDoList = $('#to-do-list');
+	var filter = $('#to-do-option input[name=filter]');
+	var resetTaskInfoMenu = function(active) {
+		$('li', taskInfoMenu).removeClass('active');
+		$('#' + active, taskInfoMenu).addClass('active');
+	}
+	var toDo = new ToDo('#to-do-option', '#to-do-list', '#to-do-creation-form');
 	toDo.populate();
-	var agendaPanel = $('.panel-01 .panel-inner');
-	agendaPanel.after('');
 
 	// toggle toDo creation form
 	$('input.objective').live('click', function(e) {
 		$('.additional').removeClass('hidden');
 	});
 	blurInput(body);
+
+	var bookList = new BookSuggest('#home-book-list');
+	bookList.getAllBookList('.panel-01 input[name=section_id]');
+
+	/**
+	 * Filter task by option
+	 */
+	taskInfoMenu.delegate('li', 'click', function(e) {
+		var target = $(this);
+		var selected = target.attr('id');
+		var optionForm = $('#to-do-option');
+		resetTaskInfoMenu(selected);
+		if (selected == 'option-pending') {
+			filter.val('pending');
+		} else if(selected == 'option-finished') {
+			filter.val('finished');
+		} else if(selected == 'option-all') {
+			filter.val('all');
+		}
+		
+		toDoList.empty();
+		toDo.populate();
+	});
+
 
 	body.delegate('a.button', 'click', function(e) {
 		e.preventDefault();
