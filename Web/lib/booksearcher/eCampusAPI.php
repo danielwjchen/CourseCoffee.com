@@ -55,7 +55,8 @@
 
 
 		public function getLowestNewPrice(){
-			return $this->result->NewPrice;
+			$price = substr($this->result->NewPrice, 0, strlen($this->result->NewPrice));
+			return $price;
 		}
 
 		public function getLowestNewLink(){
@@ -63,7 +64,8 @@
 		}
 
 		public function getLowestUsedPrice(){
-			return $this->result->UsedPrice;
+			$price = substr($this->result->UsedPrice, 0, strlen($this->result->UsedPrice));
+			return $price;
 		}
 
 		public function getLowestUsedLink(){
@@ -71,7 +73,8 @@
 		}
 
 		public function getLowestRentalPrice(){
-			return $this->result->RentalPrice;
+			$price = substr($this->result->RentalPrice, 0, strlen($this->result->RentalPrice));
+			return $price;
 		}
 
 		public function getLowestRentalLink(){
@@ -79,7 +82,8 @@
 		}
 
 		public function getLowestMarketPlacePrice(){
-			return $this->result->MarketPlacePrice;
+			$price = substr($this->result->MarketPlacePrice, 0, strlen($this->result->MarketPlacePrice));
+			return $price;
 		}
 
 		public function getLowestMarketPlaceLink(){
