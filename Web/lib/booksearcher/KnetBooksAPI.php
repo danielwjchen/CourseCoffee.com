@@ -10,6 +10,9 @@
 
 		//initial
 		function __construct($isbn) {
+			global $config;
+			$this->SASID = $config->KnetBooks['sasid'],
+
 			$this->isbn = $isbn;
 			$this->result = $this->searchBookInfo();
 		}

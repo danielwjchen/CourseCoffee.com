@@ -1,17 +1,24 @@
 <?php
 	class BookRenterAPI{
 		//params
-		private	$developKey = "5Y7HAQxTTxjijoV17ThDCzfRxQVze6NY";
-		private $apiVersion= "2011-02-01";
+		private	$developKey;
+		private $apiVersion;
+		private $uid;
 		private $result;
 
 		private $isbn;
-		private $URLPrefix= "http://www.shareasale.com/r.cfm?u=532647&b=96706&m=14293&urllink=";
+		private $URLPrefix;
 		private $link;
 
 
 		//initial
 		function __construct($input) {
+			global $config;
+			$this->uid = $config->BookRenter['uid'];
+                        $this->developKey = $config->BookRenter['developKey'];
+			$this->apiVersion = $config->BookRenter['apiVersion'];
+			$this->URLPrefix = 'http://www.shareasale.com/r.cfm?u='.$this->uid.'&b=96706&m=14293&urllink=';
+
 			$this->isbn = $input;
 
 			$result = $this->getBookInformationISBN();

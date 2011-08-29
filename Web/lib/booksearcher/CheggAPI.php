@@ -1,16 +1,22 @@
 <?php
 	class CheggAPI{
 		//cj params
-		private	$PID = "5394229";
-		private $AID= "10692263";
+		private	$PID;
+		private $AID;
 
 		//chegg params
-		private $KEY = "21ad2adf6a4ed87771729c5e61276de2";
-		private $PW = "92137916";
+		private $KEY;
+		private $PW;
 		private $result;
 		
 		//initial
 		function __construct($isbn) {
+			global $config;
+			$this->PID = $config->Chegg['pid'];
+			$this->AID = $config->Chegg['aid']; 
+			$this->KEY = $config->Chegg['key'];
+			$this->KW = $config->Chegg['kw'];
+
 			$this->isbn = $isbn;
 			$this->result = $this->searchBookISBN($isbn);
 		}

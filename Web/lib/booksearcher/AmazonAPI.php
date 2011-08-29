@@ -3,14 +3,26 @@
 	
 	class AmazonAPI{
 		// Amazon Access Key Id and Secret Access Key
+/*
 		private $accessKeyId  = "AKIAJ5FH5BHY2U5VEQRA";
 		private $secretAccessKey  = "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";
 		private $associateTag  = "msco04-20";
+*/
+                private $accessKeyId;
+                private $secretAccessKey;
+                private $associateTag;
 
-		private $result;
+
 		private $book;
 
 		private $cartURL;
+
+		function __construct(){
+			global $config; 
+			$this->accessKeyId = $config->Amazon['accessKeyId'];
+			$this->secretAccessKey = $config->Amazon['secretAccessKey'];
+			$this->associateTag = $config->Amazon['associateTag'];
+		}
 
 		//SearchIndex Value is listed on 
 		//http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/APPNDX_SearchIndexValues.html

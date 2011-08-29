@@ -1,12 +1,15 @@
 <?php
 	class eCampusAPI{
 		//params
-		private	$PID = "5394229";
+		private	$PID;
 		private $isbn;
 		private $result;
 
 		//initial
 		function __construct($input) {
+			global $config;
+			$this->PID = $config->eCampus['pid'];
+
 			$this->isbn = $input;
 			$this->result = $this->searchBookInfo();
 		}
