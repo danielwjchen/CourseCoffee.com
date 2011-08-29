@@ -1,20 +1,23 @@
 import pycurl
 import StringIO
-url = "http://www.spartanbook.com/textbooks_xml.asp?control=campus&campus=46&term=81"
-##url="http://www.spartanbook.com/textbooks_xml.asp?control=department&dept=7629&term=80"
-##url="http://www.spartanbook.com/textbooks_xml.asp?control=course&course=116751&term=80"
-##url="http://www.spartanbook.com/textbooks_xml.asp?control=section&section=501080"
 
+textbook = []
+f=open("msu","w")
+
+class Test:
+    def __init__(self):
+        self.content = ''
+    def body_callback(self, buf):
+        self.content += buf
+
+
+url = "http://www.spartanbook.com/textbooks_xml.asp?control=campus&campus=46&term=81"
 crl = pycurl.Curl()
-crl.setopt(pycurl.VERBOSE,1)
-crl.setopt(pycurl.FOLLOWLOCATION, 1)
-crl.setopt(pycurl.MAXREDIRS, 5)
-crl.fp = StringIO.StringIO()
+t = Test()
 crl.setopt(pycurl.URL, url)
-crl.setopt(crl.WRITEFUNCTION, crl.fp.write)
+crl.setopt(crl.WRITEFUNCTION, t.body_callback)
 crl.perform()
-temp= crl.fp.getvalue()
-##print temp
+temp= t.content
 d =temp.split()
 for elem in d:
     data=elem.split("=")
@@ -27,23 +30,18 @@ for elem in d:
     if "name" in elem:
         dept_name = data[1].strip("\"")
         
-        dept_id_flag=1
-    if dept_id_flag==1: #and dept_ab=="CSE":
-##        print "dept:",dept_ab,dept_name#,dept_ID
-        url="http://www.spartanbook.com/textbooks_xml.asp?control=department&dept="+dept_ID+"&term=80"
-        
+        dept_id_flag= 1
+    if dept_id_flag==1:# and dept_ab=="CSE":
+        #print "dept:",dept_ab,#dept_name#,dept_ID
+        url="http://www.spartanbook.com/textbooks_xml.asp?control=department&dept="+dept_ID+"&term=81"
         crl = pycurl.Curl()
-        crl.setopt(pycurl.VERBOSE,1)
-        crl.setopt(pycurl.FOLLOWLOCATION, 1)
-        crl.setopt(pycurl.MAXREDIRS, 5)
-        crl.fp = StringIO.StringIO()
+        t = Test()
         crl.setopt(pycurl.URL, url)
-        crl.setopt(crl.WRITEFUNCTION, crl.fp.write)
+        crl.setopt(crl.WRITEFUNCTION, t.body_callback)
         crl.perform()
-        temp= crl.fp.getvalue()
+        temp= t.content
         c=temp.split()
         for elem1 in c:
-
             course_id_flag=0
             data1=elem1.split("=")
             if "id" in elem1:
@@ -51,20 +49,17 @@ for elem in d:
                 
             if "name" in elem1:
                 course_name=data1[1].strip("\"")
-##                print "---course:", course_name#,course_ID
+                #print "---course:", course_name#,course_ID
                 course_id_flag=1
             if course_id_flag==1:
-                url="http://www.spartanbook.com/textbooks_xml.asp?control=course&course="+course_ID+"&term=80"
+                url="http://www.spartanbook.com/textbooks_xml.asp?control=course&course="+course_ID+"&term=81"
         
                 crl = pycurl.Curl()
-                crl.setopt(pycurl.VERBOSE,1)
-                crl.setopt(pycurl.FOLLOWLOCATION, 1)
-                crl.setopt(pycurl.MAXREDIRS, 5)
-                crl.fp = StringIO.StringIO()
+                t = Test()
                 crl.setopt(pycurl.URL, url)
-                crl.setopt(crl.WRITEFUNCTION, crl.fp.write)
+                crl.setopt(crl.WRITEFUNCTION, t.body_callback)
                 crl.perform()
-                temp= crl.fp.getvalue()
+                temp= t.content
                 s=temp.split()
                 
                 for elem2 in s:
@@ -76,29 +71,32 @@ for elem in d:
                         section_name=data2[1].strip("\"")
                     if "instructor" in elem2:
                         section_instructor=data2[1].strip("\"")
-##                        print "------section", section_name, section_instructor#,section_ID
+                        #print "------section", section_name, section_instructor#,section_ID
                         section_id_flag=1
                     if section_id_flag==1:
                         url="http://www.spartanbook.com/textbooks_xml.asp?control=section&section="+section_ID
         
                         crl = pycurl.Curl()
-                        crl.setopt(pycurl.VERBOSE,1)
-                        crl.setopt(pycurl.FOLLOWLOCATION, 1)
-                        crl.setopt(pycurl.MAXREDIRS, 5)
-                        crl.fp = StringIO.StringIO()
+                        t = Test()
                         crl.setopt(pycurl.URL, url)
-                        crl.setopt(crl.WRITEFUNCTION, crl.fp.write)
+                        crl.setopt(crl.WRITEFUNCTION, t.body_callback)
                         crl.perform()
-                        temp= crl.fp.getvalue()
+                        temp= t.content
                         b= temp.split()
                         for elem3 in b:
                             if "Key" in elem3 and "src" in elem3:
                                 elem31=elem3.split("=")
                                 
                                 elem311=elem31[2].split("&")
-                                print dept_ID,dept_ab,dept_name,course_ID,course_name,section_ID,section_name, section_instructor, elem311[0]
-##                                print "------isbn:",elem311[0]
-
+                                isbn = elem311[0]
+                                #print dept_ID,dept_ab,dept_name,course_ID,course_name,section_ID,section_name, section_instructor, elem311[0]
+                                #print "------isbn:",elem311[0]
+                                if isbn != "":
+                                    text = dept_ab+" "+course_name+" "+section_name+" "+isbn
+                                    if text not in textbook:
+                                        textbook.append(text)
+                                        print text
+                                        f.write(text+"\n")
 
 
 
@@ -107,3 +105,4 @@ for elem in d:
         
 
         dept_id_flag=0
+f.close()
