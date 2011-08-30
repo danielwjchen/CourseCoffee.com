@@ -17,8 +17,8 @@ class BookSuggestModel extends Model {
 	 * @{
 	 * a group of message to indicate the result
 	 */
-	const BOOK_FOUND_SINGLE   = 'Here is the book we think you might need for this class.';
-	const BOOK_FOUND_MULTIPLE = 'Here is a list of books we think you might need for this class.';
+	const BOOK_FOUND_SINGLE   = 'Here is the book we think you will need for this class.';
+	const BOOK_FOUND_MULTIPLE = 'Here is a list of books we think you will need for this class.';
 	const BOOK_FOUND_NONE     = 'We didn\'t find required reading for this class.';
 	const API_FAIL            = 'We can\'t find the requested book from online vendors.';
 	/**
@@ -53,6 +53,9 @@ class BookSuggestModel extends Model {
 
 	/**
 	 * Create cache by compress the book list array into a string.
+	 * 
+	 * Using gzcompress() is probably not the most optimal to create hash key, Let
+	 * me know if you've found a two-way hash that can replace this.
 	 */
 	protected function encodeBookCacheKey() {
 		return gzcompress(json_encode($this->book_dao->list, true));
@@ -60,7 +63,7 @@ class BookSuggestModel extends Model {
 	}
 
 	/**
-	 * Create cache by compress the book list array into a string.
+	 * Decompress the cache key to get the book list
 	 */
 	protected function decodeBookCacheKey($cache_key) {
 		$this->book_dao->list = json_decode(gzuncompress($cache_key), true);

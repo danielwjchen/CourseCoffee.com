@@ -116,6 +116,7 @@ class SystemDBA implements DBAInterface {
 					'class' => array('class'),
 				),
 			),
+/*
 			'scheduler' => array(
 				'description' => 'schedule jobs',
 				'column' => array(
@@ -138,6 +139,7 @@ class SystemDBA implements DBAInterface {
 					'performed' => array('performed')
 				),
 			),
+*/
 			'router' => array(
 				'description' => 'Map path to controller',
 				'column' => array(

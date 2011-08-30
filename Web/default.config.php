@@ -27,6 +27,12 @@ $config = new Config(array(
 		'port' => '3306',
 	),
 	/**
+	 * Define Google Analytics and Adwords
+	 */
+	'google' => array(
+		'analytics' => '',	
+	),
+	/**
 	 * Define the Facebook app
 	 */
 	'facebook' => array(

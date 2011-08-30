@@ -61,7 +61,7 @@ window.register = {
 				var pass = true;
 				$(':input').each(function(i){
 					if ($(this).val() == '') {
-						register.error('You have empty fileds. Please try again.');
+						register.error('You have empty fields. Please try again.');
 						pass = false;
 						return ;
 					}

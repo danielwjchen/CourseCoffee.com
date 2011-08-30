@@ -179,11 +179,16 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 		} elseif (isset($params['user_id'])) {
 			$sql = $this->getUnionQuery($sql);
 
-			$where_clause = "WHERE qu_linkage.user_id = :user_id";
 			$where_clause = "";
-			$where_clause .= $this->makeFilterCondition($filter);
+			if ($filter == 'pending') {
+				$where_clause = "WHERE qa.value IS NULL ";
+
+			} elseif ($filter == 'finished') {
+				$where_clause = "WHERE qa.value = 'done' ";
+			}
 			
 			$sql = sprintf($sql, $where_clause, $where_clause);
+			$sql = isset($params['limit']) ? $this->setLimit($sql, $params['limit']) : $sql;
 			$sql_params = array(
 				'section_user_id' => $params['user_id'],
 				'quest_user_id' => $params['user_id'],

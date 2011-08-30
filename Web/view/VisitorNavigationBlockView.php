@@ -13,6 +13,11 @@ class VisitorNavigationBlockView extends BlockView implements BlockViewInterface
 		$this->addJS('model/login.js');
 		$this->addJS('model/register.js');
 		$this->addJS('controller/visitor-navigation.js');
+		/**
+		 * A DIRTY HACK!!!!!11!!
+		 */
+		$login_form = new UserLoginFormModel();
+		$login_token = $login_form->initializeFormToken();
 		return <<<HTML
 <div class="visitor-header">
 	<div class="login-form">
