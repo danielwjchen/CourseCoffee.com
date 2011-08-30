@@ -135,7 +135,6 @@ HTML;
 						<h1>Assignments</h1>
 						<form id="to-do-option" action="user/list-task" method="post">
 							<input type="hidden" name="user_id" value="{$user_id}" />
-							<input type="hidden" name="begin" value="{$timestamp}" />
 							<input type="hidden" name="filter" value="pending" />
 							<input type="hidden" name="paginate" value="0" />
 						</form>

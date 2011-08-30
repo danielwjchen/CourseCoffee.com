@@ -3,17 +3,7 @@
  * @file
  * Represent list of readings for a class
  */
-class BookListDAO extends DAO {
-
-	/**
-	 * Extend DAO::__construct()
-	 */
-	function __construct($db, $params = null) {
-		$attr = array('id', 'isbn');
-
-		parent::__construct($db, $attr, $params);
-
-	}
+class BookListDAO extends ListDAO {
 
 	/**
 	 * Read records
@@ -27,13 +17,12 @@ class BookListDAO extends DAO {
 				WHERE bs_linkage.section_id = :section_id
 			";
 			$sql_param = array('section_id' => $params['section_id']);
-			$this->list = $this->db->fetch($sql, $sql_param);
+			$this->list = $this->db->fetchList($sql, $sql_param);
 			return !empty($this->list);
 		} 
 
-		throw new Exception('unknow book identifier - ' . print_r($params, true));
+		Logger::Write('unknow book identifier - ' . print_r($params, true));
 		return false;
-
 
 	}
 }

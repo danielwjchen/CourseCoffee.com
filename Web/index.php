@@ -7,9 +7,9 @@ require_once __DIR__ . '/config.php';
  * Auto-load necessary files
  */
 Session::Init();
-Autoload::Init($config->db);
+Autoloader::Init($config->db);
 function __autoload($classname) {
-	Autoload::Add($classname);
+	Autoloader::Add($classname);
 }
 
 Router::Init($config->db);

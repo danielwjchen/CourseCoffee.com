@@ -27,8 +27,8 @@ foreach ($core_dbas as $path => $dba) {
 /**
  * Build paths for autoloading
  */
-Autoload::Init($config->db);
-Autoload::Build();
+Autoloader::Init($config->db);
+Autoloader::Build();
 
 /**
  * Build URI maps for routing

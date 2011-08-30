@@ -42,19 +42,9 @@ abstract class ListDAO{
 	 *
 	 * @param $db
 	 *  a database object
-	 * @param array $attr
-	 *  an associative array of object attributes
-	 * @param array $params
-	 *  an associative array of params to be executed with the SQL query
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct($db) {
 		$this->db = $db;
-
-		if (!empty($params)) {
-			$this->read($params);
-
-		}
-
 	}
 
 	protected function setLimit($sql, $limit) {

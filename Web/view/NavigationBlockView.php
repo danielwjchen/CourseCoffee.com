@@ -18,13 +18,16 @@ class NavigationBlockView extends BlockView implements BlockViewInterface {
 		return <<<HTML
 <ul id="navigation-menu">
 	<li class="home">
-		<a class="home button" href="/home">Home</a>
+		<a class="button" href="/home">Home</a>
 	</li>
 	<li class="calendar">
-		<a class="calendar button" href="/calendar">Calendar</a>
+		<a class="button" href="/calendar">Calendar</a>
 	</li>
 	<li class="class">
-		<a class="class button" href="/class">Class</a>
+		<a class="button" href="/class">Class</a>
+	</li>
+	<li class="book-search">
+		<a class="button" href="/book-search">Books</a>
 	</li>
 	<li class="class-suggest">
 		<div class="class-suggest-inner">
