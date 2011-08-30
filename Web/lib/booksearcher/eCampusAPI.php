@@ -58,43 +58,64 @@
 
 
 		public function getLowestNewPrice(){
-			$price = substr($this->result->NewPrice, 0, strlen($this->result->NewPrice));
-			return $price;
+			if(isset($this->result->NewPrice)){
+				$price = substr($this->result->NewPrice, 0, strlen($this->result->NewPrice));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestNewLink(){
-			return $this->linkAddNewToCart();
+			if(isset($this->result->NewPrice)){
+				return $this->linkAddNewToCart();
+			}
+			return false;
 		}
 
 		public function getLowestUsedPrice(){
-			$price = substr($this->result->UsedPrice, 0, strlen($this->result->UsedPrice));
-			return $price;
+			if(isset($this->result->UsedPrice)){
+				$price = substr($this->result->UsedPrice, 0, strlen($this->result->UsedPrice));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestUsedLink(){
-			return $this->linkAddUsedToCart();
+			if(isset($this->result->UsedPrice)){
+				return $this->linkAddUsedToCart();
+			}
+			return false;
 		}
 
 		public function getLowestRentalPrice(){
-			$price = substr($this->result->RentalPrice, 0, strlen($this->result->RentalPrice));
-			return $price;
+			if(isset($this->result->RentalPrice)){
+				$price = substr($this->result->RentalPrice, 0, strlen($this->result->RentalPrice));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestRentalLink(){
-			return $this->linkAddRentalToCart();
+                        if(isset($this->result->RentalPrice)){
+				return $this->linkAddRentalToCart();
+			}
+			return false;
 		}
 
 		public function getLowestMarketPlacePrice(){
-			$price = substr($this->result->MarketPlacePrice, 0, strlen($this->result->MarketPlacePrice));
-			return $price;
+			if(isset($this->result->MarketPlacePrice)){
+				$price = substr($this->result->MarketPlacePrice, 0, strlen($this->result->MarketPlacePrice));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestMarketPlaceLink(){
-			$link = "http://www.dpbolvw.net/click-" . $this->PID . "-10490394?ISBNUPC=" . $this->isbn;
-			return $link;
+			if(isset($this->result->MarketPlacePrice)){
+				$link = "http://www.dpbolvw.net/click-" . $this->PID . "-10490394?ISBNUPC=" . $this->isbn;
+				return $link;
+			}
+			return false;
 		}
-
 	}
-
-
 ?>

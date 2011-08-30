@@ -15,7 +15,7 @@
 			$this->PID = $config->Chegg['pid'];
 			$this->AID = $config->Chegg['aid']; 
 			$this->KEY = $config->Chegg['key'];
-			$this->KW = $config->Chegg['kw'];
+			$this->PW = $config->Chegg['pw'];
 
 			$this->isbn = $isbn;
 			$this->result = $this->searchBookISBN($isbn);
@@ -46,17 +46,24 @@
 		}
 
 		public function getLowestRentalPrice(){
-			$price = '';
-
-			return $this->result->Items->Item->Terms->Term->Price;
+			
+			if(isset($this->result->Items->Item->Terms->Term->Price)){
+				$price = $this->result->Items->Item->Terms->Term->Price;
+				$price = substr($price,0,strlen($price));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestRentalLink(){
-			//build chegg's link
-			$cheggcartlink = "http://www.chegg.com/?referrer=CJGATEWAY&PID=". $this->PID . "&AID=" . $this->AID . "&pids=" . $this->result->Items->Item->Terms->Term->Pid;
+			if(isset($this->result->Items->Item->Terms->Term->Price)){
+				//build chegg's link
+				$cheggcartlink = "http://www.chegg.com/?referrer=CJGATEWAY&PID=". $this->PID . "&AID=" . $this->AID . "&pids=" . $this->result->Items->Item->Terms->Term->Pid;
 
-			$link = "http://www.jdoqocy.com/click-" . $this->PID . "-" . $this->AID . "?URL=" . $cheggcartlink;
-			return $link;
+				$link = "http://www.jdoqocy.com/click-" . $this->PID . "-" . $this->AID . "?URL=" . $cheggcartlink;
+				return $link;
+			}
+			return false;
 		}
-	}
-
+}
+?>

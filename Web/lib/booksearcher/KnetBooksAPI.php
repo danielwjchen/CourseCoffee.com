@@ -4,14 +4,14 @@
 
 	class KnetBooksAPI{
 		//params
-		private	$SASID = "532647";
+		private	$SASID;
 		private $isbn;
 		private $result;
 
 		//initial
 		function __construct($isbn) {
 			global $config;
-			$this->SASID = $config->KnetBooks['sasid'],
+			$this->SASID = $config->KnetBooks['sasid'];
 
 			$this->isbn = $isbn;
 			$this->result = $this->searchBookInfo();
@@ -65,15 +65,24 @@
 		}
 
 		public function getLowestRentalPrice(){
-			$tmp = substr($this->result, strpos($this->result,"Rental Price"), 20);
-			$price = substr($tmp,-5, 5);
-			return $price;
+			$pos_beg = strpos($this->result,"Rental Price");
+			$pos_end = strpos($this->result,"Rental Duration");
+			if($pos_beg){
+				$tmp = substr($this->result, $pos_beg, ($pos_end - $pos_beg));
+				$pos_beg = strpos($tmp, '$');
+				$pos_end = strpos($tmp, '<');
+				$price = substr($tmp,$pos_beg+1, $pos_end);
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestRentalLink(){
-			return $this->linkBookDetail();
+			if($this->result != 'Not Found'){
+				return $this->linkBookDetail();
+			}
+			return false;
 		}
 	}
 
 ?>
-

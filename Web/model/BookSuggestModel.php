@@ -7,7 +7,9 @@
 require_once LIB_PATH . '/booksearcher/AmazonAPI.php';
 require_once LIB_PATH . '/booksearcher/BarnesNobleAPI.php';
 require_once LIB_PATH . '/booksearcher/BookRenterAPI.php';
+require_once LIB_PATH . '/booksearcher/CheggAPI.php';
 require_once LIB_PATH . '/booksearcher/eCampusAPI.php';
+require_once LIB_PATH . '/booksearcher/KnetBooksAPI.php';
 require_once LIB_PATH . '/booksearcher/ValoreBooksAPI.php';
 
 class BookSuggestModel extends Model {
@@ -141,6 +143,8 @@ class BookSuggestModel extends Model {
 		$ecampusSearch = new eCampusAPI($isbn);
 		$bookrenterSearch = new BookRenterAPI($isbn);
 		$valorebookSearch = new ValoreBooksAPI($isbn);
+		$cheggSearch = new CheggAPI($isbn);
+		$knetbooksSearch = new KnetBooksAPI($isbn);
 
 		//new
 		$newprice = array(
@@ -164,7 +168,7 @@ class BookSuggestModel extends Model {
 			'eCampus'	=> $ecampusSearch->getLowestUsedPrice(),
 			'BookRenter'	=> $bookrenterSearch->getLowestUsedPrice(),
 			'AmazonMarket'  => $this->amazonSearch->getMarketPlaceLowestUsedPrice(),
-			'eCampusMArket' => $ecampusSearch->getLowestMarketPlacePrice()	
+			'eCampusMArket' => $ecampusSearch->getLowestMarketPlacePrice()
 		);
 		$usedlink = array(
 			'eCampus'	=> (string)$ecampusSearch->getLowestUsedLink(),
@@ -176,11 +180,15 @@ class BookSuggestModel extends Model {
 		//rental
 		$rentalprice = array(
 			'eCampus'	=> $ecampusSearch->getLowestRentalPrice(),
-			'BookRenter'	=> $bookrenterSearch->getLowestRentalPrice()			
+			'BookRenter'	=> $bookrenterSearch->getLowestRentalPrice(),
+			'Chegg'		=> $cheggSearch->getLowestRentalPrice(),
+			'KnetBooks'     => $knetbooksSearch->getLowestRentalPrice()
 		);
 		$rentallink = array(
 			'eCampus'	=> (string)$ecampusSearch->getLowestRentalLink(),
-			'BookRenter'	=> (string)$bookrenterSearch->getLowestRentalLink()
+			'BookRenter'	=> (string)$bookrenterSearch->getLowestRentalLink(),
+                        'Chegg'         => (string)$cheggSearch->getLowestRentalLink(),
+			'KnetBooks'     => (string)$knetbooksSearch->getLowestRentalLink()
 		);
 
 		//begin sort

@@ -3,10 +3,14 @@
 		//params
 		private	$siteID = "6WFt80";
 		private $isbn;
+		private $book;
 
 		//initial
 		function __construct($input) {
+			global $config;
 			$this->isbn = $input;
+			$this->siteID = $config->ValoreBooks['siteID'];
+			$this->book = $this->getBuyPrice();
 		}
 
 		//return xml result
@@ -63,15 +67,19 @@
 
 
 		public function getLowestNewPrice(){
-			$book = $this->getBuyPrice();
-			$price = $book->condition[0]->bestPrice;
-
-			$price = substr($price,1,strlen($price));
-			return $price;
+			if(isset($this->book->condition[0]->bestPrice)){
+				$price = $this->book->condition[0]->bestPrice;
+				$price = substr($price,1,strlen($price));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestNewLink(){
-			$link = $this->linkBuyBook();
-			return $link;
+                        if(isset($this->book->condition[0]->bestPrice)){
+				$link = $this->linkBuyBook();
+				return $link;
+			}
+			return false;
 		}
 	}
