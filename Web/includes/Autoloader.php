@@ -1,9 +1,9 @@
 <?php
 /**
  * @file
- * Resole file paths automatically
+ * Resolve file paths automatically
  */
-class Autoload {
+class Autoloader {
 
 	/**
 	 * @defgroup fail log 

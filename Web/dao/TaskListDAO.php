@@ -20,6 +20,48 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 	}
 
 	/**
+	 * Compound a UNION sql query to get all possible task
+	 */
+	private function getUnionQuery($sql) {
+		return "(" . $sql . "
+			INNER JOIN quest_user_linkage qu_linkage
+				ON qu_linkage.user_id = :quest_user_id
+				AND qu_linkage.quest_id = q.id
+			LEFT JOIN (
+				quest_section_linkage qs_linkage, 
+				section sec,
+				course crs,
+				subject sub
+			)
+				ON qs_linkage.quest_id = q.id
+				AND qs_linkage.section_id = sec.id
+				AND sec.course_id = crs.id
+				AND crs.subject_id = sub.id
+			%s
+			GROUP BY q.id
+		) UNION DISTINCT (" . 
+		$sql . "
+			INNER JOIN (
+				quest_section_linkage qs_linkage, 
+				user_section_linkage us_linkage,
+				section sec,
+				course crs,
+				subject sub
+			)
+				ON qs_linkage.quest_id = q.id
+				AND qs_linkage.section_id = us_linkage.section_id
+				AND us_linkage.user_id = :section_user_id
+				AND sec.id = qs_linkage.section_id
+				AND sec.course_id = crs.id
+				AND crs.subject_id = sub.id
+			%s
+			GROUP BY q.id
+		)
+		ORDER BY due_date ASC
+		";
+	}
+
+	/**
 	 * Extend DAO::read()
 	 */
 	public function read($params) {
@@ -55,42 +97,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 		";
 
 		if (isset($params['range'])) {
-			$sql = "(" . $sql . "
-				INNER JOIN quest_user_linkage qu_linkage
-					ON qu_linkage.user_id = :quest_user_id
-					AND qu_linkage.quest_id = q.id
-				LEFT JOIN (
-					quest_section_linkage qs_linkage, 
-					section sec,
-					course crs,
-					subject sub
-				)
-					ON qs_linkage.quest_id = q.id
-					AND qs_linkage.section_id = sec.id
-					AND sec.course_id = crs.id
-					AND crs.subject_id = sub.id
-				%s
-				GROUP BY q.id
-			) UNION DISTINCT (" . 
-			$sql . "
-				INNER JOIN (
-					quest_section_linkage qs_linkage, 
-					user_section_linkage us_linkage,
-					section sec,
-					course crs,
-					subject sub
-				)
-					ON qs_linkage.quest_id = q.id
-					AND qs_linkage.section_id = us_linkage.section_id
-					AND us_linkage.user_id = :section_user_id
-					AND sec.id = qs_linkage.section_id
-					AND sec.course_id = crs.id
-					AND crs.subject_id = sub.id
-				%s
-				GROUP BY q.id
-			)
-			ORDER BY due_date ASC
-			";
+			$sql = $this->getUnionQuery($sql);
 
 			$sql = isset($params['limit']) ? $this->setLimit($sql, $params['limit']) : $sql;
 
@@ -170,12 +177,17 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 
 		// get tasks belong to user
 		} elseif (isset($params['user_id'])) {
+			$sql = $this->getUnionQuery($sql);
 
 			$where_clause = "WHERE qu_linkage.user_id = :user_id";
+			$where_clause = "";
 			$where_clause .= $this->makeFilterCondition($filter);
 			
-			$sql = sprintf($sql, $where_clause);
-			$sql_params = array('user_id' => $params['user_id']);
+			$sql = sprintf($sql, $where_clause, $where_clause);
+			$sql_params = array(
+				'section_user_id' => $params['user_id'],
+				'quest_user_id' => $params['user_id'],
+			);
 
 
 		} else {

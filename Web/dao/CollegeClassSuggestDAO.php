@@ -6,7 +6,7 @@
  * NOTE: this is very different from other DAOs as it only does read but not 
  * create. This is also one of the example that DAO needs to be re-designed.
  */
-class CollegeClassSuggestDAO extends ListDAO {
+class CollegeClassSuggestDAO extends ListDAO implements ListDAOInterface {
 
 	/**
 	 * Extend DAO::read().
@@ -125,14 +125,8 @@ class CollegeClassSuggestDAO extends ListDAO {
 
 		$sql .= implode(' AND ', $where_clause);
 
-		if (isset($params['limit'])) {
-			$sql .= "
-				LIMIT {$params['limit']['offset']}, {$params['limit']['count']} 
-			";
-		}
 
-
-		$this->list = $this->db->fetch($sql, $sql_params);
+		$this->list = $this->db->fetchList($sql, $sql_params);
 		return !empty($this->list);
 
 

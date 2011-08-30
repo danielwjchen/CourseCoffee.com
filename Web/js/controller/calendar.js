@@ -26,7 +26,7 @@ $P.ready(function() {
 	var calendarTaskList = $('#calendar-task-list');
 
 	// Apply scrollbar to the calendar 
-	$('.calendar-display').scrollBar();
+	// $('.calendar-display').scrollBar();
 
 	// Initialize calendars
 	calendar = new Calendar('.calendar-display', '#calendar-option', '#calendar-task-list', '#calendar-task-creation-form');

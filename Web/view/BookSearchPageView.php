@@ -12,9 +12,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		parent::__construct($data);
 		$this->setPageTitle('book search');
 		$this->addJqueryUI();
-		$this->addJS('model/login.js');
 		$this->addJS('model/book-suggest.js');
-		$this->addJS('model/register.js');
 		$this->addJS('model/doc.js');
 		$this->addJS('model/class-suggest.js');
 		$this->addJS('model/book-search.js');
@@ -31,7 +29,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		$header = array();
 		if ($this->data['is_loggedIn']) {
 			$header = array(
-				'SimplifiedNavigationBlockView',
+				'NavigationBlockView',
 			);
 		} else {
 			$header = array(
@@ -54,13 +52,17 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		return <<<HTML
 <div class="book-search container">
 	<div class="container-inner">
-			{$header}
+		<div class="header">
+			<div class="header-inner">
+				{$header}
+			</div>
+		</div>
 			<div class="body">
 				<div class="body-inner">
 					<div class="search-block">
 						<img src="/images/logo.png" class="logo" />
 						<div class="class-suggest-inner">
-							<form id="class-suggest-form" name="class-suggest" action="college-class-suggest" method="post">
+							<form id="book-suggest-form" name="book-suggest" action="college-book-suggest" method="post">
 								<input type="hidden" name="term_id" value="1" />
 								<input type="hidden" name="year_id" value="1" />
 								<input type="hidden" id="section-id" name="section_id" />

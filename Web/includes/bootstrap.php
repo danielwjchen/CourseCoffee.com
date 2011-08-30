@@ -10,7 +10,7 @@ define('VIEW_PATH', ROOT_PATH . '/view');
 define('LIB_PATH', ROOT_PATH . '/lib');
 define('FILE_PATH', ROOT_PATH . '/files');
 
-require_once INCLUDES_PATH . '/Autoload.php';
+require_once INCLUDES_PATH . '/Autoloader.php';
 require_once INCLUDES_PATH . '/Config.php';
 require_once INCLUDES_PATH . '/Settings.php';
 require_once INCLUDES_PATH . '/Session.php';

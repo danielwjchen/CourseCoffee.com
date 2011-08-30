@@ -6,14 +6,14 @@
 
 interface CacheInterface {
 	/**
-	 * get the cached value from given key
+	 * Get the cached value from given key
 	 *
 	 * @param string $key
 	 */
 	public function get($key) ;
 
 	/**
-	 * set cache for the given key and value
+	 * Set cache for the given key and value
 	 *
 	 * @param string $key
 	 * @param string $value
@@ -21,11 +21,17 @@ interface CacheInterface {
 	public function set($key, $value) ;
 
 	/**
-	 * delete cached value
+	 * Delete cached value
 	 *
 	 * @param string $key
 	 */
 	public function del($key);
+
+
+	/**
+	 * Expire values in cache
+	 */
+	public function expire();
 }
 
 /**
@@ -45,33 +51,46 @@ class DBCache implements CacheInterface {
 	}
 
 	/**
-	 * Implement CacheInterface::get();
+	 * Implement CacheInterface::get()
 	 */
 	public function get($key) {
-		return $this->db->fetch(
+		$result = $this->db->fetch(
 			'SELECT `value` FROM `cache` WHERE `key` = :key',
 			array('key' => $key)
 		);
+
+		return $result['value'];
 	}
 
 	/**
-	 * Implement CacheInterface::set();
+	 * Implement CacheInterface::set()
 	 */
 	public function set($key, $value, $expire = 0) {
 		$this->db->perform(
-			'INSERT INTO `cache` (`key`, `value`, `created`, `expire`) 
+			'REPLACE INTO `cache` (`key`, `value`, `created`, `expire`) 
 			VALUES (:key, :value, UNIX_TIMESTAMP(), :expire)',
 			array('key' => $key, 'value' => $value, 'expire' => $expire)
 		);
 	}
 
 	/**
-	 * Implement CacheInterface::del();
+	 * Implement CacheInterface::del()
 	 */
 	public function del($key) {
 		$this->db->perform(
 			'DELETE FROM `cache` WHERE `key` = :key', 
 			array('key',  $key)
+		);
+	}
+
+	/**
+	 * Implement CacheInterface::expire()
+	 */
+	public function expire($timestamp = NULL) {
+		$timestamp = empty($timestamp) ? time() : $timestamp;
+		$this->db->perform(
+			'DELETE FROM `cache` WHERE `expire` <= :timestamp',
+			array('timestamp' => $timestamp)
 		);
 	}
 }

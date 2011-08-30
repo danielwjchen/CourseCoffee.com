@@ -107,6 +107,8 @@ HTML;
 						<div class="panel-inner">
 							<div class="calendar-display">
 							</div>
+							<a class="calendar-button button backward" href="#">&lt;</a>
+							<a class="calendar-button button forward" href="#">&gt;</a>
 						</div>
 					</div>
 					<div class="panel-02">
