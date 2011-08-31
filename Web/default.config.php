@@ -27,6 +27,11 @@ $config = new Config(array(
 		'port' => '3306',
 	),
 	/**
+	 * System flags to indicate if javascript and stylesheet should be compressed
+	 */
+	'compressCSS' => false,
+	'compressJS'  => false,
+	/**
 	 * Define Google Analytics and Adwords
 	 */
 	'google' => array(

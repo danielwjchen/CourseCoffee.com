@@ -87,8 +87,8 @@ abstract class PageView extends View implements ViewInterface {
 	 * Add JQuery UI
 	 */
 	protected function addJQueryUI() {
-		$this->data['js'][]  = "/js/lib/jquery-ui/jquery-ui-1.8.14.custom.min.js";
-		$this->data['css'][] = "/js/lib/jquery-ui/themes/smoothness/jquery-ui-1.8.14.custom.css";
+		$this->data['jquery_ui']['js'][] = "/js/lib/jquery-ui/jquery-ui-1.8.14.custom.min.js";
+		$this->data['jquery_ui']['css'][] = "/js/lib/jquery-ui/themes/smoothness/jquery-ui-1.8.14.custom.css";
 	}
 
 	/**
@@ -97,8 +97,8 @@ abstract class PageView extends View implements ViewInterface {
 	public function addJQueryUIPlugin($name) {
 		switch ($name) {
 			case 'datetime':
-				$this->data['js'][]  = "/js/lib/jquery-ui/plugins/datetime/jquery.ui.datetime.src.js";
-				$this->data['css'][] = "/js/lib/jquery-ui/plugins/datetime/jquery.ui.datetime.css";
+				$this->data['jquery_ui']['js'][]  = "/js/lib/jquery-ui/plugins/datetime/jquery.ui.datetime.src.js";
+				$this->data['jquery_ui']['css'][] = "/js/lib/jquery-ui/plugins/datetime/jquery.ui.datetime.css";
 				break;
 
 		}
@@ -148,10 +148,39 @@ META;
 
 	/**
 	 * Render the CSS files
+	 *
+	 * This file also creates cache if the compress flag is set true but no cached
+	 * value is available.
+	 *
+	 * It'is using DBCache(), which should be changed to FileCache() or even 
+	 * MemCache() in the future.
 	 */
 	protected function renderCSS() {
-		array_walk($this->data['css'], 'PageView::setLinkTag');
-		return implode("\n", $this->data['css']);
+		global $config;
+		if (!$config->compressCSS) {
+			array_walk($this->data['css'], 'PageView::setLinkTag');
+			return implode("\n", $this->data['css']);
+		}
+
+		$cache_key   = sha1(implode('', $this->data['css']));
+		$db_cache    = new DBCache();
+		$cache_value = $db_cache->get($cache_key);
+		if (!$cache_value) {
+			foreach ($this->data['css'] as $css) {
+				$cache_value .= file_get_contents(ROOT_PATH . $css);
+			}
+			/* remove comments */
+			$cache_value = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $cache_value);
+			/* remove tabs, spaces, newlines, etc. */
+			$cache_value = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $cache_value);
+			// expire not defined so it gets flushed when cron runs
+			$db_cache->set($cache_key, $cache_value);
+		}
+
+		$css_tag = '/css/' . $cache_key . '.css';
+
+		$this->setLinkTag($css_tag);
+		return $css_tag;
 		
 	}
 
@@ -277,6 +306,13 @@ HTML;
 		$this->renderBlocks();
 		$js       = $this->renderJS();
 		$css      = $this->renderCSS();
+		// Add Jquery UI stuff because it doesn't play nice with others when cached
+		if (isset($this->data['jquery_ui'])) {
+			array_walk($this->data['jquery_ui']['js'], 'PageView::setScriptTag');
+			array_walk($this->data['jquery_ui']['css'], 'PageView::setLinkTag');
+			$js  .= implode("\n", $this->data['jquery_ui']['js']);
+			$css .= implode("\n", $this->data['jquery_ui']['css']);
+		}
 		$content  = $this->getContent();
 		$title    = $this->data['title'];
 		$facebook = $this->getFacebookSDK();
