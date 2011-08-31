@@ -26,15 +26,11 @@
 	margin: 0;
 	padding: 0 5px;
 }
-.visitor-header  a{
-	color: white;
-	font-size: 18px;
-	line-height: 18px;
-	font-weight: bold;
-	text-decoration: none;
-	text-align: center;
-	padding: 8px 12px;
-	display: block;
+.visitor-header .button {
+	float: left;
+	font-size: 18px !important;
+	line-height: 18px !important;
+	padding: 8px 12px !important;
 }
 .visitor-header .login-form{
   padding-top: 3px;
@@ -57,9 +53,6 @@
 }
 .visitor-header input[name=password] {
 	width: 108px;
-}
-.visitor-header .button{
-	float: left;
 }
 .visitor-header .sign-up {
 	margin-left: 10px;
