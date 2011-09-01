@@ -19,19 +19,28 @@ class BookSuggestModel extends Model {
 	 * @{
 	 * a group of message to indicate the result
 	 */
-	const BOOK_FOUND_SINGLE   = 'Here is the book we think you might need for this class.';
-	const BOOK_FOUND_MULTIPLE = 'Here is a list of books we think you might need for this class.';
+	const BOOK_FOUND_SINGLE   = 'Here is the book we think you will need for this class.';
+	const BOOK_FOUND_MULTIPLE = 'Here is a list of books we think you will need for this class.';
 	const BOOK_FOUND_NONE     = 'We didn\'t find required reading for this class.';
+	const API_FAIL            = 'We can\'t find the requested book from online vendors.';
 	/**
 	 * @} End of "message"
 	 */
 
+	const QUEUE_NEW      = 'NEW';
+	const QUEUE_FAILED   = 'FAILED';
+	const QUEUE_STARTED  = 'STARTED';
+	const QUEUE_FINISHED = 'FINISHED';
+
+	// book cache expires in 12 hours
+	const CACHE_EXPIRE   = 43200;
+
 	/**
 	 * Access to book list record
 	 */
-	private $book_list;
-	private $list;
-	private $cache;
+	protected $book_dao;
+	protected $list;
+	protected $cache;
 
 	/**
 	 * Extend Model::__construct()
@@ -40,8 +49,85 @@ class BookSuggestModel extends Model {
 		parent::__construct();
 		$this->amazonSearch = new AmazonAPI();
 		$this->cache = new DBCache();
+		$this->book_dao = new BookListDAO($this->db);
+		$this->crawler_dao = new BookCrawlerQueueDAO($this->db);
 	}
 
+	/**
+	 * Create cache by compress the book list array into a string.
+	 * 
+	 * Using gzcompress() is probably not the most optimal to create hash key, Let
+	 * me know if you've found a two-way hash that can replace this.
+	 */
+	protected function encodeBookCacheKey() {
+		return gzcompress(json_encode($this->book_dao->list, true));
+		return Crypto::Digest(json_encode($this->book_dao->list, true));
+	}
+
+	/**
+	 * Decompress the cache key to get the book list
+	 */
+	protected function decodeBookCacheKey($cache_key) {
+		$this->book_dao->list = json_decode(gzuncompress($cache_key), true);
+		return count($this->book_dao->list) == 1 ? self::BOOK_FOUND_SINGLE : self::BOOK_FOUND_MULTIPLE;
+	}
+
+	/**
+	 * Generate book list for a given class
+	 *
+	 * @return string
+	 */
+	protected function generateBookList($section_id) {
+		$has_reading = $this->book_dao->read(array('section_id' => $section_id));
+		
+		// debug
+		// error_log('asdfsadf' . print_r($this->book_dao->list, true));
+
+		if (!$has_reading) {
+			return self::BOOK_FOUND_NONE;
+		}
+
+		return count($this->book_dao->list) == 1 ? self::BOOK_FOUND_SINGLE : self::BOOK_FOUND_MULTIPLE;
+	}
+
+	/**
+	 * Process book list and query vendor APIs
+	 */
+	protected function processBookList() {
+		$book_list = $this->book_dao->list;
+		$list = array();
+		for ($i = 0; $i < count($book_list); $i++) {
+			try {
+				$isbn = $book_list[$i]['isbn'];
+				$this->amazonSearch->searchBookIsbn($isbn);
+				$title = (string)$this->amazonSearch->getTitle();
+				$image = (string)$this->amazonSearch->getSmallImageLink(); 
+				$list[$title] = array(
+					'image'  => $image,
+					'offers' => $this->getSingleBookRankList($isbn),
+				);
+			} catch (Exception $e) {
+				Logger::Write(__METHOD__ . ' BookSearch API error: ' . $e->getMessage());
+			}
+
+			// debug
+			// error_log('image - ' . $image);
+
+		}
+
+		if (empty($list)) {
+			return array(
+				'error' => true,
+				'message' => self::API_FAIL,
+			);
+		}
+
+		return array(
+			'success' => true,
+			'list'    => $list
+		);
+
+	}
 
 	/**
 	 * Get book list
@@ -59,71 +145,56 @@ class BookSuggestModel extends Model {
 	 *   - message:
 	 */
 	public function getBookList($section_id) {
-		$this->book_list = new BookListDAO($this->db);
-		$has_reading = $this->book_list->read(array('section_id' => $section_id));
-		
-		// debug
-		// error_log('asdfsadf' . print_r($this->book_list->list, true));
+		$message = $this->generateBookList($section_id);
 
-		if (!$has_reading) {
-			//return $this->list;
-			return array('message' => self::BOOK_FOUND_NONE);
+		if ($message == self::BOOK_FOUND_NONE) {
+			return array('message' => $message);
 		}
 
-		$cacheKey = 'bookList' . $section_id;
+		/**
+		 * The cache key is the digest of the serialized book list. This way we can
+		 * share cache among classes that have the same list of readings.
+		 *
+		 * Why go through all this trouble? Most classes have the same reading list 
+		 * for every section, e.g. CSE 232. However, some classes, especially social
+		 * studies, have optional readings for each section, and they are almost never
+		 * the same.
+		 */
+		$cache_key   = $this->encodeBookCacheKey();
+		$cache_value = $this->cache->get($cache_key);
 
-		$cacheValue = $this->cache->get($cacheKey);
-		if ($cacheValue) {
-			return json_decode($cacheValue['value'], true);
-		}
-
-		// the system truncates the list if there is only one record... we need to 
-		// restore it back
-		$record  = array();
-		$message = '';
-		if (isset($this->book_list->list['isbn'])) {
-			$message   = self::BOOK_FOUND_SINGLE;
-			$record[0] = $this->book_list->list;
-		} else {
-			$message = self::BOOK_FOUND_MULTIPLE;
-			$record  = $this->book_list->list;
-		}
-
-		// debug
-		// error_log('book suggest record - ' . print_r($record, true));
-
-		$this->list = array();	
-
-
-		try {
-			for ($i = 0; $i < count($record); $i++) {
-				$isbn = $record[$i]['isbn'];
-				$this->amazonSearch->searchBookIsbn($isbn);
-				$title = (string)$this->amazonSearch->getTitle();
-				$image = (string)$this->amazonSearch->getSmallImageLink(); 
-
-				// debug
-				// error_log('image - ' . $image);
-
-				$this->list[$title] = array(
-					'image'  => $image,
-					'offers' => $this->getSingleBookRankList($isbn),
-				);
+		if ($cache_value) {
+			$is_queued = $this->crawler_dao->read(array('cache_key' => $cache_key));
+			if (!$is_queued) {
+				$this->crawler_dao->create(array(
+					'cache_key' => $cache_key, 
+					'status' => self::QUEUE_NEW
+				));
 			}
-		} catch (Exception $e) {
-			Logger::Write($e->getMessage());
+			return json_decode($cache_value, true);
 		}
 
-		// debug
-		// error_log('book suggest result - ' . print_r($this->list, true));
 
-		$result = array(
-			'success' => true,
-			'message' => $message,
-			'list'    => $this->list
-		);
+		// debug
+		// error_log('book suggest book_list - ' . print_r($book_list, true));
+
+		$result = $this->processBookList();
+
+		if (isset($result['error'])) {
+			return $result;
+		}
+
+		$result['message'] = $message;
+
+		// debug
+		// error_log('book suggest result - ' . print_r($list, true));
+
 		
-		$this->cache->set($cacheKey, json_encode($result));
+		$this->cache->set($cache_key, json_encode($result), time() + self::CACHE_EXPIRE);
+		$this->crawler_dao->create(array(
+			'cache_key' => $cache_key, 
+			'status' => self::QUEUE_NEW
+		));
 
 		return $result;
 

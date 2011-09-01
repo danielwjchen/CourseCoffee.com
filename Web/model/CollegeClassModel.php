@@ -14,7 +14,7 @@ class CollegeClassModel extends Model {
 
 	const ERROR_ALREADY_HAS_SYLLABUS = "hmmm... someone already uploaded a syllabus to this class, but that's okay!";
 	const EVENT_ALREADY_HAS_SYLLABUS = 'Attempt to upload syllabus to a class already has one';
-	const SYLLABUS_SUCCESS = 'Congratulation! The syllabus is now uploaded!';
+	const SYLLABUS_SUCCESS = 'Congratulations! The syllabus is now uploaded!';
 
 	/**
 	 * Access to college class records

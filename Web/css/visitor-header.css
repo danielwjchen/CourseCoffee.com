@@ -1,0 +1,59 @@
+/**
+ * @file
+ * Define styles for login
+ */
+.visitor-header {
+	float: left;
+	text-align: left;
+  height: 45px;
+}
+.visitor-header {
+  margin: 0 -960px -50px 450px;
+	width: 510px;
+}
+.login.error{
+	color: white;
+	position: absolute;
+	top: 50px;
+	left: 480px;
+	width: 480px;
+	text-align: center;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
+}
+.visitor-header .error p{
+	margin: 0;
+	padding: 0 5px;
+}
+.visitor-header .button {
+	float: left;
+	font-size: 18px !important;
+	line-height: 18px !important;
+	padding: 8px 12px !important;
+}
+.visitor-header .login-form{
+  padding-top: 3px;
+	margin: 0 auto;
+	width: 480px;
+}
+.visitor-header input{
+	color: #787474;
+	font-size: 12px;
+	line-height: 18px;
+	height: 28px;
+	border: 1px solid #457319;
+	border-radius: 4px;
+	margin: 5px 10px 5px 0;
+	float: left;
+	padding: 0 4px;
+}
+.visitor-header input[name=email] {
+	width: 168px;
+}
+.visitor-header input[name=password] {
+	width: 108px;
+}
+.visitor-header .sign-up {
+	margin-left: 10px;
+}

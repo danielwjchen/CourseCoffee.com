@@ -28,8 +28,8 @@ foreach ($dbas as $path => $dba) {
 /**
  * Rebuild paths for autoloading
  */
-Autoload::Init($config->db);
-Autoload::Build();
+Autoloader::Init($config->db);
+Autoloader::Build();
 
 /**
  * Rebuild URI maps for routing

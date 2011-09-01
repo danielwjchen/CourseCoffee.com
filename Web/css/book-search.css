@@ -3,94 +3,6 @@
  * Define styles for book search page
  */
 /**
- * Define styles for login
- */
-.book-search .simplified-navigation,
-.book-search .visitor-navigation {
-	width: 960px;
-  margin: 0 auto;
-}
-.book-search .navigation-inner {
-	float: left;
-	text-align: left;
-  height: 45px;
-	background: #313131;
-	background-image: -moz-linear-gradient(#313131, #5e5b5b);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
-  border: #313131 1px solid;
-  border-radius: 0 0 8px 8px;
-	-moz-box-shadow: 0 0 15px #333;
-	-webkit-box-shadow: 0 0 15px #333;
-	box-shadow: 0 0 15px #333;
-}
-.book-search .simplified-navigation .navigation-inner {
-  margin: 0 -960px -50px 660px;
-	width: 300px;
-}
-.book-search .visitor-navigation .navigation-inner {
-  margin: 0 -960px -50px 450px;
-	width: 510px;
-}
-.book-search #navigation-menu {
-	width: 310px;
-	margin: 0 auto;
-	text-align: center;
-	float: left;
-}
-.book-search .login.error{
-	color: white;
-	position: absolute;
-	top: 50px;
-	left: 480px;
-	width: 480px;
-	text-align: center;
-	text-shadow: 0 0 6px #000;
-	-moz-text-shadow: 0 0 6px #000;
-	-webkit-text-shadow: 0 0 6px #000;
-}
-.book-search .visitor-navigation .error p{
-	margin: 0;
-	padding: 0 5px;
-}
-.book-search .visitor-navigation a{
-	color: white;
-	font-size: 18px;
-	line-height: 18px;
-	font-weight: bold;
-	text-decoration: none;
-	text-align: center;
-	padding: 8px 12px;
-	display: block;
-}
-.book-search .visitor-navigation .login-form{
-  padding-top: 3px;
-	margin: 0 auto;
-	width: 480px;
-}
-.book-search .visitor-navigation input{
-	color: #787474;
-	font-size: 12px;
-	line-height: 18px;
-	height: 28px;
-	border: 1px solid #457319;
-	border-radius: 4px;
-	margin: 5px 10px 5px 0;
-	float: left;
-	padding: 0 4px;
-}
-.book-search .visitor-navigation input[name=email] {
-	width: 168px;
-}
-.book-search .visitor-navigation input[name=password] {
-	width: 108px;
-}
-.book-search .visitor-navigation .button{
-	float: left;
-}
-.book-search .visitor-navigation .sign-up {
-	margin-left: 10px;
-}
-/**
  * Define style for search block
  */
 .book-search .search-block {
@@ -131,11 +43,20 @@
 /**
  * Define styles for book list
  */
+.book-search .message,
 .book-search .content {
 	width: 600px;
 	margin: 0 auto;
 	float: none;
 	clear: both;
+}
+.book-search .message h1 {
+	color: white;
+	font-size: 16px;
+	text-align: center;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
 }
 .book-search .book-list {
 	width: 560px;

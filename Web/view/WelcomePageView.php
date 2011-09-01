@@ -59,7 +59,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 					</div>
 					<div class="panel-01">
 						<div class="panel-inner">
-							<h2>Upload your syllabus to:</h2>
+							<h2>Upload your course syllabi to:</h2>
 							<ul>
 								<li class="calendar">Automatically organize all your class assignments into one calendar</li>
 								<li class="text-book">Instantly find the cheapest deals on your textbooks online</li>

@@ -14,6 +14,7 @@ BookSearchSuggest = function(formName, inputName) {
 	 */
 	var _getBookSuggest = function(section_id) {
 		if (section_id != undefined) {
+			$('.book-search .message').remove();
 			$('.content').removeClass('hidden');
 			var bookList = new BookSuggest('#book-suggest-list');
 			bookList.getBookList(section_id);

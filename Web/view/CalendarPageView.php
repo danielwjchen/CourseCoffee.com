@@ -99,7 +99,7 @@ HTML;
 								<li><a href="#" class="option month active">month</a></li>
 								<li><a href="#" class="option week">week</a></li>
 								<li><a href="#" class="option customized">4-day</a></li>
-								<li><a href="#" class="option today">today</a></li>
+								<li><a href="#" class="option today">day</a></li>
 							</ul>
 						</div>
 					</div>
@@ -107,6 +107,8 @@ HTML;
 						<div class="panel-inner">
 							<div class="calendar-display">
 							</div>
+							<a class="calendar-button button backward" href="#">&lt;</a>
+							<a class="calendar-button button forward" href="#">&gt;</a>
 						</div>
 					</div>
 					<div class="panel-02">

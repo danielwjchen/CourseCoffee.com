@@ -43,9 +43,6 @@ class TaskListModel extends Model {
 		$has_record = $this->task_list_dao->read(array(
 			'user_id' => $user_id,
 			'filter'  => $filter,
-			'range' => array(
-				'begin_date' => $begin_date,
-			),
 			'limit'   => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,

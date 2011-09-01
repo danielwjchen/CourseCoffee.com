@@ -15,7 +15,9 @@ class PageController extends Controller implements ControllerInterface {
 		return array(
 			'doc-edit'        => 'getDocumentEditorPage',
 			'sign-up'         => 'getSignUpPage',
-			'welcome'         => 'getWelcomePage',
+			// We decided to use /book-search as default page 8/31/2011
+			// 'welcome'         => 'getWelcomePage',
+			'welcome'         => 'getBookSearchPage',
 			'home'            => 'getHomePage',
 			'calendar'        => 'getCalendarPage',
 			'class'           => 'getClassPage',
@@ -223,8 +225,10 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the book search page
 	 */
 	public function getBookSearchPage() {
+		$login_form = new UserLoginFormModel();
 		$this->output = new BookSearchPageView(array(
 			'is_loggedIn' => $this->getUserId(),
+			'login_token' => $login_form->initializeFormToken(),
 		));
 	}
 

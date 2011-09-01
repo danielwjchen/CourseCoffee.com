@@ -7,7 +7,7 @@ window.doc = {
 	 */
 	'init' : function() {
 		dialog.open('upload', '');
-		doc.createForm('.dialog-inner', 'Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)');
+		doc.createForm('.dialog-inner', 'Please select syllabus documents to upload (.pdf, .doc, .html, or .txt)');
 
 		$('.dialog-close', $P).live('click', function(e) {
 			e.preventDefault();

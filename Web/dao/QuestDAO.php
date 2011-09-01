@@ -157,7 +157,7 @@ class QuestDAO extends DAO implements DAOInterface{
 			LEFT JOIN `quest_linkage` qq_linkage
 				ON q.id = qq_linkage.child_id
 			WHERE q.id = :id';
-		$this->db->perform($sql, array('id' => $this->id));
+		$this->db->perform($sql, array('id' => $this->attr['id']));
 
 	}
 

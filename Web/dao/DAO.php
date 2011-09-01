@@ -166,17 +166,10 @@ abstract class DAO{
 	/**
 	 * Set the value of the object's attribute
 	 *
-	 * WARNING! this operation won't alter the value in table unless save() is 
+	 * WARNING! this operation won't alter the value in table unless update() is 
 	 * run. Also note that it only works with attributes
 	 */
 	public function __set($name, $value) {
-
-		if (!isset($this->attr[$name])) {
-			throw new Exception('unknown object attribute ' . __CLASS__ . '::' . $name);
-
-		} else {
-			$this->attr[$name] = $value;
-
-		}
+		$this->attr[$name] = $value;
 	}
 }

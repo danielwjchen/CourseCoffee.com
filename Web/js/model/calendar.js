@@ -65,6 +65,65 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	var monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 	/**
+	 * Travel forward and backwad on calendar
+	 */
+	$('a.calendar-button').click(function(e) {
+		e.preventDefault();
+		timestamp = parseInt(timestamp);
+		var date = new Date(timestamp * 1000);
+		var target = $(this);
+
+		/**
+		 * helper functions to share code 
+		 */
+		var _traverseMonth = function(date) {
+			calculateMonthRange(date);
+			displayMonth();
+		}
+		var _traverseWeek = function(date) {
+			calculateWeekRange(date);
+			displayDay();
+		}
+		if (type == 'month') {
+			date.setDate(1)
+			if (target.hasClass('backward')) {
+				date.setMonth(date.getMonth() - 1);
+				_traverseMonth(date);
+			} else if (target.hasClass('forward')) {
+				date.setMonth(date.getMonth() + 1);
+				_traverseMonth(date);
+			}
+			timestamp = toTimestamp(date);
+		} else if (type == '7-day') {
+			var weekOffset = 7 * 24 * 60 * 60 * 1000;
+			date.setTime(date.getTime() - ((date.getDay() * 86400) * 1000));
+			if (target.hasClass('backward')) {
+				date.setTime(date.getTime() - weekOffset)
+				_traverseWeek(date);
+			} else if (target.hasClass('forward')) {
+				date.setTime(date.getTime() + weekOffset)
+				_traverseWeek(date);
+			}
+			timestamp = toTimestamp(date);
+		} else if (type.indexOf('-day')) {
+			var dayNumber = parseInt(type.replace('-day', ''));
+			var dayOffset = dayNumber * 24 * 60 * 60 * 1000;
+			if (target.hasClass('backward')) {
+				date.setTime(date.getTime() - dayOffset);
+			} else if (target.hasClass('forward')) {
+				date.setTime(date.getTime() + dayOffset);
+			}
+			timestamp = toTimestamp(date);
+			calculateDayRange(dayNumber);
+			displayDay();
+		}
+
+		setCalendarRange();
+		setCalendarType();
+		getTaskList();
+	});
+
+	/**
 	 * Get event list from server
 	 *
 	 * It also clears out timeslots before re-populating.
@@ -260,6 +319,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		$('.day-interval .row', region).width(rowWidth);
 		var row = $('.row:not(.label)', region);
 		var rowHeight = (row.height() * hourInterval);
+		rowHeight = 100;
 		row.height(rowHeight);
 	};
 
@@ -269,9 +329,11 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * This is a helper/private method.
 	 */
 	var displayMonth = function() {
+		var labelDate = (new Date(range.begin * 1000)).getMonth();
+		labelDate = (labelDate == 11) ? 0 : labelDate + 1;
 		var html = '<div class="month calendar-display-inner">' + 
 			'<div class="month-label">' +
-			monthArray[((new Date(range.begin * 1000)).getMonth() + 1)] +
+			monthArray[labelDate] +
 			'</div>' +
 		'<div class="week-day-interval row">';
 
@@ -349,8 +411,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 *   - begin
 	 *   - end
 	 */
-	var calculateWeekRange = function() {
-		var date = new Date(timestamp * 1000);
+	var calculateWeekRange = function(date) {
 		date.setHours(0, 0, 0, 0);
 		date.setTime(date.getTime() - ((date.getDay() * 86400) * 1000));
 		range.begin = toTimestamp(date);
@@ -369,21 +430,11 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 *   - begin
 	 *   - end
 	 */
-	var calculateMonthRange = function() {
-		var date = new Date(timestamp * 1000);
+	var calculateMonthRange = function(date) {
 		date.setDate(1)
 		date.setHours(0, 0, 0, 0);
 		range.begin = toTimestamp(date);
-
-		// we wrap the month around to 1 if it's the end of the year and increment 
-		// year by 1
-		if (date.getMonth() == 11) {
-			date.setMonth(1);
-			date.setFullYear(date.getFullYear() +1);
-		} else {
-			date.setMonth(date.getMonth() + 1);
-		}
-
+		date.setMonth(date.getMonth() + 1);
 		range.end  = toTimestamp(new Date(date.getFullYear(), date.getMonth(), 0));
 	};
 
@@ -414,7 +465,8 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * @return object range
 	 */
 	this.getWeekCalendar = function() {
-		calculateWeekRange();
+		var date = new Date(timestamp * 1000);
+		calculateWeekRange(date);
 		type  = '7-day';
 		displayDay();
 		setCalendarRange();
@@ -430,7 +482,8 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * @return object range
 	 */
 	this.getMonthCalendar = function() {
-		calculateMonthRange();
+		var date = new Date(timestamp * 1000);
+		calculateMonthRange(date);
 		type  = 'month';
 		displayMonth();
 		setCalendarRange();

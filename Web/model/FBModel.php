@@ -89,7 +89,7 @@ class FBModel extends Model {
 				{'name' : 'school', 
 					'description' : 'The current school you are attending', 
 					'type' : 'select',
-					'options' : {1 : 'Michigan State University', 2: 'University of Michigan'}},
+					'options' : {1 : 'Michigan State University'}},
 				{'name' : 'email'},
 				{'name' : 'password'}
 			]",

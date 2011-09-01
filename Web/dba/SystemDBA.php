@@ -116,6 +116,30 @@ class SystemDBA implements DBAInterface {
 					'class' => array('class'),
 				),
 			),
+/*
+			'scheduler' => array(
+				'description' => 'schedule jobs',
+				'column' => array(
+					'callback' => array(
+						'type' => 'varchar',
+						'length' => '64',
+						'not null' => TRUE,
+						'description' => 'name of the job class to be called.',
+					),
+					'performed' => array(
+						'type' => 'int',
+						'not null' => TRUE,
+						'description' => 'the timestamp when the job is performed',
+					),
+				),
+				'primary' => array(
+					'callback' => array('callback'),
+				),
+				'index' => array(
+					'performed' => array('performed')
+				),
+			),
+*/
 			'router' => array(
 				'description' => 'Map path to controller',
 				'column' => array(
