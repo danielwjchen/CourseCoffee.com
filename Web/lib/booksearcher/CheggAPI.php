@@ -1,16 +1,22 @@
 <?php
 	class CheggAPI{
 		//cj params
-		private	$PID = "5394229";
-		private $AID= "10692263";
+		private	$PID;
+		private $AID;
 
 		//chegg params
-		private $KEY = "21ad2adf6a4ed87771729c5e61276de2";
-		private $PW = "92137916";
+		private $KEY;
+		private $PW;
 		private $result;
 		
 		//initial
 		function __construct($isbn) {
+			global $config;
+			$this->PID = $config->Chegg['pid'];
+			$this->AID = $config->Chegg['aid']; 
+			$this->KEY = $config->Chegg['key'];
+			$this->PW = $config->Chegg['pw'];
+
 			$this->isbn = $isbn;
 			$this->result = $this->searchBookISBN($isbn);
 		}
@@ -40,17 +46,24 @@
 		}
 
 		public function getLowestRentalPrice(){
-			$price = '';
-
-			return $this->result->Items->Item->Terms->Term->Price;
+			
+			if(isset($this->result->Items->Item->Terms->Term->Price)){
+				$price = $this->result->Items->Item->Terms->Term->Price;
+				$price = substr($price,0,strlen($price));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestRentalLink(){
-			//build chegg's link
-			$cheggcartlink = "http://www.chegg.com/?referrer=CJGATEWAY&PID=". $this->PID . "&AID=" . $this->AID . "&pids=" . $this->result->Items->Item->Terms->Term->Pid;
+			if(isset($this->result->Items->Item->Terms->Term->Price)){
+				//build chegg's link
+				$cheggcartlink = "http://www.chegg.com/?referrer=CJGATEWAY&PID=". $this->PID . "&AID=" . $this->AID . "&pids=" . $this->result->Items->Item->Terms->Term->Pid;
 
-			$link = "http://www.jdoqocy.com/click-" . $this->PID . "-" . $this->AID . "?URL=" . $cheggcartlink;
-			return $link;
+				$link = "http://www.jdoqocy.com/click-" . $this->PID . "-" . $this->AID . "?URL=" . $cheggcartlink;
+				return $link;
+			}
+			return false;
 		}
-	}
-
+}
+?>
