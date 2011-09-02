@@ -10,6 +10,7 @@ html{
 }
 body{
 	font-family: Sans-Serif;
+	background: #457319;
 	overflow-y: scroll;
 }
 
@@ -136,7 +137,7 @@ hr {
  */
 .body {
 	margin: 75px 0;
-	min-height: 600px;
+	min-height: 500px;
 }
 .body-inner{
 	width: 960px;
@@ -327,12 +328,16 @@ hr {
 /** 
  * Define styles for footer 
  */
+/* clear-fix in only used on pages where content isn't enough to push down the page, e.g. /book-search, /welcome */
+.clear-fix, 
+.footer {
+	height: 150px;
+	clear: both;
+}
 .footer{
 	position: relative;
-  clear: both;
 	bottom: 0;
-	height: 150px;
-  margin-top: -150px;
+	margin-top: -150px;
 	background: #313131;
 	background-image: -moz-linear-gradient(#313131, #5e5b5b);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 

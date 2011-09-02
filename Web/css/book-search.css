@@ -2,9 +2,9 @@
  * @file
  * Define styles for book search page
  */
-/**
- * Define style for search block
- */
+.book-search .body {
+	min-height: 100%;
+}
 .book-search .search-block {
 	margin: 60px auto 0;
 	width: 550px;

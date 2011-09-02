@@ -90,6 +90,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 			</div>
 		</div>
 	</div>
+	<div class="clear-fix"></div>
 </div>
 <div class="footer">
 	<div class="footer-inner">

@@ -42,6 +42,10 @@ class Config{
 	 * Get a configuration value
 	 */
 	function __get($name) {
+		// builds are made daily
+		if ($name == 'build') {
+			return date('d');
+		}
 		return $this->data[$name];
 	}
 }

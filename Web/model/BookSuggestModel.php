@@ -27,6 +27,9 @@ class BookSuggestModel extends Model {
 	 * @} End of "message"
 	 */
 
+	// Event message when we can't find the item with fiven isbn
+	const INVALID_ISBN = 'Fail to fetch result for - ';
+
 	const QUEUE_NEW      = 'NEW';
 	const QUEUE_FAILED   = 'FAILED';
 	const QUEUE_STARTED  = 'STARTED';
@@ -101,11 +104,15 @@ class BookSuggestModel extends Model {
 				$isbn = $book_list[$i]['isbn'];
 				$this->amazonSearch->searchBookIsbn($isbn);
 				$title = (string)$this->amazonSearch->getTitle();
-				$image = (string)$this->amazonSearch->getSmallImageLink(); 
-				$list[$title] = array(
-					'image'  => $image,
-					'offers' => $this->getSingleBookRankList($isbn),
-				);
+				if (empty($title)) {
+					Logger::Write(self::INVALID_ISBN . $isbn);
+				} else {
+					$image = (string)$this->amazonSearch->getSmallImageLink(); 
+					$list[$title] = array(
+						'image'  => $image,
+						'offers' => $this->getSingleBookRankList($isbn),
+					);
+				}
 			} catch (Exception $e) {
 				Logger::Write(__METHOD__ . ' BookSearch API error: ' . $e->getMessage());
 			}

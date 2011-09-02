@@ -3,7 +3,6 @@
  * Oversee user inputs on navigation area
  */
 $P.ready(function() {
-	// hide/show the default input
 	var fbUid = '';
 	$FB(function() {
 		FB.getLoginStatus(function(response) {
@@ -33,7 +32,7 @@ $P.ready(function() {
 			var signUpOption = SignUp.getOptions();
 			var content = '<div class="progress">' +
 				'<div class="progress-inner">' +
-					'<h3>How would you like to create your account?</h3>' +
+					'<h2>CourseCoffee.com does a lot.</h2>' +
 					signUpOption +
 				'</div>' + 
 			'</div>';

@@ -157,6 +157,12 @@ var SignUp = function(url_param) {
  */
 SignUp.getOptions = function() {
 	return '<div class="sign-up-option">' +
+			'<ul>' +
+				'<li class="calendar">Organize all your class assignments into one calendar</li>' +
+				'<li class="text-book">Find the best deals on your textbooks online</li>' +
+				'<li class="facebook">Collaborate with your friends</li>' +
+	 '</ul>' +
+		'<h3>How would you like to create your account?</h3>' +
 		'<a class="facebook button sign-up" href="/sign-up">sign up with facebook</a>' +
 		'<div class="alternative">' +
 			'<p>Or, you can always manually create an account...</p>' +

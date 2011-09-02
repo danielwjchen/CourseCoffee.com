@@ -146,7 +146,7 @@ CSS;
 			return implode("\n", $this->data['css']);
 		}
 
-		$cache_key   = sha1(implode('', $this->data['css']));
+		$cache_key   = sha1(implode('', $this->data['css']) . $config->build);
 		$cache_value = $this->cache->get($cache_key);
 		if (!$cache_value) {
 			foreach ($this->data['css'] as $css) {
@@ -185,7 +185,7 @@ CSS;
 
 		require_once LIB_PATH . '/JSMin.php';
 
-		$cache_key   = sha1(implode('', $this->data['js']));
+		$cache_key   = sha1(implode('', $this->data['js']) . $config->build);
 		$cache_value = $this->cache->get($cache_key);
 		if (!$cache_value) {
 			foreach ($this->data['js'] as $js) {
