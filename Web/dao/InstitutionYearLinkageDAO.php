@@ -8,10 +8,11 @@ class InstitutionYearLinkageDAO extends LinkageDAO{
 	/**
 	 * Extend LinkageDAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('institution_id', 'year_id', 'id');
+	function __construct() {
+		parent::__construct();
+		$this->column  = array('institution_id', 'year_id', 'id');
 		$this->linkage = 'institution_year_linkage';
-		parent::__construct($db, $attr, $params);
+		$this->setAttribute($this->column);
 	}
 
 }

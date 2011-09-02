@@ -8,9 +8,9 @@ class QuestAttributeTypeDAO extends TypeDAO{
 	/**
 	 * Extend TypeDAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
 		$this->type = 'quest_attribute_type';
-		parent::__construct($db, $params);
+		parent::__construct();
 	}
 
 }

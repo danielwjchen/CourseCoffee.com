@@ -26,7 +26,7 @@ class CollegeClassModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->class_dao = new CollegeClassDAO($this->db);
+		$this->class_dao = new CollegeClassDAO();
 	}
 
 	/**
@@ -111,7 +111,7 @@ class CollegeClassModel extends Model {
 	 *  return false where there is no syllabus
 	 */
 	public function hasClassSyllabus($section_id) {
-		$section_dao = new SectionDAO($this->db);
+		$section_dao = new SectionDAO();
 		$has_record = $section_dao->read(array('id' => $section_id));
 
 		// debug

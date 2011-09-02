@@ -46,7 +46,7 @@
 .book-search .message,
 .book-search .content {
 	width: 600px;
-	margin: 0 auto;
+	margin: 0 auto 30px;
 	float: none;
 	clear: both;
 }
@@ -69,6 +69,12 @@
 .book-search .book-list ul {
 	width: 440px;
 	margin: 0 auto;
+}
+.book-search .underline {
+	border-bottom: 1px white solid;
+}
+.book-search .underline a{
+	color: white;
 }
 /**
  * Define styles for autocomplete

@@ -49,8 +49,8 @@ class BookSuggestModel extends Model {
 		parent::__construct();
 		$this->amazonSearch = new AmazonAPI();
 		$this->cache = new DBCache();
-		$this->book_dao = new BookListDAO($this->db);
-		$this->crawler_dao = new BookCrawlerQueueDAO($this->db);
+		$this->book_dao = new BookListDAO();
+		$this->crawler_dao = new BookCrawlerQueueDAO();
 	}
 
 	/**

@@ -43,8 +43,9 @@ abstract class ListDAO{
 	 * @param $db
 	 *  a database object
 	 */
-	function __construct($db) {
-		$this->db = $db;
+	function __construct() {
+		global $config;
+		$this->db = new DB($config->db);
 	}
 
 	protected function setLimit($sql, $limit) {

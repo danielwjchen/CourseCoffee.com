@@ -4,6 +4,14 @@
  * Oversee acessses to javascript and css
  */
 class AssetController extends Controller implements ControllerInterface {
+
+	private $cache;
+
+	function __construct() {
+		parent::__construct();
+		//$this->cache = new FileCache();
+		$this->cache = new DBCache();
+	}
 	/**
 	 * Implement Controller::path()
 	 */
@@ -26,8 +34,24 @@ class AssetController extends Controller implements ControllerInterface {
 
 		$key = str_replace('.css', '', $key);
 
-		$db_cache = new DBCache();
-		$value = $db_cache->get($key);
+		$value = $this->cache->get($key);
+		echo $value;
+	}
+
+	public function getJS($params = array()) {
+		header('Content-type: text/javascript');
+		global $config;
+		$key = reset($params);
+
+		if (!$config->compressJS) {
+			include ROOT_PATH . '/js/' . $key;
+			return;
+		
+		}
+
+		$key = str_replace('.js', '', $key);
+
+		$value = $this->cache->get($key);
 		echo $value;
 	}
 }

@@ -20,10 +20,10 @@ class TutorialPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'LogoHeaderBlockView',
+				'callback' => 'LogoHeaderBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}

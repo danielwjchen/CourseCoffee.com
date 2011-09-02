@@ -9,6 +9,7 @@ require_once __DIR__ . '/config.php';
 Session::Init();
 Autoloader::Init($config->db);
 function __autoload($classname) {
+	// error_log($classname);
 	Autoloader::Add($classname);
 }
 

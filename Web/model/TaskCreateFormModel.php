@@ -40,7 +40,7 @@ class TaskCreateFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->task_dao = new TaskDAO($this->db);
+		$this->task_dao = new TaskDAO();
 		$this->form_name = 'task_creation_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;

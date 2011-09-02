@@ -101,7 +101,7 @@
  * Define styles for upload dialog
  */
 .upload.dialog {
-	margin: 200px auto 0;
+	margin: 100px auto 0;
 	position: relative;
 }
 
@@ -111,15 +111,46 @@
 }
 .upload .error{
 	color: red;
+	font-size: 12px;
+	font-weight: bold;
 	text-align: center;
 	clear: both;
 	margin-bottom: 25px;
 }
+.upload .row,
+.upload .description,
 .upload input[type=file] {
+	float: left;
+	display: block;
+}
+.upload .row {
+	width: 450px;
+	clear: both;
+}
+.upload .row p {
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+}
+.upload input[type=file] {
+	width: 250px;
+	text-align: center;
+	padding-left: 60px;
+	margin: 35px auto;
+}
+.upload p {
+	margin: 10px 0;
+	text-align: center;
+}
+.upload .button {
+	float: left;
 	clear: both;
 	width: 458px;
-	text-align: center;
-	margin: 35px auto;
+}
+.upload img {
+	width: 300px;
+	margin: 20px auto;
+	display:block;
 }
 /**
  * Define styles for enrollment dialog

@@ -13,16 +13,17 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
+		parent::__construct();
 		$attr = array(
 			'id',
 			`institution_id`,
 			'period',
 		);
 
-		$this->linkage_dao = new InstitutionYearLinkageDAO($this->db);
+		$this->linkage_dao = new InstitutionYearLinkageDAO();
+		$this->setAttribute($attr);
 
-		parent::__construct($db, $attr, $params);
 
 	}
 

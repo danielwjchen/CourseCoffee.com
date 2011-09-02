@@ -14,7 +14,6 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		$this->addJqueryUI();
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/doc.js');
-		$this->addJS('model/class-suggest.js');
 		$this->addJS('model/book-search.js');
 		$this->addJS('controller/book-search.js');
 		$this->addCSS('dialog.css');
@@ -29,17 +28,17 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		$header = array();
 		if ($this->data['is_loggedIn']) {
 			$header = array(
-				'NavigationBlockView',
+				'callback' => 'NavigationBlockView',
 			);
 		} else {
 			$header = array(
-				'VisitorNavigationBlockView',
+				'callback' => 'VisitorNavigationBlockView',
 			);
 		}
 		return array(
 			'header' => $header,
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -62,7 +61,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 					<div class="search-block">
 						<img src="/images/logo.png" class="logo" />
 						<div class="class-suggest-inner">
-							<form id="book-suggest-form" name="book-suggest" action="college-book-suggest" method="post">
+							<form id="book-suggest-form" name="book-suggest">
 								<input type="hidden" name="term_id" value="1" />
 								<input type="hidden" name="year_id" value="1" />
 								<input type="hidden" id="section-id" name="section_id" />
@@ -76,11 +75,22 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 							</form>
 						</div>
 					</div>
-					<div class="message">
-						<h1>Find the lowest price on your textbooks from all over the internet.</h1>
-					</div>
+					<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
+						<input type="hidden" name="token" />
+						<div class="row">
+							<input type="file" name="document" />
+						</div>
+						<div class="row">
+							<p>Please select syllabus documents to upload (.pdf, .doc, .html, or .txt)</p>
+						</div>
+						<div class="error hidden"></div>
+						<a class="button submit" href="#">upload</a>
+					</form>
 					<div class="content hidden">
 						<div id="book-suggest-list" class="book-list"></div>
+					</div>
+					<div class="message">
+						<h1>We do more than finding book deals. <span class="underline"><a href="#" class="upload">Try the syllabus organizer</a></span>.</h1>
 					</div>
 			</div>
 		</div>

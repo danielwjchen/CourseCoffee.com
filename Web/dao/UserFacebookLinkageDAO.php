@@ -8,10 +8,11 @@ class UserFacebookLinkageDAO extends LinkageDAO{
 	/**
 	 * Extend LinkageDAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('user_id', 'fb_uid', 'id');
+	function __construct() {
+		parent::__construct();
+		$this->column  = array('user_id', 'fb_uid', 'id');
 		$this->linkage = 'user_facebook_linkage';
-		parent::__construct($db, $attr, $params);
+		$this->setAttribute($this->column);
 	}
 	/**
 	 * Override LinkageDAO::read()

@@ -29,13 +29,13 @@ class SignUpPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'LogoHeaderBlockView',
+				'callback' => 'LogoHeaderBlockView',
 			),
 			'legal' => array(
-				'UserAgreementBlockView',
+				'callback' => 'UserAgreementBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -105,6 +105,9 @@ HTML;
 								<input type="email" name="email" /> 
 							</div> 
 						</div> 
+						<div class="row">
+							<p>*We use this email address to verify your account and such. Please make sure you've got it right.<p>
+						</div>
 						<div class="row"> 
 							<div class="title"> 
 								<label for="password">password: </label> 

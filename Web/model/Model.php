@@ -12,15 +12,8 @@ interface ModelInterface {
 abstract class Model {
 
 	/**
-	 * Manage database access
-	 */
-	protected $db;
-
-	/**
 	 * Construct the model object
 	 */
 	function __construct() {
-		global $config;
-		$this->db = new DB($config->db);
 	}
 }

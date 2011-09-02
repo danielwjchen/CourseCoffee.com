@@ -27,13 +27,13 @@ class FBSignUpPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'LogoHeaderBlockView',
+				'callback' => 'LogoHeaderBlockView',
 			),
 			'legal' => array(
-				'UserAgreementBlockView',
+				'callback' => 'UserAgreementBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}

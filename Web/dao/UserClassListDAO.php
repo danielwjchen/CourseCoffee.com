@@ -10,7 +10,8 @@ class UserClassListDAO extends DAO {
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
+		parent::__construct();
 		$attr = array(
 			'subject_id',
 			'subject_abbr',
@@ -20,7 +21,7 @@ class UserClassListDAO extends DAO {
 			'section_id',
 			'section_num',
 		);
-		parent::__construct($db, $attr, $params);
+		$this->setAttribute($attr);
 
 	}
 

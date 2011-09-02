@@ -31,7 +31,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}

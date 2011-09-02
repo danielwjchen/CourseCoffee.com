@@ -41,7 +41,7 @@ class UserProfileFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_profile_dao = new UserProfileDAO($this->db);
+		$this->user_profile_dao = new UserProfileDAO();
 	}
 
 	/**

@@ -72,6 +72,7 @@ class SystemDBA implements DBAInterface {
 					),
 					'value' => array(
 						'type' => 'text',
+						'size' => 'medium',
 						'not null' => TRUE,
 						'value' => 'cache value',
 					),
@@ -95,7 +96,36 @@ class SystemDBA implements DBAInterface {
 					'expire' => array('expire'),
 				),
 			),
-			'autoload' => array(
+			'file_cache' => array(
+				'description' => 'implement a file based caching system',
+				'column' => array(
+					'key' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'cache key',
+					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is created',
+					),
+					'expire' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is expire',
+					),
+				),
+				'primary' => array('key'),
+				'index' => array(
+					'expire' => array('expire'),
+				),
+			),
+			'autoloader' => array(
 				'description' => 'register a class and the file path',
 				'column' => array(
 					'class' => array(

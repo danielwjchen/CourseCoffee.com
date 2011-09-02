@@ -23,8 +23,8 @@ class FBModel extends Model {
 			'appId'  => $config->facebook['id'],
 			'secret' => $config->facebook['secret'],
 		));
-		$this->college_list_dao = new CollegeListDAO($this->db);
-		$this->linkage          = new UserFacebookLinkageDAO($this->db);
+		$this->college_list_dao = new CollegeListDAO();
+		$this->linkage          = new UserFacebookLinkageDAO();
 	}
 
 	private function base64UrlDecode($input) {

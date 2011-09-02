@@ -103,7 +103,7 @@ class CollegeClassListModel extends Model {
 		$params['limit']['offset'] = 0;
 		$params['limit']['count']  = 10;
 
-		$this->list_dao = new CollegeClassSuggestDAO($this->db);
+		$this->list_dao = new CollegeClassSuggestDAO();
 		$has_records = $this->list_dao->read($params);
 
 		if ($has_records) {
@@ -131,7 +131,7 @@ class CollegeClassListModel extends Model {
 	 * @return array
 	 */
 	public function fetchUserClassList($user_id, $institution_id, $year_id, $term_id) {
-		$this->list_dao = new UserClassListDAO($this->db);
+		$this->list_dao = new UserClassListDAO();
 
 		$has_record = $this->list_dao->read(array(
 			'user_id'        => $user_id,

@@ -10,7 +10,8 @@ class TaleDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
+		parent::__construct();
 		$attr = array(
 			'id',
 			'vid',
@@ -20,9 +21,9 @@ class TaleDAO extends DAO implements DAOInterface{
 			'created',
 			'updated',
 		);
+		$this->setAttribute($attr);
 
-		$this->version_dao = new TaleVersionDAO($db);
-		parent::__construct($db, $attr, $params);
+		$this->version_dao = new TaleVersionDAO();
 
 	}
 
