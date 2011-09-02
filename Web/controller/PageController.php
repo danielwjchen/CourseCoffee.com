@@ -267,14 +267,14 @@ class PageController extends Controller implements ControllerInterface {
 	 * Provide an interactive task editor
 	 */
 	public function getDocumentEditorPage() {
-		$referrer  = $this->getReferrer();
 		$processor = new DocumentProcessorFormModel();
-		$college   = new CollegeModel();
+		$process_state = $this->isUserLoggedIn() ? 'redirect' : 'sign-up';
+		$college  = new CollegeModel();
 		$document = Input::Get('document');
 		$file_id  = Input::Get('file_id');
 		$mime     = Input::Get('doc-type');
 		$this->output = new DocumentEditorPageView(array(
-			'process_state'   => $processor->getState($referrer),
+			'process_state'   => $process_state,
 			'document'        => $document,
 			'file_id'         => $file_id,
 			'mime'            => $mime,

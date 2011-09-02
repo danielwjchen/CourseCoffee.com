@@ -14,6 +14,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		$this->addJqueryUI();
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/doc.js');
+		$this->addJS('model/class-suggest.js');
 		$this->addJS('model/book-search.js');
 		$this->addJS('controller/book-search.js');
 		$this->addCSS('dialog.css');
