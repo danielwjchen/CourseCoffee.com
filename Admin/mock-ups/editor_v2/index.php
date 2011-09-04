@@ -6,13 +6,13 @@
 		<meta http-equiv='Pragma' data='no-cache' /> 
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="/css/layout.css" />
-		<link rel="stylesheet" type="text/css" href="/css/main.css" />
-		<link rel="stylesheet" type="text/css" href="/css/footer.css" />
-		<link rel="stylesheet" type="text/css" href="/css/navigation.css" />
-		<link rel="stylesheet" type="text/css" href="/css/mock-up.css" />
-		<script type="text/javascript" src="/js/main.js"></script>
-		<script type="text/javascript" src="/js/mock-up.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/layout.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" type="text/css" href="css/footer.css" />
+		<link rel="stylesheet" type="text/css" href="css/navigation.css" />
+		<link rel="stylesheet" type="text/css" href="css/mock-up.css" />
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/mock-up.js"></script>
 		<title>mock-up</title>
 	</head>
 	<body>
