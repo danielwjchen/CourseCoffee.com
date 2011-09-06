@@ -61,8 +61,8 @@ class UserSessionModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_cookie_dao = new UserCookieDAO();
-		$this->user_session_dao = new UserSessionDAO();
+		$this->user_cookie_dao = new UserCookieDAO($this->default_db);
+		$this->user_session_dao = new UserSessionDAO($this->default_db);
 	}
 
 	/**
@@ -127,7 +127,7 @@ class UserSessionModel extends Model {
 	public function beginUserSession($user_id, $email, $password) {
 		$this->setUserSessionCookie($user_id, $email, $password);
 
-		$user_profile_dao = new UserProfileDAO();
+		$user_profile_dao = new UserProfileDAO($this->default_db);
 		$user_profile_dao->read(array('user_id' => $user_id));
 		$user_profile = $user_profile_dao->attribute;;
 		$user_profile['account'] = $email;
@@ -138,10 +138,10 @@ class UserSessionModel extends Model {
 
 		$this->setUserProfile($user_profile);
 
-		$user_setting_dao = new UserSettingDAO();
+		$user_setting_dao = new UserSettingDAO($this->default_db);
 		$user_setting_dao->read(array('user_id' => $user_id));
 		$user_setting = $user_setting_dao->attribute;;
-		$fb_linkage_dao = new UserFacebookLinkageDAO();
+		$fb_linkage_dao = new UserFacebookLinkageDAO($this->default_db);
 		$fb_linkage_dao->read(array('user_id' => $user_id));
 		$user_setting['fb_uid'] = $fb_linkage_dao->fb_uid;
 
@@ -153,7 +153,7 @@ class UserSessionModel extends Model {
 
 		$this->setUserSetting($user_setting);
 
-		$user_class_list_dao = new UserClassListDAO();
+		$user_class_list_dao = new UserClassListDAO($this->institution_db);
 		$user_class_list_dao->read(array(
 			'user_id'        => $user_id,
 			'institution_id' => $user_setting['institution_id'],
@@ -161,10 +161,6 @@ class UserSessionModel extends Model {
 			'term_id'        => $user_setting['term_id'],
 		));
 		$record = $user_class_list_dao->list;;
-		// another ugly hack! 
-		if (isset($record['section_id'])) {
-			$record = array($record);
-		}
 
 		// debug
 		// error_log(__METHOD__ . 'user class list record- ' . print_r($record, true));

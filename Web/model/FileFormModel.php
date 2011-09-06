@@ -45,7 +45,7 @@ class FileFormModel extends FormModel{
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->file_dao = new FileDAO();
+		$this->file_dao = new FileDAO($this->default_db);
 		$this->form_name = 'file_upload_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;

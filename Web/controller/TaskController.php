@@ -64,12 +64,10 @@ class TaskController extends Controller implements ControllerInterface {
 	 * This really needs to be authenticated
 	 */
 	public function updateTaskStatus() {
-		$task_id = Input::Post('task_id');
 		$user_id = $this->getUserId();
-		$type = 'status';
-		$value = 'done';
-		$task_updater = new TaskStatusDAO();
-		$result = $task_updater->set($user_id, $task_id, $type, $value);
+		$task_id = Input::Post('task_id');
+		$task_updater = new TaskStatusUpdateFormModel();
+		$result = $task_updater->processForm($user_id, $task_id);
 		if ($result) {
 			$result['success'] = true;
 			$this->output = new JSONView($result);
@@ -171,7 +169,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get tasks belong to a user
 	 */
 	public function getTaskBelongToUser() {
-		$user_id  = Input::Post('user_id');
+		$user_id  = $this->getUserId();
 		$begin    = Input::Post('begin');
 		$filter   = Input::Post('filter');
 		$paginate = Input::Post('paginate');
@@ -184,7 +182,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get task belong to a class
 	 */
 	public function getTaskBelongToClass() {
-		$user_id    = Input::Post('user_id');
+		$user_id    = $this->getUserId();
 		$section_id = Input::Post('section_id');
 		$filter   = Input::Post('filter');
 		$paginate   = Input::Post('paginate');
@@ -197,7 +195,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get task belong to a time period
 	 */
 	public function getTaskBelongToDate() {
-		$user_id  = Input::Post('user_id');
+		$user_id  = $this->getUserId();
 		$begin    = Input::Post('begin');
 		$end      = Input::Post('end');
 		$filter   = Input::Post('filter');

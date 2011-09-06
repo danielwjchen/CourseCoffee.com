@@ -52,8 +52,8 @@ class DocumentProcessorFormModel extends FormModel{
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->file_dao    = new FileDAO();
-		$this->section_dao = new SectionDAO();
+		$this->file_dao    = new FileDAO($this->default_db);
+		$this->section_dao = new SectionDAO($this->institution_db);
 		// form submission is limite to 5 times
 		$this->max_try = 5;
 		// form expires in three hours

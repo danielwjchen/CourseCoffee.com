@@ -17,14 +17,26 @@ $config = new Config(array(
 	'domain' => 'eample.com',
 	/**
 	 * Define a database connection for system database
+	 *  - name: Alias of the database name. The system requires a default database.
+	 *     - rebuild: Boolean flag to indicate whether the database gets rebuilt
+	 *                each time update.php is run.
+	 *     - name: name of the database.
+	 *     - driver
+	 *     - host
+	 *     - user
+	 *     - password
+	 *     - port
 	 */
 	'db' => array(
-		'name' => 'example',
-		'driver' => 'mysql',
-		'host' => 'localhost',
-		'user' => 'username',
-		'password' => 'password',
-		'port' => '3306',
+		'default' => array(
+			'rebuild'  => false,
+			'name'     => 'example',
+			'driver'   => 'mysql',
+			'host'     => 'localhost',
+			'user'     => 'username',
+			'password' => 'password',
+			'port'     => '3306',
+		),
 	),
 	/**
 	 * System flags to indicate if javascript and stylesheet should be compressed

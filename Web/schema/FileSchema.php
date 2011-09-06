@@ -3,23 +3,12 @@
  * @file
  * Define tables to keep track of files
  */
-class FileDBA implements DBAInterface{
+class FileSchema extends DefaultSchema implements SchemaInterface{
 
 	/**
-	 * Populate database
+	 * Implement SchemaInterface::getDefinition()
 	 */
-	public function script() {
-		return array(
-			"INSERT INTO file_type (name) VALUES 
-				('" . FileType::PROFILE_IMAGE . "'), 
-				('" . FileType::SYLLABUS  . "')",
-		);
-	}
-	
-	/**
-	 * Implement DBAInterface::schema()
-	 */
-	public function schema() {
+	public function getDefinition() {
 		return array(
 			'file' => array(
 				'description' => 'keep track of uploaded files',

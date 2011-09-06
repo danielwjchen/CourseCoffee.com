@@ -119,7 +119,7 @@ HTML;
 			$auto_login = Cookie::Get(UserSessionModel::COOKIE_AUTO_LOGIN); 
 			if ($auto_login != 'false' && !empty($signature)) {
 				global $config;
-				$user_cookie_dao = new UserCookieDAO(new DB($config->db));
+				$user_cookie_dao = new UserCookieDAO();
 				$user_cookie_dao->read(array('signature' => $signature));
 				$user_id = $user_cookie_dao->user_id;
 				if (!empty($user_id)){

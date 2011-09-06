@@ -3,14 +3,12 @@
  * @file
  * Create table schema for User and populate default types
  */
-class UserDBA implements DBAInterface{
+class UserSchema extends DefaultSchema implements SchemaInterface {
 
 	/**
-	 * Create table schema
-	 *
-	 * @return array
+	 * Implement SchemaInterface::getDefinition()
 	 */
-	public function schema() {
+	public function getDefinition() {
 		return array(
 			'user' => array(
 				'description' => 'define user',
@@ -118,7 +116,7 @@ class UserDBA implements DBAInterface{
 						'description' => 'The UNIX timestamp of when quest is updated',
 					),
 					/**
-					 * To-do
+					 * @to-do
 					 *
 					'language_id' => array(
 						'type' => 'int',
@@ -151,7 +149,7 @@ class UserDBA implements DBAInterface{
 					'institution_id' => array('institution_id'),
 					'year_id' => array('year_id'),
 					/**
-					 * To do
+					 * @to-do
 					 *
 					'status_id' => array('status_id'),
 					'role_id'   => array('role_id'),
@@ -200,37 +198,6 @@ class UserDBA implements DBAInterface{
 				'primary' => array('id'),
 				'unique' => array(
 					'name' => array('name'),
-				),
-			),
-			'user_section_linkage' => array(
-				'description' => 'provide a one-to-many mapping among user and section',
-				'column' => array(
-					'id' => array(
-						'type' => 'serial',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'description' => 'the primary key that identifies a linkage',
-					),
-					'user_id' => array(
-						'type' => 'int',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'default' => 0,
-						'description' => 'the primary key that identifies a user',
-					),
-					'section_id' => array(
-						'type' => 'int',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'default' => 0,
-						'description' => 'the primary key that identifies a section ',
-					),
-				),
-				'primary' => array('id'),
-				'index' => array(
-					'user_section_relation' => array('user_id', 'section_id'),
-					'user_id' => array('user_id'),
-					'section_id' => array('section_id'),
 				),
 			),
 			'user_institution_linkage' => array(

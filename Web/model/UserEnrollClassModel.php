@@ -46,8 +46,8 @@ class UserEnrollClassModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->linkage   = new UserClassLinkageDAO();
-		$this->class_dao = new CollegeClassDAO();
+		$this->linkage   = new UserSectionLinkageDAO($this->institution_db);
+		$this->class_dao = new CollegeClassDAO($this->institution_db);
 	}
 
 	/**
@@ -149,7 +149,7 @@ class UserEnrollClassModel extends Model {
 	 *
 	 * @param int $user_id
 	 */
-	public function getUserClass($user_id) {
+	public function getUserSection($user_id) {
 		$this->linkage->read(array('user_id' => $user_id));
 		return $this->linkage->list;
 	}

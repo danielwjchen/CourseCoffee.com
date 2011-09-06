@@ -6,13 +6,19 @@
 class QuestDateLinkageDAO extends LinkageDAO {
 
 	/**
-	 * Extend LinkageDAO::__construct().
+	 * Implement LinkageDAO::defineColumn().
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->column  = array('quest_id', 'date_id', 'id');
-		$this->linkage = 'quest_date_linkage';
-		$this->setAttribute($this->column);
+	protected function defineColumn() {
+		return array(
+			'parent_id' => 'quest_id', 
+			'child_id'  => 'date_id',
+		);
 	}
 
+	/**
+	 * Implement LinkageDAO::defineLinkageTable().
+	 */
+	protected function defineLinkageTable() {
+		return 'quest_date_linkage';
+	}
 }

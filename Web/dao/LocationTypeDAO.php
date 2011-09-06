@@ -6,11 +6,10 @@
 class LocationTypeDAO extends TypeDAO{
 
 	/**
-	 * Extend TypeDAO::__construct().
+	 * Implement TypeDAO::defineType()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->type = 'location_type';
+	protected function defineType() {
+		return 'location_type';
 	}
 
 }

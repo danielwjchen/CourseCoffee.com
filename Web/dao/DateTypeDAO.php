@@ -3,14 +3,13 @@
  * @file
  * Represent date types
  */
-class DateTypeDAO extends TypeDAO{
+class DateTypeDAO extends TypeDAO {
 
 	/**
-	 * Extend TypeDAO::__construct().
+	 * Implement TypeDAO::defineType()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->type = 'date_type';
+	protected function defineType() {
+		return 'date_type';
 	}
 
 }

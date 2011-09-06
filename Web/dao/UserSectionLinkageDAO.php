@@ -1,17 +1,17 @@
 <?php
 /**
  * @file
- * Represent institution-year linkage records
+ * Represent a linkage between user and class section
  */
-class InstitutionYearLinkageDAO extends LinkageDAO{
+class UserSectionLinkageDAO extends LinkageDAO {
 
 	/**
 	 * Implement LinkageDAO::defineColumn().
 	 */
 	protected function defineColumn() {
 		return array(
-			'parent_id' => 'institution_id', 
-			'child_id'  => 'year_id',
+			'parent_id' => 'user_id', 
+			'child_id'  => 'section_id',
 		);
 	}
 
@@ -19,6 +19,6 @@ class InstitutionYearLinkageDAO extends LinkageDAO{
 	 * Implement LinkageDAO::defineLinkageTable().
 	 */
 	protected function defineLinkageTable() {
-		return 'institution_year_linkage';
+		return 'user_section_linkage';
 	}
 }

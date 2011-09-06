@@ -13,22 +13,24 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array(
-			'id',
-			`institution_id`,
-			'period',
-		);
-
+	function __construct($db_name = 'default') {
+		parent::__construct($db_name);
 		$this->linkage_dao = new InstitutionYearLinkageDAO();
-		$this->setAttribute($attr);
-
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array(
+			'id',
+			'institution_id',
+			'period',
+		);
+	}
+
+	/**
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (!isset($params['institution_id']) || !isset($params['period'])) {
@@ -51,7 +53,7 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 *
 	 * This differs from other DAOs as it fetches all the records
 	 */
@@ -108,7 +110,7 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -124,7 +126,7 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = 'DELETE FROM `institution_year` WHERE id = :id';

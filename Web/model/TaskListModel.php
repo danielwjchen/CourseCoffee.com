@@ -21,14 +21,15 @@ class TaskListModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->task_list_dao = new TaskListDAO();
+		$this->task_list_dao = new TaskListDAO($this->institution_db);
 	}
 
 	/**
 	 * Fetch a list of task record for a user
 	 *
-	 * @param string $user_id
-	 * @param int $filter
+	 * @param int $user_id
+	 * @param int $begin_date
+	 * @param string $filter
 	 * @param int $paginate
 	 *
 	 * @return array
@@ -80,9 +81,10 @@ class TaskListModel extends Model {
 	 */
 	public function fetchUserClassList($user_id, $section_id, $filter, $paginate) {
 		$has_record = $this->task_list_dao->read(array(
+			'user_id'    => $user_id,
 			'section_id' => $section_id,
-			'filter'  => $filter,
-			'limit'   => array(
+			'filter'     => $filter,
+			'limit' => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
 			),

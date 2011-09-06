@@ -72,15 +72,15 @@ class UserRegisterFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_dao                = new UserDAO();
-		$this->user_setting_dao        = new UserSettingDAO();
-		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO();
+		$this->user_dao                = new UserDAO($this->default_db);
+		$this->user_setting_dao        = new UserSettingDAO($this->default_db);
+		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->default_db);
 
-		$this->person_dao              = new PersonDAO();
-		$this->institution_linkage_dao = new UserInstitutionLinkageDAO();
-		$this->institution_dao         = new InstitutionDAO();
-		$this->institution_year_dao    = new InstitutionYearDAO();
-		$this->institution_term_dao    = new InstitutionTermDAO();
+		$this->person_dao              = new PersonDAO($this->default_db);
+		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($this->default_db);
+		$this->institution_dao         = new InstitutionDAO($this->default_db);
+		$this->institution_year_dao    = new InstitutionYearDAO($this->default_db);
+		$this->institution_term_dao    = new InstitutionTermDAO($this->default_db);
 
 		$this->form_name = 'user_register_form';
 		// form submission is limite to 5 times

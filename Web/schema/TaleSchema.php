@@ -3,13 +3,12 @@
  * @file
  * Define schema to store static information on the website, a.k.a. Tale
  */
-class TaleDBA implements DBAInterface{
+class TaleSchema extends DefaultSchema implements SchemaInterface {
 
 	/**
-	 * Create table schema
-	 * @return array
+	 * Implement SchemaInterface::getDefinition()
 	 */
-	public function schema() {
+	public function getDefinition() {
 		return array(
 			'tale' => array(
 				'description' => 'define tale',

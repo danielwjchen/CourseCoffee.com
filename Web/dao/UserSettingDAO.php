@@ -6,11 +6,10 @@
 class UserSettingDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array(
+	protected function defineAttribute() {
+		return array(
 			'user_id',
 			'tou_vid',
 			'institution_id',
@@ -19,12 +18,10 @@ class UserSettingDAO extends DAO implements DAOInterface{
 			'created',
 			'updated',
 		);
-		$this->setAttribute($attr);
-
 	}
 
 	/**
-	 * Extend DAO::create().
+	 * Implement DAOInterface::create().
 	 */
 	public function create($params) {
 		if (
@@ -57,7 +54,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read().
+	 * Implement DAOInterface::read().
 	 */
 	public function read($params) {
 		$sql = "SELECT * FROM `user_setting` us ";
@@ -82,7 +79,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -106,7 +103,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy().
+	 * Implement DAOInterface::destroy().
 	 */
 	public function destroy() {
 		$sql = "DELETE FROM `user_setting` WHERE `user_id` = :user_id";

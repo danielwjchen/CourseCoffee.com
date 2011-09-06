@@ -11,13 +11,6 @@ class UserLogoutModel extends Model {
 	const REDIRECT = '/welcome';
 
 	/**
-	 * Extend Model::__construct()
-	 */
-	function __construct() {
-		parent::__construct();
-	}
-
-	/**
 	 * Terminate user's session
 	 *
 	 * @param string $user_id

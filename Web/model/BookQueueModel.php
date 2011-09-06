@@ -13,7 +13,7 @@ class BookQueueModel extends BookSuggestModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->crawler_queue_dao = new BookCrawlerQueueListDAO();
+		$this->crawler_queue_dao = new BookCrawlerQueueListDAO($this->default_db);
 	}
 
 	/**

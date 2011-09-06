@@ -2,31 +2,11 @@
 /**
  * @file
  * Represent a list of classes belong to user
- *
- * This DAO does not implement DAOInterface
  */
-class UserClassListDAO extends DAO {
+class UserClassListDAO extends ListDAO implements ListDAOInterface {
 
 	/**
-	 * Extend DAO::__construct().
-	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array(
-			'subject_id',
-			'subject_abbr',
-			'course_id',
-			'course_num',
-			'course_title',
-			'section_id',
-			'section_num',
-		);
-		$this->setAttribute($attr);
-
-	}
-
-	/**
-	 * Extend DAO::read().
+	 * Implement ListDAOInterface::read().
 	 *
 	 * @param array $params
 	 *  - user_id
@@ -78,7 +58,7 @@ class UserClassListDAO extends DAO {
 			'term_id'        => $params['term_id'],
 		);
 
-		$this->list = $this->db->fetch($sql, $sql_param);
+		$this->list = $this->db->fetchList($sql, $sql_param);
 
 		// debug
 		// error_log(__METHOD__ . ' : user class list param - ' . print_r($params, true));

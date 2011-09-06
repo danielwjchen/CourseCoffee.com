@@ -6,12 +6,12 @@
  * This is heavily influenced by drupal 6.
  */ 
 
-require_once DBA_PATH . '/DBAInterface.php';
+require_once Schema_PATH . '/Schema.php';
 
 /**
  * Handle database administrative tasks.
  */
-class DBAInvoker{
+class SchemaInvoker{
 
 	/**
 	 * an associative array of PDO database connection
@@ -163,14 +163,14 @@ class DBAInvoker{
 	 *  An associative array that mirrors the table sctructure
 	 * @param array $table_old
 	 *  An associative array that mirrors the table sctructure
-	 * @param string $dba_path
-	 *  an optional string to specify the DBA file path if different from default
+	 * @param string $schema_path
+	 *  an optional string to specify the Schema file path if different from default
 	 *
-	 * @return array $dba_sql
+	 * @return array $schema_sql
 	 *  an array of key clause SQL queries
 	 */
 	static private function alter_key_sql($table_new, $table_old) {
-		$dba_sql  = array();
+		$schema_sql  = array();
 		$add_sql  = array();
 		$drop_sql = array();
 		$key_type = array('primary', 'unique', 'index');
@@ -189,28 +189,28 @@ class DBAInvoker{
 			if (!empty($drop_key)) {
 
 				if ($type == 'primary' ) {
-					$dba_sql[] = ' DROP ' . $sql_key . ' `' . $drop_key . '` ';
+					$schema_sql[] = ' DROP ' . $sql_key . ' `' . $drop_key . '` ';
 				} else {
-					$dba_sql[] = ' DROP ' . $sql_key .' ' . implode(', ', $drop_key) . '';
+					$schema_sql[] = ' DROP ' . $sql_key .' ' . implode(', ', $drop_key) . '';
 				}
 			}
 
 			if (!empty($add_key)) {
 				if ($type == 'primary' ) {
-					$dba_sql[] = ' ADD ' . $sql_key . ' `' . $add_key . '` ';
+					$schema_sql[] = ' ADD ' . $sql_key . ' `' . $add_key . '` ';
 				} else {
 					foreach ($add_key as $key_name) {
-						$dba_sql[] = 'ADD ' . $sql_key .' `' . $key_name . '` (' . implode(', ', $table_new[$type][$key_name]) . ')';
+						$schema_sql[] = 'ADD ' . $sql_key .' `' . $key_name . '` (' . implode(', ', $table_new[$type][$key_name]) . ')';
 					}
 				}
 			}
 		}
-		return $dba_sql;
+		return $schema_sql;
 	}
 
 
 	/**
-	 * Rebuild DBA schema array from actual table schema
+	 * Rebuild Schema schema array from actual table schema
 	 *
 	 * This is not finished...
 	 *
@@ -245,78 +245,83 @@ class DBAInvoker{
 	*/
 
 	/**
-	 * Initialize the DBAInvoker
-	 *
-	 * @param array $config_db
-	 *  an associative array that defines the database configuration
+	 * Initialize the SchemaInvoker
 	 */
-	static function Init(array $config_db) {
-		self::$db = new DB($config_db);
+	static function Init() {
+		global $config;
+		self::$db['default'] = new DB($config->db['default']);
+		foreach ($config->db['institution'] as $name => $connection) {
+			self::$db[$name] = new DB($connection);
+		}
+		
 	}
 
 	/**
-	 * Process a DBA Request.
+	 * Process a Schema Request.
 	 *
-	 * @param string $dba_request
-	 *  name of the DBA request
-	 * @param string $dba_path
-	 *  a string to specify the DBA file path 
+	 * @param string $schema_request
+	 *  name of the Schema request
+	 * @param string $schema_path
+	 *  a string to specify the Schema file path 
 	 *
 	 * @return bool $result
 	 */
-	static function Request($dba_request, $dba_path) {
-		require_once($dba_path);
+	static function Request($schema_request, $schema_path) {
+		require_once $schema_path;
 
-		$dba_schema = call_user_func($dba_request . '::schema');
-		$dba_record  = self::$db->fetch(
-			'SELECT * FROM DBA WHERE request = :request',
-			array('request' => $dba_request)
+		$schema_object     = new $schema_request();
+		$schema_definition = $schema_object->getDefinition();
+		$schema_database   = $schema_object->getDB();
+
+		$schema_record = self::$db['default']->fetch(
+			'SELECT * FROM `Schema` WHERE request = :request',
+			array('request' => $schema_request)
 		);
 
-		$encoded_schema = json_encode($dba_schema);
+		$encoded_schema = json_encode($schema_definition);
 
 		$sql = '';
-		if (empty($dba_record['schema'])) {
-			self::Create($dba_schema);
+		if (empty($schema_record['schema'])) {
+			self::Create($schema_database, $schema_definition);
 			$sql = '
-				INSERT INTO DBA (`request`, `schema`, `timestamp`)
+				INSERT INTO `Schema` (`request`, `schema`, `timestamp`)
 				VALUES (:request, :schema, UNIX_TIMESTAMP())
 			';
 			
 		} else {
-			self::Alter($dba_schema, json_decode($dba_record['schema'], true));
+			self::Alter($schema_database, $schema_definition, json_decode($schema_record['schema'], true));
 			$sql = '
-				UPDATE DBA SET
+				UPDATE `Schema` SET
 					`schema` = :schema,
 					`timestamp` = UNIX_TIMESTAMP()
 				WHERE `request` = :request
 			';
 		}
-		self::$db->perform($sql, array(
+		self::$db['default']->perform($sql, array(
 			'schema'  => $encoded_schema,
-			'request' => $dba_request,
+			'request' => $schema_request,
 		));
 
 		$encoded_script = '';
-		if (method_exists($dba_request, 'script')) {
-			$dba_sql = call_user_func($dba_request . '::script');
-			$encoded_script = json_encode($dba_sql);
-			if (empty($dba_record['script']) || $dba_record['script'] !== $encoded_script) {
-				foreach($dba_sql as $sql) {
-					self::Perform($sql);
+		if (method_exists($schema_request, 'script')) {
+			$schema_sql = call_user_func($schema_request . '::script');
+			$encoded_script = json_encode($schema_sql);
+			if (empty($schema_record['script']) || $schema_record['script'] !== $encoded_script) {
+				foreach($schema_sql as $sql) {
+					self::$db['default']->perform($sql);
 				}
 			} else {
-				$encoded_script = $dba_record['script'];
+				$encoded_script = $schema_record['script'];
 			}
-			self::$db->perform("
-				UPDATE DBA SET
+			self::$db['default']->perform("
+				UPDATE `Schema` SET
 					`script` = :script,
 					`timestamp` = UNIX_TIMESTAMP()
 				WHERE `request` = :request
 				",
 				array(
 					'script'  => $encoded_script,
-					'request' => $dba_request,
+					'request' => $schema_request,
 				)
 			);
 		}
@@ -324,33 +329,28 @@ class DBAInvoker{
 	}
 
 	/**
-	 * Perform SQL script
-	 *
-	 * @param string $dba_sql
-	 */
-	public static function Perform($dba_sql) {
-		self::$db->perform($dba_sql);
-	}
-
-	/**
 	 * Create table
 	 *
 	 * This is a helper method to share code among Create() and Alter()
 	 *
+	 * @param array $db
+	 *  An array of database where the tables will be created
 	 * @param string $name
 	 *  name of the table
 	 * @param array $table
 	 *  An associative array that mirrors the table sctructure
 	 */
-	private static function CreateTable($name, $table) {
-		$dba_sql = 'CREATE TABLE ' . $name . '(';
+	private static function CreateTable($db, $name, $table) {
+		global $config;
+
+		$schema_sql = 'CREATE TABLE IF NOT EXISTS `' . $name . '` (';
 
 		// compose columns
 		$columns = array();
 		foreach ($table['column'] as $column_name => $column) {
 			$columns[] = self::create_column_sql($column_name, self::process_column($column));
 		}
-		$dba_sql .= implode(", \n", $columns) . ", \n";
+		$schema_sql .= implode(", \n", $columns) . ", \n";
 
 		$keys = array();
 
@@ -373,21 +373,25 @@ class DBAInvoker{
 			}
 		}
 		
-		$dba_sql .= implode(', ', $keys) .')';
-
-		self::$db->perform($dba_sql);
+		$schema_sql .= implode(', ', $keys) .')';
+		foreach ($db as $db_name) {
+			echo $db_name . "\n";
+			self::$db[$db_name]->perform($schema_sql);
+		}
 	}
 
 	/**
 	 * Create table from schema
 	 *
-	 * @param array $dba_schema
+	 * @param array $schema_database
+	 *  An array of database where the tables will be created
+	 * @param array $schema_definition
 	 *  An array of table schemas that mirrors the table sctructure
 	 */
-	public static function Create($dba_schema) {
+	public static function Create($schema_database, $schema_definition) {
 
-		foreach ($dba_schema as $name => $table) {
-			self::CreateTable($name, $table);
+		foreach ($schema_definition as $name => $table) {
+			self::CreateTable($schema_database, $name, $table);
 
 		}
 
@@ -399,16 +403,19 @@ class DBAInvoker{
 	 * This method compares the new schema with the old (existing) one and computes
 	 * a series of queries the modify the table. It doesn't handle DROP operation.
 	 *
+	 * @param array $schema_database
+	 *  An array of database where the tables will be created
 	 * @param array $schema_new
 	 *  An associative array that mirrors the table sctructure
 	 * @param array $schema_old
 	 *  An associative array that mirrors the table sctructure
-	 * @param string $dba_path
-	 *  an optional string to specify the DBA file path if different from default
+	 * @param string $schema_path
+	 *  an optional string to specify the Schema file path if different from default
 	 *
 	 * @return bool $result
 	 */
-	static function Alter($schema_new, $schema_old) {
+	static function Alter($schema_database, $schema_new, $schema_old) {
+		global $config;
 
 		$update_tables  = array();
 		$drop_tables    = array();
@@ -422,14 +429,16 @@ class DBAInvoker{
 		$add_tables = array_diff($request_tables, $update_tables);
 		if (!empty($add_tables)) {
 			foreach ($add_tables as $table_name) {
-				self::CreateTable($table_name, $schema_new[$table_name]);
+				self::CreateTable($schema_database, $table_name, $schema_new[$table_name]);
 			}
 		}
 
 		$drop_tables = array_diff($exist_tables, $update_tables);
 		if (!empty($drop_tables)) {
 			foreach ($drop_tables as $table_name) {
-				self::$db->perform('DROP TABLE `' . $table_name . '`');
+				foreach ($schema_database as $db_name) {
+					self::$db[$db_name]->perform('DROP TABLE `' . $table_name . '`');
+				}
 			}
 		}
 		if (!empty($update_tables)) {
@@ -441,51 +450,36 @@ class DBAInvoker{
 				$drop_cols    = array_diff($exist_cols, $update_cols);
 				$add_cols     = array_diff($request_cols, $update_cols);
 
-				$dba_sql = array();
+				$schema_sql = array();
 
 				foreach ($drop_cols as $col_name) {
-					$dba_sql[] = 'DROP ' . $col_name . "\n";
+					$schema_sql[] = 'DROP ' . $col_name . "\n";
 				}
 
 				foreach ($add_cols as $col_name) {
-					$dba_sql[] = '
+					$schema_sql[] = '
 						ADD ' . 
 						self::create_column_sql($col_name, self::process_column($schema_new[$table_name]['column'][$col_name])) .
 					"\n";
 				}
 
 				foreach ($update_cols as $col_name) {
-					$dba_sql[] = '
+					$schema_sql[] = '
 						CHANGE `' .$col_name . '` ' .
 						self::create_column_sql($col_name, self::process_column($schema_new[$table_name]['column'][$col_name])) .
 					"\n";
 				}
 
-				$dba_sql = array_merge($dba_sql, self::alter_key_sql($schema_new[$table_name], $schema_old[$table_name]));
+				$schema_sql = array_merge($schema_sql, self::alter_key_sql($schema_new[$table_name], $schema_old[$table_name]));
 
-				$sql = 'ALTER TABLE `' . $table_name . '` ' . implode(', ', $dba_sql);
+				$sql = 'ALTER TABLE `' . $table_name . '` ' . implode(', ', $schema_sql);
 
-				self::$db->perform($sql);
+				foreach ($schema_database as $db_name) {
+					self::$db[$db_name]->perform($sql);
+				}
 			}
 		}
 
 	}
 
-	/**
-	 * Remove table from database 
-	 *
-	 * @param object $db
-	 *  A database connection object.
-	 * @param string $request
-	 *  the table requested to be dropped
-	 *
-	 * @return bool $result
-	 */
-	static function Remove($db, $request) {
-		$drop_sql = 'DROP TABLE `'.$request.'`';
-		$db->perform($drop_sql);
-
-		$delete_sql = "DELETE FROM `DBA` WHERE `request` = '{$request}'";
-		$db->perform($delete_sql);
-	}
 }

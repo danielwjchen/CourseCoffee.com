@@ -6,22 +6,19 @@
 class InstitutionDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array(
+	protected function defineAttribute() {
+		return array(
 			'id',
 			'name',
 			'uri',
 			'domain',
 		);
-		$this->setAttribute($attr);
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (!isset($params['name']) || 
@@ -49,7 +46,7 @@ class InstitutionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 *
 	 * This differs from other DAOs as it fetches all the records
 	 */
@@ -87,7 +84,7 @@ class InstitutionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -108,7 +105,7 @@ class InstitutionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = 'DELETE FROM `institution` WHERE id = :id';

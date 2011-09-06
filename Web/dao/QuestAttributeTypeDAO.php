@@ -6,11 +6,10 @@
 class QuestAttributeTypeDAO extends TypeDAO{
 
 	/**
-	 * Extend TypeDAO::__construct().
+	 * Implement TypeDAO::defineType()
 	 */
-	function __construct() {
-		$this->type = 'quest_attribute_type';
-		parent::__construct();
+	protected function defineType() {
+		return 'quest_attribute_type';
 	}
 
 }

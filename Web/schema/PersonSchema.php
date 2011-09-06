@@ -1,7 +1,14 @@
 <?php
+/**
+ * @file
+ * Create table schema for person
+ */
+class PersonSchema extends DefaultSchema implements SchemaInterface{
 
-class PersonDBA implements DBAInterface{
-	public function schema() {
+	/**
+	 * Implement SchemaInterface::getDefinition()
+	 */
+	public function getDefinition() {
 		return array(
 			'person' => array(
 				'description' => 'define a person',
