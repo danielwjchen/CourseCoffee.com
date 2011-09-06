@@ -180,7 +180,7 @@ class DocumentProcessorFormModel extends FormModel{
 			}
 		}
 
-		$school = new InstitutionDAO();
+		$school = new InstitutionDAO($this->default_db);
 		$school->read(array('name' => $school_string));
 		$params['institution_id'] = $school->id;
 
@@ -244,7 +244,7 @@ class DocumentProcessorFormModel extends FormModel{
 			$params['limit']['offset'] = 0;
 			$params['limit']['count']  = 10;
 
-			$class_list = new CollegeClassSuggestDAO();
+			$class_list = new CollegeClassSuggestDAO($this->institution_db);
 			$has_no_record = $class_list->read($params);
 			if (!$has_no_record) {
 				$course_code = strtoupper($course_code_array[$i]);
