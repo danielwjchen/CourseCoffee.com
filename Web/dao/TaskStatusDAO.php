@@ -2,16 +2,22 @@
 /**
  * @file
  * Represents a task (sub-quest) with in a Quest.
+ *
+ * This DAO differs from others and does not implement DAOInterface.
  */
 class TaskStatusDAO {
 
-	private $db;
+	/**
+	 * Database connection object
+	 */
+	protected $db;
 
-	function __construct() {
-		global $config;
-		$this->db = new DB($config->db);
+	/**
+	 * Load a the data for child classes
+	 */
+	function __construct($db) {
+		$this->db = $db;
 	}
-		
 
 	public function set($user_id, $task_id, $type, $value) {
 		$sql = "

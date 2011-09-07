@@ -11,14 +11,14 @@ require_once __DIR__ . '/config.php';
 /**
  * Populate database with tables
  */
-require_once INCLUDES_PATH . '/DBAInvoker.php';
-require_once DBA_PATH . '/SystemDBA.php';
-DBAInvoker::Init($config->db);
-DBAInvoker::Create(SystemDBA::schema());
-$core_dbas = File::ScanDirectory(DBA_PATH, '/[^System]DBA\.php$/');
+require_once INCLUDES_PATH . '/SchemaInvoker.php';
+require_once Schema_PATH . '/SystemSchema.php';
+SchemaInvoker::Init();
+SchemaInvoker::Create(array('default'), SystemSchema::schema());
+$core_dbas = File::ScanDirectory(Schema_PATH, '/[^System]Schema\.php$/');
 foreach ($core_dbas as $path => $dba) {
 	try {
-		DBAInvoker::Request($dba->name, $dba->uri);
+		SchemaInvoker::Request($dba->name, $dba->uri);
 	} catch (Exception $e) {
 		echo $e->Message();
 	}
@@ -27,17 +27,17 @@ foreach ($core_dbas as $path => $dba) {
 /**
  * Build paths for autoloading
  */
-Autoloader::Init($config->db);
+Autoloader::Init($config->db['default']);
 Autoloader::Build();
 
 /**
  * Build URI maps for routing
  */
-Router::Init($config->db);
+Router::Init($config->db['default']);
 Router::Build();
 
 /**
  * Generate salt for encryptions
  */
-Crypto::Init($config->db);
+Crypto::Init($config->db['default']);
 Crypto::Build();

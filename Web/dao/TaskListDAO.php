@@ -62,7 +62,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 
@@ -75,7 +75,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 				DISTINCT q.id,
 				q.user_id AS creator_id,
 				qa.value AS status,
-				COUNT(qa.id) AS stats,
+				COUNT(qa_stats.id) AS stats,
 				sec.id AS section_id,
 				sec.num AS section_num,
 				crs.num AS course_num,
@@ -88,8 +88,15 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 			INNER JOIN quest_type qt
 				ON q.type_id = qt.id
 				AND qt.name = '" . QuestType::TASK . "'
-			LEFT JOIN (quest_attribute qa, quest_attribute_type qat)
+			LEFT JOIN (quest_attribute qa_stats, quest_attribute_type qat)
+				ON q.id = qa_stats.quest_id
+				AND qa_stats.type_id = qat.id
+				AND qat.name = 'status'
+			LEFT JOIN (quest_attribute qa)
 				ON q.id = qa.quest_id
+				AND qa.user_id = " . $params['user_id'] . "
+				AND qa_stats.type_id = qat.id
+				AND qat.name = 'status'
 			INNER JOIN quest_date_linkage qd_linkage
 				ON qd_linkage.quest_id = q.id
 			INNER JOIN date qd
@@ -186,7 +193,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 			} elseif ($filter == 'finished') {
 				$where_clause = "WHERE qa.value = 'done' ";
 			}
-			
+
 			$sql = sprintf($sql, $where_clause, $where_clause);
 			$sql = isset($params['limit']) ? $this->setLimit($sql, $params['limit']) : $sql;
 			$sql_params = array(

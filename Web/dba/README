@@ -1,4 +1,0 @@
-== README ==
-The DBA handles database administrative works and oversees table schemas and 
-predefined values. The future plan is to incoporate it with DAO to minimize
-code duplication.

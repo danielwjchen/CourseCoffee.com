@@ -6,22 +6,19 @@
 class InstitutionTermDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array(
+	protected function defineAttribute() {
+		return array(
 			'id',
 			`institution_id`,
 			'year_id',
 			'name',
 		);
-		$this->setAttribute($attr);
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (
@@ -54,7 +51,7 @@ class InstitutionTermDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 *
 	 */
 	public function read($params) {
@@ -111,7 +108,7 @@ class InstitutionTermDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -131,7 +128,7 @@ class InstitutionTermDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = 'DELETE FROM `institution_term` WHERE id = :id';

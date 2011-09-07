@@ -33,15 +33,21 @@ class TaskDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->quest                 = new QuestDAO();
-		$this->date                  = new DateDAO();
-		$this->quest_date_linkage    = new QuestDateLinkageDAO();
-		$this->quest_section_linkage = new QuestSectionLinkageDAO();
-		$this->quest_user_linkage    = new QuestUserLinkageDAO();
+	function __construct($db) {
+		parent::__construct($db);
+		$this->quest                 = new QuestDAO($db);
+		$this->date                  = new DateDAO($db);
+		$this->quest_date_linkage    = new QuestDateLinkageDAO($db);
+		$this->quest_section_linkage = new QuestSectionLinkageDAO($db);
+		$this->quest_user_linkage    = new QuestUserLinkageDAO($db);
 
-		$attr = array(
+	}
+
+	/**
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array(
 			'id',
 			'type',
 			'type_id',
@@ -52,13 +58,10 @@ class TaskDAO extends DAO implements DAOInterface{
 			'objective',
 			'description',
 		);
-		$this->setAttribute($attr);
-
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 *
 	 * @param array $params
 	 *   - section_id: optional, e.g. an id to identify the class this task 
@@ -93,7 +96,7 @@ class TaskDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		if (!isset($params['id'])) {
@@ -153,7 +156,7 @@ class TaskDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 *
 	 * This is not tested!
 	 */
@@ -168,7 +171,7 @@ class TaskDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$this->quest->destroy();

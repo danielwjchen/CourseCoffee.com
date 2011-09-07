@@ -35,18 +35,8 @@ window.ClassSuggest = function(formName, inputName, callback) {
 						list = data.list;
 					}
 
-					if (list['subject_abbr'] != undefined) {
-						fixedData  = {
-							0 : {
-								'institution' : list['institution'],
-								'subject_abbr' : list['subject_abbr'],
-								'course_num' : list['course_num'],
-								'section_num' : list['section_num'],
-								'course_title' : list['course_title'],
-								'section_id' : list['section_id']
-							}
-						}
-						response( $.map(fixedData, function(item) {
+					response( $.map(list, function(item) {
+						if (item['section_num'] != undefined) {
 							return {
 								courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
 								institution : item['institution'],
@@ -54,27 +44,15 @@ window.ClassSuggest = function(formName, inputName, callback) {
 								section_id : item['section_id'],
 								value: item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num']
 							}
-						}));
-					} else {
-						response( $.map(list, function(item) {
-							if (item['section_num'] != undefined) {
-								return {
-									courseCode : item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num'],
-									institution : item['institution'],
-									title: item['course_title'],
-									section_id : item['section_id'],
-									value: item['subject_abbr'] + ' ' + item['course_num'] + ' ' + item['section_num']
-								}
-							} else {
-								return {
-									courseCode : item['subject_abbr'] + ' ' + item['course_num'],
-									institution : item['institution'],
-									title: item['course_title'],
-									value: item['subject_abbr'] + ' ' + item['course_num']
-								}
+						} else {
+							return {
+								courseCode : item['subject_abbr'] + ' ' + item['course_num'],
+								institution : item['institution'],
+								title: item['course_title'],
+								value: item['subject_abbr'] + ' ' + item['course_num']
 							}
-						}));
-					}
+						}
+					}));
 				}
 			})
 		},
@@ -100,7 +78,6 @@ window.ClassSuggest = function(formName, inputName, callback) {
 			.append('<a href="#">' +
 				'<span class="course-code">' + item.courseCode + '</span>' +
 				'<span class="course-title">' + item.title + '</span>' + 
-				'<span class="institution">' + item.institution + '</span>' + 
 			'</a>')
 			.appendTo( ul );
 	};

@@ -61,6 +61,14 @@ abstract class DAO{
 	protected $db;
 
 	/**
+	 * Define the attributes of the dao object.
+	 *
+	 * @return array
+	 */
+	abstract protected function defineAttribute() ;
+
+
+	/**
 	 * Set the object attribute
 	 *
 	 * @param array $attribute
@@ -109,9 +117,9 @@ abstract class DAO{
 	/**
 	 * Load a the data for child classes
 	 */
-	function __construct() {
-		global $config;
-		$this->db = new DB($config->db);
+	function __construct($db) {
+		$this->db = $db;
+		$this->setAttribute($this->defineAttribute());
 	}
 
   /**

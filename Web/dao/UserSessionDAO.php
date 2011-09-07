@@ -5,18 +5,16 @@
  */
 class UserSessionDAO extends DAO implements DAOInterface{
 
-	/**
-	 * Extend DAO::__construct().
-	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array('user_id', 'session');
-		$this->setAttribute($attr);
 
+	/**
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array('user_id', 'session');
 	}
 
 	/**
-	 * Extend DAO::create().
+	 * Implement DAOInterface::create().
 	 */
 	public function create($params) {
 		if (!isset($params['user_id']) || !isset($params['session'])) {
@@ -37,7 +35,7 @@ class UserSessionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read().
+	 * Implement DAOInterface::read().
 	 */
 	public function read($params) {
 		$sql = "SELECT * FROM `user_session` WHERE ";
@@ -61,7 +59,7 @@ class UserSessionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -78,7 +76,7 @@ class UserSessionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy().
+	 * Implement DAOInterface::destroy().
 	 */
 	public function destroy() {
 		$sql = "DELETE FROM `user_session` WHERE `user_id` = :user_id";

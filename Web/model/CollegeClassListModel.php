@@ -28,7 +28,6 @@ class CollegeClassListModel extends Model {
 	const EVENT_FAILED_TO_CREATE = 'Failed create task';
 	const EVENT_FORM_EMPTY       = 'An empty task form is submitted. How is this possible?';
 	const EVENT_FORM_EXPIRED     = 'Task creation form expired.';
-
 	/**
 	 * @} End of even_messages
 	 */
@@ -103,7 +102,7 @@ class CollegeClassListModel extends Model {
 		$params['limit']['offset'] = 0;
 		$params['limit']['count']  = 10;
 
-		$this->list_dao = new CollegeClassSuggestDAO();
+		$this->list_dao = new CollegeClassSuggestDAO($this->institution_db);
 		$has_records = $this->list_dao->read($params);
 
 		if ($has_records) {
@@ -131,7 +130,7 @@ class CollegeClassListModel extends Model {
 	 * @return array
 	 */
 	public function fetchUserClassList($user_id, $institution_id, $year_id, $term_id) {
-		$this->list_dao = new UserClassListDAO();
+		$this->list_dao = new UserClassListDAO($this->institution_db);
 
 		$has_record = $this->list_dao->read(array(
 			'user_id'        => $user_id,

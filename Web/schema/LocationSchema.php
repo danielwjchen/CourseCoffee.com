@@ -4,25 +4,12 @@
  * Create table schema for Location and populate default types
  */
 
-class LocationDBA implements DBAInterface{
-	/**
-	 * Populate database
-	 */
-	public function script() {
-		return array(
-			"INSERT INTO location_type (name) VALUES 
-				('" . LocationType::CAMPUS . "'), 
-				('" . LocationType::BUILDING . "'),
-				('" . LocationType::CITY . "')",
-		);
-	}
+class LocationSchema extends InstitutionSchema implements SchemaInterface {
 
 	/**
-	 * Create table schema
-	 *
-	 * @return array
+	 * Implement SchemaInterface::getDefinition()
 	 */
-	public function schema() {
+	public function getDefinition() {
 		return array(
 			'location' => array(
 				'description' => 'define a location',

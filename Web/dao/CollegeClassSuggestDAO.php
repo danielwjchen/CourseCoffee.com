@@ -9,7 +9,7 @@
 class CollegeClassSuggestDAO extends ListDAO implements ListDAOInterface {
 
 	/**
-	 * Extend DAO::read().
+	 * Implement DAOInterface::read().
 	 *
 	 * @param array $params
 	 *  - id
@@ -35,43 +35,18 @@ class CollegeClassSuggestDAO extends ListDAO implements ListDAOInterface {
 				c.num AS course_num,
 				c.title AS course_title,
 				sub.abbr AS subject_abbr,
-				sub.title AS subject_title,
-				i.name AS institution
+				sub.title AS subject_title
 			FROM `section` s
 			INNER JOIN course c
 				ON s.course_id = c.id
 			INNER JOIN subject sub
 				ON c.subject_id = sub.id
-			INNER JOIN subject_term_linkage st_linkage
-				ON sub.id = st_linkage.subject_id
-			INNER JOIN institution_term it
-				ON st_linkage.term_id = it.id
-			INNER JOIN institution_year iy
-				ON it.year_id = iy.id
-			INNER JOIN institution_year_linkage iy_linkage
-				ON iy.id = iy_linkage.year_id
-			INNER JOIN institution i
-				ON iy_linkage.institution_id = i.id
 			WHERE 
 		';
 
 		$sql_params   = array();
 		$where_clause = array();
 
-		if (isset($params['term_id'])) {
-			$where_clause[] = 'it.id = :term_id';
-			$sql_params['term_id'] = $params['term_id'];
-		}
-
-		if (isset($params['year_id'])) {
-			$where_clause[] = 'iy.id = :year_id';
-			$sql_params['year_id'] = $params['year_id'];
-		}
-
-		if (isset($params['institution_id'])) {
-			$where_clause[] = 'i.id = :institution_id';
-			$sql_params['institution_id'] = $params['institution_id'];
-		}
 			
 		// a specific course section is given
 		if (isset($params['course_id']) && isset($params['section_num'])) {

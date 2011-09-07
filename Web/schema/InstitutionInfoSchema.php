@@ -3,14 +3,12 @@
  * @file
  * Create table schemas to store information of a college institution
  */
-class InstitutionDBA implements DBAInterface{
+class InstitutionInfoSchema extends DefaultSchema implements SchemaInterface {
 
 	/**
-	 * Create table schema
-	 *
-	 * @return array
+	 * Implement SchemaInterface::getDefinition()
 	 */
-	public function schema() {
+	public function getDefinition() {
 		return array(
 			'institution' => array(
 				'description' => 'Creates a table to deal with institutions',
@@ -38,7 +36,7 @@ class InstitutionDBA implements DBAInterface{
 						'type' => 'char',
 						'length' => 64,
 						'not null' => TRUE,
-						'description' => 'The website domain of the institution takes pleace, e.g. msu.edu, umich.edu, etc.',
+						'description' => 'The sub domain that will be used to identify the insitution in the system, e.g. msu (Michigan State University), umich (University of Michigan).',
 					),
 				),
 				'primary' => array('id'),
@@ -46,36 +44,6 @@ class InstitutionDBA implements DBAInterface{
 					'uri' => array('uri'),
 					'name' => array('name'),
 					'domain' => array('domain'),
-				),
-			),
-			'institution_alias' => array(
-				'description' => 'Create a table to deal with institutions and their aliases',
-				'column' => array(
-					'id' => array(
-						'type' => 'serial',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'size' => 'normal',
-						'description' =>'The primary key of the insitution table',
-					),
-					'institution_id' => array(
-						'type' => 'int',
-						'unsigned' => TRUE,
-						'not null' => TRUE,
-						'default' => 0,
-						'description' => 'The primary key that identifies a institution record.',
-					),
-					'alias' => array(
-						'type' => 'char',
-						'length' => 12,
-						'not null' => TRUE,
-						'description' => 'The abbreviation of institution, e.g. MSU, UO, UMICH, etc.',
-					),
-				),
-				'primary' => array('id'),
-				'index' => array(
-					'institution_id' => array('institution_id'),
-					'alias' => array('alias'),
 				),
 			),
 			'institution_year' => array(

@@ -3,14 +3,13 @@
  * @file
  * Represent achievement types
  */
-class AchievementTypeDAO extends TypeDAO{
+class AchievementTypeDAO extends TypeDAO {
 
 	/**
-	 * Extend TypeDAO::__construct().
+	 * Implement TypeDAO::defineType()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->type = 'achievement_type';
+	protected function defineType() {
+		return 'achievement_type';
 	}
 
 }

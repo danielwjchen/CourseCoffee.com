@@ -10,13 +10,27 @@ abstract class TypeDAO extends DAO implements DAOInterface{
 	 */
 	protected $type;
 
+
 	/**
-	 * Implement DAO::__construct().
+	 * Define the DAO class which this TypeDAO complements.
+	 *
+	 * @return array
 	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array('name', 'id');
-		$this->setAttribute($attr);
+	abstract protected function defineType() ;
+
+	/**
+	 * Extend DAO::__construct().
+	 */
+	function __construct($db) {
+		parent::__construct($db);
+		$this->defineType();
+	}
+
+	/**
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array('name', 'id');
 	}
 
 	/**

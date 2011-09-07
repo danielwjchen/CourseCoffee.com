@@ -3,15 +3,15 @@
  * @file
  * Define tables to administer system tasks
  */
-class SystemDBA implements DBAInterface {
+class SystemSchema extends DefaultSchema implements SchemaInterface {
 	
 	/**
-	 * Implement DBAInterface::schema()
+	 * Implement SchemaInterface::getDefinition()
 	 */
-	public function schema() {
+	public function getDefinition() {
 		return array(
-			'DBA' => array(
-				'description' => 'This table manages schemas installed via DBA',
+			'Schema' => array(
+				'description' => 'This table manages schemas installed via Schema',
 				'column' => array(
 					'id' => array(
 						'type' => 'serial',
@@ -35,7 +35,7 @@ class SystemDBA implements DBAInterface {
 					'timestamp' => array(
 						'type' => 'int',
 						'not null' => TRUE,
-						'description' => 'the timestamp when the DBA request is performed',
+						'description' => 'the timestamp when the Schema request is performed',
 					),
 				),
 				'primary' => array('id', 'request'),
@@ -56,7 +56,7 @@ class SystemDBA implements DBAInterface {
 					'timestamp' => array(
 						'type' => 'int',
 						'not null' => TRUE,
-						'description' => 'the timestamp when the DBA request is performed',
+						'description' => 'the timestamp when the Schema request is performed',
 					),
 				),
 				'primary' => array('id'),
@@ -144,6 +144,41 @@ class SystemDBA implements DBAInterface {
 				'unique' => array(
 					'path' => array('path'),
 					'class' => array('class'),
+				),
+			),
+			'book_crawler_queue' => array(
+				'description' => 'keep track of book lists stored in cache that needed to be refreshed.',
+				'column' => array(
+					'cache_key' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'cache key',
+					),
+					'status' => array(
+						'type' => 'char',
+						'length' => 32,
+						'not null' => TRUE,
+						'description' => 'a status flag to indicate the state of the queued item, e.g. NEW, STARTED, FINISHED, FAILED.',
+					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'UNIX timestamp of the moment when the item is created.',
+					),
+					'updated' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'UNIX timestamp of the moment when the item is processed.',
+					),
+				),
+				'primary' => array('cache_key'),
+				'index' => array(
+					'status' => array('status'),
 				),
 			),
 /*
