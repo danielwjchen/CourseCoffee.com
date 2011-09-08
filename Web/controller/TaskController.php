@@ -36,7 +36,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Issue a task token
 	 */
 	public function issueTaskToken() {
-		$task = new TaskCreateFormModel();
+		$task = new TaskCreateFormModel($this->sub_domain);
 		$this->output = new JSONView(array(
 			'token' => $task->initializeFormToken(),
 		));
