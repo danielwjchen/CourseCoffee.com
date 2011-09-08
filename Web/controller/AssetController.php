@@ -3,12 +3,11 @@
  * @file
  * Oversee acessses to javascript and css
  */
-class AssetController extends Controller implements ControllerInterface {
+class AssetController {
 
 	private $cache;
 
 	function __construct() {
-		parent::__construct();
 		//$this->cache = new FileCache();
 		$this->cache = new DBCache();
 	}

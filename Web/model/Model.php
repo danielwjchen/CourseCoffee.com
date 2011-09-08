@@ -17,22 +17,12 @@ abstract class Model {
 	/**
 	 * Construct the model object
 	 */
-	function __construct() {
+	function __construct($domain) {
 		global $config;
 		$this->default_db = new DB($config->db['default']);
-		$sub_domain = $this->getInstitutionDB();
-		if (!empty($sub_domain)) {
-			$this->institution_db = new DB($config->db['institution'][$sub_domain]);
+		if ($domain != 'www') {
+			$this->institution_db = new DB($config->db['institution'][$domain]);
 		}
 	}
 
-	/**
-	 * Get institution database
-	 *
-	 * @return string
-	 */
-	protected function getInstitutionDB() {
-		global $config;
-		return str_replace('.', '', str_replace($config->domain, '', $_SERVER['SERVER_NAME']));
-	}
 }

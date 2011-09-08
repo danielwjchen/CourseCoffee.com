@@ -59,9 +59,10 @@ class UserSessionModel extends Model {
 	/**
 	 * Extend Model::construct()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->user_cookie_dao = new UserCookieDAO($this->default_db);
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
+		$this->user_dao         = new UserDAO($this->default_db);
+		$this->user_cookie_dao  = new UserCookieDAO($this->default_db);
 		$this->user_session_dao = new UserSessionDAO($this->default_db);
 	}
 
@@ -107,6 +108,30 @@ class UserSessionModel extends Model {
 
 		Cookie::Set(self::COOKIE_SIGNATURE, $signature, Cookie::EXPIRE_MONTH);
 		Cookie::Set(self::COOKIE_AUTO_LOGIN, true, Cookie::EXPIRE_MONTH);
+	}
+
+	/**
+	 * Restart user session
+	 *
+	 * @param string $signature
+	 *  a unique signature generated from user's account and password
+	 */
+	public function reviveUserSession($signature) {
+		$has_record = $this->user_cookie_dao->read(array('signature' => $signature));
+		if (!$has_record) {
+			return false;
+		}
+
+		$user_id = $this->user_cookie_dao->user_id;
+
+		$has_record = $this->user_dao->read(array('id' => $user_id));
+		if (!$has_record) {
+			return false;
+		}
+
+		$record = $this->user_dao->attribute;
+		$this->beginUserSession($record['id'], $record['account'], $recrod['password']);
+		
 	}
 
 	/**
@@ -211,6 +236,20 @@ class UserSessionModel extends Model {
 	 */
 	public function getUserId() {
 		return Session::Get('user_id');
+	}
+
+	/**
+	 * Get the sub domain of the user in session
+	 *
+	 * @return string
+	 */
+	public function getUserDomain() {
+		$profile = Session::Get(self::USER_PROFILE);
+		if (isset($profile['institution_domain'])) {
+			return $profile['institution_domain'];
+		} else {
+			return false;
+		}
 	}
 
 	/**

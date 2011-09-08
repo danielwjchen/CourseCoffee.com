@@ -24,8 +24,10 @@ $P.ready(function() {
 		});
 	});
 
-	window.welcome = $('.welcome');
-	blurInput(welcome);
+	var welcome = $('.welcome');
+	$('#school-options', welcome).change(function(e) {
+		window.location = window.location.protocol + '//' + $(this).val();
+	});
 
 	// submit login form on press enter
 	$('#user-login-form input').keypress(function(e){

@@ -3,244 +3,39 @@
  * Define CSS for the /welcome
  */
 .welcome .body {
-	margin: 0;
-	min-height: 400px;
-}
-.welcome .body-inner{
-  margin: 0 auto;
-  width: 960px;
+	min-height: 100%;
 }
 
-/**
- * Define styles for top panel
- */
-.welcome .panel-top{
-	float: left;
-	clear: both;
-	width: 960px;
-	height: 160px;
+.welcome .select-school {
+	margin: 60px auto 0;
+	width: 550px;
 }
-/**
- * Define styles for log and slogan 
- */
 .welcome .logo {
-  width: 392px;
-	position: absolute;
-	left: 45px;
-	top: 45px;
-}
-
-/**
- * Define styles for login
- */
-.welcome .user-login{
-	float: left;
-	text-align: left;
-  margin: 0 -960px -50px 520px;
-	width: 405px;
-  height: 45px;
-	background: #313131;
-	background-image: -moz-linear-gradient(#313131, #5e5b5b);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
-  border: #313131 1px solid;
-  border-radius: 0 0 8px 8px;
-	-moz-box-shadow: 0 0 15px #333;
-	-webkit-box-shadow: 0 0 15px #333;
-	box-shadow: 0 0 15px #333;
-}
-.welcome .login.error{
-	color: white;
-	position: absolute;
-	top: 50px;
-	left: 480px;
-	width: 480px;
-	text-align: center;
-	text-shadow: 0 0 6px #000;
-	-moz-text-shadow: 0 0 6px #000;
-	-webkit-text-shadow: 0 0 6px #000;
-}
-.welcome .user-login .error p{
-	margin: 0;
-	padding: 0 5px;
-}
-.welcome .user-login a{
-	color: white;
-	font-size: 18px;
-	line-height: 18px;
-	font-weight: bold;
-	text-decoration: none;
-	text-align: center;
-	padding: 8px 12px;
+	margin: 0 auto 15px;
+	width: 410px;
 	display: block;
 }
-.welcome .user-login .login-form{
-  padding-top: 3px;
+.welcome .select-school-inner {
+	text-align: center;
 	margin: 0 auto;
-	width: 385px;
+	width: 550px;
+	border: 1px solid #f6f5f4;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: #ffffff;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
 }
-.welcome .user-login input{
-	color: #787474;
-	font-size: 12px;
-	line-height: 18px;
-	height: 28px;
-	border: 1px solid #457319;
-	border-radius: 4px;
-	margin: 5px 10px 5px 0;
-	float: left;
-	padding: 0 4px;
+.welcome .select-school-inner select {
+	width: 500px;
+	height: 30px;
+	margin: 25px 0;
+	font-size: 24px;
+	font-weight: bold;
 }
-.welcome .user-login input[name=email] {
-	width: 168px;
-}
-.welcome .user-login input[name=password] {
-	width: 108px;
-}
-.welcome .user-login .button{
-	float: left;
-}
-/**
- * We were goin to provide a button to login via facebook on /welcome
- *
-.welcome .button.fb-login {
-	float: left;
-	color: white;
-	background: #627AAD;
-	border: 1px solid #1A3C6C;
-	text-shadow: 0 0 6px #1A3C6C;
-	-moz-text-shadow: 0 0 6px #1A3C6C;
-	-webkit-text-shadow: 0 0 6px #1A3C6C;
-	background-image: -moz-linear-gradient(#627AAD, #1A3C6C);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#627AAD), to(#1A3C6C)); 
-}
-.welcome .button.fb-login:active {
-	-moz-box-shadow: inset 0 0 15px 15px #1A3C6C;
-	-webkit-box-shadow: inset 0 0 15px 15px #1A3C6C;
-	box-shadow: inset 0 0 15px 15px #1A3C6C;
-}
-*/
-.welcome .slogan{
-  float: left;
-  width: 480px;
-	height: 115px;
-	background: url('../images/slogan.png') no-repeat center center;
-  margin: 80px -960px 20px 480px;
-	/**
-  text-align: center;
+.welcome .select-school-inner option {
+	height: 30px;
 	line-height: 30px;
-	padding: 50px 0 0px;
-	font-size: 30px;
-	font-weight: bold;
-	color: white;
-	text-shadow: 0 0 6px #000;
-	-moz-text-shadow: 0 0 6px #000;
-	-webkit-text-shadow: 0 0 6px #000;
-	**/
 }
-/**
- * Define styles for panel-01
- */
-.welcome .panel-01{
-  font-size: 20px;
-	font-weight: bold;
-	color: white;
-	text-shadow: 0 0 6px #000;
-	-moz-text-shadow: 0 0 6px #000;
-	-webkit-text-shadow: 0 0 6px #000;
-}
-.welcome .panel-01 .panel-inner{
-}
-.welcome .panel-01 h2{
-	color: white;
-	margin-top: 20px;
-  font-size: 24px;
-	text-shadow: 0 0 6px #000;
-	-moz-text-shadow: 0 0 6px #000;
-	-webkit-text-shadow: 0 0 6px #000;
-}
-.welcome .panel-01 ul,
-.welcome .panel-01 li{
-  font-size: 14px;
-	line-height: 20px;
-  list-style: none;
-}
-.welcome .panel-01 ul{
-	width: 325px;
-  margin: 20px auto 40px;
-}
-.welcome .panel-01 li{
-  padding: 20px 0 20px 50px;
-	height: 40px;
-}
-.welcome .panel-01 li.calendar {
-	background: url('/images/calendar.png') left center no-repeat;
-}
-.welcome .panel-01 li.text-book {
-	background: url('/images/text-book.png') left center no-repeat;
-}
-.welcome .panel-01 li.facebook {
-	background: url('/images/facebook.png') left center no-repeat;
-}
-.welcome .panel-01 a{
-  text-decoration: none;
-  color: white;
-}
-.welcome .panel-01 a:hover{
-	text-shadow: 0 0 3px #fff;
-	-moz-text-shadow: 0 0 3px #fff;
-	-webkit-text-shadow: 0 0 3px #fff;
-}
-.welcome .panel-01 .sign-up-shortcut{
-	font-size: 12px;
-	float: right;
-	margin-top: 20px;
-	width: 220px;
-}
-.welcome .tutorial {
-	text-decoration: underline;
-	text-align: center;
-}
-.welcome .panel-01 .sign-up-shortcut p{
-	width: 150px;
-	float: left;
-	margin-right: -210px;
-	margin-left: 60px;
-	display block;
-	height: 24px;
-	line-height: 24px;
-}
-.welcome .panel-01 .sign-up{
-	font-size: 14px;
-	margin-left: 150px;
-	height: 24px;
-	line-height: 24px;
-	width: 60px;
-}
-
-/**
- * Define styles for panel-02
- */
-.welcome .panel-02{
-}
-.welcome .panel-02 .panel-inner{
-  height: 475px;
-  background: url('../images/syllabus-icon.png') center center no-repeat;
-}
-.welcome .panel-02 .error{
-	color: red;
-	font-size: 16px;
-	font-weight: bold;
-	text-align: center;
-}
-.welcome .panel-02 .upload{
-	font-size: 30px;
-	height: 46px;
-	line-height: 46px;
-}
-/**
- * Define styles for upload
- */
-.welcome .upload-form .button{
-  margin: 220px auto;
-  width: 200px;
-}
-

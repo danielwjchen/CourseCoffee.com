@@ -16,15 +16,29 @@ class CollegeModel extends Model {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
 		$this->college_list = new CollegeListDAO($this->default_db);
 	}
 
+	/**
+	 * Get college by id
+	 */
 	public function getCollege($institution_id) {
 		$this->college_list->read(array('id' => $institution_id));
 
 		return $this->college_list->attribute;
+	}
+
+	/**
+	 * Get college by sub domain
+	 *
+	 * @param string $domain
+	 */
+	public function getCollegeByDomain($domain) {
+		$institution = new InstitutionDAO($this->default_db);
+		$institution->read(array('domain' => $domain));
+		return $institution->attribute;
 	}
 
 

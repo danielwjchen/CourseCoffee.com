@@ -288,8 +288,11 @@ HTML;
 
 			$block_object = new $info['callback'];
 
-			if (isset($info[1])) {
-				$params = array_intersect_key(array_flip($this->data, $info['params']));
+			if (isset($info['params'])) {
+				$params = array_flip($info['params']);
+				foreach ($params as $key => $value) {
+					$params[$key] = $this->data[$key];
+				}
 				$block = $block_object->render($params);
 			} else {
 				$block = $block_object->render();

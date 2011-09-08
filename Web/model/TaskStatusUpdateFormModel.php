@@ -15,8 +15,8 @@ class TaskStatusUpdateFormModel extends Model {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
 		$this->task_status_dao = new TaskStatusDAO($this->institution_db);
 	}
 

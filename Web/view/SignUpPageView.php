@@ -91,14 +91,6 @@ HTML;
 						</div> 
 						<div class="row"> 
 							<div class="title"> 
-								<label for="school">school: </label> 
-							</div> 
-							<div class="field"> 
-								{$school_select}
-							</div> 
-						</div> 
-						<div class="row"> 
-							<div class="title"> 
 								<label for="user-account">email: </label> 
 							</div> 
 							<div class="field"> 

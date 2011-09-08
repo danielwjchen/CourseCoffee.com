@@ -77,10 +77,6 @@ HTML;
 							<input type="hidden" id="section-id" name="section_id" />
 						</div>
 						<div class="row">
-							<label for="institution_id">School:</label>
-							{$school_select}
-						</div>
-						<div class="row">
 							<label for="string">Class: </label>
 							<input type="text" id="suggest-input" name="string" />
 						</div>

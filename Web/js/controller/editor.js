@@ -765,7 +765,6 @@ $P.ready(function(){
 									data: processorData,
 									success: function(response){
 										form = $('#class-selection-form-skeleton');
-										$('#institution-id', form).val(response.institution_id);
 										$('#year-id', form).val(response.year_id);
 										$('#term-id', form).val(response.term_id);
 										$('#section-id', form).val(response.section_id);

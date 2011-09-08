@@ -28,7 +28,7 @@ class DB{
 			);
 
 		} catch (PDOException $e) {
-			echo 'Fail to init PDO: ' . $e->getMessage();
+			echo 'Fail to init PDO: ' . $e->getMessage() . ' - ' . $config;
 		}
 	}
 

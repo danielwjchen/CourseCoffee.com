@@ -70,8 +70,8 @@ class UserRegisterFormModel extends FormModel {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
 		$this->user_dao                = new UserDAO($this->default_db);
 		$this->user_setting_dao        = new UserSettingDAO($this->default_db);
 		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->default_db);

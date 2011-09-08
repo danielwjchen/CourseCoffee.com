@@ -48,8 +48,8 @@ class BookSuggestModel extends Model {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
 		$this->amazonSearch = new AmazonAPI();
 		$this->cache = new DBCache();
 		$this->book_dao = new BookListDAO($this->institution_db);

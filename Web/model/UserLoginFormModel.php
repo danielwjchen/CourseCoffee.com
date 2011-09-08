@@ -57,8 +57,8 @@ class UserLoginFormModel extends FormModel {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
 		$this->user_dao = new UserDAO($this->default_db);
 
 		$this->form_name = 'user_login_form';

@@ -4,9 +4,6 @@
  * Manage access to information of a class in college
  */
 class CollegeClassController extends Controller implements ControllerInterface {
-
-	private $json;
-
 	/**
 	 * Implement ControllerInterface::path()
 	 */
@@ -23,13 +20,6 @@ class CollegeClassController extends Controller implements ControllerInterface {
 		);
 	}
 
-	/**
-	 * Implement ControllerInterface::afterAction()
-	 */
-	public function afterAction() {
-		$this->json->setHeader(PageView::HTML_HEADER);
-		echo $this->json->render();
-	}
 
 	/**
 	 * Create a new class
@@ -60,9 +50,9 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 */
 	public function getClassDetail() {
 		$section_id = Input::Post('section_id');
-		$class_model = new CollegeClassModel();
+		$class_model = new CollegeClassModel($this->sub_domain);
 		$result = $class_model->getClassById($section_id);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 
 	}
 
@@ -76,8 +66,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 * Suggest a list of classes based on user input
 	 */
 	public function suggestClass() {
-		$user_session = new UserSessionModel();
-		$user_setting = $user_session->GetUserSetting();
+		$user_setting = $this->user_session->GetUserSetting();
 		if (empty($user_setting)) {
 			$institution_id = Input::Post('institution_id');
 			$year_id        = Input::Post('year_id');
@@ -94,7 +83,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 		// error_log(__METHOD__ . print_r($user_setting, true));
 
 
-		$class_suggestion = new CollegeClassListModel();
+		$class_suggestion = new CollegeClassListModel($this->sub_domain);
 
 		$result = $class_suggestion->suggestClassList(
 			$institution_id,
@@ -103,21 +92,20 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			$string
 		);
 
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 	/**
 	 * Add a user to a class
 	 */
 	public function enrollClass() {
-		$user_session_model = new UserSessionModel();
-		$user_id = $user_session_model->getUserId();
+		$user_id = $this->getUserId();
 		if (empty($user_id)) {
-			$this->json = new JSONView(array('redirect' => '/welcome'));
+			$this->output = new JSONView(array('redirect' => '/welcome'));
 
 		} else {
 			$section_id = Input::Post('section_id');
-			$enroll = new UserEnrollClassModel();
+			$enroll = new UserEnrollClassModel($this->sub_domain);
 			$result = $enroll->AddUserToClass($user_id, $section_id);
 
 			// debug
@@ -125,16 +113,16 @@ class CollegeClassController extends Controller implements ControllerInterface {
 
 			// rebuild user_class_list in session
 			if (isset($result['success'])) {
-				$class_list = $user_session_model->getUserClassList();
+				$class_list = $this->user_session->getUserClassList();
 				$class_list[$section_id] = $result['section_code'];
 
 				// debug
 				// error_log(__METHOD__ . ' : class_list - ' . print_r($class_list, true));
 
-				$user_session_model->setUserClassList($class_list);
+				$this->user_session->setUserClassList($class_list);
 			}
 
-			$this->json = new JSONView($result);
+			$this->output = new JSONView($result);
 		}
 
 	}
@@ -144,9 +132,9 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 */
 	public function getClassBookList() {
 		$section_id = Input::Post('section_id');
-		$list = new BookSuggestModel();
+		$list = new BookSuggestModel($this->sub_domain);
 		$result = $list->getBookList($section_id);
-		$this->json = new JSONView($result);
+		$this->output = new JSONView($result);
 	}
 
 }

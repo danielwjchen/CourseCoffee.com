@@ -13,9 +13,9 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db_name = 'default') {
-		parent::__construct($db_name);
-		$this->linkage_dao = new InstitutionYearLinkageDAO();
+	function __construct($db) {
+		parent::__construct($db);
+		$this->linkage_dao = new InstitutionYearLinkageDAO($db);
 	}
 
 	/**

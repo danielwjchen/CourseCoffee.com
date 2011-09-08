@@ -34,6 +34,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		} else {
 			$header = array(
 				'callback' => 'VisitorNavigationBlockView',
+				'params' => array('login_token'),
 			);
 		}
 		return array(
@@ -90,7 +91,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 					<div class="content hidden">
 						<div id="book-suggest-list" class="book-list"></div>
 					</div>
-					<div class="message">
+					<div class="search-message">
 						<h1>We do more than finding book deals. <span class="underline"><a href="#" class="upload">Try the syllabus organizer</a></span>.</h1>
 					</div>
 			</div>
