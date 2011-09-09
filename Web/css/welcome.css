@@ -1,12 +1,10 @@
 /**
  * @file
  * Define CSS for the /welcome
- *
- * Define styles for header
  */
-.body {
-	/* override default */
+.welcome .body {
 	margin: 0;
+	min-height: 400px;
 }
 .welcome .body-inner{
   margin: 0 auto;
@@ -33,47 +31,22 @@
 }
 
 /**
- * Define styles for orange buttons
- */
-.welcome .button{
-	color: white;
-	display: block;
-	border: 1px solid #ff8400;
-	border-radius: 4px;
-	text-align: center;
-	font-weight: bold;
-	text-decoration: none;
-	text-shadow: 0 0 6px #8a4c0a;
-	-moz-text-shadow: 0 0 6px #8a4c0a;
-	-webkit-text-shadow: 0 0 6px #8a4c0a;
-	background: #ff8400;
-	background-image: -moz-linear-gradient(#ff8400, #d06e06);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
-}
-.welcome .button:hover{
-	text-shadow: 0 0 3px #fff;
-	-moz-text-shadow: 0 0 3px #fff;
-	-webkit-text-shadow: 0 0 3px #fff;
-}
-.welcome .button:active{
-	-moz-box-shadow: inset 0 0 15px 15px #d06e06;
-	-webkit-box-shadow: inset 0 0 15px 15px#d06e06;
-	box-shadow: inset 0 0 15px 15px #d06e06;
-}
-/**
  * Define styles for login
  */
 .welcome .user-login{
 	float: left;
 	text-align: left;
-  margin: 0 -960px -50px 480px;
-	width: 480px;
+  margin: 0 -960px -50px 520px;
+	width: 405px;
   height: 45px;
 	background: #313131;
 	background-image: -moz-linear-gradient(#313131, #5e5b5b);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
   border: #313131 1px solid;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 8px 8px;
+	-moz-box-shadow: 0 0 15px #333;
+	-webkit-box-shadow: 0 0 15px #333;
+	box-shadow: 0 0 15px #333;
 }
 .welcome .login.error{
 	color: white;
@@ -102,24 +75,49 @@
 }
 .welcome .user-login .login-form{
   padding-top: 3px;
-	float: left;
-	width: 480px;
-	margin-left: 80px;
+	margin: 0 auto;
+	width: 385px;
 }
 .welcome .user-login input{
 	color: #787474;
-	font-size: 18px;
+	font-size: 12px;
 	line-height: 18px;
+	height: 28px;
 	border: 1px solid #457319;
 	border-radius: 4px;
-	margin: 5px;
-	width: 138px;
+	margin: 5px 10px 5px 0;
 	float: left;
 	padding: 0 4px;
+}
+.welcome .user-login input[name=email] {
+	width: 168px;
+}
+.welcome .user-login input[name=password] {
+	width: 108px;
 }
 .welcome .user-login .button{
 	float: left;
 }
+/**
+ * We were goin to provide a button to login via facebook on /welcome
+ *
+.welcome .button.fb-login {
+	float: left;
+	color: white;
+	background: #627AAD;
+	border: 1px solid #1A3C6C;
+	text-shadow: 0 0 6px #1A3C6C;
+	-moz-text-shadow: 0 0 6px #1A3C6C;
+	-webkit-text-shadow: 0 0 6px #1A3C6C;
+	background-image: -moz-linear-gradient(#627AAD, #1A3C6C);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#627AAD), to(#1A3C6C)); 
+}
+.welcome .button.fb-login:active {
+	-moz-box-shadow: inset 0 0 15px 15px #1A3C6C;
+	-webkit-box-shadow: inset 0 0 15px 15px #1A3C6C;
+	box-shadow: inset 0 0 15px 15px #1A3C6C;
+}
+*/
 .welcome .slogan{
   float: left;
   width: 480px;
@@ -152,9 +150,12 @@
 .welcome .panel-01 .panel-inner{
 }
 .welcome .panel-01 h2{
+	color: white;
 	margin-top: 20px;
-	text-align: center;
   font-size: 24px;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
 }
 .welcome .panel-01 ul,
 .welcome .panel-01 li{
@@ -193,6 +194,10 @@
 	float: right;
 	margin-top: 20px;
 	width: 220px;
+}
+.welcome .tutorial {
+	text-decoration: underline;
+	text-align: center;
 }
 .welcome .panel-01 .sign-up-shortcut p{
 	width: 150px;

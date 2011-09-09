@@ -4,9 +4,9 @@
  * page
  */
 $P.ready(function() {
-	window.signUp = $('.sign-up');
+	var content = $('.sign-up .content');
 
-	signUp.delegate('a.button', 'click', function(e) {
+	content.delegate('a.button', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);
 		if (target.hasClass('sign-up')) {

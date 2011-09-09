@@ -2,13 +2,13 @@
  * Define class for suggested reading
  */
 .book-list {
- overflow: auto;
+	overflow: auto;
 }
 .book-list#enroll-book-list {
-	height: 200px;
+	height: 150px;
 }
 .book-list#class-book-list {
-	height: 450px;
+	min-height: 400px;
 }
 .book-list h3 {
 	font-size: 18px;
@@ -79,4 +79,7 @@
 	font-weight: bold;
 	font-size: 16px;
 	float: right;
+	text-shadow: 0 0 4px #D5D4D2;
+	-moz-text-shadow: 0 0 4px #D5D4D2;
+	-webkit-text-shadow: 0 0 4px #D5D4D2;
 }

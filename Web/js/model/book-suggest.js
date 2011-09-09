@@ -92,4 +92,55 @@ window.BookSuggest = function(regionName) {
 			}
 		});
 	}
+
+	/**
+	 * Get all required books for a list of sections
+	 */
+	this.getAllBookList = function(sectionForm) {
+		region.addClass('loading');
+		region.html('<h3>Here is a list of books we think you might need for this class.</h3>');
+		var sectionId = '';
+		var html = '';
+		$(sectionForm).each(function(i, el) {
+			sectionId = $(el).val();
+			$.ajax({
+				url: '/college-class-reading',
+				type: 'post',
+				cache: true,
+				data: 'section_id=' + sectionId,
+				success: function(response) {
+					if (response.list) {
+						html += '<ul>';
+						$.each(response.list, function(title, value) {
+							var newOffers     = generateOfferOutput('buy new', value['offers']['new']);
+							var usedOffers    = generateOfferOutput('buy used', value['offers']['used']);
+							var retanlOoffers = generateOfferOutput('rent', value['offers']['rental']);
+							var bookCover = value['image'] != '' ? '<img src="' + value['image'] + '" class="cover" />' : '';
+							html += '<li class="book">' +
+								bookCover + 
+								'<div class="info">' +
+									'<span class="title">' + title  + '</span>' +
+									'<div class="offer">' + newOffers + usedOffers + retanlOoffers + '</div>' +
+								'</div>' +
+							'</li>';
+							// console.log(title);
+							// console.log(value);
+						});
+						html += '</ul>';
+						region.append(html);
+						html = '';
+
+
+						// debug
+						// console.log('book suggest cache');
+						// console.log(cache);
+
+					}
+					cache.set(sectionId, html);
+				}
+			});
+		});
+		region.removeClass('loading');
+
+	}
 }

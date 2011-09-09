@@ -53,35 +53,38 @@
 /**
  * Define styles for profile
  */
-.home .profile{
-	height: 100px;
-}
-.home .profile img{
-	position: absolute;
-	top: -20px;
-	left: 20px;
+.home .profile-image {
+	float: left;
+	margin-top: -20px;
+	margin-left: 20px;
+	margin-right: -200px;
 	width: 160px;
 	-moz-box-shadow: 2px 2px #000;
 	-webkit-box-shadow: 2px 2px 5px #000;
 	box-shadow: 2px 2px 5px #000;
 }
-.home .profile .name,
-.home .profile .school,
-.home .profile .semester {
-	left: 225px;
+.home .profile-info {
+	margin-left: 200px;
+	width: 400px;
+	height: 80px;
+	margin-bottom: -80px;
+}
+.home .profile-info .name,
+.home .profile-info .school,
+.home .profile-info .semester {
 	font-weight: bold;
 	font-size: 18px;
 	color: #333333;
 }
-.home .profile .achievement{
+.home .profile-info .achievement{
 	left: 225px;
 }
-.home .profile .achievement .karma{
+.home .profile-info .achievement .karma{
 	font-weight: bold;
 	font-size: 18px;
 	color: #ec7b02;
 }
-.home .profile .achievement strong{
+.home .profile-info .achievement strong{
 	font-weight: bold;
 	font-size: 18px;
 	color: #333333;
@@ -104,17 +107,13 @@
  */
 .task-create-form-wrapper{
 	float: left;
+	margin-top: 80px;
 	margin-left: 200px;
 	width: 725px;
 }
-.task-create-form{
-}
 .task-create-form .row{
-	clear: both;
-	float: left;
-	padding: 5px 0;
-}
-.task-create-form label{
+	width: 695px;
+	margin-right: -695px;
 }
 .task-create-form select,
 .task-create-form input {
@@ -150,104 +149,22 @@
 	padding: 0 0 0 5px;
 }
 .task-create-form textarea{
-	font-family: Sans-Serif;
 	width: 685px;
-	color: #787474;
-	font-weight: bold;
-	float: left;
-	border: 1px solid #457319;
-	border-radius: 4px;
-	padding: 0 5px;
-	margin: 0;
-	line-height: 16px;
-	font-size: 16px;
-}
-.task-create-form legend{
-	font-weight: bold;
-	font-size: 18px;
-	color: #333333;
-}
-.task-create-form fieldset{
-	border: 1px solid #5e5b5b;
-	border-radius: 4px;
-	padding: 0 15px;
-	/**
-	 * This is commented out because firefox does not know how to render fieldset
-	 * box-shadow correctly.
-	 *
-	-moz-box-shadow: 1px 3px #5e5b5b;
-	-webkit-box-shadow: 1px 1px 3px #5e5b5b;
-	box-shadow: 1px 1px 3px #5e5b5b;
-	*/
-}
-.task-create-form .required{
-	border: 1px 1px 0 1px;
-}
-.task-create-form .optional{
-	border: 0 1px 0 1px;
-	border-radius:  0 0 4px 4px;
 }
 .task-create-form a.button.show-detail{
+	position: absolute;
+	left: 585px;
 	width: 100px;
-	margin: 0 0 0 25px;
-	clear: none;
 	font-size: 16px;
 }
 .task-create-form a.button.submit{
 	width: 685px;
 }
-.task-list dd.comment {
-	display: none;
-}
 
-/**
- * Define styles for panels
- */
-.home h1{
-	font-weight: bold;
-	font-size: 24px;
-	color: #333333;
-	text-shadow: 0 0 1px #000;
-	-moz-text-shadow: 0 0 1px #000;
-	-webkit-text-shadow: 0 0 1px #000;
-}
-.home h2{
-	font-weight: bold;
-	font-size: 18px;
-	color: #333333;
-	padding: 0;
-	margin: 0;
-	text-shadow: 0 0 1px #000;
-	-moz-text-shadow: 0 0 1px #000;
-	-webkit-text-shadow: 0 0 1px #000;
-}
-.home h3{
-	font-weight: bold;
-	font-size: 18px;
-	color: #333333;
-	padding: 0;
-	margin: 0;
-	text-shadow: 0 0 1px #000;
-	-moz-text-shadow: 0 0 1px #000;
-	-webkit-text-shadow: 0 0 1px #000;
-}
-.home p{
-	padding: 0 0 0 10px;
-	margin: 0;
-	color: #333333;
-	font-size: 12px;
-}
-.home ul,
-.home ul li{
-	list-style: none;
-}
-.home ul li{
-	margin-bottom: 15px;
-}
 /**
  * Define styles for to-do panel
  */
-.home .panel-01 .panel-inner{
+.home .panel-02 .panel-inner{
 	min-height: 400px;
 }
 

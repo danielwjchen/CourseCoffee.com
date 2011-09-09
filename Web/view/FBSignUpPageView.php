@@ -26,8 +26,14 @@ class FBSignUpPageView extends PageView implements PageViewInterface {
 	 */
 	public function getBlocks() {
 		return array(
+			'header' => array(
+				'callback' => 'LogoHeaderBlockView',
+			),
+			'legal' => array(
+				'callback' => 'UserAgreementBlockView',
+			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -42,18 +48,15 @@ class FBSignUpPageView extends PageView implements PageViewInterface {
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
-				<ul id="navigation-menu">
-					<li class="home active">
-						<a class="home button" href="/home">Home</a>
-					</li>
-				</ul>
+				{$header}
 			</div>
 		</div>
 		<div class="body">
 			<div class="body-inner">
 				<div class="content"> 
-				<fb:registration fields="{$fields}" redirect-uri="{$redirect}" width="530">
-				</fb:registration>
+					<fb:registration fields="{$fields}" redirect-uri="{$redirect}" width="530">
+					</fb:registration>
+					{$legal}
 				</div>
 			</div>
 		</div>
@@ -61,7 +64,7 @@ class FBSignUpPageView extends PageView implements PageViewInterface {
 </div>
 <div class="footer">
 	<div class="footer-inner">
-		{$footer['block']}
+		{$footer}
 	</div>
 </div>
 HTML;

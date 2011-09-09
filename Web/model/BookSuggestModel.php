@@ -7,7 +7,9 @@
 require_once LIB_PATH . '/booksearcher/AmazonAPI.php';
 require_once LIB_PATH . '/booksearcher/BarnesNobleAPI.php';
 require_once LIB_PATH . '/booksearcher/BookRenterAPI.php';
+require_once LIB_PATH . '/booksearcher/CheggAPI.php';
 require_once LIB_PATH . '/booksearcher/eCampusAPI.php';
+require_once LIB_PATH . '/booksearcher/KnetBooksAPI.php';
 require_once LIB_PATH . '/booksearcher/ValoreBooksAPI.php';
 
 class BookSuggestModel extends Model {
@@ -17,18 +19,31 @@ class BookSuggestModel extends Model {
 	 * @{
 	 * a group of message to indicate the result
 	 */
-	const BOOK_FOUND_SINGLE   = 'Here is the book we think you might need for this class.';
-	const BOOK_FOUND_MULTIPLE = 'Here is a list of books we think you might need for this class.';
+	const BOOK_FOUND_SINGLE   = 'Here is the book we think you will need for this class.';
+	const BOOK_FOUND_MULTIPLE = 'Here is a list of books we think you will need for this class.';
 	const BOOK_FOUND_NONE     = 'We didn\'t find required reading for this class.';
+	const API_FAIL            = 'We can\'t find the requested book from online vendors.';
 	/**
 	 * @} End of "message"
 	 */
 
+	// Event message when we can't find the item with fiven isbn
+	const INVALID_ISBN = 'Fail to fetch result for - ';
+
+	const QUEUE_NEW      = 'NEW';
+	const QUEUE_FAILED   = 'FAILED';
+	const QUEUE_STARTED  = 'STARTED';
+	const QUEUE_FINISHED = 'FINISHED';
+
+	// book cache expires in 12 hours
+	const CACHE_EXPIRE   = 43200;
+
 	/**
 	 * Access to book list record
 	 */
-	private $book_list;
-	private $list;
+	protected $book_dao;
+	protected $list;
+	protected $cache;
 
 	/**
 	 * Extend Model::__construct()
@@ -36,8 +51,90 @@ class BookSuggestModel extends Model {
 	function __construct() {
 		parent::__construct();
 		$this->amazonSearch = new AmazonAPI();
+		$this->cache = new DBCache();
+		$this->book_dao = new BookListDAO();
+		$this->crawler_dao = new BookCrawlerQueueDAO();
 	}
 
+	/**
+	 * Create cache by compress the book list array into a string.
+	 * 
+	 * Using gzcompress() is probably not the most optimal to create hash key, Let
+	 * me know if you've found a two-way hash that can replace this.
+	 */
+	protected function encodeBookCacheKey() {
+		return gzcompress(json_encode($this->book_dao->list, true));
+		return Crypto::Digest(json_encode($this->book_dao->list, true));
+	}
+
+	/**
+	 * Decompress the cache key to get the book list
+	 */
+	protected function decodeBookCacheKey($cache_key) {
+		$this->book_dao->list = json_decode(gzuncompress($cache_key), true);
+		return count($this->book_dao->list) == 1 ? self::BOOK_FOUND_SINGLE : self::BOOK_FOUND_MULTIPLE;
+	}
+
+	/**
+	 * Generate book list for a given class
+	 *
+	 * @return string
+	 */
+	protected function generateBookList($section_id) {
+		$has_reading = $this->book_dao->read(array('section_id' => $section_id));
+		
+		// debug
+		// error_log('asdfsadf' . print_r($this->book_dao->list, true));
+
+		if (!$has_reading) {
+			return self::BOOK_FOUND_NONE;
+		}
+
+		return count($this->book_dao->list) == 1 ? self::BOOK_FOUND_SINGLE : self::BOOK_FOUND_MULTIPLE;
+	}
+
+	/**
+	 * Process book list and query vendor APIs
+	 */
+	protected function processBookList() {
+		$book_list = $this->book_dao->list;
+		$list = array();
+		for ($i = 0; $i < count($book_list); $i++) {
+			try {
+				$isbn = $book_list[$i]['isbn'];
+				$this->amazonSearch->searchBookIsbn($isbn);
+				$title = (string)$this->amazonSearch->getTitle();
+				if (empty($title)) {
+					Logger::Write(self::INVALID_ISBN . $isbn);
+				} else {
+					$image = (string)$this->amazonSearch->getSmallImageLink(); 
+					$list[$title] = array(
+						'image'  => $image,
+						'offers' => $this->getSingleBookRankList($isbn),
+					);
+				}
+			} catch (Exception $e) {
+				Logger::Write(__METHOD__ . ' BookSearch API error: ' . $e->getMessage());
+			}
+
+			// debug
+			// error_log('image - ' . $image);
+
+		}
+
+		if (empty($list)) {
+			return array(
+				'error' => true,
+				'message' => self::API_FAIL,
+			);
+		}
+
+		return array(
+			'success' => true,
+			'list'    => $list
+		);
+
+	}
 
 	/**
 	 * Get book list
@@ -55,61 +152,59 @@ class BookSuggestModel extends Model {
 	 *   - message:
 	 */
 	public function getBookList($section_id) {
-		$this->book_list = new BookListDAO($this->db);
-		$has_reading = $this->book_list->read(array('section_id' => $section_id));
-		
-		// debug
-		// error_log('asdfsadf' . print_r($this->book_list->list, true));
+		$message = $this->generateBookList($section_id);
 
-		if (!$has_reading) {
-			//return $this->list;
-			return array('message' => self::BOOK_FOUND_NONE);
-		}
-		// the system truncates the list if there is only one record... we need to 
-		// restore it back
-		$record  = array();
-		$message = '';
-		if (isset($this->book_list->list['isbn'])) {
-			$message   = self::BOOK_FOUND_SINGLE;
-			$record[0] = $this->book_list->list;
-		} else {
-			$message = self::BOOK_FOUND_MULTIPLE;
-			$record  = $this->book_list->list;
+		if ($message == self::BOOK_FOUND_NONE) {
+			return array('message' => $message);
 		}
 
-		// debug
-		// error_log('book suggest record - ' . print_r($record, true));
+		/**
+		 * The cache key is the digest of the serialized book list. This way we can
+		 * share cache among classes that have the same list of readings.
+		 *
+		 * Why go through all this trouble? Most classes have the same reading list 
+		 * for every section, e.g. CSE 232. However, some classes, especially social
+		 * studies, have optional readings for each section, and they are almost never
+		 * the same.
+		 */
+		$cache_key   = $this->encodeBookCacheKey();
+		$cache_value = $this->cache->get($cache_key);
 
-		$this->list = array();	
-
-
-		try {
-			for ($i = 0; $i < count($record); $i++) {
-				$isbn = $record[$i]['isbn'];
-				$this->amazonSearch->searchBookIsbn($isbn);
-				$title = (string)$this->amazonSearch->getTitle();
-				$image = (string)$this->amazonSearch->getSmallImageLink(); 
-
-				// debug
-				// error_log('image - ' . $image);
-
-				$this->list[$title] = array(
-					'image'  => $image,
-					'offers' => $this->getSingleBookRankList($isbn),
-				);
+		if ($cache_value) {
+			$is_queued = $this->crawler_dao->read(array('cache_key' => $cache_key));
+			if (!$is_queued) {
+				$this->crawler_dao->create(array(
+					'cache_key' => $cache_key, 
+					'status' => self::QUEUE_NEW
+				));
 			}
-		} catch (Exception $e) {
-			Logger::Write($e->getMessage());
+			return json_decode($cache_value, true);
 		}
 
-		// debug
-		// error_log('book suggest result - ' . print_r($this->list, true));
 
-		return array(
-			'success' => true,
-			'message' => $message,
-			'list'    => $this->list
-		);
+		// debug
+		// error_log('book suggest book_list - ' . print_r($book_list, true));
+
+		$result = $this->processBookList();
+
+		if (isset($result['error'])) {
+			return $result;
+		}
+
+		$result['message'] = $message;
+
+		// debug
+		// error_log('book suggest result - ' . print_r($list, true));
+
+		
+		$this->cache->set($cache_key, json_encode($result), time() + self::CACHE_EXPIRE);
+		$this->crawler_dao->create(array(
+			'cache_key' => $cache_key, 
+			'status' => self::QUEUE_NEW
+		));
+
+		return $result;
+
 	}
 
 
@@ -126,15 +221,16 @@ class BookSuggestModel extends Model {
 		$ecampusSearch = new eCampusAPI($isbn);
 		$bookrenterSearch = new BookRenterAPI($isbn);
 		$valorebookSearch = new ValoreBooksAPI($isbn);
+		$cheggSearch = new CheggAPI($isbn);
+		$knetbooksSearch = new KnetBooksAPI($isbn);
 
-		//start to querysubstr($ecampusSearch->getLowestNewPrice(),0,strlen($ecampusSearch->getLowestNewPrice())),
 		//new
 		$newprice = array(
-			'Amazon'	=> substr($this->amazonSearch->getLowestNewPrice(),1,strlen($this->amazonSearch->getLowestNewPrice())),
-			'eCampus'	=> substr($ecampusSearch->getLowestNewPrice(),0,strlen($ecampusSearch->getLowestNewPrice())),
-			'BookRenter'	=> substr($bookrenterSearch->getLowestNewPrice(),1,strlen($bookrenterSearch->getLowestNewPrice())),
-			'ValoreBooks'   => substr($valorebookSearch->getLowestNewPrice(),1,strlen($valorebookSearch->getLowestNewPrice())),
-			'AmazonMarket'  => substr($this->amazonSearch->getMarketPlaceLowestNewPrice(),1,strlen($this->amazonSearch->getMarketPlaceLowestNewPrice()))
+			'Amazon'	=> $this->amazonSearch->getLowestNewPrice(),
+			'eCampus'	=> $ecampusSearch->getLowestNewPrice(),
+			'BookRenter'	=> $bookrenterSearch->getLowestNewPrice(),
+			'ValoreBooks'   => $valorebookSearch->getLowestNewPrice(),
+			'AmazonMarket'  => $this->amazonSearch->getMarketPlaceLowestNewPrice()
 		);
 
 		$newlink = array(
@@ -147,10 +243,10 @@ class BookSuggestModel extends Model {
 
 		//used
 		$usedprice = array(
-			'eCampus'	=> substr($ecampusSearch->getLowestUsedPrice(),0,strlen($ecampusSearch->getLowestUsedPrice())),
-			'BookRenter'	=> substr($bookrenterSearch->getLowestUsedPrice(),1,strlen($bookrenterSearch->getLowestUsedPrice())),
-			'AmazonMarket'  => substr($this->amazonSearch->getMarketPlaceLowestUsedPrice(),1,strlen($this->amazonSearch->getMarketPlaceLowestUsedPrice())),
-			'eCampusMArket' => substr($ecampusSearch->getLowestMarketPlacePrice(),0,strlen($ecampusSearch->getLowestMarketPlacePrice()))	
+			'eCampus'	=> $ecampusSearch->getLowestUsedPrice(),
+			'BookRenter'	=> $bookrenterSearch->getLowestUsedPrice(),
+			'AmazonMarket'  => $this->amazonSearch->getMarketPlaceLowestUsedPrice(),
+			'eCampusMArket' => $ecampusSearch->getLowestMarketPlacePrice()
 		);
 		$usedlink = array(
 			'eCampus'	=> (string)$ecampusSearch->getLowestUsedLink(),
@@ -161,12 +257,16 @@ class BookSuggestModel extends Model {
 
 		//rental
 		$rentalprice = array(
-			'eCampus'	=> substr($ecampusSearch->getLowestRentalPrice(),0,strlen($ecampusSearch->getLowestRentalPrice())),
-			'BookRenter'	=> substr($bookrenterSearch->getLowestRentalPrice(),1,strlen($bookrenterSearch->getLowestRentalPrice()))			
+			'eCampus'	=> $ecampusSearch->getLowestRentalPrice(),
+			'BookRenter'	=> $bookrenterSearch->getLowestRentalPrice(),
+			'Chegg'		=> $cheggSearch->getLowestRentalPrice(),
+			'KnetBooks'     => $knetbooksSearch->getLowestRentalPrice()
 		);
 		$rentallink = array(
 			'eCampus'	=> (string)$ecampusSearch->getLowestRentalLink(),
-			'BookRenter'	=> (string)$bookrenterSearch->getLowestRentalLink()
+			'BookRenter'	=> (string)$bookrenterSearch->getLowestRentalLink(),
+                        'Chegg'         => (string)$cheggSearch->getLowestRentalLink(),
+			'KnetBooks'     => (string)$knetbooksSearch->getLowestRentalLink()
 		);
 
 		//begin sort
@@ -201,7 +301,7 @@ class BookSuggestModel extends Model {
 			'new'       => $new,
 			'used'      => $used,
 			'rental'    => $rental,
-			'listPrice' => substr($this->amazonSearch->getListPrice(),1,strlen($this->amazonSearch->getListPrice()))
+			'listPrice' => $this->amazonSearch->getListPrice()
 		);
 
 		return $rankList;

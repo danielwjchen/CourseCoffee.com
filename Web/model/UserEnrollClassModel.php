@@ -46,8 +46,8 @@ class UserEnrollClassModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->linkage   = new UserClassLinkageDAO($this->db);
-		$this->class_dao = new CollegeClassDAO($this->db);
+		$this->linkage   = new UserClassLinkageDAO();
+		$this->class_dao = new CollegeClassDAO();
 	}
 
 	/**

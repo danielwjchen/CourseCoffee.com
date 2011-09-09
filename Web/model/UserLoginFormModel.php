@@ -59,7 +59,7 @@ class UserLoginFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_dao             = new UserDAO($this->db);
+		$this->user_dao             = new UserDAO();
 
 		$this->form_name = 'user_login_form';
 		// form submission is limite to 5 times
@@ -72,7 +72,7 @@ class UserLoginFormModel extends FormModel {
 	 * Log in user by facebook uid
 	 */
 	public function processFBLoginRequest($fb_uid) {
-		$fb_linkage_dao = new UserFacebookLinkageDAO($this->db);
+		$fb_linkage_dao = new UserFacebookLinkageDAO();
 		$has_record = $fb_linkage_dao->read(array(
 			'fb_uid' => $fb_uid
 		));

@@ -53,4 +53,13 @@ class Crypto{
 		return base64_encode(sha1($string. self::$salt, true) . self::$salt); 
 	}
 
+	/**
+	 * Create a digest of string of a given string
+	 *
+	 * This is supposed to be fast and insecure.
+	 */
+	public static function Digest($string) {
+		return sha1($string);
+	}
+
 }

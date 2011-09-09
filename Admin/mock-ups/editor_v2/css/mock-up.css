@@ -1,0 +1,75 @@
+/**
+ * @file 
+ * Define styles for editor v2 mock-up
+ */
+#navigation-menu{
+	float: left;
+}
+#navigation-menu li.cancel {
+}
+#navigation-menu li.upload {
+	margin-right: 300px;
+}
+#navigation-menu li.undo {
+}
+#navigation-menu li.redo {
+}
+#navigation-menu li.add new{
+ }
+#navigation-menu li.submit {
+}
+
+.editor .header {
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	height: 55px;
+}
+.editor .content-wrap {
+	z-index: 9;
+	float: left;
+	width: 640px;
+	margin-right: -640px;
+	margin-bottom: 400px;
+}
+.editor .content {
+	margin: 20px 0 20px;
+	padding: 40px;
+	width: 560px;
+	height: 820px;
+	font-size: 12px;
+}
+.editor .content p {
+	margin: 20px 0;
+}
+.editor .task-wrap {
+	top: 1800px;
+	z-index: 99;
+	float: left;
+	margin-left: 540px; 
+	width: 420px;
+}
+.editor .task {
+	margin: 20px 0;
+	padding: 5px 10px;
+	border: 4px solid #09F;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: #ffffff;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+.editor .task .options {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+}
+.editor .task .button {
+	font-size: 12px;
+	width: 80px;
+	float: left;
+	margin-right: 10px;
+
+}

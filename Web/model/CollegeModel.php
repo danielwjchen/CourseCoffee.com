@@ -18,7 +18,7 @@ class CollegeModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->college_list = new CollegeListDAO($this->db);
+		$this->college_list = new CollegeListDAO();
 	}
 
 	public function getCollege($institution_id) {

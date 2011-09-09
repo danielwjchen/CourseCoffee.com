@@ -23,8 +23,8 @@ class FBModel extends Model {
 			'appId'  => $config->facebook['id'],
 			'secret' => $config->facebook['secret'],
 		));
-		$this->college_list_dao = new CollegeListDAO($this->db);
-		$this->linkage          = new UserFacebookLinkageDAO($this->db);
+		$this->college_list_dao = new CollegeListDAO();
+		$this->linkage          = new UserFacebookLinkageDAO();
 	}
 
 	private function base64UrlDecode($input) {
@@ -89,7 +89,7 @@ class FBModel extends Model {
 				{'name' : 'school', 
 					'description' : 'The current school you are attending', 
 					'type' : 'select',
-					'options' : {1 : 'Michigan State University', 2: 'University of Michigan'}},
+					'options' : {1 : 'Michigan State University'}},
 				{'name' : 'email'},
 				{'name' : 'password'}
 			]",

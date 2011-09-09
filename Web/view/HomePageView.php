@@ -33,13 +33,13 @@ class HomePageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'NavigationBlockView',
+				'callback' => 'NavigationBlockView',
 			),
 			'upload_form' => array(
-				'UploadFormBlockView',
+				'callback' => 'UploadFormBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -54,6 +54,7 @@ class HomePageView extends PageView implements PageViewInterface {
 		if (isset($class_list) && is_array($class_list)) {
 			foreach ($class_list as $section_id => $section_code) {
 				$option .= "<option value='{$section_id}'>{$section_code}</option>";
+				$readings .= "<input type='hidden' name='section_id' value='{$section_id}' />";
 				$sections .= "<input type='hidden' name='section-code' value='{$section_code}' />";
 			}
 		}
@@ -79,8 +80,8 @@ HTML;
 				<div class="content">
 					<div class="panel-top">
 						<div class="panel-inner">
-							<div class="profile">
-								<img src="{$profile_image}" />
+							<img class="profile-image" src="{$profile_image}" />
+							<div class="profile-info">
 								<div class="name">{$profile['first_name']} {$profile['last_name']}</div>
 								<div class="school">{$profile['institution']}</div>
 								<div class="semester">{$profile['term']} {$profile['year']}</div>
@@ -120,28 +121,34 @@ HTML;
 							</div>
 						</div>
 					</div>
-					<div class="panel-01 panel-class">
-						<h1>To-dos</h1>
-						<form id="to-do-option" action="user/list-task" method="post">
-							<input type="hidden" name="paginate" value="0" />
-							<input type="hidden" name="user_id" value="{$user_id}" />
-							<input type="hidden" name="begin" value="{$timestamp}" />
+					<div class="panel-01">
+						<h1>book list</h1>
+						<form name="class-feed">
+							{$readings}
 						</form>
 						<div class="panel-inner">
+							<div id="home-book-list" class="book-list">
+							</div>
+						</div>
+					</div>
+					<div class="panel-02 panel-class">
+						<h1>Assignments</h1>
+						<form id="to-do-option" action="user/list-task" method="post">
+							<input type="hidden" name="user_id" value="{$user_id}" />
+							<input type="hidden" name="filter" value="pending" />
+							<input type="hidden" name="paginate" value="0" />
+						</form>
+						<div class="panel-inner">
+							<div id="task-info-menu">
+								<ul>
+									<li id="option-pending" class="active">to-do</li>
+									<li id="option-finished" >finished</li>
+									<li id="option-all">all</li>
+								</ul>
+							</div>
 							<div id="to-do-list" class="task-list">
 							</div>
 							<a href="#" class="button more">more</a>
-						</div>
-					</div>
-					<div class="panel-02">
-						<h1>Class Feed</h1>
-						<div class="panel-inner">
-							<form name="class-feed">
-								<input type="hidden" name="institution_uri" value="{$profile['institution_uri']}" />
-								<input type="hidden" name="year" value="{$profile['year']}" />
-								<input type="hidden" name="term" value="{$profile['term']}" />
-								{$sections}
-							</form>
 						</div>
 					</div>
 				</div>

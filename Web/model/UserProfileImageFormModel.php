@@ -15,7 +15,7 @@ class UserProfileImageForm extends FormModel{
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->file_dao = new FileDAO($this->db);
+		$this->file_dao = new FileDAO();
 		$this->form_name = 'profile_image_upload_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;

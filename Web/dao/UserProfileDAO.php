@@ -16,9 +16,11 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
+		parent::__construct();
 		$attr = array(
 			'id',
+			'account',
 			'first_name',
 			'last_name',
 			'institution',
@@ -26,15 +28,15 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			'year',
 			'term',
 		);
+		$this->setAttribute($attr);
 
-		$this->user_dao                = new UserDAO($db);
-		$this->user_setting_dao        = new UserSettingDAO($db);
-		$this->person_dao              = new PersonDAO($db);
-		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($db);
-		$this->institution_dao         = new InstitutionDAO($db);
-		$this->file_dao                = new FileDAO($db);
+		$this->user_dao                = new UserDAO();
+		$this->user_setting_dao        = new UserSettingDAO();
+		$this->person_dao              = new PersonDAO();
+		$this->institution_linkage_dao = new UserInstitutionLinkageDAO();
+		$this->institution_dao         = new InstitutionDAO();
+		$this->file_dao                = new FileDAO();
 
-		parent::__construct($db, $attr, $params);
 	}
 
 	/**
@@ -92,6 +94,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 		$sql = "
 			SELECT 
 				u.id,
+				u.account,
 				p.first_name,
 				p.last_name,
 				i.name AS institution,

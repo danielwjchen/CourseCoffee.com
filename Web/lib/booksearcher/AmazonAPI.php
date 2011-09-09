@@ -3,14 +3,20 @@
 	
 	class AmazonAPI{
 		// Amazon Access Key Id and Secret Access Key
-		private $accessKeyId  = "AKIAJ5FH5BHY2U5VEQRA";
-		private $secretAccessKey  = "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";
-		private $associateTag  = "msco04-20";
+                private $accessKeyId;
+                private $secretAccessKey;
+                private $associateTag;
 
-		private $result;
 		private $book;
 
 		private $cartURL;
+
+		function __construct(){
+			global $config; 
+			$this->accessKeyId = $config->Amazon['accessKeyId'];
+			$this->secretAccessKey = $config->Amazon['secretAccessKey'];
+			$this->associateTag = $config->Amazon['associateTag'];
+		}
 
 		//SearchIndex Value is listed on 
 		//http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/APPNDX_SearchIndexValues.html
@@ -31,7 +37,8 @@
 					return ($response);
 				}
 				else{
-					throw new Exception("Invalid xml response.");
+					//return false;
+                                        return false;
 				}
 			}
 		}
@@ -116,15 +123,24 @@
 		}
 
 		public function getTitle(){
-			return $this->book->ItemAttributes->Title;
+			if(isset($this->book->ItemAttributes->Title)){
+				return $this->book->ItemAttributes->Title;
+			}
+			return false;
 		}
 
 		public function getISBN(){
-			return $this->book->ItemAttributes->ISBN;
+			if(isset($this->book->ItemAttributes->ISBN)){
+				return $this->book->ItemAttributes->ISBN;
+			}
+			return false;
 		}
 
 		public function getASIN(){
-			return $this->book->ASIN;
+			if(isset($this->book->ASIN)){
+				return $this->book->ASIN;
+			}
+			return false;
 		}
 
 		public function getAuthors(){
@@ -143,31 +159,56 @@
 					$Authors = $Author;
 				}
 			}
-			return $Authors;
+			
+			if(isset($Authors)){
+				return $Authors;
+			}
+			return false;
 		}
 
 		public function getSmallImageLink(){
-			return  $this->book->SmallImage->URL;
+			if(isset($this->book->SmallImage->URL)){
+				return $this->book->SmallImage->URL;
+			}
+			return false;
 		}
 
 		public function getMediumImageLink(){
-			return  $this->book->MediumImage->URL;
+			if(isset($this->book->MediumImage->URL)){
+				return $this->book->MediumImage->URL;
+			}
+			return false;
 		}
 
 		public function getLargeImageLink(){
-			return  $this->book->LargeImage->URL;
+			if(isset($this->book->LargeImage->URL)){
+				return $this->book->LargeImage->URL;
+			}
+			return false;
 		}
 
 		public function getDetailLink(){
-			return $this->book->DetailPageURL;
+			if(isset($this->book->DetailPageURL)){
+				return $this->book->DetailPageURL;
+			}
+			return false;
 		}
 
 		public function getListPrice(){
-			return $this->book->ItemAttributes->ListPrice->FormattedPrice;
+			if(isset($this->book->ItemAttributes->ListPrice->FormattedPrice)){
+				$price = substr($this->book->ItemAttributes->ListPrice->FormattedPrice,1,strlen($this->book->ItemAttributes->ListPrice->FormattedPrice));
+				return $price;
+			}
+
+			return false;
 		}
 
 		public function getLowestNewPrice(){
-			return $this->book->Offers->Offer->OfferListing->Price->FormattedPrice;
+                        if(isset($this->book->Offers->Offer->OfferListing->Price->FormattedPrice)){
+				$price = substr($this->book->Offers->Offer->OfferListing->Price->FormattedPrice,1,strlen($this->book->Offers->Offer->OfferListing->Price->FormattedPrice));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getLowestNewLink(){
@@ -175,11 +216,19 @@
 		}
 
 		public function getMarketPlaceLowestNewPrice(){
-			return $this->book->OfferSummary->LowestNewPrice->FormattedPrice;
+			if(isset($this->book->OfferSummary->LowestNewPrice->FormattedPrice)){
+				$price = substr($this->book->OfferSummary->LowestNewPrice->FormattedPrice,1,strlen($this->book->OfferSummary->LowestNewPrice->FormattedPrice));
+				return $price;
+			}
+			return false;
 		}
 
 		public function getMarketPlaceLowestUsedPrice(){
-			return $this->book->OfferSummary->LowestUsedPrice->FormattedPrice;
+			if(isset($this->book->OfferSummary->LowestUsedPrice->FormattedPrice)){
+				$price = substr($this->book->OfferSummary->LowestUsedPrice->FormattedPrice,1,strlen($this->book->OfferSummary->LowestUsedPrice->FormattedPrice));
+				return $price;
+			}
+			return false;
 		}
 
 		//sth wrong with this function
@@ -205,8 +254,11 @@
 			$xmlResponse = $this->queryAmazon($params);
 
 			$this->cartURL = $xmlResponse->Cart->PurchaseURL;
-
-			return $this->cartURL;
+			
+			if(isset($this->cartURL)){
+				return $this->cartURL;
+			}
+			return false;
 		}
 
 	}

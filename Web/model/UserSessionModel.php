@@ -10,6 +10,7 @@
  *  - user_id
  *  - signature
  *  - profile
+       - account/email
  *     - first_name
  *     - last_name
  *     - institution
@@ -21,6 +22,9 @@
  *     - year_id
  *     - term_id
  *     - fb_uid
+ *     - tou_vid: version id for terms of use
+ *     - created: timestamp of moment account created
+ *     - updated: timestamp of moment account updated
  *  - class_list:
  *     - section_id: the primary key that identifies a section
  *        - section_code: a string that contains a class's subject abbreviation, 
@@ -31,6 +35,9 @@ class UserSessionModel extends Model {
 	const USER_PROFILE    = 'profile';
 	const USER_SETTING    = 'setting';
 	const USER_CLASS_LIST = 'class_list';
+
+	// we difned a user has just registered by a 1 hour window
+	const USER_NEWLY_REGISTERED = 3600;
 
 	/**
 	 * Name to be used for the cookie
@@ -54,8 +61,30 @@ class UserSessionModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_cookie_dao = new UserCookieDAO($this->db);
-		$this->user_session_dao = new UserSessionDAO($this->db);
+		$this->user_cookie_dao = new UserCookieDAO();
+		$this->user_session_dao = new UserSessionDAO();
+	}
+
+	/**
+	 * Check is the user is newly registered
+	 *
+	 * This is used mainly to controll access to accoount creation confirmation
+	 * page.
+	 *
+	 * @return bool
+	 */
+	public function isNewlyRegistered() {
+		$setting = Session::Get(self::USER_SETTING);
+		if (!isset($setting['created'])) {
+			return false;
+		}
+
+		if ($setting['created'] + self::USER_NEWLY_REGISTERED <= time()) {
+			return false;
+		}
+
+		return true;
+
 	}
 
 	/**
@@ -98,9 +127,10 @@ class UserSessionModel extends Model {
 	public function beginUserSession($user_id, $email, $password) {
 		$this->setUserSessionCookie($user_id, $email, $password);
 
-		$user_profile_dao = new UserProfileDAO($this->db);
+		$user_profile_dao = new UserProfileDAO();
 		$user_profile_dao->read(array('user_id' => $user_id));
 		$user_profile = $user_profile_dao->attribute;;
+		$user_profile['account'] = $email;
 		unset($user_profile['id']);
 
 		// debug
@@ -108,10 +138,10 @@ class UserSessionModel extends Model {
 
 		$this->setUserProfile($user_profile);
 
-		$user_setting_dao = new UserSettingDAO($this->db);
+		$user_setting_dao = new UserSettingDAO();
 		$user_setting_dao->read(array('user_id' => $user_id));
 		$user_setting = $user_setting_dao->attribute;;
-		$fb_linkage_dao = new UserFacebookLinkageDAO($this->db);
+		$fb_linkage_dao = new UserFacebookLinkageDAO();
 		$fb_linkage_dao->read(array('user_id' => $user_id));
 		$user_setting['fb_uid'] = $fb_linkage_dao->fb_uid;
 
@@ -123,7 +153,7 @@ class UserSessionModel extends Model {
 
 		$this->setUserSetting($user_setting);
 
-		$user_class_list_dao = new UserClassListDAO($this->db);
+		$user_class_list_dao = new UserClassListDAO();
 		$user_class_list_dao->read(array(
 			'user_id'        => $user_id,
 			'institution_id' => $user_setting['institution_id'],
@@ -173,8 +203,8 @@ class UserSessionModel extends Model {
 		$user_id = Session::Get('user_id');
 		$this->user_cookie_dao->read(array('user_id' => $user_id));
 		$this->user_cookie_dao->destroy();
-		Cookie::del(self::COOKIE_SIGNATURE);
-		Cookie::del(self::COOKIE_AUTO_LOGIN);
+		Cookie::Del(self::COOKIE_SIGNATURE);
+		Cookie::Set(self::COOKIE_AUTO_LOGIN, 'false');
 		session_destroy();
 	}
 

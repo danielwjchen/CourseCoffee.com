@@ -1,20 +1,30 @@
 <?php
 	class BookRenterAPI{
 		//params
-		private	$developKey = "5Y7HAQxTTxjijoV17ThDCzfRxQVze6NY";
-		private $apiVersion= "2011-02-01";
+		private	$developKey;
+		private $apiVersion;
+		private $uid;
+		private $term;
 		private $result;
 
 		private $isbn;
-		private $URLPrefix= "http://www.shareasale.com/r.cfm?u=532647&b=96706&m=14293&urllink=";
+		private $URLPrefix;
 		private $link;
 
 
 		//initial
 		function __construct($input) {
+			global $config;
+			$this->uid = $config->BookRenter['uid'];
+                        $this->developKey = $config->BookRenter['developKey'];
+			$this->apiVersion = $config->BookRenter['apiVersion'];
+			$this->term = $config->BookRenter['term'];
+			$this->URLPrefix = 'http://www.shareasale.com/r.cfm?u='.$this->uid.'&b=96706&m=14293&urllink=';
+
 			$this->isbn = $input;
 
-			$result = $this->getBookInformationISBN();
+			$this->result = $this->getBookInformationISBN();
+			$this->link = $this->URLPrefix . substr($this->result->book->book_url, 7, strlen($this->result->book->book_url));
 		}
 
 		//search book detail info
@@ -25,20 +35,16 @@
 
 			// send request
 			$response = @file_get_contents($request);
-			if ($response === False){
-				return False;
+			if ($response === false){
+				return false;
 			}
 			else{
 				// parse XML to SimpleXMLObject
 				$parsedXml = simplexml_load_string($response);
-				if ($parsedXml === False){
+				if ($parsedXml === false){
 					return False; // no xml
 				}
 				else{
-
-					$this->result = $parsedXml;
-					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url));
-					$this->link = $this->URLPrefix . $bookURL;
 					return $parsedXml;
 				}
 			}
@@ -52,19 +58,16 @@
 			// send request
 			$response = @file_get_contents($request);
 
-			if ($response === False){
-				return False;
+			if ($response === false){
+				return false;
 			}
 			else{
 				// parse XML to SimpleXMLObject
 				$parsedXml = simplexml_load_string($response);
-				if ($parsedXml === False){
-					return False; // no xmlwe
+				if ($parsedXml === false){
+					return false; // no xml
 				}
 				else{
-					$this->result = $parsedXml;
-					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url));
-					$this->link = $this->URLPrefix . $bookURL;
 					return $parsedXml;
 				}
 			}
@@ -72,80 +75,85 @@
 
 
 		public function buyBackBookISBN(){
-
-			$request = "   http://www.bookrenter.com/api/get_buybacks?developer_key" . $this->developKey.
+			$request = "http://www.bookrenter.com/api/get_buybacks?developer_key" . $this->developKey.
 		        	   "&version=" . $this->apiVersion . "&isbns=" . $this->isbn;
 
 			// send request
 			$response = @file_get_contents($request);
 
-			if ($response === False){
-				return False;
+			if ($response === false){
+				return false;
 			}
 			else{
 				// parse XML to SimpleXMLObject
 				$parsedXml = simplexml_load_string($response);
 				if ($parsedXml === False){
-					return False; // no xmlwe
+					return false; // no xml
 				}
 				else{
-					$this->result = $parsedXml;
-					$bookURL = substr($this->result->book->book_url, 7, strlen($this->result->book->book_url));
-					$this->link = $this->URLPrefix . $bookURL;
 					return $parsedXml;
 				}
 			}
 		}
 
-
-
 		public function getLowestNewPrice(){
-			$price = '';
-			if (!is_array($this->result->book->prices->purchase_price)) {
+			if (isset($this->result->book->prices->purchase_price)) {
+				foreach($this->result->book->prices->purchase_price as $purchase ){
+					if($purchase->attributes() == "new") $price = $purchase;
+				};
+				$price = substr($price,1,strlen($price));
 				return $price;
 			}
 
-			foreach($this->result->book->prices->purchase_price as $purchase ){
-				if($purchase->attributes() == "new") $price = $purchase;
-			};
-
-			return $price;
+			return false;
 		}
 
 		public function getLowestNewLink(){
-			return $this->link;
+                        if (isset($this->result->book->prices->purchase_price)) {
+                                return $this->link;
+                        }
+			return false;
 		}
 
 		public function getLowestUsedPrice(){
-			$price = '';
-			foreach($this->result->book->prices->purchase_price as $purchase ){
-				if($purchase->attributes() == "used") $price = $purchase;
-			};
+                        if (isset($this->result->book->prices->purchase_price)) {
+                                foreach($this->result->book->prices->purchase_price as $purchase ){
+                                        if($purchase->attributes() == "used") $price = $purchase;
+                                };
+                                $price = substr($price,1,strlen($price));
+                                return $price;
+                        }
 
-			return $price;
+                        return false;
 		}
 
 		public function getLowestUsedLink(){
-			return $this->link;
+		        if (isset($this->result->book->prices->purchase_price)) {
+                                return $this->link;
+                        }
+                        return false;
 		}
 
 
 		public function getLowestRentalPrice(){
-			$price = '';
-			foreach($this->result->book->prices->rental_price as $rental ){
-				if($rental->attributes() == "90") $price = $rental;
-			};
+                        if (isset($this->result->book->prices->rental_price)) {
+                                foreach($this->result->book->prices->rental_price as $rental ){
+                            	    if($rental->attributes() == $this->term) $price = $rental;
+                        	};
 
-			return $price;
+               		        $price = substr($price,1,strlen($price));
+                        	return $price;
+                        }
+
+                        return false;
 		}
 
 		public function getLowestRentalLink(){
-			return $this->link;
+                        if (isset($this->result->book->prices->rental_price)) {
+				return $this->link;
+			}
+			return false;
 		}
-
-
-
 	}
-
 
 ?>

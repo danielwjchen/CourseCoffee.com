@@ -475,8 +475,8 @@ $P.ready(function(){
 
             $(window).scroll(function(){
                     adjust_parsed_data_pos();
-                    $("#tool_box").animate({"top": ($(window).scrollTop()-125)+"px"}, 10)
-                    $("#msg_board").animate({"top": ($(window).scrollTop()-125)+"px"}, 10)
+                    $("#tool_box").animate({"top": ($(window).scrollTop()-100)+"px"}, 10)
+                    $("#msg_board").animate({"top": ($(window).scrollTop()-100)+"px"}, 10)
             });
 
 
@@ -929,11 +929,11 @@ $P.ready(function(){
 			'<div class="confirm-message">' +
 				"<h2>Before we submit everything, let's take a final look... </h2>" + 
 				'<ul>' +
-					'<li>Are all the dates correct?</li>' +
-					'<li>Are there missing assignments?</li>' +
-					'<li>Do the assignments make sense?</li>' +
+					'<li><span class="orange-checker">&#10004;</span> Are all the dates correct?</li>' +
+					'<li><span class="orange-checker">&#10004;</span> Are there missing assignments?</li>' +
+					'<li><span class="orange-checker">&#10004;</span> Do the assignments make sense?</li>' +
 				'</ul>' +
-				'<h3>If everything works, congrats! Fill out the the form below and hit submit!</h3>' +
+				'<h3>If everything works, Fill out the the form below and hit submit.</h3>' +
 			'</div>' +
 		'</div>';
 		dialog.open('confirm-class', content);
@@ -971,17 +971,17 @@ $P.ready(function(){
 				creationForm.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
 			});*/
                         
-                        cnt = 0; 
-                        for(i=0; i<schedule_list.length; i++){
-                                if(schedule_list[i].deleted == false){
-                                        curr_date =  schedule_list[i].date
-                                        sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate()) + "/" + "2011"
-                                        sch_content = schedule_list[i].content
-				        creationForm.append('<input type="hidden" name="date_' + cnt + '" value="' + sch_date + '" />');
-				        creationForm.append('<input type="hidden" name="objective_' + cnt + '" value="' + sch_content + '" />');
-                                        cnt = cnt + 1
-                                }
-                        }
+      cnt = 0; 
+      for(i=0; i<schedule_list.length; i++){
+				if(schedule_list[i].deleted == false){
+					curr_date =  schedule_list[i].date
+					sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate()) + "/" + "2011"
+					sch_content = schedule_list[i].content
+					creationForm.append('<input type="hidden" name="date_' + cnt + '" value="' + sch_date + '" />');
+					creationForm.append('<input type="hidden" name="objective_' + cnt + '" value="' + sch_content + '" />');
+					cnt = cnt + 1
+        }
+      }
 			var content = '';
 
 			$.ajax({
@@ -1015,7 +1015,7 @@ $P.ready(function(){
 							});
 						});
 
-						content += '<div class="sign-up-option">' + SignUp.getOptions() + '</div>';
+						content += "<h2>In the meantime, why don't we create an account?</h2>" + SignUp.getOptions();
 						$('.dialog-inner').delegate('a.sign-up', 'click', function(e) {
 							e.preventDefault();
 							var target = $(this);

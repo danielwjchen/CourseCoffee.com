@@ -58,7 +58,40 @@ class UserController extends Controller implements ControllerInterface {
 	 * Check if the user qualifies for auto login
 	 */
 	private function checkAutoLogin() {
-		return Cookie::Get(USerSessionModel::COOKIE_AUTO_LOGIN); 
+		return Cookie::Get(UserSessionModel::COOKIE_AUTO_LOGIN); 
+	}
+
+	/**
+	 * Register user
+	 *
+	 * This is a helper function to share code among registerUserByFB() and
+	 * registerUserByUs()
+	 */
+	private function processRegistration($user_record, $section_id) {
+		$this->user_session_model->setUserSessionCookie($user_record['user_id'], $email, $password);
+		$this->user_session_model->setUserProfile($user_record['profile']);
+		$this->user_session_model->setUserSetting($user_record['setting']);
+
+		$class_list = array();
+		if (!empty($section_id)) {
+			Session::Del('section_id');
+			$college_class = new CollegeClassModel();
+			$class_info = $college_class->getClassById($section_id);
+
+			// check if the requested section id is valid
+			if (isset($class_info['content'])) {
+
+				$user_enroll_class_model = new UserEnrollClassModel();
+				$user_enroll_class_model->createLinkage(
+					$user_record['user_id'], 
+					$section_id
+				);
+				$class_list[$section_id] = $class_info['content']['section_code'];
+			}
+			$this->user_session_model->setUserClassList($class_list);
+
+
+		}
 	}
 
 	/**
@@ -80,11 +113,12 @@ class UserController extends Controller implements ControllerInterface {
 			// error_log(__METHOD__ . ' : result - ' . print_r($result, true));
 
 			$user_register_form = new UserRegisterFormModel();
+			$tou_model = new TermsOfUseModel();
+			$tou_vid        = $tou_model->getLatest();
 			$first_name     = $result['first_name'];
 			$last_name      = $result['last_name'];
 			$institution_id = $result['school'];
 			$section_id     = Session::Get('section_id');
-			$course_code    = Session::Get('course_code');
 			$year           = '2011';
 			$term           = 'fall';
 			$email          = $result['email'];
@@ -98,43 +132,13 @@ class UserController extends Controller implements ControllerInterface {
 				$term, 
 				$email, 
 				$password,
+				$tou_vid,
 				$fb_uid
 			);
 
-			if (isset($user_record['error'])) {
-				$this->redirect($user_record['redirect']);
+			if (isset($user_record['success'])) {
+				$this->processRegistration($user_record, $section_id);
 			}
-
-			// debug 
-			// error_log(__METHOD__ . ' : user_record - ' . print_r($user_record, true));
-
-			$this->user_session_model->setUserSessionCookie($user_record['user_id'], $email, $password);
-			$this->user_session_model->setUserProfile($user_record['profile']);
-			$this->user_session_model->setUserSetting($user_record['setting']);
-
-			$class_list = array();
-			if (!empty($section_id)) {
-				Session::Del('section_id');
-				$section_code  = Session::Get('section_code');
-				$college_class = new CollegeClassModel();
-				$class_info = $college_class->getClassById($section_id);
-
-				if (isset($class_info['content'])) {
-
-					$user_enroll_class_model = new UserEnrollClassModel();
-					$user_enroll_class_model->createLinkage(
-						$user_record['user_id'], 
-						$section_id
-					);
-					$class_list[$section_id] = $class_info['content']['section_code'];
-				}
-				$this->user_session_model->setUserClassList($class_list);
-
-
-			}
-
-			unset($user_record['profile']);
-			unset($user_record['setting']);
 		}
 
 		$this->clientRedirect($user_record['redirect']);
@@ -147,6 +151,8 @@ class UserController extends Controller implements ControllerInterface {
 	 * Since this is our first semester, some of information is hard-coded
 	 */
 	public function registerUserByUs() {
+		$tou_model = new TermsOfUseModel();
+		$tou_vid        = $tou_model->getLatest();
 		$first_name     = Input::Post('first-name');
 		$last_name      = Input::Post('last-name');
 		$institution_id = Input::Post('school');
@@ -160,7 +166,7 @@ class UserController extends Controller implements ControllerInterface {
 
 		$user_register_form = new UserRegisterFormModel();
 
-		$result = $user_register_form->processForm(
+		$user_record = $user_register_form->processForm(
 			$first_name,
 			$last_name,
 			$institution_id,
@@ -169,40 +175,18 @@ class UserController extends Controller implements ControllerInterface {
 			$email, 
 			$password, 
 			$confirm, 
+			$tou_vid,
 			$token
 		);
 		
-		if (isset($result['success'])) {
-			$this->user_session_model->setUserSessionCookie($result['user_id'], $email, $password);
-			$this->user_session_model->setUserProfile($result['profile']);
-			$this->user_session_model->setUserSetting($result['setting']);
-
-			$class_list = array();
-			if (!empty($section_id)) {
-				Session::Del('section_id');
-				$section_code  = Session::Get('section_code');
-				$college_class = new CollegeClassModel();
-				$class_info = $college_class->getClassById($section_id);
-
-				if (isset($class_info['content'])) {
-
-					$user_enroll_class_model = new UserEnrollClassModel();
-					$user_enroll_class_model->createLinkage(
-						$result['user_id'], 
-						$section_id
-					);
-					$class_list[$section_id] = $class_info['content']['section_code'];
-				}
-				$this->user_session_model->setUserClassList($class_list);
-
-
-			}
-
-			unset($result['profile']);
-			unset($result['setting']);
+		if (isset($user_record['success'])) {
+			$this->processRegistration($user_record, $section_id);
 		}
 
-		$this->output = new JSONView($result);
+		unset($user_record['profile']);
+		unset($user_record['setting']);
+
+		$this->output = new JSONView($user_record);
 	}
 
 	/**
@@ -227,7 +211,7 @@ class UserController extends Controller implements ControllerInterface {
 	 * Accept user login request by facebook and begin session
 	 */
 	public function loginUserByFB() {
-		if (!$this->checkAutoLogin()) {
+		if ($this->checkAutoLogin() == 'false') {
 			$this->output = new JSONView(array('error' => true));
 			return ;
 		}
@@ -279,9 +263,7 @@ class UserController extends Controller implements ControllerInterface {
 		$user_id = $this->user_session_model->getUserId();
 		$result = $logout_model->terminate($user_id);
 
-		if (isset($result['success'])) {
-			$this->user_session_model->endUserSession();
-		}
+		$this->user_session_model->endUserSession();
 
 		$this->output = new JSONView($result);
 	}

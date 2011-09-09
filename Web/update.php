@@ -9,23 +9,27 @@ require_once __DIR__ . '/config.php';
 
 
 /**
- * Disabled for development
+ * Rebuild table schemas
  *
+ * This is not 100% reliable.... It checks with the existing DAB schema entries 
+ * but not the actual table schemas.
+ */
+require_once INCLUDES_PATH . '/DBAInvoker.php';
 DBAInvoker::Init($config->db);
-$dbas = File::ScanDirectory(DBA_PATH . '/core', '/DBA\.php$/');
+$dbas = File::ScanDirectory(DBA_PATH, '/DBA\.php$/');
 foreach ($dbas as $path => $dba) {
 	try {
 		DBAInvoker::Request($dba->name, $dba->uri);
 	} catch (Exception $e) {
 		echo $e->Message();
-	}
+		}
 }
 
 /**
  * Rebuild paths for autoloading
  */
-Autoload::Init($config->db);
-Autoload::Build();
+Autoloader::Init($config->db);
+Autoloader::Build();
 
 /**
  * Rebuild URI maps for routing

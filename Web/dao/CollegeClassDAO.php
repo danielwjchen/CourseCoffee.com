@@ -8,7 +8,8 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
+		parent::__construct();
 		$attr = array(
 			'institution_id',
 			'institution',
@@ -23,14 +24,13 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 			'course_num',
 			'course_title',
 			'course_code',
-			'course_description',
 			'section_id',
 			'section_num',
 			'section_code',
 			'syllabus_status',
 			'syllabus_id',
 		);
-		parent::__construct($db, $attr, $params);
+		$this->setAttribute($attr);
 
 	}
 
@@ -65,7 +65,6 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 				crs.num AS course_num,
 				crs.title AS course_title,
 				CONCAT(sub.abbr, '-', crs.num) AS course_code,
-				crs.description AS course_description,
 				sub.id AS subject_id,
 				sub.abbr AS subject_abbr,
 				sub.title AS subject_title,

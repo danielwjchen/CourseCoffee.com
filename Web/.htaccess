@@ -84,8 +84,6 @@ DirectoryIndex index.php
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !=/favicon.ico
-  RewriteCond %{REQUEST_URI} !(css)
-  RewriteCond %{REQUEST_URI} !(js)
   RewriteCond %{REQUEST_URI} !(image)
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>

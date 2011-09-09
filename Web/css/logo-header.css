@@ -1,0 +1,21 @@
+/**
+ * Define style for header with logo
+ */
+.header {
+	height: 85px;
+}
+.header img {
+	height: 70px;
+	float: left;
+	margin-top: 8px;
+	margin-right: -215px;
+}
+.header .back {
+	float: left;
+	font-size: 24px;
+	line-height: 32px;
+	margin-top: 25px;
+	width: 100px;
+	margin-left: 860px;
+	margin-right: -960px;
+}

@@ -61,7 +61,71 @@ class SystemDBA implements DBAInterface {
 				),
 				'primary' => array('id'),
 			),
-			'autoload' => array(
+			'cache' => array(
+				'description' => 'implement database based caching system',
+				'column' => array(
+					'key' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'cache key',
+					),
+					'value' => array(
+						'type' => 'text',
+						'size' => 'medium',
+						'not null' => TRUE,
+						'value' => 'cache value',
+					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is created',
+					),
+					'expire' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is expire',
+					),
+				),
+				'primary' => array('key'),
+				'index' => array(
+					'expire' => array('expire'),
+				),
+			),
+			'file_cache' => array(
+				'description' => 'implement a file based caching system',
+				'column' => array(
+					'key' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'cache key',
+					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is created',
+					),
+					'expire' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is expire',
+					),
+				),
+				'primary' => array('key'),
+				'index' => array(
+					'expire' => array('expire'),
+				),
+			),
+			'autoloader' => array(
 				'description' => 'register a class and the file path',
 				'column' => array(
 					'class' => array(
@@ -82,6 +146,30 @@ class SystemDBA implements DBAInterface {
 					'class' => array('class'),
 				),
 			),
+/*
+			'scheduler' => array(
+				'description' => 'schedule jobs',
+				'column' => array(
+					'callback' => array(
+						'type' => 'varchar',
+						'length' => '64',
+						'not null' => TRUE,
+						'description' => 'name of the job class to be called.',
+					),
+					'performed' => array(
+						'type' => 'int',
+						'not null' => TRUE,
+						'description' => 'the timestamp when the job is performed',
+					),
+				),
+				'primary' => array(
+					'callback' => array('callback'),
+				),
+				'index' => array(
+					'performed' => array('performed')
+				),
+			),
+*/
 			'router' => array(
 				'description' => 'Map path to controller',
 				'column' => array(

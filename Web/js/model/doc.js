@@ -7,7 +7,11 @@ window.doc = {
 	 */
 	'init' : function() {
 		dialog.open('upload', '');
-		doc.createForm('.dialog-inner', 'Please select syllabus documents to upload (.pdf, .doc, .docx, .html, .txt, e.t.c)');
+		var message = '<h2>From doc to data. Easy as ABC.</h2>' + 
+		'<p><strong>Upload your syllabus, and we will extract the assignments and arrange them into a nice calendar.</strong></p>' +
+		'<img src="/images/syllabus-to-calendar.png" />' +
+		'<p><strong>Ingenious? We think so.</strong></p>';
+		doc.createForm('.dialog-inner', message);
 
 		$('.dialog-close', $P).live('click', function(e) {
 			e.preventDefault();

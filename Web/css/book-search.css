@@ -1,0 +1,123 @@
+/**
+ * @file
+ * Define styles for book search page
+ */
+.book-search .body {
+	min-height: 100%;
+}
+.book-search .search-block {
+	margin: 60px auto 0;
+	width: 550px;
+}
+.book-search .search-block .logo {
+	margin: 0 auto 15px;
+	width: 410px;
+	display: block;
+}
+.book-search .search-block input {
+	width: 550px;
+	margin: 5px 10px 5px 0;
+	clear: both;
+	padding: 0 4px;
+	color: #787474;
+	font-size: 12px;
+	line-height: 18px;
+	height: 28px;
+	border: 1px solid #457319;
+	float: left;
+	background: white;
+	-moz-box-shadow: 0 0 25px 0 #457319;
+	-webkit-box-shadow: 0 0 25px 0 #457319;
+	box-shadow: 0 0 25px 0 #457319;
+}
+.book-search .search-block .row {
+	width: 550px;
+	float: left;
+}
+.book-search .search-block .button {
+	clear: both;
+	width: 150px;
+	margin: 20px auto;
+	padding: 5px 0;
+}
+/**
+ * Define styles for book list
+ */
+.book-search .message,
+.book-search .content {
+	width: 600px;
+	margin: 0 auto 30px;
+	float: none;
+	clear: both;
+}
+.book-search .message h1 {
+	color: white;
+	font-size: 16px;
+	text-align: center;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
+}
+.book-search .book-list {
+	width: 560px;
+	min-height: 200px;
+	margin: 20px auto;
+}
+.book-search .book-list h3 {
+	text-align: center;
+}
+.book-search .book-list ul {
+	width: 440px;
+	margin: 0 auto;
+}
+.book-search .underline {
+	border-bottom: 1px white solid;
+}
+.book-search .underline a{
+	color: white;
+}
+/**
+ * Define styles for autocomplete
+ */
+.book-search #class-suggest-form .message {
+	top: 32px !important;
+}
+#class-suggest-form .message {
+	position: absolute;
+	top: 36px;
+	text-align:center;
+	border: 1px solid #585656;
+	padding: 10px 5px;
+	border-radius: 0 0 4px 4px;
+	-moz-box-shadow: 1px 1px #003d01;
+	-webkit-box-shadow: 1px 1px 5px #003d01;
+	box-shadow: 1px 1px 5px #003d01;
+	background: white;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+.ui-autocomplete {
+	z-index: 99999!important;
+	height: 300px !important;
+	overflow: auto !important;
+	font-size: 14px;
+}
+.ui-autocomplete a,
+.ui-autocomplete span {
+	display: block;
+	float: left;
+}
+.ui-autocomplete a {
+	width: 400px;
+}
+.ui-autocomplete .course-code {
+	clear: right;
+	font-weight: bold;
+	width: 100%;
+}
+.ui-autocomplete .course-title {
+	padding-right: 20px;
+}
+.ui-autocomplete .institution {
+	color: #6B6B6B;
+}

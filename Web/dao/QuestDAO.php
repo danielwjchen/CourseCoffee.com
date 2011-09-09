@@ -8,17 +8,17 @@ class QuestDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
+		parent::__construct();
 		$attr = array(
 			'id',
-      'type',
-      'type_id',
+			'type',
+			'type_id',
 			'user_id',
 			'objective',
 			'description',
 		);
-
-		parent::__construct($db, $attr, $params);
+		$this->setAttribute($attr);
 
 	}
 
@@ -37,12 +37,14 @@ class QuestDAO extends DAO implements DAOInterface{
 		} else {
 			return $this->db->insert("
 				INSERT INTO `quest`
-					(`objective`, `description`, `user_id`, `type_id`)
+					(`objective`, `description`, `user_id`, `type_id`, `created`, `updated`)
 				VALUES (
 					:objective,
 					:description,
 					:user_id,
-					(SELECT `id` FROM `quest_type` WHERE name = :type)
+					(SELECT `id` FROM `quest_type` WHERE name = :type),
+					UNIX_TIMESTAMP(),
+					UNIX_TIMESTAMP()
 				)",
 				array(
 					'type' => $params['type'],
@@ -119,7 +121,8 @@ class QuestDAO extends DAO implements DAOInterface{
 				q.user_id = :user_id,
 				q.description = :description,
 				q.objective = :objective,
-				q.type_id = (SELECT qt.id FROM quest_type qt WHERE qt.name = :type)
+				q.type_id = (SELECT qt.id FROM quest_type qt WHERE qt.name = :type),
+				q.updated = UNIX_TIMESTAMP()
 			WHERE q.id = :id
 		";
 
@@ -154,7 +157,7 @@ class QuestDAO extends DAO implements DAOInterface{
 			LEFT JOIN `quest_linkage` qq_linkage
 				ON q.id = qq_linkage.child_id
 			WHERE q.id = :id';
-		$this->db->perform($sql, array('id' => $this->id));
+		$this->db->perform($sql, array('id' => $this->attr['id']));
 
 	}
 

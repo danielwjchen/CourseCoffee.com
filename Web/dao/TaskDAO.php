@@ -33,17 +33,18 @@ class TaskDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
-		$this->quest                 = new QuestDAO($db);
-		$this->date                  = new DateDAO($db);
-		$this->quest_date_linkage    = new QuestDateLinkageDAO($db);
-		$this->quest_section_linkage = new QuestSectionLinkageDAO($db);
-		$this->quest_user_linkage    = new QuestUserLinkageDAO($db);
+	function __construct() {
+		parent::__construct();
+		$this->quest                 = new QuestDAO();
+		$this->date                  = new DateDAO();
+		$this->quest_date_linkage    = new QuestDateLinkageDAO();
+		$this->quest_section_linkage = new QuestSectionLinkageDAO();
+		$this->quest_user_linkage    = new QuestUserLinkageDAO();
 
 		$attr = array(
 			'id',
-      'type',
-      'type_id',
+			'type',
+			'type_id',
 			'creator_id',
 			'user_id',
 			'due_date',
@@ -51,8 +52,8 @@ class TaskDAO extends DAO implements DAOInterface{
 			'objective',
 			'description',
 		);
+		$this->setAttribute($attr);
 
-		parent::__construct($db, $attr, $params);
 
 	}
 
@@ -153,14 +154,17 @@ class TaskDAO extends DAO implements DAOInterface{
 
 	/**
 	 * Extend DAO::update()
+	 *
+	 * This is not tested!
 	 */
 	public function update() {
-		$this->quest->update($this->attr);
-		$this->date->update(array(
-			'id' => $this->date->id,
-			'type' => $this->date->type,
-			'timestamp' => $this->attr['due_date']
-		));
+		foreach ($this->quest->attribute as $attr => $value) {
+			$this->quest->$attr = $this->attr[$attr];
+		};
+		$this->quest->update();
+
+		$this->date->timestamp = $this->attr['due_date'];
+		$this->date->update();
 	}
 
 	/**

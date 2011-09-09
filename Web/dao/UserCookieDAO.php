@@ -8,9 +8,10 @@ class UserCookieDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
+		parent::__construct();
 		$attr = array('user_id', 'signature');
-		parent::__construct($db, $attr, $params);
+		$this->setAttribute($attr);
 
 	}
 

@@ -6,6 +6,8 @@
  */
 window.Calendar = function(regionName, optionFormName, listName, creationFormName) {
 
+	var _taskUpdater = '';
+
 	/**
 	 * HTML region to be populated with the calendar
 	 */
@@ -63,6 +65,65 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	var monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 	/**
+	 * Travel forward and backwad on calendar
+	 */
+	$('a.calendar-button').click(function(e) {
+		e.preventDefault();
+		timestamp = parseInt(timestamp);
+		var date = new Date(timestamp * 1000);
+		var target = $(this);
+
+		/**
+		 * helper functions to share code 
+		 */
+		var _traverseMonth = function(date) {
+			calculateMonthRange(date);
+			displayMonth();
+		}
+		var _traverseWeek = function(date) {
+			calculateWeekRange(date);
+			displayDay();
+		}
+		if (type == 'month') {
+			date.setDate(1)
+			if (target.hasClass('backward')) {
+				date.setMonth(date.getMonth() - 1);
+				_traverseMonth(date);
+			} else if (target.hasClass('forward')) {
+				date.setMonth(date.getMonth() + 1);
+				_traverseMonth(date);
+			}
+			timestamp = toTimestamp(date);
+		} else if (type == '7-day') {
+			var weekOffset = 7 * 24 * 60 * 60 * 1000;
+			date.setTime(date.getTime() - ((date.getDay() * 86400) * 1000));
+			if (target.hasClass('backward')) {
+				date.setTime(date.getTime() - weekOffset)
+				_traverseWeek(date);
+			} else if (target.hasClass('forward')) {
+				date.setTime(date.getTime() + weekOffset)
+				_traverseWeek(date);
+			}
+			timestamp = toTimestamp(date);
+		} else if (type.indexOf('-day')) {
+			var dayNumber = parseInt(type.replace('-day', ''));
+			var dayOffset = dayNumber * 24 * 60 * 60 * 1000;
+			if (target.hasClass('backward')) {
+				date.setTime(date.getTime() - dayOffset);
+			} else if (target.hasClass('forward')) {
+				date.setTime(date.getTime() + dayOffset);
+			}
+			timestamp = toTimestamp(date);
+			calculateDayRange(dayNumber);
+			displayDay();
+		}
+
+		setCalendarRange();
+		setCalendarType();
+		getTaskList();
+	});
+
+	/**
 	 * Get event list from server
 	 *
 	 * It also clears out timeslots before re-populating.
@@ -73,13 +134,14 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 */
 	var getTaskList = function() {
 		var paginate   = $('input[name=paginate]', option).val();
-		var cacheKey   = 'task-list-' + range.begin + '-' + range.end + '-' + paginate;
-		var cacheValue = cache.get(cacheKey);
+		$('.has-event').removeClass('has-event');
+		list.empty();
 
 		/**
 		 * A helper function to populate calendar timeslot
 		 */
 		var populateTimeSlot = function(itemList) {
+
 			if (itemList && itemList['id']) {
 				findTimeInterval(itemList);
 			} else if (itemList) {
@@ -98,35 +160,30 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 			}
 		}
 
-		if (cacheValue) {
-			Task.generateList(cacheValue, list);
-			populateTimeSlot(cacheValue);
+		list.addClass('loading');
+		$('span.event').remove();
+		$.ajax({
+			url: '/calendar-list-task',
+			type: 'POST',
+			cache: false,
+			data: option.serialize(),
+			success: function(response) {
+				list.removeClass('loading');
+				if (response.success) {
+					var tasks = task.AddUrlToTask(response.list);
 
-		} else {
-			list.addClass('loading');
-			$.ajax({
-				url: '/calendar-list-task',
-				type: 'POST',
-				cache: false,
-				data: option.serialize(),
-				success: function(response) {
-					list.removeClass('loading');
-					if (response.success) {
-						tasks = task.AddUrlToTask(response.list);
+					Task.generateList(tasks, list);
+					populateTimeSlot(tasks);
 
-						Task.generateList(tasks, list);
-						populateTimeSlot(tasks);
-
-						cache.set(cacheKey, tasks);
-						
-					}
-
-					if (response.error) {
-						task.setError(response.message, list);
-					}
+					_taskUpdater = new TaskUpdater(listName);
+					
 				}
-			});
-		}
+
+				if (response.error) {
+					task.setError(response.message, list);
+				}
+			}
+		});
 	}
 
 	/**
@@ -135,19 +192,31 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * This is a helper/private method.
 	 */
 	var findTimeInterval = function(item) {
-		date = new Date(item['due_date'] * 1000);
+		var date  = new Date(item['due_date'] * 1000);
+		var begin = '';
+		var end   = '';
+
+		// debug
+		// console.log(date);
+
 		date.setMinutes(0, 0, 0);
 
 		if (type.indexOf('day') > 0) {
-			date.setHours(date.getHours() + 1);
-			begin = date.getTime() / 1000;
-			end   = (date.setHours(date.getHours() + 1 * hourInterval))/ 1000;
+			date.setHours(date.getHours());
+			begin = toTimestamp(date);
+			date.setHours(date.getHours() + 1 * hourInterval);
+			end   = toTimestamp(date);
 
 		} else if (type == 'month') {
 			date.setHours(0, 0, 0, 0);
-			begin = date.getTime() / 1000;
-			end   = (date.setTime(date.getTime() + 86400000))/ 1000;
+			begin = toTimestamp(date) ;
+			date.setTime(date.getTime() + 86400000);
+			end   = toTimestamp(date);
 		}
+
+		// debug
+		// console.log(begin);
+		// console.log(end);
 
 		// JQuery is having trouble selecting newly created elements, that's why
 		var timeslot = $(document.getElementById(begin + '.' + end), region);
@@ -197,7 +266,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 *  UNIX timestamp
 	 */
 	var toTimestamp = function(date) {
-		return Math.round(date.getTime() / 1000);
+		return Math.round(date.getTime() / 1000) - (date.getTimezoneOffset() * 60);
 	};
 
 	/**
@@ -206,11 +275,11 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * This is a helper/private method.
 	 */
 	var displayDay = function() {
-		date = new Date();
-		currentMonth = '';
-		currentDate  = '';
+		var date = new Date();
+		var currentMonth = '';
+		var currentDate  = '';
 
-		html = '<div class="day calendar-display-inner">' +
+		var html = '<div class="day calendar-display-inner">' +
 			'<div class="col hour-interval">';
 
 		for (i = 0; i < 24 / hourInterval; i++) {
@@ -224,7 +293,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		html += '</div>';
 
 		for (i = range.begin; i < range.end; i += 86400) {
-			date.setTime(i * 1000);
+			date.setTime((i + date.getTimezoneOffset() * 60) * 1000);
 			currentMonth = date.getMonth() + 1;
 			currentDate  = date.getDate();
 			html += '<div class="col day-interval"><div class="label row">' +
@@ -250,6 +319,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 		$('.day-interval .row', region).width(rowWidth);
 		var row = $('.row:not(.label)', region);
 		var rowHeight = (row.height() * hourInterval);
+		rowHeight = 100;
 		row.height(rowHeight);
 	};
 
@@ -259,9 +329,11 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * This is a helper/private method.
 	 */
 	var displayMonth = function() {
+		var labelDate = (new Date(range.begin * 1000)).getMonth();
+		labelDate = (labelDate == 11) ? 0 : labelDate + 1;
 		var html = '<div class="month calendar-display-inner">' + 
 			'<div class="month-label">' +
-			monthArray[((new Date(range.begin * 1000)).getMonth())] +
+			monthArray[labelDate] +
 			'</div>' +
 		'<div class="week-day-interval row">';
 
@@ -272,7 +344,8 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 
 		html += '</div><div class="week row">';
 
-		var firstDayInWeek = (new Date(range.begin * 1000)).getDay();
+		var date = new Date(range.begin * 1000);
+		var firstDayInWeek = date.getDay() +1;
 		// create padding between the first day of the week and the beginning of 
 		// the month
 		var colType = '';
@@ -283,7 +356,7 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 
 		// cycle through the days
 		for (k = range.begin; k <= range.end; k += 86400) {
-			curDate = new Date(k * 1000);
+			curDate = new Date((k + (new Date()).getTimezoneOffset() * 60) * 1000);
 			colType = (curDate.getDate() % 2 == 0) ? 'even' : 'odd';
 			html += '<div id="' + k + '.' + (k + 86400) + '" class="day col ' + colType + '">' + 
 				'<span class="day-label">' + curDate.getDate() + '</span>' + 
@@ -338,12 +411,11 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 *   - begin
 	 *   - end
 	 */
-	var calculateWeekRange = function() {
-		var date = new Date(timestamp * 1000);
+	var calculateWeekRange = function(date) {
 		date.setHours(0, 0, 0, 0);
 		date.setTime(date.getTime() - ((date.getDay() * 86400) * 1000));
 		range.begin = toTimestamp(date);
-		date.setTime(date.getTime() + 7 *86400 * 1000);
+		date.setTime(date.getTime() + 6 *86400 * 1000);
 		range.end = toTimestamp(date);
 		return range;
 	};
@@ -358,21 +430,11 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 *   - begin
 	 *   - end
 	 */
-	var calculateMonthRange = function() {
-		var date = new Date(timestamp * 1000);
+	var calculateMonthRange = function(date) {
 		date.setDate(1)
 		date.setHours(0, 0, 0, 0);
 		range.begin = toTimestamp(date);
-
-		// we wrap the month around to 1 if it's the end of the year and increment 
-		// year by 1
-		if (date.getMonth() == 11) {
-			date.setMonth(1);
-			date.setFullYear(date.getFullYear() +1);
-		} else {
-			date.setMonth(date.getMonth() + 1);
-		}
-
+		date.setMonth(date.getMonth() + 1);
 		range.end  = toTimestamp(new Date(date.getFullYear(), date.getMonth(), 0));
 	};
 
@@ -403,7 +465,8 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * @return object range
 	 */
 	this.getWeekCalendar = function() {
-		calculateWeekRange();
+		var date = new Date(timestamp * 1000);
+		calculateWeekRange(date);
 		type  = '7-day';
 		displayDay();
 		setCalendarRange();
@@ -419,7 +482,8 @@ window.Calendar = function(regionName, optionFormName, listName, creationFormNam
 	 * @return object range
 	 */
 	this.getMonthCalendar = function() {
-		calculateMonthRange();
+		var date = new Date(timestamp * 1000);
+		calculateMonthRange(date);
 		type  = 'month';
 		displayMonth();
 		setCalendarRange();

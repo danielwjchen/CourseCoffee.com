@@ -52,8 +52,8 @@ class DocumentProcessorFormModel extends FormModel{
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->file_dao    = new FileDAO($this->db);
-		$this->section_dao = new SectionDAO($this->db);
+		$this->file_dao    = new FileDAO();
+		$this->section_dao = new SectionDAO();
 		// form submission is limite to 5 times
 		$this->max_try = 5;
 		// form expires in three hours
@@ -180,7 +180,7 @@ class DocumentProcessorFormModel extends FormModel{
 			}
 		}
 
-		$school = new InstitutionDAO($this->db);
+		$school = new InstitutionDAO();
 		$school->read(array('name' => $school_string));
 		$params['institution_id'] = $school->id;
 
@@ -244,7 +244,7 @@ class DocumentProcessorFormModel extends FormModel{
 			$params['limit']['offset'] = 0;
 			$params['limit']['count']  = 10;
 
-			$class_list = new CollegeClassSuggestDAO($this->db);
+			$class_list = new CollegeClassSuggestDAO();
 			$has_no_record = $class_list->read($params);
 			if (!$has_no_record) {
 				$course_code = strtoupper($course_code_array[$i]);

@@ -41,13 +41,13 @@ class CalendarPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'NavigationBlockView',
+				'callback' => 'NavigationBlockView',
 			),
 			'upload_form' => array(
-				'UploadFormBlockView',
+				'callback' => 'UploadFormBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -58,8 +58,10 @@ class CalendarPageView extends PageView implements PageViewInterface {
 	public function getContent() {
 		extract($this->data);
 		$option = '';
-		foreach ($class_list as $section_id => $section_code) {
-			$option .= "<option value='{$section_id}'>{$section_code}</option>";
+		if (is_array($class_list)) {
+			foreach ($class_list as $section_id => $section_code) {
+				$option .= "<option value='{$section_id}'>{$section_code}</option>";
+			}
 		}
 		$class_select = <<<HTML
 <select name="section_id" class="class-list">
@@ -90,13 +92,14 @@ HTML;
 								<input type="hidden" name="begin" />
 								<input type="hidden" name="end" />
 								<input type="hidden" name="user_id" value="{$user_id}" />
+								<input type="hidden" name="filter" value="pending" />
 								<input type="hidden" name="paginate" value="0" />
 							</form>
 							<ul>
 								<li><a href="#" class="option month active">month</a></li>
 								<li><a href="#" class="option week">week</a></li>
 								<li><a href="#" class="option customized">4-day</a></li>
-								<li><a href="#" class="option today">today</a></li>
+								<li><a href="#" class="option today">day</a></li>
 							</ul>
 						</div>
 					</div>
@@ -104,6 +107,8 @@ HTML;
 						<div class="panel-inner">
 							<div class="calendar-display">
 							</div>
+							<a class="calendar-button button backward" href="#">&lt;</a>
+							<a class="calendar-button button forward" href="#">&gt;</a>
 						</div>
 					</div>
 					<div class="panel-02">
@@ -142,6 +147,13 @@ HTML;
 										</div>
 									</fieldset>
 								</form>
+							</div>
+							<div id="task-info-menu">
+								<ul>
+									<li id="option-pending" class="active">to-do</li>
+									<li id="option-finished" >finished</li>
+									<li id="option-all">all</li>
+								</ul>
 							</div>
 							<div id="calendar-task-list" class="task-list">
 							</div>

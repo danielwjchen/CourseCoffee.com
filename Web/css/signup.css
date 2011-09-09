@@ -17,6 +17,10 @@
 	padding: 10px 0;
 	clear: both;
 }
+.sign-up #user-register-form .row p {
+	font-size: 12px;
+	padding: 0 20px 0 20px;
+}
 .sign-up #user-register-form .error{
 	color: red;
 	text-align: center;

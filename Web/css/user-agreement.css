@@ -1,0 +1,13 @@
+/**
+ * @file
+ * Define style for user agreement block
+ */
+.user-agreement {
+	width: 400px;
+	margin: 10px auto;
+	font-size: 12px;
+}
+.user-agreement a {
+	color: #333333;
+	font-weight: bold;
+}

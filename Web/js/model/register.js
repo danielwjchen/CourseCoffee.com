@@ -7,9 +7,6 @@ window.register = {
 	 * Initialize the user registration form
 	 */
 	'init': function () {
-		$.get('?q=user/register', function(data) {
-			$('.body').html(register.form('', '', '', data.token, ''));
-		});
 	},
 	/**
 	 * Generate the HTML form for user registration
@@ -59,16 +56,67 @@ window.register = {
 	 * Validate the form fields
 	 */
 	'validate' : function() {
-		var error = true;
-		$(':input').each(function(i){
-			if ($(this).val() == '') {
-				register.error('You have empty fileds. Please try again.');
-				error = false;
-				return;
+		var validateRules = {
+			'checkEmpty' : function() {
+				var pass = true;
+				$(':input').each(function(i){
+					if ($(this).val() == '') {
+						register.error('You have empty fields. Please try again.');
+						pass = false;
+						return ;
+					}
+				});
+				return pass;
+			},
+			'checkEmail' : function() {
+				var validateEmail = function(string) {
+					var rule = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+					return string.match(rule);
+				}
+
+				if (!validateEmail($('input[name=email]').val())) {
+					register.error('Please enter a valid email account');
+					return false;
+				}
+
+				return true;
+			},
+			/*
+			'validateName' : function() {
+				var rule  = /^[a-z]{3,17}$/;
+				var first = $('input[name=first-name]').val();
+				var last  = $('input[name=last-name]').val();
+				// worlds' longest surename record has 17 characters
+				register.error('Please enter a valid first or last name.');
+				return first.match(rule) && last.match(rule);
+			},
+			*/
+			'password' : function() {
+				var password = $('input[name=password]').val();
+				var confirm  = $('input[name=confirm]').val();
+				if (password != confirm) {
+					register.error('Password and confirmation do not match.');
+					return false;
+				}
+				if (password.length < 8 || confirm.length < 8) {
+					register.error('Password too short. A good password must be a combination of at least 8 alphanumeric characters');
+					 return false;
+				}
+
+				return true;
 			}
-		});
+		};
+
+		var pass = true;
+		for (i in validateRules) {
+			if (!validateRules[i]()){
+				pass = false;	
+				return ;
+			}
+		}
+
 		
-		return error;
+		return pass;
 	},
 	/**
 	 * submit the user registration form
@@ -109,6 +157,12 @@ var SignUp = function(url_param) {
  */
 SignUp.getOptions = function() {
 	return '<div class="sign-up-option">' +
+			'<ul>' +
+				'<li class="calendar">Organize all your class assignments into one calendar</li>' +
+				'<li class="text-book">Find the best deals on your textbooks online</li>' +
+				'<li class="facebook">Collaborate with your friends</li>' +
+	 '</ul>' +
+		'<h3>How would you like to create your account?</h3>' +
 		'<a class="facebook button sign-up" href="/sign-up">sign up with facebook</a>' +
 		'<div class="alternative">' +
 			'<p>Or, you can always manually create an account...</p>' +

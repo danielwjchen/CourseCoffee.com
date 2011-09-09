@@ -25,7 +25,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -65,7 +65,9 @@ class WelcomePageView extends PageView implements PageViewInterface {
 								<li class="text-book">Instantly find the cheapest deals on your textbooks online</li>
 								<li class="facebook">Collaborate with your classmates on facebook</li>
 						 </ul>
-							 <a href="#">Help: where do I access my electronic syllabus?</a>
+						 	<div class="tutorial">
+								 <a href="/how-to-find-syllabus">Help: where do I find my syllabus?</a>
+							</div>
 							 <div class="sign-up-shortcut">
 									<p>or... manually</p>
 									<a href="/sign-up" class="button sign-up">Sign Up</a>
@@ -88,6 +90,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 			</div>
 		</div>
 	</div>
+	<div class="clear-fix"></div>
 </div>
 <div class="footer">
 	<div class="footer-inner">

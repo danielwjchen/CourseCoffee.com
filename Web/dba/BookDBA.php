@@ -57,12 +57,53 @@ class BookDBA implements DBAInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies a section',
 					),
+					'key' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'cache key',
+					),
 				),
 				'primary' => array('id'),
 				'index' => array(
 					'book_section_relation' => array('book_id', 'section_id'),
 					'book_id' => array('book_id'),
 					'section_id' => array('section_id'),
+				),
+			),
+			'book_crawler_queue' => array(
+				'description' => 'keep track of book lists stored in cache that needed to be refreshed.',
+				'column' => array(
+					'cache_key' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'cache key',
+					),
+					'status' => array(
+						'type' => 'char',
+						'length' => 32,
+						'not null' => TRUE,
+						'description' => 'a status flag to indicate the state of the queued item, e.g. NEW, STARTED, FINISHED, FAILED.',
+					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'UNIX timestamp of the moment when the item is created.',
+					),
+					'updated' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'UNIX timestamp of the moment when the item is processed.',
+					),
+				),
+				'primary' => array('cache_key'),
+				'index' => array(
+					'status' => array('status'),
 				),
 			),
 		);

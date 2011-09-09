@@ -22,6 +22,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 		$this->addCSS('book-list.css');
 		$this->addCSS('dialog.css');
 		$this->addCSS('editor.css');
+		$this->addCSS('navigation.css');
 	}
 
 	/**
@@ -30,7 +31,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}

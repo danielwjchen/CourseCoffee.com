@@ -44,7 +44,7 @@ $.fn.translateTime = function() {
 	 */
 	setMessage = function(region, timeString) {
 		var _dueDateObject = new Date(dueTimestamp * 1000);
-		var _dueDateString = _dueDateObject.getMonth() + '/' + 
+		var _dueDateString = (_dueDateObject.getMonth() + 1) + '/' + 
 			_dueDateObject.getDate() + '/' + 
 			_dueDateObject.getFullYear();
 

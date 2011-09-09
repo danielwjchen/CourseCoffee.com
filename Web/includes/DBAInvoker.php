@@ -144,10 +144,10 @@ class DBAInvoker{
 		$key_array = array();
 		foreach ($keys as $key) {
 			if (is_array($key)) {
-				$key_array[] = $key[0] . '(' . $key[1] . ')';
+				$key_array[] = $key[0] . '(`' . $key[1] . '`)';
 
 			} else {
-				$key_array[] = $key;
+				$key_array[] = '`' . $key . '`';
 			}
 		}
 
@@ -157,13 +157,11 @@ class DBAInvoker{
 	/**
 	 * Create the SQL query for the key columns
 	 *
-	 * @param string $type
-	 *  type of key, i.e primary, unique, index.
 	 * @param object $db
 	 *  A database connection object.
-	 * @param array $schema_new
+	 * @param array $table_new
 	 *  An associative array that mirrors the table sctructure
-	 * @param array $schema_old
+	 * @param array $table_old
 	 *  An associative array that mirrors the table sctructure
 	 * @param string $dba_path
 	 *  an optional string to specify the DBA file path if different from default
@@ -171,52 +169,80 @@ class DBAInvoker{
 	 * @return array $dba_sql
 	 *  an array of key clause SQL queries
 	 */
-	static private function alter_key($type, $schema_new, $schema_old) {
+	static private function alter_key_sql($table_new, $table_old) {
 		$dba_sql  = array();
 		$add_sql  = array();
 		$drop_sql = array();
-		$sql_key = strtoupper($type);
-		$sql_key = $sql_key == 'PRIMARY' ? $sql_key .' KEY' : $sql_key;
+		$key_type = array('primary', 'unique', 'index');
 
-		if (isset($schema_new[$type])) {
+		foreach ($key_type as $type) {
+			$sql_key = strtoupper($type);
+			$sql_key = $sql_key == 'PRIMARY' ? $sql_key .' KEY ' : $sql_key;
 
-			if (!isset($schema_old[$type])) {
-				$add_sql[] = self::create_key_sql($schema_new[$type]);
+			$request_key = isset($table_new[$type]) ? array_keys($table_new[$type]) : array();
+			$exist_key   = isset($table_old[$type]) ? array_keys($table_old[$type]) : array();
+			$same_key    = array_intersect($request_key, $exist_key);
+			$drop_key = array_diff($exist_key, $same_key);
+			$add_key  = array_diff($request_key, $same_key);
 
-			} elseif ($schema_new[$type] != $schema_old[$type]) {
 
-				$keys = array_unique(array_merge($schema_old[$type], $schema_new[$type]));
+			if (!empty($drop_key)) {
 
-				foreach ($keys as $key) {
+				if ($type == 'primary' ) {
+					$dba_sql[] = ' DROP ' . $sql_key . ' `' . $drop_key . '` ';
+				} else {
+					$dba_sql[] = ' DROP ' . $sql_key .' ' . implode(', ', $drop_key) . '';
+				}
+			}
 
-					if (!in_array($key, $schema_old[$type])) {
-						$add_sql[] = $key;
-
-					} elseif (!in_array($key, $schema_new[$type])) {
-						$drop_sql[] = $key;
-
+			if (!empty($add_key)) {
+				if ($type == 'primary' ) {
+					$dba_sql[] = ' ADD ' . $sql_key . ' `' . $add_key . '` ';
+				} else {
+					foreach ($add_key as $key_name) {
+						$dba_sql[] = 'ADD ' . $sql_key .' `' . $key_name . '` (' . implode(', ', $table_new[$type][$key_name]) . ')';
 					}
 				}
 			}
-		} else {
-			$drop_sql[] = self::create_key_sql($schema_old[$type]);
 		}
-
-		if (!empty($drop_sql)) {
-
-			if ($type == 'primary' ) {
-				$dba_sql[] = 'DROP ' . $sql_key;
-			} else {
-				$dba_sql[] = 'DROP ' . $sql_key .' (' . implode(', ', $drop_sql) . ')';
-			}
-		}
-
-		if (!empty($add_sql)) {
-			$dba_sql[] = 'ADD ' . $sql_key .' (' . implode(', ', $add_sql) . ')';
-		}
-
 		return $dba_sql;
 	}
+
+
+	/**
+	 * Rebuild DBA schema array from actual table schema
+	 *
+	 * This is not finished...
+	 *
+	 * @param string $table_name
+	 *
+	static private function BuildSchemaFromDB($table_name) {
+		$table_def = self::$db->fetchList('DESCRIBE `' . $table_name .'`');
+		$unique  = array();
+		$index   = array();
+		$primary = array();
+		$column  = array();
+
+		$type = '';
+		$size = '';
+		foreach ($table_def as $i => $col) {
+			if ($col['Extra']) {
+				$type = 'serial';
+			} elseif (strpos($col['Type'], 'int(11)')) {
+				$type = 'int';
+			} elseif (strpos($col['Type'], 'char')) {
+				$type = 'int';
+				preg_match('/[0-9]{0,5}/', $col['Type'], $matches);
+				$size = reset($matches);
+			} 
+
+			$column[$col['Field']] = array(
+				'type' => $type,
+			);
+		}
+
+	}
+	*/
 
 	/**
 	 * Initialize the DBAInvoker
@@ -250,38 +276,51 @@ class DBAInvoker{
 		$encoded_schema = json_encode($dba_schema);
 
 		$sql = '';
-		if (!isset($dba_record['schema'])) {
+		if (empty($dba_record['schema'])) {
 			self::Create($dba_schema);
 			$sql = '
-				INSERT INTO DBA (`request`, `schema`, `script`, `timestamp`)
-				VALUES (:request, :schema, :script, UNIX_TIMESTAMP())
+				INSERT INTO DBA (`request`, `schema`, `timestamp`)
+				VALUES (:request, :schema, UNIX_TIMESTAMP())
 			';
 			
-		} elseif ($dba_record['schema'] !== $encoded_schema) {
-			self::Alter($dba_schema, $dba_record);
+		} else {
+			self::Alter($dba_schema, json_decode($dba_record['schema'], true));
 			$sql = '
 				UPDATE DBA SET
 					`schema` = :schema,
-					`script` = :script,
 					`timestamp` = UNIX_TIMESTAMP()
 				WHERE `request` = :request
 			';
 		}
+		self::$db->perform($sql, array(
+			'schema'  => $encoded_schema,
+			'request' => $dba_request,
+		));
 
 		$encoded_script = '';
 		if (method_exists($dba_request, 'script')) {
 			$dba_sql = call_user_func($dba_request . '::script');
 			$encoded_script = json_encode($dba_sql);
-			foreach($dba_sql as $sql) {
-				self::Perform($sql);
+			if (empty($dba_record['script']) || $dba_record['script'] !== $encoded_script) {
+				foreach($dba_sql as $sql) {
+					self::Perform($sql);
+				}
+			} else {
+				$encoded_script = $dba_record['script'];
 			}
+			self::$db->perform("
+				UPDATE DBA SET
+					`script` = :script,
+					`timestamp` = UNIX_TIMESTAMP()
+				WHERE `request` = :request
+				",
+				array(
+					'script'  => $encoded_script,
+					'request' => $dba_request,
+				)
+			);
 		}
 
-		self::$db->perform($sql, array(
-			'schema'  => $encoded_schema,
-			'script'  => $encoded_script,
-			'request' => $dba_request,
-		));
 	}
 
 	/**
@@ -294,49 +333,61 @@ class DBAInvoker{
 	}
 
 	/**
+	 * Create table
+	 *
+	 * This is a helper method to share code among Create() and Alter()
+	 *
+	 * @param string $name
+	 *  name of the table
+	 * @param array $table
+	 *  An associative array that mirrors the table sctructure
+	 */
+	private static function CreateTable($name, $table) {
+		$dba_sql = 'CREATE TABLE ' . $name . '(';
+
+		// compose columns
+		$columns = array();
+		foreach ($table['column'] as $column_name => $column) {
+			$columns[] = self::create_column_sql($column_name, self::process_column($column));
+		}
+		$dba_sql .= implode(", \n", $columns) . ", \n";
+
+		$keys = array();
+
+		// compose primary key
+		if (isset($table['primary'])) {
+			$keys[] = 'PRIMARY KEY (' . self::create_key_sql($table['primary']) . ') ';
+		}
+
+		// compose unique keys
+		if (isset($table['unique'])) {
+			foreach ($table['unique'] as $unique => $column) {
+				$keys[] = 'UNIQUE KEY ' . $unique . ' (' . self::create_key_sql($column) . ') ';
+			}
+		}
+
+		// compose indexes
+		if (isset($table['index'])) {
+			foreach ($table['index'] as $index => $column ) {
+				$keys[] = 'INDEX ' . $index . ' (' . self::create_key_sql($column) . ') ';
+			}
+		}
+		
+		$dba_sql .= implode(', ', $keys) .')';
+
+		self::$db->perform($dba_sql);
+	}
+
+	/**
 	 * Create table from schema
 	 *
 	 * @param array $dba_schema
-	 *  An associative array that mirrors the table sctructure
-	 *
-	 * @return bool $result
+	 *  An array of table schemas that mirrors the table sctructure
 	 */
 	public static function Create($dba_schema) {
 
 		foreach ($dba_schema as $name => $table) {
-			$dba_sql = 'CREATE TABLE ' . $name . '(';
-
-			// compose columns
-			$columns = array();
-			foreach ($table['column'] as $column_name => $column) {
-				$columns[] = self::create_column_sql($column_name, self::process_column($column));
-			}
-			$dba_sql .= implode(", \n", $columns) . ", \n";
-
-			$keys = array();
-
-			// compose primary key
-			if (isset($table['primary'])) {
-				$keys[] = 'PRIMARY KEY (' . self::create_key_sql($table['primary']) . ') ';
-			}
-
-			// compose unique keys
-			if (isset($table['unique'])) {
-				foreach ($table['unique'] as $unique => $column) {
-					$keys[] = 'UNIQUE KEY ' . $unique . ' (' . self::create_key_sql($column) . ') ';
-				}
-			}
-
-			// compose indexes
-			if (isset($table['index'])) {
-				foreach ($table['index'] as $index => $column ) {
-					$keys[] = 'INDEX ' . $index . ' (' . self::create_key_sql($column) . ') ';
-				}
-			}
-			
-			$dba_sql .= implode(', ', $keys) .')';
-
-			self::$db->perform($dba_sql);
+			self::CreateTable($name, $table);
 
 		}
 
@@ -344,8 +395,6 @@ class DBAInvoker{
 
 	/**
 	 * Alter a table from schema
-	 *
-	 * THIS METHOD IS BROKEN!!1!!
 	 *
 	 * This method compares the new schema with the old (existing) one and computes
 	 * a series of queries the modify the table. It doesn't handle DROP operation.
@@ -361,41 +410,65 @@ class DBAInvoker{
 	 */
 	static function Alter($schema_new, $schema_old) {
 
-		$table = $schema_new['name'];
-		$dba_sql = array();
+		$update_tables  = array();
+		$drop_tables    = array();
+		$add_tables     = array();
 
-		$columns = array();
-
-		foreach ($schema_new as $table => $table_schema) {
-
-			// if the table already exist
-			if (isset($schema_old[$table])) {
-				foreach ($table_schema['column'] as $column_name => $column) {
-
-					if (!isset($schema_old[$table]['column'][$column_name])) {
-						$dba_sql[] = '
-							ADD ' . self::create_column_sql($column_name, self::process_column($column)) .
-						"\n";
-
-					} elseif ($schema_new[$table]['column'][$column_name] != $schema_old[$table]['column'][$column_name]) {
-						$dba_sql[] = '
-							CHANGE `' .$column_name . '` ' .
-							self::create_column_sql($column_name, self::process_column($column)) .
-						"\n";
-					}
-
-				}
+		$exist_tables  = array_keys($schema_old);
+		$exist_tables  = is_array($exist_tables) ? $exist_tables : array();
+		$request_tables = array_keys($schema_new); 
+		$request_tables = is_array($request_tables) ? $request_tables : array();
+		$update_tables  = array_intersect($exist_tables, $request_tables);
+		$add_tables = array_diff($request_tables, $update_tables);
+		if (!empty($add_tables)) {
+			foreach ($add_tables as $table_name) {
+				self::CreateTable($table_name, $schema_new[$table_name]);
 			}
-
-			$dba_sql = array_merge($dba_sql, self::alter_key('primary', $schema_new[$table], $schema_old[$table]));
-			$dba_sql = array_merge($dba_sql, self::alter_key('unique', $schema_new[$table], $schema_old[$table]));
-			$dba_sql = array_merge($dba_sql, self::alter_key('index', $schema_new[$table], $schema_old[$table]));
-
-
-			$sql = 'ALTER TABLE ' . $schema_new[$table] . ' ' .	implode(', ', $dba_sql);
-
-			self::$db->perform($sql);
 		}
+
+		$drop_tables = array_diff($exist_tables, $update_tables);
+		if (!empty($drop_tables)) {
+			foreach ($drop_tables as $table_name) {
+				self::$db->perform('DROP TABLE `' . $table_name . '`');
+			}
+		}
+		if (!empty($update_tables)) {
+
+			foreach ($update_tables as $table_name) {
+				$request_cols = array_keys($schema_new[$table_name]['column']);
+				$exist_cols   = array_keys($schema_old[$table_name]['column']);
+				$update_cols  = array_intersect($request_cols, $exist_cols);
+				$drop_cols    = array_diff($exist_cols, $update_cols);
+				$add_cols     = array_diff($request_cols, $update_cols);
+
+				$dba_sql = array();
+
+				foreach ($drop_cols as $col_name) {
+					$dba_sql[] = 'DROP ' . $col_name . "\n";
+				}
+
+				foreach ($add_cols as $col_name) {
+					$dba_sql[] = '
+						ADD ' . 
+						self::create_column_sql($col_name, self::process_column($schema_new[$table_name]['column'][$col_name])) .
+					"\n";
+				}
+
+				foreach ($update_cols as $col_name) {
+					$dba_sql[] = '
+						CHANGE `' .$col_name . '` ' .
+						self::create_column_sql($col_name, self::process_column($schema_new[$table_name]['column'][$col_name])) .
+					"\n";
+				}
+
+				$dba_sql = array_merge($dba_sql, self::alter_key_sql($schema_new[$table_name], $schema_old[$table_name]));
+
+				$sql = 'ALTER TABLE `' . $table_name . '` ' . implode(', ', $dba_sql);
+
+				self::$db->perform($sql);
+			}
+		}
+
 	}
 
 	/**

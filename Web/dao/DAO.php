@@ -77,7 +77,7 @@ abstract class DAO{
 	 * @param array $data
 	 *  an assciative array that contains data
 	 *
-	 * @
+	 * @return bool
 	 */
 	protected function updateAttribute($data) {
 		if (!empty($data)) {
@@ -108,23 +108,10 @@ abstract class DAO{
 
 	/**
 	 * Load a the data for child classes
-	 *
-	 * @param $db
-	 *  a database object
-	 * @param array $attr
-	 *  an associative array of object attributes
-	 * @param array $params
-	 *  an associative array of params to be executed with the SQL query
 	 */
-	function __construct($db, $attr, $params = NULL) {
-		$this->setAttribute($attr);
-		$this->db = $db;
-
-		if (!empty($params)) {
-			$this->read($params);
-
-		}
-
+	function __construct() {
+		global $config;
+		$this->db = new DB($config->db);
 	}
 
   /**
@@ -166,17 +153,10 @@ abstract class DAO{
 	/**
 	 * Set the value of the object's attribute
 	 *
-	 * WARNING! this operation won't alter the value in table unless save() is 
+	 * WARNING! this operation won't alter the value in table unless update() is 
 	 * run. Also note that it only works with attributes
 	 */
 	public function __set($name, $value) {
-
-		if (!isset($this->attr[$name])) {
-			throw new Exception('unknown object attribute ' . __CLASS__ . '::' . $name);
-
-		} else {
-			$this->attr[$name] = $value;
-
-		}
+		$this->attr[$name] = $value;
 	}
 }

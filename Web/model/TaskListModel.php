@@ -21,13 +21,14 @@ class TaskListModel extends Model {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->task_list_dao = new TaskListDAO($this->db);
+		$this->task_list_dao = new TaskListDAO();
 	}
 
 	/**
 	 * Fetch a list of task record for a user
 	 *
 	 * @param string $user_id
+	 * @param int $filter
 	 * @param int $paginate
 	 *
 	 * @return array
@@ -38,12 +39,10 @@ class TaskListModel extends Model {
 	 *   - error
 	 *   - message
 	 */
-	public function fetchUserToDoList($user_id, $begin_date, $paginate) {
+	public function fetchUserToDoList($user_id, $begin_date, $filter, $paginate) {
 		$has_record = $this->task_list_dao->read(array(
 			'user_id' => $user_id,
-			'range' => array(
-				'begin_date' => $begin_date,
-			),
+			'filter'  => $filter,
 			'limit'   => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
@@ -68,6 +67,7 @@ class TaskListModel extends Model {
 	 *
 	 * @param string $user_id
 	 * @param int $section_id
+	 * @param int $filter
 	 * @param int $paginate
 	 *
 	 * @return array
@@ -78,9 +78,10 @@ class TaskListModel extends Model {
 	 *   - error
 	 *   - message
 	 */
-	public function fetchUserClassList($user_id, $section_id, $paginate) {
+	public function fetchUserClassList($user_id, $section_id, $filter, $paginate) {
 		$has_record = $this->task_list_dao->read(array(
 			'section_id' => $section_id,
+			'filter'  => $filter,
 			'limit'   => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
@@ -106,6 +107,7 @@ class TaskListModel extends Model {
 	 * @param string $user_id
 	 * @param int $begin_date
 	 * @param int $end_date
+	 * @param int $filter
 	 * @param int $paginate
 	 *
 	 * @return array
@@ -116,9 +118,10 @@ class TaskListModel extends Model {
 	 *   - error
 	 *   - message
 	 */
-	public function fetchUserCalendarList($user_id, $begin_date, $end_date, $paginate) {
+	public function fetchUserCalendarList($user_id, $begin_date, $end_date, $filter, $paginate) {
 		$has_record = $this->task_list_dao->read(array(
 			'user_id' => $user_id,
+			'filter'  => $filter,
 			'range'   => array(
 				'begin_date' => $begin_date,
 				'end_date'   => $end_date,

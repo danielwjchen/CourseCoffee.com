@@ -16,12 +16,29 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 	protected $column;
 
 	/**
-	 * Implement DAO::__construct().
+	 * Update the object Attribute
+	 *
+	 * @param array $data
+	 *  an assciative array that contains data
+	 *
+	 * @return bool
 	 */
-	function __construct($db, $attr, $params = NULL) {
-		$this->column = $attr;
-		parent::__construct($db, $attr, $params);
+	protected function updateAttribute($data) {
+		if (!empty($data)) {
+			foreach ($this->attr as $key => $value) {
+				$this->attr[$key] = isset($data[$key]) ? $data[$key] : null;
+
+			}
+
+			return true;
+
+		} else {
+			return false;
+
+		}
+
 	}
+
 
 	/**
 	 * Implement DAO::create()

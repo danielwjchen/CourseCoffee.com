@@ -1,21 +1,23 @@
 <?php
 /**
  * @file
- * Resole file paths automatically
+ * Resolve file paths automatically
  */
-class Autoload {
+class Autoloader {
 
 	/**
 	 * @defgroup fail log 
 	 * @{
 	 */
 	const FAIL_EMPTY_PATH = 'failed to resolve path';
+	const WRONG_PATH      = 'path is pointed to a file that does not exist.';
 
 	/**
 	 * A map of component paths and the regular expression that identifies an 
 	 * implementation.
 	 */
 	private static $paths = array(
+		CACHE_PATH => '/Cache\.php$/',
 		DBA_PATH => '/DBA\.php$/',
 		DAO_PATH => '/DAO\.php$/',
 		MODEL_PATH => '/Model\.php$/',
@@ -44,10 +46,10 @@ class Autoload {
 	 * WARNING!! This method clears the table and repopulates it with new data.
 	 */
 	public static function Build() {
-		self::$db->perform('TRUNCATE TABLE autoload');
+		self::$db->perform('TRUNCATE TABLE `autoloader`');
 		$sql = "
-			INSERT INTO autoload
-				(class, path) 
+			INSERT INTO `autoloader`
+				(`class`, `path`) 
 			VALUES
 				(:class, :path)
 		";
@@ -68,7 +70,7 @@ class Autoload {
 	 */
 	public static function Add($classname) {
 		$record = self::$db->fetch(
-			'SELECT path FROM autoload WHERE class = :class',
+			'SELECT `path` FROM `autoloader` WHERE `class` = :class',
 			array('class' => $classname)
 		);
 
@@ -81,7 +83,8 @@ class Autoload {
 			require_once $record['path'];
 
 		} catch (Exception $e) {
-			echo 'sss';
+			Logger::write(self::WRONG_PATH . ' - ' . $classname, Logger::SEVERITY_HIGH);
+			header('Location: /all-system-down');
 		}
 	}
 }

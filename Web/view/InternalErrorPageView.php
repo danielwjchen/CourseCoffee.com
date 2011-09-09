@@ -8,15 +8,13 @@ class InternalErrorPageView extends PageView implements PageViewInterface {
 	/**
 	 * Extend PageView::__construct().
 	 */
-	function __construct($content = null) {
-		parent::__construct($content);
-		$this->addJS('model/login.js');
-		$this->addJS('controller/navigation.js');
+	function __construct($data = null) {
+		parent::__construct($data);
 		$this->addCSS('internal-error.css');
 	}
 
 	/**
-	 * Implement View::getHeader()
+	 * Override View::getHeader()
 	 */
 	protected function getHeader() {
     header(self::INTERNAL_ERROR);
@@ -27,8 +25,11 @@ class InternalErrorPageView extends PageView implements PageViewInterface {
 	 */
 	public function getBlocks() {
 		return array(
+			'header' => array(
+				'callback' => 'LogoHeaderBlockView',
+			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -43,19 +44,7 @@ class InternalErrorPageView extends PageView implements PageViewInterface {
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
-				<ul id="navigation-menu">
-					<li class="login">
-						<div class="error hidden"></div>
-						<div class="login-form">
-							<form id="user-login-form" name="user-login" action="user/login" method="post">
-								<input type="hidden" name="token" value="{$header['block']['login_token']}" />
-								<input type="email" name="email" class="input" value="email" />
-								<input type="password" name="password" class="input" value="password" />
-								<a class="button login" href="#">login</a>
-							</form>
-						</div>
-					</li>
-				</ul>
+				{$header}
 			</div>
 		</div>
 		<div class="internal-error body">

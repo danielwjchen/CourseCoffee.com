@@ -8,7 +8,8 @@ class AchievementDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
+		parent::__construct();
 		$attr = array(
 			'id',
 			'name',
@@ -16,8 +17,7 @@ class AchievementDAO extends DAO implements DAOInterface{
 			'type',
 			'type_id',
 		);
-
-		parent::__construct($db, $attr, $params);
+		$this->setAttribute($attr);
 
 	}
 

@@ -27,6 +27,12 @@ $P.ready(function() {
 	window.welcome = $('.welcome');
 	blurInput(welcome);
 
+	// submit login form on press enter
+	$('#user-login-form input').keypress(function(e){
+		if(e.which == 13){
+			login.submit();
+		}
+	});
 	welcome.delegate('a.button', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);

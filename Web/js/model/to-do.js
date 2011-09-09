@@ -26,43 +26,37 @@ window.ToDo = function(optionFormName, listName, creationFormName) {
 	 */
 	var task = new Task(creationFormName, optionFormName);
 
+	var _taskUpdater = '';
+
 	/**
 	 * Implement Task::getTaskList()
 	 *
 	 * Get to-do list from server
 	 */
 	var getTaskList = function() {
-		var cacheKey   = 'task-list-' + $('input[name=paginate]', option).val();
-		var cacheValue = cache.get(cacheKey);
+		list.addClass('loading');
+		$.ajax({
+			url: '/user-list-task',
+			type: 'POST',
+			cache: false,
+			data: option.serialize(),
+			success: function(response) {
+				list.removeClass('loading');
+				if (response.success) {
 
-		if (cacheValue) {
-			findTimeInterval(cacheValue);
+					// debug
+					// console.log(response.list);
+					tasks = task.AddUrlToTask(response.list);
 
-		} else {
-			list.addClass('loading');
-
-			$.ajax({
-				url: '/user-list-task',
-				type: 'POST',
-				cache: false,
-				data: option.serialize(),
-				success: function(response) {
-					list.removeClass('loading');
-					if (response.success) {
-
-						// debug
-						// console.log(response.list);
-
-						Task.generateList(response.list, list);
-						cache.set(cacheKey, response.list);
-					}
-
-					if (response.error) {
-						task.setError(response.message, list);
-					}
+					Task.generateList(response.list, list);
+					_taskUpdater = new TaskUpdater(listName);
 				}
-			});
-		}
+
+				if (response.error) {
+					task.setError(response.message, list);
+				}
+			}
+		});
 	};
 
 	/**

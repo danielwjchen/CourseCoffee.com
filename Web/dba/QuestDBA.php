@@ -53,6 +53,20 @@ class QuestDBA implements DBAInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies a quest type',
 					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is created',
+					),
+					'updated' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'The UNIX timestamp of when quest is updated',
+					),
 					'objective' => array(
 						'type' => 'char',
 						'length' => 128,

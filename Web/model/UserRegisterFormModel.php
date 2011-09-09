@@ -13,8 +13,10 @@ class UserRegisterFormModel extends FormModel {
 	const ERROR_FAILED_TO_CREATE     = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
 	const ERROR_FORM_EXPIRED         = 'The form has expired. Please try again.';
 	const ERROR_FORM_EMPTY           = 'You have empty fields. Please try again.';
-	const ERROR_EMAIL_TAKEN          = 'An account is already registered with this emaill address. Please try again.';
-	const ERROR_PASSWORD_NOT_MATCH   = 'The password and confirmation do not match. Please try again.';
+	const ERROR_EMAIL_TAKEN          = 'An account is already registered with this emaill address.';
+	const ERROR_PASSWORD_NOT_MATCH   = 'The password and confirmation do not match.';
+	const ERROR_INVALID_EMAIL        = 'Please enter a valid email account';
+	const ERROR_PASSWORD_TOO_SHORT = 'Attempt to register with password that is too short';
 	
 	/**
 	 * @} End of error_messages
@@ -32,6 +34,9 @@ class UserRegisterFormModel extends FormModel {
 	const EVENT_FORM_EXPIRED     = 'User registration form expired';
 	const EVENT_EMAIL_TAKEN      = 'Attempt to register with an existing email account';
 	const EVENT_UNKNOWN_SCHOOL   = 'Attempt to register with a unknown school. Record created';
+	const EVENT_INVALID_EMAIL    = 'Attempt to register with an invalid email';
+	const EVENT_PASSWORD_NOT_MATCH = 'Attempt to register with password and confirmation that do not match';
+	const EVENT_PASSWORD_TOO_SHORT = 'Attempt to register with password that is too short';
 	/**
 	 * @} End of event_messages
 	 */
@@ -40,7 +45,10 @@ class UserRegisterFormModel extends FormModel {
 	 * Action to take after the form is successfully processed
 	 */
 	const FAIL_REDIRECT = '/welcome';
-	const REDIRECT = '/home';
+	const REDIRECT = '/account-created';
+
+	const EMAIL_REGEX = '/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i';
+	const PASSWORD_MIN_LENGTH = 8;
 
 	/**
 	 * @defgroup 'dao
@@ -64,15 +72,15 @@ class UserRegisterFormModel extends FormModel {
 	 */
 	function __construct() {
 		parent::__construct();
-		$this->user_dao                = new UserDAO($this->db);
-		$this->user_setting_dao        = new UserSettingDAO($this->db);
-		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->db);
+		$this->user_dao                = new UserDAO();
+		$this->user_setting_dao        = new UserSettingDAO();
+		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO();
 
-		$this->person_dao              = new PersonDAO($this->db);
-		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($this->db);
-		$this->institution_dao         = new InstitutionDAO($this->db);
-		$this->institution_year_dao    = new InstitutionYearDAO($this->db);
-		$this->institution_term_dao    = new InstitutionTermDAO($this->db);
+		$this->person_dao              = new PersonDAO();
+		$this->institution_linkage_dao = new UserInstitutionLinkageDAO();
+		$this->institution_dao         = new InstitutionDAO();
+		$this->institution_year_dao    = new InstitutionYearDAO();
+		$this->institution_term_dao    = new InstitutionTermDAO();
 
 		$this->form_name = 'user_register_form';
 		// form submission is limite to 5 times
@@ -100,6 +108,8 @@ class UserRegisterFormModel extends FormModel {
 	 *  a string of email address to be user as account
 	 * @param string $password
 	 *  a string to identifer the user as the owner of the account
+	 * @param int $tou_vid
+	 *  terms of use agreement verion number
 	 * @param int $fb_uid
 	 *  user's facebook uid, only exists when the user is registered through 
 	 *  facebook
@@ -119,7 +129,7 @@ class UserRegisterFormModel extends FormModel {
 	 *   - password
 	 *   - redirect
 	 */
-	public function createUserAccount($first_name, $last_name, $institution_id, $year, $term, $email, $password, $fb_uid = null) {
+	public function createUserAccount($first_name, $last_name, $institution_id, $year, $term, $email, $password, $tou_vid, $fb_uid = null) {
 		// create record
 		$has_record = $this->user_dao->read(array('account' => $email));
 		if ($has_record) {
@@ -191,7 +201,12 @@ class UserRegisterFormModel extends FormModel {
 			'institution_id' => $institution_id,
 			'year_id'        => $year_id,
 			'term_id'        => $term_id,
+			'tou_vid'        => $tou_vid,
 		));
+
+		$this->user_setting_dao->read(array('user_id' => $user_id));
+		$setting = $this->user_setting_dao->attribute;
+		unset($setting['user_id']);
 
 		Logger::write(self::EVENT_NEW_USER);
 		$this->unsetFormToken();
@@ -199,19 +214,15 @@ class UserRegisterFormModel extends FormModel {
 			'success' => true,
 			'user_id' => $user_id,
 			'profile' => array(
+				'account'    => $email,
 				'first_name' => $first_name,
-				'last_name' => $last_name,
+				'last_name'  => $last_name,
 				'institution'     => $institution_name,
 				'institution_uri' => $institution_uri,
 				'year' => $year,
 				'term' => $term,
 			),
-			'setting' => array(
-				'institution_id' => $institution_id,
-				'year_id' => $year_id,
-				'term_id' => $term_id,
-				'fb_uid'  => $fb_uid,
-			),
+			'setting' => $setting,
 			'redirect'   => self::REDIRECT,
 		);
 	}
@@ -239,6 +250,8 @@ class UserRegisterFormModel extends FormModel {
 	 *  a string that should be identical to $password
 	 * @param string $token
 	 *  a uniquely generated token to counter CSR attacks
+	 * @param int $tou_vid
+	 *  terms of use agreement verion number
 	 * @param int $fb_uid
 	 *  user's facebook uid, only exists when the user is registered through 
 	 *  facebook
@@ -258,7 +271,7 @@ class UserRegisterFormModel extends FormModel {
 	 *   - password
 	 *   - redirect
 	 */
-	public function processForm($first_name, $last_name, $institution_id, $year, $term, $email, $password, $confirm, $token, $fb_uid = null) {
+	public function processForm($first_name, $last_name, $institution_id, $year, $term, $email, $password, $confirm, $tou_vid, $token, $fb_uid = null) {
 		// if the form is new
 		if (empty($token)) {
 			$token = $this->initializeFormToken();
@@ -318,10 +331,61 @@ class UserRegisterFormModel extends FormModel {
 			);
 		}
 
+		// check if the eamil is a email account string
+		if (preg_match(self::EMAIL_REGEX, $email) == 0) {
+			Logger::write(self::EVENT_INVALID_EMAIL, Logger::SEVERITY_HIGH);
+			return array(
+				'error'          => self::ERROR_INVALID_EMAIL,
+				'first_name'     => $first_name,
+				'last_name'      => $last_name,
+				'institution_id' => $institution_id,
+				'year'           => null,
+				'term'           => null,
+				'email'          => $email,
+				'password'       => $password,
+				'confirm'        => $confirm,
+				'token'          => $token,
+			);
+		}
+
+		if (strlen($password) < self::PASSWORD_MIN_LENGTH) {
+			Logger::write(self::EVENT_PASSWORD_TOO_SHORT, Logger::SEVERITY_HIGH);
+			return array(
+				'error'          => self::ERROR_PASSWORD_TOO_SHORT,
+				'first_name'     => $first_name,
+				'last_name'      => $last_name,
+				'institution_id' => $institution_id,
+				'year'           => null,
+				'term'           => null,
+				'email'          => $email,
+				'password'       => $password,
+				'confirm'        => $confirm,
+				'token'          => $token,
+			);
+		}
+
 		// check if the password and confirmation match
 		if ($password !== $confirm) {
+			Logger::write(self::EVENT_PASSWORD_NOT_MATCH, Logger::SEVERITY_HIGH);
 			return array(
 				'error'          => self::ERROR_PASSWORD_NOT_MATCH,
+				'first_name'     => $first_name,
+				'last_name'      => $last_name,
+				'institution_id' => $institution_id,
+				'year'           => null,
+				'term'           => null,
+				'email'          => $email,
+				'password'       => $password,
+				'confirm'        => $confirm,
+				'token'          => $token,
+			);
+		}
+
+		$has_record = $this->user_dao->read(array('account' => $email));
+		if ($has_record) {
+			Logger::write(self::EVENT_EMAIL_TAKEN, Logger::SEVERITY_HIGH);
+			return array(
+				'error'          => self::ERROR_EMAIL_TAKEN,
 				'first_name'     => $first_name,
 				'last_name'      => $last_name,
 				'institution_id' => $institution_id,
@@ -342,6 +406,7 @@ class UserRegisterFormModel extends FormModel {
 			$term, 
 			$email, 
 			$password, 
+			$tou_vid,
 			$fb_uid
 		);
 

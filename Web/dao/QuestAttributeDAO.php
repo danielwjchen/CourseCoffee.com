@@ -8,9 +8,9 @@ class QuestAttributeDAO extends AttributeDAO{
 	/**
 	 * Extend AttributeDAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct() {
 		$this->model = 'quest';
-		parent::__construct($db, $params);
+		parent::__construct();
 
 	}
 
