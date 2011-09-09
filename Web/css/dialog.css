@@ -387,3 +387,24 @@
 .sign-up li {
 	margin: 15px 0 15px;
 }
+
+/**
+ * Define styles for class remove dialog
+ */
+.remove-class.dialog,
+.remove-class .dialog-inner {
+	height: 125px;
+}
+.remove-class.dialog {
+	margin: 150px auto 0;
+}
+.remove-class .remove-option {
+	width: 440px;
+	margin: 50px auto 0;
+}
+.remove-class .remove-option .button {
+	font-size: 16px;
+	width: 198px;
+	margin: 0 10px;
+	float: left;
+}

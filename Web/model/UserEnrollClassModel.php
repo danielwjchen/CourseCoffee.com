@@ -2,6 +2,9 @@
 /**
  * @file
  * Oversee linkage among user and classes
+ *
+ * @to-do
+ *  This class should be protected by token!
  */
 class UserEnrollClassModel extends Model {
 
@@ -132,6 +135,9 @@ class UserEnrollClassModel extends Model {
 	/**
 	 * Remove user from class
 	 *
+	 * This will need to be improved and check if the user is actually enrolled 
+	 * in the requested class, and check if the user is actually removed.
+	 *
 	 * @param int $user_id
 	 * @param int $section_id
 	 */
@@ -142,6 +148,9 @@ class UserEnrollClassModel extends Model {
 		));
 		$this->linkage->destroy();
 		Logger::Write(EVENT_REMOVE_ENROLL);
+		return array(
+			'success' => true,
+		);
 	}
 
 	/**

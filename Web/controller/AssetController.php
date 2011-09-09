@@ -21,6 +21,23 @@ class AssetController {
 		);
 	}
 
+	/**
+	 * Implement Controller::beforeAction()
+	 *
+	 *  this is a stub!
+	 */
+	public function beforeAction() {
+
+	}
+
+	/**
+	 * Implement ControllerInterface::afterAction()
+	 *
+	 *  this is a stub!
+	 */
+	public function afterAction() {
+	}
+
 	public function getCSS($params = array()) {
 		header('Content-type: text/css');
 		global $config;

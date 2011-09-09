@@ -12,7 +12,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			'college-class-add'     => 'createClass',
 			'college-class-update'  => 'updateClass',
 			'college-class-remove'  => 'removeClass',
-			'college-class-info'  => 'getClassDetail',
+			'college-class-info'    => 'getClassDetail',
 			'college-class-list'    => 'getListOfClass',
 			'college-class-suggest' => 'suggestClass',
 			'college-class-enroll'  => 'enrollClass',
@@ -39,10 +39,16 @@ class CollegeClassController extends Controller implements ControllerInterface {
 
 	/**
 	 * Remove a class
-	 *
-	 * @to-do
 	 */
 	public function removeClass() {
+		$user_id    = $this->getUserId();
+		$section_id = Input::Post('section_id');
+		$enroll = new UserEnrollClassModel($this->sub_domain);
+		$result = $enroll->removeUserFromClass($user_id, $section_id);
+		$class_list = $this->user_session->getUserClassList();
+		unset($class_list[$section_id]);
+		$this->user_session->setUserClassList($class_list);
+		$this->output = new JSONView($result);
 	}
 
 	/**
