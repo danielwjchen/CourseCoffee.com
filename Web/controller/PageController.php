@@ -78,6 +78,7 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getSignUpPage() {
 		$this->redirectUnsupportedDomain();
+		$institution_id = $this->getInstitutionId();
 
 		$section_id = Input::Get('section_id');
 		$fb         = Input::Get('fb');

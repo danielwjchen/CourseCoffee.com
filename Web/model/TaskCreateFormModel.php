@@ -99,6 +99,7 @@ class TaskCreateFormModel extends FormModel {
 		if (!$this->validateFormToken($token)) {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_FORM_EXPIRED, Logger::SEVERITY_LOW);
+			/*
 			return array(
 				'objective' => $objective,
 				'due_date' => $due_date,
@@ -106,6 +107,7 @@ class TaskCreateFormModel extends FormModel {
 				'token' => $token,
 				'error' => self::ERROR_FORM_EXPIRED
 			);
+			*/
 		}
 
 		$this->unsetFormToken();
