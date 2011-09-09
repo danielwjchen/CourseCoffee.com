@@ -783,7 +783,7 @@ $P.ready(function(){
 
                     reg_idx = get_reg_idx(result);
                     if(reg_idx == -1){ //no valid pattern found
-                            alert("No date assignment found!");
+                            alert("No assignment dates found!");
                             schedule_list_orig_len = 0
                             $("#orig_syl").html(result_g.replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;"))
                             return;
