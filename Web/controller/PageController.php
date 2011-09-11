@@ -264,7 +264,6 @@ class PageController extends Controller implements ControllerInterface {
 	 * Provide an interactive task editor
 	 */
 	public function getDocumentEditorPage() {
-		error_log(print_r($_GET, true));
 		$this->redirectUnsupportedDomain();
 
 		$processor = new DocumentProcessorFormModel($this->sub_domain);

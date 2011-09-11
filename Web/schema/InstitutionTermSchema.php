@@ -172,13 +172,11 @@ class InstitutionTermSchema extends InstitutionSchema implements SchemaInterface
 					'isbn' => array(
 						'type' => 'char',
 						'length' => 128,
-						'not null' => TRUE,
 						'description' => 'isbn of the book',
 					),
 					'title' => array(
 						'type' => 'char',
 						'length' => 255,
-						'not null' => TRUE,
 						'description' => 'book title',
 					),
 				),

@@ -172,12 +172,15 @@ window.EditorAction = function(taskCreationFormClassName) {
 				dialog.close()
 			});
 
+			/**
+			 * Go throught the task list and append items to task creation form
+			 */
       var cnt = 0; 
-			var cur_date = null;
+			var curr_date = null;
 			var sch_content = null;
       for(var i = 0; i < taskList.length; i++){
 				if(taskList[i].deleted == false){
-					cur_date = taskList[i].date;
+					curr_date = taskList[i].date;
 					sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate()) + "/" + "2011";
 					sch_content = taskList[i].content;
 					creationForm.append('<input type="hidden" name="date_' + cnt + '" value="' + sch_date + '" />');

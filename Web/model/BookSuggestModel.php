@@ -102,6 +102,8 @@ class BookSuggestModel extends Model {
 		for ($i = 0; $i < count($book_list); $i++) {
 			try {
 				$isbn = $book_list[$i]['isbn'];
+				error_log($isbn);
+				error_log('sssssssssssss');
 				$this->amazonSearch->searchBookIsbn($isbn);
 				$title = (string)$this->amazonSearch->getTitle();
 				if (empty($title)) {
