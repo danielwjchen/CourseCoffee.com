@@ -51,7 +51,7 @@ $P.ready(function() {
 	var resetTaskInfoMenu = function(active) {
 		$('li', taskInfoMenu).removeClass('active');
 		$('#' + active, taskInfoMenu).addClass('active');
-		$('input[name=paginate]').val('');
+		$('input[name=paginate]').val(0);
 		$('.more').removeClass('disabled');
 	}
 	var toDo = new ToDo('#to-do-option', '#to-do-list', '#to-do-creation-form');
