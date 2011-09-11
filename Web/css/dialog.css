@@ -256,74 +256,31 @@
 /**
  * Define styles for confirm class info dialog
  */
-.confirm-class.dialog {
-	margin: 15px auto 0;
-}
-
+.confirm-class.dialog,
 .confirm-class .dialog-inner {
-	margin: 25px auto 0;
-	width: 500px;
-	height: auto;
+	margin: 50px auto 0;
+	height: 270px;
 }
-.confirm-class .title {
-	width: 400px;
-	margin: 0 auto;
-	text-align: left;
+.confirm-class.dialog {
 }
-.confirm-class .error{
-	color: red;
+.confirm-class .dialog-inner {
+}
+.confirm-class {
+}
+.confirm-class h1,
+.confirm-class h2 {
 	text-align: center;
-	clear: both;
-	margin-bottom: 25px;
+}
+.confirm-class h2 {
+	margin: 20px auto 50px;
 }
 .confirm-class .row {
 	margin: 5px 0;
 	float: left;
 	text-align: left;
 }
-.confirm-class .confirm-message {
-	margin: 10px 5px 25px;
-	font-size: 12px;
-	float: left;
-	width: 490px;
-}
-.confirm-class .confirm-message h2 {
-	clear: both;
-	margin: 5px 0;
-	font-size: 22px;
-	text-align: left;
-}
-.confirm-class .confirm-message h3 {
-	clear: both;
-	margin: 15px 0;
-	width: 490px;
-	font-size: 14px;
-	text-align: center;
-}
-.confirm-class .confirm-message ul,
-.confirm-class .confirm-message li {
-	display: block;
-	float: left;
-}
-.confirm-class .confirm-message ul {
-	margin : 25px 0 25px 90px;
-	width: 380px;
-	clear: both;
-}
-.confirm-class .confirm-message li {
-	font-weight: bold;
-	padding: 2px 0;
-	font-size: 18px;
-	line-height: 26px;
-}
-.confirm-class .orange-checker {
-	color: #FF8400;
-	font-weight: bold;
-	font-size: 26px;
-}
 .confirm-class label,
-.confirm-class input,
-.confirm-class select {
+.confirm-class input {
 	height: 34px;
 	line-height: 34px;
 	float: left;
@@ -331,11 +288,9 @@
 .confirm-class .row input {
 	border: 1px solid #313131;
 	font-size: 20px;
+	color: #868C8F;
+	font-weight: bold;
 	width: 330px;
-}
-.confirm-class select {
-	font-size: 18px;
-	width: 333px;
 }
 .confirm-class label {
 	font-size: 20px;
@@ -346,20 +301,92 @@
 	width: 115px;
 }
 .confirm-class .confirm-row {
-	margin-top: 105px;
+	margin-top: 50px;
 	width: 100%;
 }
-.confirm-class .book-list {
+/**
+ * Define styles for confirm task creation dialog
+ */
+.confirm-task.dialog {
+	margin: 15px auto 0;
+}
+
+.confirm-task .dialog-inner {
+	margin: 25px auto 0;
+	width: 500px;
+	height: auto;
+}
+.confirm-task .title {
+	width: 400px;
+	margin: 0 auto;
+	text-align: left;
+}
+.confirm-task .error{
+	color: red;
+	text-align: center;
+	clear: both;
+	margin-bottom: 25px;
+}
+.confirm-task .row {
+	margin: 5px 0;
+	float: left;
+	text-align: left;
+}
+.confirm-task .confirm-message {
+	margin: 10px 5px;
+	font-size: 12px;
+	float: left;
+	width: 490px;
+}
+.confirm-task .confirm-message h2 {
+	clear: both;
+	margin: 5px 0;
+	font-size: 22px;
+	text-align: left;
+}
+.confirm-task .confirm-message h3 {
+	clear: both;
+	margin: 15px 0;
+	width: 490px;
+	font-size: 14px;
+	text-align: center;
+}
+.confirm-task .confirm-message ul,
+.confirm-task .confirm-message li {
+	display: block;
+	float: left;
+}
+.confirm-task .confirm-message ul {
+	margin : 25px 0 55px 90px;
+	width: 380px;
+	clear: both;
+}
+.confirm-task .confirm-message li {
+	font-weight: bold;
+	padding: 2px 0;
+	font-size: 18px;
+	line-height: 26px;
+}
+.confirm-task .orange-checker {
+	color: #FF8400;
+	font-weight: bold;
+	font-size: 26px;
+}
+.confirm-task .book-list {
 	margin-bottom: 20px;
 }
-.confirm-class .message {
+.confirm-task .message {
 	position: absolute;
 	width: 100%;
 	top: 365px;
 	text-align: center;
 }
-.confirm-class .warning {
+.confirm-task .warning {
 	text-align: left;
+}
+.confirm-task .confirm-row {
+	margin-top: 50px;
+	width: 100%;
 }
 
 /**
@@ -386,4 +413,30 @@
 }
 .sign-up li {
 	margin: 15px 0 15px;
+}
+
+/**
+ * Define styles for class remove dialog
+ */
+.remove-class.dialog,
+.remove-class .dialog-inner {
+	height: 235px;
+}
+.remove-class.dialog {
+	margin: 150px auto 0;
+}
+.remove-class.dialog p {
+	padding: 20px 25px;
+}
+.remove-class.dialog strong {
+	font-size: 14px;
+}
+.remove-class .remove-option {
+	width: 440px;
+	margin: 40px auto 0;
+}
+.remove-class .remove-option .button {
+	width: 198px;
+	margin: 0 10px;
+	float: left;
 }

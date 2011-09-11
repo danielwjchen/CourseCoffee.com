@@ -127,9 +127,7 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 				`{$this->column['child_id']}` = :{$this->column['child_id']}
 			WHERE `id` = :id
 		";
-		parent::update($sql);
-		$this->read($this->attr);
-
+		$this->db->perform($sql, $this->attr);
 	}
 
 	/**
@@ -137,7 +135,7 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 	 */
 	public function destroy() {
 		$sql = "DELETE FROM `{$this->linkage}` WHERE `id` = :id";
-		parent::destroy($sql, array('id' => $this->id));
+		$this->db->perform($sql, array('id' => $this->id));
 
 	}
 

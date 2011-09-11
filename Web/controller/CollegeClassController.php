@@ -12,8 +12,8 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			'college-class-add'     => 'createClass',
 			'college-class-update'  => 'updateClass',
 			'college-class-remove'  => 'removeClass',
-			'college-class-info'  => 'getClassDetail',
-			'college-class-list'    => 'getListOfClass',
+			'college-class-info'    => 'getClassDetail',
+			'college-class-list'    => 'getClassList',
 			'college-class-suggest' => 'suggestClass',
 			'college-class-enroll'  => 'enrollClass',
 			'college-class-reading' => 'getClassBookList',
@@ -39,10 +39,16 @@ class CollegeClassController extends Controller implements ControllerInterface {
 
 	/**
 	 * Remove a class
-	 *
-	 * @to-do
 	 */
 	public function removeClass() {
+		$user_id    = $this->getUserId();
+		$section_id = Input::Post('section_id');
+		$enroll = new UserEnrollClassModel($this->sub_domain);
+		$result = $enroll->removeUserFromClass($user_id, $section_id);
+		$class_list = $this->user_session->getUserClassList();
+		unset($class_list[$section_id]);
+		$this->user_session->setUserClassList($class_list);
+		$this->output = new JSONView($result);
 	}
 
 	/**
@@ -59,7 +65,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	/**
 	 * Get a list of class
 	 */
-	public function getListOfClass() {
+	public function getClassList() {
 	}
 
 	/**
@@ -120,6 +126,15 @@ class CollegeClassController extends Controller implements ControllerInterface {
 				// error_log(__METHOD__ . ' : class_list - ' . print_r($class_list, true));
 
 				$this->user_session->setUserClassList($class_list);
+			} elseif (isset($result['error'])) {
+				switch ($result['error']) {
+					case 'exceed_max':
+						$result['class_list'] = $this->user_session->getUserClassList();
+						break;
+					case 'already_enrolled':
+						break;
+					default:
+				}
 			}
 
 			$this->output = new JSONView($result);

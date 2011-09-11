@@ -21,11 +21,7 @@ class DateDAO extends DAO implements DAOInterface{
 	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
-		if (!isset($params['timestamp']) || 
-				empty($params['timestamp']) ||
-				!isset($params['type']) ||
-				empty($params['type'])) 
-		{
+		if (!isset($params['timestamp']) || !isset($params['type'])) {
 			throw new Exception('incomplete date params');
 			return ;
 

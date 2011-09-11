@@ -122,7 +122,7 @@ HTML;
 						</div>
 					</div>
 					<div class="panel-01">
-						<h1>book list</h1>
+						<h1>Book List</h1>
 						<form name="class-feed">
 							{$readings}
 						</form>

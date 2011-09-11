@@ -35,9 +35,6 @@ class CollegeClassDAO extends DAO implements DAOInterface {
 	 *
 	 * @param array $params
 	 *  - id
-	 *  - institution_id
-	 *  - year_id
-	 *  - term_id
 	 *  - subject_abbr
 	 *  - course_num
 	 *  - section_num
@@ -69,9 +66,6 @@ class CollegeClassDAO extends DAO implements DAOInterface {
 			$sql .= "WHERE sec.id = :id";
 			$sql_param = array('id' => $params['id']);
 		} else if (
-				isset($params['institution_uri']) &&
-				isset($params['year']) &&
-				isset($params['term']) &&
 				isset($params['subject_abbr']) &&
 				isset($params['course_num']) &&
 				isset($params['section_num'])

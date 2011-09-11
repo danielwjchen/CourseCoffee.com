@@ -8,7 +8,7 @@ require_once __DIR__ . '/../Web/config.php';
 
 function load($file) {
 	$book_sql = "
-		INSERT INTO book (isbn) VALUE (:isbn)
+		INSERT INTO `book` (`isbn`) VALUE (:isbn)
 	";
 	$linkage_sql = "
 		INSERT INTO book_section_linkage (book_id, section_id)
@@ -27,12 +27,11 @@ function load($file) {
 		)
 	";
 	global $config;
-	$db = new DB($config->db['institution']['umich']);
+	$db = new DB($config->db['institution']['msu']);
 
 	$ouput = '';
 	exec('catdoc ' . __DIR__ . '/' . $file, $output);
 	for ($i = 0; $i < count($output); $i++) {
-		echo $output[$i] . "\n";
 		$book_info = explode(' ', $output[$i]);
 		$book_id = $db->insert($book_sql, array('isbn' => $book_info[3]));
 		$db->perform($linkage_sql, array(
@@ -44,4 +43,4 @@ function load($file) {
 	}
 }
 
-load('um_book');
+load('msu_book');

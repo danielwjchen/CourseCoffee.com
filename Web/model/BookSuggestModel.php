@@ -19,8 +19,8 @@ class BookSuggestModel extends Model {
 	 * @{
 	 * a group of message to indicate the result
 	 */
-	const BOOK_FOUND_SINGLE   = 'Here is the book we think you will need for this class.';
-	const BOOK_FOUND_MULTIPLE = 'Here is a list of books we think you will need for this class.';
+	const BOOK_FOUND_SINGLE   = 'Here is the book you need for this class.';
+	const BOOK_FOUND_MULTIPLE = 'Here is a list of books you need for this class.';
 	const BOOK_FOUND_NONE     = 'We didn\'t find required reading for this class.';
 	const API_FAIL            = 'We can\'t find the requested book from online vendors.';
 	/**
@@ -102,6 +102,8 @@ class BookSuggestModel extends Model {
 		for ($i = 0; $i < count($book_list); $i++) {
 			try {
 				$isbn = $book_list[$i]['isbn'];
+				error_log($isbn);
+				error_log('sssssssssssss');
 				$this->amazonSearch->searchBookIsbn($isbn);
 				$title = (string)$this->amazonSearch->getTitle();
 				if (empty($title)) {

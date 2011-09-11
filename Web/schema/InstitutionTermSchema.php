@@ -89,13 +89,6 @@ class InstitutionTermSchema extends InstitutionSchema implements SchemaInterface
 						'not null' => TRUE,
 						'description' => 'The primary key',
 					),
-					'institution_id' => array(
-						'type' => 'int',
-						'size' => 'normal',
-						'not null' => TRUE,
-						'default' => 0,
-						'description' => 'The institution which this section belongs.',
-					),
 					'course_id' => array(
 						'type' => 'int',
 						'size' => 'normal',
@@ -131,7 +124,6 @@ class InstitutionTermSchema extends InstitutionSchema implements SchemaInterface
 				),
 				'primary' => array('id'),
 				'index' => array(
-					'institution_id' => array('institution_id'),
 					'course_id' => array('course_id'),
 					'num' => array('num'),
 					'syllabus_id' => array('syllabus_id'),
@@ -180,13 +172,11 @@ class InstitutionTermSchema extends InstitutionSchema implements SchemaInterface
 					'isbn' => array(
 						'type' => 'char',
 						'length' => 128,
-						'not null' => TRUE,
 						'description' => 'isbn of the book',
 					),
 					'title' => array(
 						'type' => 'char',
 						'length' => 255,
-						'not null' => TRUE,
 						'description' => 'book title',
 					),
 				),
@@ -220,12 +210,6 @@ class InstitutionTermSchema extends InstitutionSchema implements SchemaInterface
 						'not null' => TRUE,
 						'default' => 0,
 						'description' => 'the primary key that identifies a section',
-					),
-					'key' => array(
-						'type' => 'char',
-						'length' => 255,
-						'not null' => TRUE,
-						'description' => 'cache key',
 					),
 				),
 				'primary' => array('id'),

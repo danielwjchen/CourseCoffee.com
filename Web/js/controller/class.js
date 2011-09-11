@@ -127,6 +127,12 @@ $P.ready(function() {
 
 		if (target.hasClass('upload')) {
 			doc.init();
+			/**
+			var upload_button = $('.upload.dialog a.button.submit');
+			var section_id = $('input[name=section-id]').val();
+			upload_button.attr('href', upload_button.attr('href') + '?section_id' + section_id);
+			**/
+			$('#doc-upload-form input[name=section-id]').val($('input[name=section-id]').val());
 		} else if (target.hasClass('submit')) {
 			classInfo.createTask();
 
