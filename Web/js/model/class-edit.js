@@ -15,7 +15,7 @@ window.ClassEdit = function(formName, inputName) {
 	var confirmEdit = function(section_id) {
 		if (section_id != undefined) {
 			$('input[name=section_id]', form).val(section_id);
-			$('.confirm', form).removeClass('disabled');
+			$('.confirm-class-info', form).removeClass('disabled');
 		}
 	};
 

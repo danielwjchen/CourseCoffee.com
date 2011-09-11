@@ -19,7 +19,8 @@ abstract class BlockView extends View implements ViewInterface {
 	/**
 	 * Implement ViewInterface::render()
 	 */
-	public function render() {
+	public function render($data = null) {
+		$this->data = $data;
 		$this->data['content'] = $this->getContent();
 		return $this->data;
 	}

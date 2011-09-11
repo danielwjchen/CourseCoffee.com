@@ -6,8 +6,6 @@
 
 class PageController extends Controller implements ControllerInterface {
 
-	private $output;
-
 	/**
 	 * Implement ControllerInterface::path()
 	 */
@@ -33,20 +31,6 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Override Controller::beforeAction()
-	 */
-	public function beforeAction() {
-
-	}
-
-	/**
-	 * Implement ControllerInterface::afterAction()
-	 */
-	public function afterAction() {
-		echo $this->output->render();
-	}
-
-	/**
 	 * Get the welcome output
 	 *
 	 * we redirect if the user is logged in
@@ -56,9 +40,9 @@ class PageController extends Controller implements ControllerInterface {
 			header('Location: ' . self::PAGE_HOME);
 		}
 
-		$login_form    = new UserLoginFormModel();
-		$register_form = new UserRegisterFormModel();
-		$file_form     = new FileFormModel();
+		$login_form    = new UserLoginFormModel($this->sub_domain);
+		$register_form = new UserRegisterFormModel($this->sub_domain);
+		$file_form     = new FileFormModel($this->sub_domain);
 
 		$this->output = new WelcomePageView(array(
 			'login_token'    => $login_form->initializeFormToken(),
@@ -71,12 +55,13 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the home output for a user
 	 */
 	public function getHomePage() {
+		$this->redirectUnsupportedDomain();
 		$this->redirectUnknownUser();
 
 		// debug
 		// error_log(__METHOD__ . ' - user session - ' . print_r($_SESSION, true));
 
-		$user_session_model = new UserSessionModel();
+		$user_session_model = new UserSessionModel($this->sub_domain);
 		$profile = $user_session_model->getUserProfile();
 		$class_list = $user_session_model->getUserClassList();
 		$this->output = new HomePageView(array(
@@ -92,6 +77,9 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get signup output for visiters
 	 */
 	public function getSignUpPage() {
+		$this->redirectUnsupportedDomain();
+		$institution_id = $this->getInstitutionId();
+
 		$section_id = Input::Get('section_id');
 		$fb         = Input::Get('fb');
 		$fb_uid     = Input::Get('fb_uid');
@@ -102,7 +90,7 @@ class PageController extends Controller implements ControllerInterface {
 		}
 
 		if ($fb) {
-			$fb_model = new FBModel();
+			$fb_model = new FBModel($this->sub_domain);
 			if (!$fb_model->checkFbUid($fb_uid)) {
 				$form_fields = $fb_model->generateSignUpForm();
 				$this->output = new FBSignUpPageView($form_fields);
@@ -113,8 +101,8 @@ class PageController extends Controller implements ControllerInterface {
 			}
 		}
 
-		$user_register = new UserRegisterFormModel();
-		$college       = new CollegeModel();
+		$user_register = new UserRegisterFormModel($this->sub_domain);
+		$college       = new CollegeModel($this->sub_domain);
 		$this->output = new SignUpPageView(array(
 			'error'          => $error,
 			'register_token' => $user_register->initializeFormToken(),
@@ -128,7 +116,7 @@ class PageController extends Controller implements ControllerInterface {
 	public function getCalendarPage() {
 		$this->redirectUnknownUser();
 
-		$user_session_model = new UserSessionModel();
+		$user_session_model = new UserSessionModel($this->sub_domain);
 		$class_list    = $user_session_model->getUserClassList();
 		$user_profile  = $user_session_model->getUserProfile(); 
 
@@ -157,17 +145,16 @@ class PageController extends Controller implements ControllerInterface {
 	public function getClassPage($params = array()) {
 		$this->redirectUnknownUser();
 
-		$user_session_model = new UserSessionModel();
-		$result['class_list'] = $user_session_model->getUserClassList();
+		$result['class_list'] = $this->user_session->getUserClassList();
 
 		// debug
 		// error_log(__METHOD__ . ' : class_list - ' . print_r($result['class_list'], true));
 
 		// a paticular class is specified to be displayed as default
 		if (!empty($params)) {
-			$class = new CollegeClassModel();
-			list($instituion_uri, $year, $term, $subject_abbr, $course_num, $section_num) = $params;
-			$class_info = $class->getClassByURI($instituion_uri, $year, $term, $subject_abbr, $course_num, $section_num);
+			$class = new CollegeClassModel($this->sub_domain);
+			list($subject_abbr, $course_num, $section_num) = $params;
+			$class_info = $class->getClassBySectionCode($subject_abbr, $course_num, $section_num);
 
 			// debug 
 			// error_log(__METHOD__ . ' : class_info - ' . print_r($class_info, true));
@@ -183,7 +170,7 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the 404 output
 	 */
 	public function get404Page() {
-		$login_form = new UserLoginFormModel();
+		$login_form = new UserLoginFormModel($this->sub_domain);
 		$this->output = new NotFoundPageView(array(
 			'login_token' => $login_form->initializeFormToken(),
 		));
@@ -193,7 +180,7 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the 500 output
 	 */
 	public function get500Page() {
-		$login_form = new UserLoginFormModel();
+		$login_form = new UserLoginFormModel($this->sub_domain);
 		$this->output = new InternalErrorPageView(array(
 			'login_token' => $login_form->initializeFormToken(),
 		));
@@ -225,28 +212,36 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the book search page
 	 */
 	public function getBookSearchPage() {
-		$login_form = new UserLoginFormModel();
-		$this->output = new BookSearchPageView(array(
-			'is_loggedIn' => $this->getUserId(),
-			'login_token' => $login_form->initializeFormToken(),
-		));
+		if ($this->sub_domain == self::DEFAULT_DOMAIN) {
+			$this->output = new WelcomePageView(array(
+				'domain'      => $this->domain,
+			));
+		} else {
+			$this->redirectUnsupportedDomain();
+
+			$login_form = new UserLoginFormModel($this->sub_domain);
+			$this->output = new BookSearchPageView(array(
+				'is_loggedIn' => $this->getUserId(),
+				'login_token' => $login_form->initializeFormToken(),
+			));
+		}
 	}
 
 	/**
 	 * Get user creation confirmation page
 	 */
 	public function getUserCreatedPage() {
-		$user_session = new UserSessionModel();
+		$this->redirectUnsupportedDomain();
 
 		if (!$this->getUserId()) {
-			$this->redirect('/welcome');
+			$this->redirect(self::PAGE_DEFAULT);
 		}
 
-		if (!$user_session->isNewlyRegistered()) {
-			$this->redirect('/home');
+		if (!$this->user_session->isNewlyRegistered()) {
+			$this->redirect(self::PAGE_HOME);
 		}
 
-		$profile = $user_session->getUserProfile();
+		$profile = $this->user_session->getUserProfile();
 
 		$this->output = new UserCreationConfirmPageView(array(
 			'first_name' => $profile['first_name'],
@@ -258,6 +253,8 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get task page
 	 */
 	public function getTaskPage() {
+		$this->redirectUnsupportedDomain();
+
 		$this->output = new BookSearchPageView(array(
 			'is_loggedIn' => $this->getUserId(),
 		));
@@ -267,18 +264,30 @@ class PageController extends Controller implements ControllerInterface {
 	 * Provide an interactive task editor
 	 */
 	public function getDocumentEditorPage() {
-		$processor = new DocumentProcessorFormModel();
+		$this->redirectUnsupportedDomain();
+
+		$processor = new DocumentProcessorFormModel($this->sub_domain);
 		$process_state = $this->isUserLoggedIn() ? 'redirect' : 'sign-up';
-		$college  = new CollegeModel();
-		$document = Input::Get('document');
-		$file_id  = Input::Get('file_id');
-		$mime     = Input::Get('doc-type');
+		$college    = new CollegeModel($this->sub_domain);
+		$document     = Input::Get('document');
+		$file_id      = Input::Get('file_id');
+		$mime         = Input::Get('mime');
+		$section_id   = Input::Get('section_id');
+		$section_code = null;
+		if (!empty($section_id)) {
+			$college_class = new CollegeClassModel($this->sub_domain);
+			$result = $college_class->getClassById($section_id);
+			if (isset($result['content'])) {
+				$section_code = $result['content']['section_code'];
+			}
+		}
 		$this->output = new DocumentEditorPageView(array(
 			'process_state'   => $process_state,
 			'document'        => $document,
 			'file_id'         => $file_id,
+			'section_id'      => $section_id,
+			'section_code'    => $section_code,
 			'mime'            => $mime,
-			'college_option'  => $college->getCollegeOption(),
 			'processor_token' => $processor->initializeFormToken(),
 		));
 	}

@@ -17,14 +17,14 @@ class FBModel extends Model {
 	private $facebook;
 	private $linkage;
 
-	function __construct() {
-		parent::__construct();
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
 		$this->fb = new Facebook(array(
 			'appId'  => $config->facebook['id'],
 			'secret' => $config->facebook['secret'],
 		));
-		$this->college_list_dao = new CollegeListDAO();
-		$this->linkage          = new UserFacebookLinkageDAO();
+		$this->college_list_dao = new CollegeListDAO($this->default_db);
+		$this->linkage          = new UserFacebookLinkageDAO($this->default_db);
 	}
 
 	private function base64UrlDecode($input) {
@@ -86,10 +86,6 @@ class FBModel extends Model {
 				{'name' : 'name'},
 				{'name' : 'first_name'},
 				{'name' : 'last_name'},
-				{'name' : 'school', 
-					'description' : 'The current school you are attending', 
-					'type' : 'select',
-					'options' : {1 : 'Michigan State University'}},
 				{'name' : 'email'},
 				{'name' : 'password'}
 			]",

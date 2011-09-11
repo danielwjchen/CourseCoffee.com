@@ -3,12 +3,11 @@
  * @file
  * Oversee acessses to javascript and css
  */
-class AssetController extends Controller implements ControllerInterface {
+class AssetController {
 
 	private $cache;
 
 	function __construct() {
-		parent::__construct();
 		//$this->cache = new FileCache();
 		$this->cache = new DBCache();
 	}
@@ -20,6 +19,23 @@ class AssetController extends Controller implements ControllerInterface {
 			'css' => 'getCSS',
 			'js'  => 'getJS',
 		);
+	}
+
+	/**
+	 * Implement Controller::beforeAction()
+	 *
+	 *  this is a stub!
+	 */
+	public function beforeAction() {
+
+	}
+
+	/**
+	 * Implement ControllerInterface::afterAction()
+	 *
+	 *  this is a stub!
+	 */
+	public function afterAction() {
 	}
 
 	public function getCSS($params = array()) {

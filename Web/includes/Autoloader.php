@@ -17,12 +17,12 @@ class Autoloader {
 	 * implementation.
 	 */
 	private static $paths = array(
-		CACHE_PATH => '/Cache\.php$/',
-		DBA_PATH => '/DBA\.php$/',
-		DAO_PATH => '/DAO\.php$/',
-		MODEL_PATH => '/Model\.php$/',
+		CACHE_PATH      => '/Cache\.php$/',
+		Schema_PATH     => '/Schema\.php$/',
+		DAO_PATH        => '/DAO\.php$/',
+		MODEL_PATH      => '/Model\.php$/',
 		CONTROLLER_PATH => '/Controller\.php$/',
-		VIEW_PATH => '/View\.php$/',
+		VIEW_PATH       => '/View\.php$/',
 	);
 
 	/**

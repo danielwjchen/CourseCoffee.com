@@ -38,9 +38,9 @@ class TaskCreateFormModel extends FormModel {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->task_dao = new TaskDAO();
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
+		$this->task_dao = new TaskDAO($this->institution_db);
 		$this->form_name = 'task_creation_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
@@ -99,6 +99,7 @@ class TaskCreateFormModel extends FormModel {
 		if (!$this->validateFormToken($token)) {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_FORM_EXPIRED, Logger::SEVERITY_LOW);
+			/*
 			return array(
 				'objective' => $objective,
 				'due_date' => $due_date,
@@ -106,6 +107,7 @@ class TaskCreateFormModel extends FormModel {
 				'token' => $token,
 				'error' => self::ERROR_FORM_EXPIRED
 			);
+			*/
 		}
 
 		$this->unsetFormToken();

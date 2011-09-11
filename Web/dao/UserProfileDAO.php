@@ -11,36 +11,40 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	private $institution_linkage_dao;
 	private $institution_dao;
 	private $facebook_linkage_dao;
-	private $file_dao;
 
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array(
+	function __construct($db) {
+		parent::__construct($db);
+
+		$this->user_dao                = new UserDAO($db);
+		$this->user_setting_dao        = new UserSettingDAO($db);
+		$this->person_dao              = new PersonDAO($db);
+		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($db);
+		$this->institution_dao         = new InstitutionDAO($db);
+
+	}
+
+	/**
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array(
 			'id',
 			'account',
 			'first_name',
 			'last_name',
 			'institution',
 			'institution_uri',
+			'institution_domain',
 			'year',
 			'term',
 		);
-		$this->setAttribute($attr);
-
-		$this->user_dao                = new UserDAO();
-		$this->user_setting_dao        = new UserSettingDAO();
-		$this->person_dao              = new PersonDAO();
-		$this->institution_linkage_dao = new UserInstitutionLinkageDAO();
-		$this->institution_dao         = new InstitutionDAO();
-		$this->file_dao                = new FileDAO();
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 *
 	 * @param array $params
 	 *   - first_name
@@ -80,7 +84,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 *
 	 * @param array $params
 	 *   - user_id
@@ -99,6 +103,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				p.last_name,
 				i.name AS institution,
 				i.uri AS institution_uri,
+				i.domain AS institution_domain,
 				iy.period AS year,
 				it.name AS term
 			FROM `user` u
@@ -131,7 +136,6 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			 GROUP BY u.id
 			";
 			$data = $this->db->fetch($sql, array(
-				'file_type' => FileType::PROFILE_IMAGE,
 				'email'    => $params['email'],
 				'password' => $params['password'],
 			));
@@ -144,7 +148,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$this->user_dao->read(array('id' => $this->attr['id']));
@@ -166,13 +170,13 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$this->user_dao->destroy();
 		$this->person_dao->destroy();
 		$this->facebook_linkage_dao->destroy();
-		$this->location_linkage_dao->destroy();
+		$this->institution_dao->update();
 	}
 
 }

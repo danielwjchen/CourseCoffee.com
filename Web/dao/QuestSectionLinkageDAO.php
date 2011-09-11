@@ -3,16 +3,22 @@
  * @file
  * Represent a linkage among quest and section
  */
-class QuestSectionLinkageDAO extends LinkageDAO{
+class QuestSectionLinkageDAO extends LinkageDAO {
 
 	/**
-	 * Extend LinkageDAO::__construct().
+	 * Implement LinkageDAO::defineColumn().
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->column  = array('quest_id', 'section_id', 'id');
-		$this->linkage = 'quest_section_linkage';
-		$this->setAttribute($this->column);
+	protected function defineColumn() {
+		return array(
+			'parent_id' => 'quest_id', 
+			'child_id'  => 'section_id',
+		);
 	}
 
+	/**
+	 * Implement LinkageDAO::defineLinkageTable().
+	 */
+	protected function defineLinkageTable() {
+		return 'quest_section_linkage';
+	}
 }

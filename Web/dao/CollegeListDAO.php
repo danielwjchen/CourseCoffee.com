@@ -2,12 +2,10 @@
 /**
  * Represent a institution
  */
-class CollegeListDAO extends ListDAO implements ListDAOInterface{
+class CollegeListDAO extends ListDAO implements ListDAOInterface {
 
 	/**
-	 * Extend DAO::read()
-	 *
-	 * This differs from other DAOs as it fetches all the records
+	 * Implement ListDAOInterface::read()
 	 */
 	public function read($params) {
 		$sql ="SELECT * FROM `institution`";
@@ -33,7 +31,7 @@ class CollegeListDAO extends ListDAO implements ListDAOInterface{
 			));
 
 		} else {
-			$this->list = $this->db->fetch($sql);
+			$this->list = $this->db->fetchList($sql);
 			return empty($this->list);
 		}
 		

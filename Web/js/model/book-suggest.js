@@ -98,7 +98,6 @@ window.BookSuggest = function(regionName) {
 	 */
 	this.getAllBookList = function(sectionForm) {
 		region.addClass('loading');
-		region.html('<h3>Here is a list of books we think you might need for this class.</h3>');
 		var sectionId = '';
 		var html = '';
 		$(sectionForm).each(function(i, el) {

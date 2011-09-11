@@ -91,14 +91,6 @@ HTML;
 						</div> 
 						<div class="row"> 
 							<div class="title"> 
-								<label for="school">school: </label> 
-							</div> 
-							<div class="field"> 
-								{$school_select}
-							</div> 
-						</div> 
-						<div class="row"> 
-							<div class="title"> 
 								<label for="user-account">email: </label> 
 							</div> 
 							<div class="field"> 
@@ -123,6 +115,9 @@ HTML;
 							<div class="field"> 
 								<input type="password" name="confirm" /> 
 							</div> 
+						<div class="row">
+							<p>*For security reasons, password needs to contain more than 8 characters.<p>
+						</div>
 						</div> 
 						<a href="#" class="button sign-up">Join</a> 
 					</form> 

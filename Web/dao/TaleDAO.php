@@ -10,9 +10,16 @@ class TaleDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct() {
-		parent::__construct();
-		$attr = array(
+	function __construct($db_name = 'default') {
+		parent::__construct($db_name);
+		$this->version_dao = new TaleVersionDAO();
+	}
+
+	/**
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array(
 			'id',
 			'vid',
 			'user_id',
@@ -21,14 +28,10 @@ class TaleDAO extends DAO implements DAOInterface{
 			'created',
 			'updated',
 		);
-		$this->setAttribute($attr);
-
-		$this->version_dao = new TaleVersionDAO();
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (!isset($params['user_id']) || 
@@ -63,7 +66,7 @@ class TaleDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		$sql ="
@@ -96,7 +99,7 @@ class TaleDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$vid = $this->version_dao->create(array('story' => $this->attr['story']));
@@ -119,7 +122,7 @@ class TaleDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = '

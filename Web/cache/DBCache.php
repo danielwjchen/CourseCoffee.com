@@ -9,7 +9,7 @@ class DBCache implements CacheInterface {
 
 	function __construct() {
 		global $config;
-		$this->db = new DB($config->db);
+		$this->db = new DB($config->db['default']);
 	}
 
 	function __destruct() {

@@ -25,7 +25,7 @@ interface ListDAOInterface {
 /**
  * Some shared methods among all dao classes
  */
-abstract class ListDAO{
+abstract class ListDAO {
 
 	/**
 	 * keep a list of records constructed from database
@@ -43,13 +43,12 @@ abstract class ListDAO{
 	 * @param $db
 	 *  a database object
 	 */
-	function __construct() {
-		global $config;
-		$this->db = new DB($config->db);
+	function __construct($db) {
+		$this->db = $db;
 	}
 
 	protected function setLimit($sql, $limit) {
-		return $sql . "LIMIT {$limit['offset']}, {$limit['count']}";
+		return $sql . " LIMIT {$limit['offset']}, {$limit['count']}";
 	}
 
   /**
