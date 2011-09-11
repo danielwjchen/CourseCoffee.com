@@ -99,6 +99,7 @@ class CollegeClassSuggestDAO extends ListDAO implements ListDAOInterface {
 		}
 
 		$sql .= implode(' AND ', $where_clause);
+		$sql .= ' ORDER BY sub.abbr, c.num, s.num';
 
 
 		$this->list = $this->db->fetchList($sql, $sql_params);
