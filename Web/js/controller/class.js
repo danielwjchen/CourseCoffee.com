@@ -21,6 +21,8 @@ $P.ready(function() {
 	var resetTaskInfoMenu = function(active) {
 		$('li', taskInfoMenu).removeClass('active');
 		$('#' + active, taskInfoMenu).addClass('active');
+		$('input[name=paginate]').val('');
+		$('.more').removeClass('disabled');
 	}
 	// mark the first item in class list as active on page load
 	var defaultMenuOption = 'a:first';
