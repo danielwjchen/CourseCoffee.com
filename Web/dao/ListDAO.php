@@ -48,7 +48,7 @@ abstract class ListDAO {
 	}
 
 	protected function setLimit($sql, $limit) {
-		return $sql . "LIMIT {$limit['offset']}, {$limit['count']}";
+		return $sql . " LIMIT {$limit['offset']}, {$limit['count']}";
 	}
 
   /**
