@@ -211,12 +211,6 @@ class InstitutionTermSchema extends InstitutionSchema implements SchemaInterface
 						'default' => 0,
 						'description' => 'the primary key that identifies a section',
 					),
-					'key' => array(
-						'type' => 'char',
-						'length' => 255,
-						'not null' => TRUE,
-						'description' => 'cache key',
-					),
 				),
 				'primary' => array('id'),
 				'index' => array(
