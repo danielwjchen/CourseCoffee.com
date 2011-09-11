@@ -113,7 +113,7 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	 */
 	var displayClassInfo = function() {
 		var content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>' +
-			'<a href="#" class="remove button">&times;</a>';
+			'<a href="#" class="remove-class button">&times;</a>';
 		if ($('input[name=syllabus-id]', option).val() != 0) {
 			$('a.button.upload').addClass('disabled');
 		} else {

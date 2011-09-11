@@ -153,8 +153,8 @@ class PageController extends Controller implements ControllerInterface {
 		// a paticular class is specified to be displayed as default
 		if (!empty($params)) {
 			$class = new CollegeClassModel($this->sub_domain);
-			list($instituion_uri, $year, $term, $subject_abbr, $course_num, $section_num) = $params;
-			$class_info = $class->getClassByURI($instituion_uri, $year, $term, $subject_abbr, $course_num, $section_num);
+			list($subject_abbr, $course_num, $section_num) = $params;
+			$class_info = $class->getClassBySectionCode($subject_abbr, $course_num, $section_num);
 
 			// debug 
 			// error_log(__METHOD__ . ' : class_info - ' . print_r($class_info, true));
@@ -264,20 +264,31 @@ class PageController extends Controller implements ControllerInterface {
 	 * Provide an interactive task editor
 	 */
 	public function getDocumentEditorPage() {
+		error_log(print_r($_GET, true));
 		$this->redirectUnsupportedDomain();
 
 		$processor = new DocumentProcessorFormModel($this->sub_domain);
 		$process_state = $this->isUserLoggedIn() ? 'redirect' : 'sign-up';
-		$college  = new CollegeModel($this->sub_domain);
-		$document = Input::Get('document');
-		$file_id  = Input::Get('file_id');
-		$mime     = Input::Get('doc-type');
+		$college    = new CollegeModel($this->sub_domain);
+		$document     = Input::Get('document');
+		$file_id      = Input::Get('file_id');
+		$mime         = Input::Get('mime');
+		$section_id   = Input::Get('section_id');
+		$section_code = null;
+		if (!empty($section_id)) {
+			$college_class = new CollegeClassModel($this->sub_domain);
+			$result = $college_class->getClassById($section_id);
+			if (isset($result['content'])) {
+				$section_code = $result['content']['section_code'];
+			}
+		}
 		$this->output = new DocumentEditorPageView(array(
 			'process_state'   => $process_state,
 			'document'        => $document,
 			'file_id'         => $file_id,
+			'section_id'      => $section_id,
+			'section_code'    => $section_code,
 			'mime'            => $mime,
-			'college_option'  => $college->getCollegeOption(),
 			'processor_token' => $processor->initializeFormToken(),
 		));
 	}

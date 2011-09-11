@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Define styles for functions releated removing a class
+ */
+a.remove-class.button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0 3px;
+	font-size: 16px !important;
+	height: 18px !important;
+	line-height: 18px !important;
+}
+.dialog-remove-class p {
+	margin: 20px 30px;
+	font-size: 14px;
+}
+.dialog-remove-class .class-remove-list {
+	width: 340px;
+	margin: 10px auto;
+}
+.dialog-remove-class .options {
+	clear: both;
+	width: 450px;
+	margin: 0 auto;
+}
+.dialog-remove-class .options .button {
+	float: left;
+	width: 200px;
+	margin: 20px 10px 0;
+}
+.dialog-remove-class .class-remove-list ul,
+.dialog-remove-class .class-remove-list li {
+	list-style: none;
+}
+.dialog-remove-class .class-remove-list ul {
+	float: left;
+}
+.dialog-remove-class .class-remove-list li {
+	position: relative;
+	margin: 10px 0;
+	text-align: center;
+	width: 150px;
+}

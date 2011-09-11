@@ -24,13 +24,38 @@ window.ClassEnroll = function(formName, inputName) {
 					var content = '';
 
 					if (response.error) {
-						content = '<h2 class="error">' + response.message + '</h2>';
+						content = ClassEnroll.handleError(response);
 						dialog.open('enroll', content);
 
 						$('.dialog-close', $P).live('click', function(e) {
 							e.preventDefault();
 							dialog.close()
 						});
+
+						var dialogRegion = $('.dialog');
+						$('.button.cancel-action').click(function(e) {
+							e.preventDefault();
+							dialog.close();
+						});
+						$('.button.go-to-class-page').click(function(e) {
+							e.preventDefault();
+							window.location = response.redirect;
+						});
+						ClassRemove.removeClassFromList(dialogRegion, function(section_id) {
+							var confirmAction = $('.button.confirm-action', dialogRegion);
+							confirmAction.removeClass('disabled');
+							confirmAction.click(function(e) {
+								e.preventDefault();
+								$.ajax({
+									url: '/college-class-enroll',
+									type: 'post',
+									async: false,
+									data: form.serialize()
+								});
+								window.location = response.redirect;
+							});
+						});
+
 
 					} else {
 						content += '<h2>' + response.message + '</h2>' +
@@ -45,6 +70,7 @@ window.ClassEnroll = function(formName, inputName) {
 						if (!response.has_syllabus) {
 							$('.suggested-reading').after('<hr />');
 							doc.createForm('.dialog-inner', 'It seems no one has uploaded a syllabus for this class yet. Would you care to help us out?');
+							$('#doc-upload-form input[name=section-id]').val(response.section_id);
 							$('#doc-upload-form').after('<span class="double-underline"><a class="cancel" href="#">no, thanks</a></span>');
 
 						} else {
@@ -77,4 +103,31 @@ window.ClassEnroll = function(formName, inputName) {
 		submitEnroll();
 	}
 
+};
+
+/**
+ * Handle errors encountered during enrollment
+ *
+ * @param object response
+ *
+ * @return string content
+ */
+ClassEnroll.handleError = function(response) {
+	var content = '<div class="dialog-content dialog-remove-class"><h2>' + response.message + '</h2>';
+	switch (response.error) {
+		case 'already_enrolled':
+			content += '<a href="#" class="go-to-class-page button">go to class page</a>';
+			break;
+		case 'exceed_max':
+			content += "<p>Well, this is akward. You will have to remove a class to make room for the new one. Remember, you can always add it back, and the assignment you've created won't be lost.</p>" +
+			ClassRemove.listClassToRemove(response.class_list) +
+			'<div class="options">' +
+				'<a href="#" class="button disabled confirm-action">confirm</a>' +
+				'<a href="#" class="button cancel-action">cancel</a>' +
+			'</div>';
+			break;
+		default:
+			break;
+	}
+	return content + '</div>';
 };

@@ -17,12 +17,14 @@ window.ClassRemove = function(regionClassName, section_id) {
 	 *  an action to be executed after the class is removed
 	 */
 	this.promptAction = function(section_code, callback) {
-		$('a.remove.button', _region).click(function(e) {
+		$('a.remove-class.button', _region).click(function(e) {
 			e.preventDefault();
 			var content = '<h3>You are about to remove ' + section_code + ' from your schedule.</h3>' + 
+			"<p><strong>Remember, you will still have access to the assignments you've created, but the ones shared from this class will be removed from your schedule.</strong></p>" +
+			"<h3> You can always add the class back, though.</h3>" +
 			'<div class="remove-option">' +
-				'<a class="confirm-remove button">confirm</a>' +
-				'<a class="cancel-remove button">cancel</a>' +
+				'<a class="confirm-remove button" href="#">confirm</a>' +
+				'<a class="cancel-remove button" href="#">cancel</a>' +
 			'</div>';
 			dialog.open('remove-class', content);
 			$('.dialog a').click(function(e) {
@@ -38,6 +40,34 @@ window.ClassRemove = function(regionClassName, section_id) {
 
 };
 /**
+ * Offer a list of currently enrolled classes to be removed
+ */
+ClassRemove.listClassToRemove = function(classList) {
+	var html  = '';
+	var list  = '';
+	var count = 0;
+	for (section_id in classList) {
+		list += '<li>' + classList[section_id] + '<a href="#" id="' + section_id + '" class="remove-class button">&times;</a></li>';
+		count++;
+		if (count >=3 && count % 3 == 0) {
+			html += '<ul>' + list + '</ul>';
+			list = '';
+		} 
+	}
+	return '<div class="class-remove-list">' + html + '</div>';
+};
+/**
+ * Remove class from a list
+ */
+ClassRemove.removeClassFromList = function(region, callback) {
+	$('a.remove-class.button', region).click(function(e) {
+		e.preventDefault();
+		var section_id = $(this).attr('id');
+		$(this).parent('li').remove();
+		ClassRemove.removeClass(section_id, callback);
+	});
+}
+/**
  * Remove user from class
  *
  * @param int section_id
@@ -46,8 +76,6 @@ window.ClassRemove = function(regionClassName, section_id) {
  */
 ClassRemove.removeClass = function(section_id, callback) {
 	$('.dialog').click(function(e) {
-		console.log(this);
-		console.log(section_id);
 		e.preventDefault();
 		$.ajax({
 			url: '/college-class-remove',

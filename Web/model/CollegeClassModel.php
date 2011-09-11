@@ -12,7 +12,7 @@ class CollegeClassModel extends Model {
 	 */
 	const NO_CLASS_FOUND = 'We are sorry, but no class could be found with the provided information';
 
-	const ERROR_ALREADY_HAS_SYLLABUS = "hmmm... someone already uploaded a syllabus to this class, but that's okay!";
+	const ERROR_ALREADY_HAS_SYLLABUS = "hmmm... someone already uploaded a syllabus for this class, but that's okay!";
 	const EVENT_ALREADY_HAS_SYLLABUS = 'Attempt to upload syllabus to a class already has one';
 	const SYLLABUS_SUCCESS = 'Congratulations! The syllabus is now uploaded!';
 
@@ -72,12 +72,8 @@ class CollegeClassModel extends Model {
 	}
 
 	/**
-	 * Get college class information by name
+	 * Get college class information by section code
 	 *
-	 * @param string institution_uri
-	 *   an URI safe version of the college name
-	 * @param string year
-	 * @param string term
 	 * @param string subject_abbr
 	 * @param string course_num
 	 * @param string section_num
@@ -90,11 +86,8 @@ class CollegeClassModel extends Model {
 	 *   - error:
 	 *   - meessage:
 	 */
-	public function getClassByURI($institution_uri, $year, $term, $subject_abbr, $course_num, $section_num) {
+	public function getClassBySectionCode($subject_abbr, $course_num, $section_num) {
 		$has_record = $this->class_dao->read(array(
-			'institution_uri'  => $institution_uri,
-			'year'             => $year,
-			'term'             => $term,
 			'subject_abbr'     => strtoupper($subject_abbr),
 			'course_num'       => strtoupper($course_num),
 			'section_num'      => strtoupper($section_num),

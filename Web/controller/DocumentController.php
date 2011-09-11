@@ -36,14 +36,23 @@ class DocumentController extends Controller implements ControllerInterface {
 	 */
 	public function uploadDocument() {
 		$file_form = new FileFormModel($this->sub_domain);
-		$token    = Input::Post('token');
-		$user_id  = $this->getUserId();
+
+		$token      = Input::Post('token');
+		$section_id = Input::Post('section-id');
+		$user_id    = $this->getUserId();
 		// we default visitor's user_id = 1
 		$user_id  = empty($user_id) ? 1 : $user_id;
 		$filename = 'document';
 		// process form and save the file
 		$result = $file_form->processForm($user_id, $token, $filename, FileType::SYLLABUS);
-		$this->redirect('/doc-edit&file_id=' . $result['file_id'] . '&doc-type=' . $result['mime'] . '&document=' . $result['encoded']);
+		$data = array(
+			'file_id'    => $result['file_id'],
+			'mime'       => str_replace('application/', '', $result['mime']),
+			'document'   => $result['encoded'],
+			'section_id' => $section_id,
+		);
+		$this->redirect('/doc-edit&' . http_build_query($data, '', '&'));
+		// $this->redirect('/doc-edit&file_id=' . $result['file_id'] . '&doc-type=' . $result['mime'] . '&document=' . $result['encoded']);
 	}
 
 	/**

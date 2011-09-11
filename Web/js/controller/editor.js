@@ -8,6 +8,14 @@
  * from.
  */ 
 $P.ready(function(){
+
+	/**
+	 * Interact with user when action is taken on /doc-editor
+	 *
+	 * @see js/model/editor-action.js
+	 */
+	var editorAction = new EditorAction('#task-creation-form');
+	
             /*    global variables    */
             history_stack = [];
             redo_stack = [];
@@ -300,7 +308,7 @@ $P.ready(function(){
                             $(".schedule_elem_date[sid='" + sid  + "']").html(new_date_str)
                             
                             /* saving schedule content*/
-                            console.log(sid)
+                            // console.log(sid)
                             content_temp = $(".schedule_elem_edit[sid='" + sid + "']").val().replace(/\n/gi,"<br>").replace(/\s{2,}/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
                             $(".sch_content[sid='"+$(this).attr("sid")+"']").html(content_temp);
                             for(i=0;i<schedule_list.length;i++){
@@ -728,7 +736,7 @@ $P.ready(function(){
                                     }
                                     //alert( inc_val)
                                     if(variance(inc_val) < 1 && inc_val.length > 10){ // min number of dates allowed
-                                            console.log("best")
+                                            // console.log("best")
                                             best_guess_idx = m
                                     }
                                     if(variance(inc_val) < min_var && inc_val.length > 2){ // min number of dates allowed
@@ -739,7 +747,7 @@ $P.ready(function(){
                                     }
                             }
                     }
-                    console.log(min_var)
+                    // console.log(min_var)
                     if(best_guess_idx != -1) {reg_idx = best_guess_idx;}
                     if(reg_idx == 6) {flag_week_format = 1;}
                     
@@ -758,17 +766,16 @@ $P.ready(function(){
             init();
             var processorData = $('#processor-form').serialize();
             $.ajax({
-
-									url: '?q=doc-process',
-									type: 'Post',
-									cache: false,
-									data: processorData,
-									success: function(response){
-										form = $('#class-selection-form-skeleton');
-										$('#year-id', form).val(response.year_id);
-										$('#term-id', form).val(response.term_id);
-										$('#section-id', form).val(response.section_id);
-										$('#suggest-input', form).val(response.course_code);
+							url: '?q=doc-process',
+							type: 'Post',
+							cache: false,
+							data: processorData,
+							success: function(response){
+								/**
+								 * Even if the user is comming from /class, it's a good idea to ask
+								 * again if the document is indeed uploaded for the desired class.
+								 */
+								editorAction.promptClassConfirmation();
 
                     result = response.content; 
 										// console.log(result);
@@ -824,7 +831,7 @@ $P.ready(function(){
                             if(schedule_list[i].content.length < 3){
                                     continue // some suckers will write their syls as " Quizzes: EVERY Thursday: 1/25, 2/1, 2/8, 2/15, 3/1, 3/8, 3/22, 4/5, 4/12, 4/19 ", which will total screw the smoothing process
                             }
-                            console.log(i,i+1)
+                            // console.log(i,i+1)
                             curr_day = schedule_list[i].date.getOrdinalNumber()
                             next_day = schedule_list[i+1].date.getOrdinalNumber()
                             
@@ -836,7 +843,7 @@ $P.ready(function(){
                                             max_len = end_pos-start_pos
                                             start_pos_final = start_pos
                                             end_pos_final = end_pos
-                                            console.log("break", start_pos_final, end_pos_final, max_len)
+                                            // console.log("break", start_pos_final, end_pos_final, max_len)
                                     }
                                     start_pos = i+1
                                     end_pos = i+2
@@ -845,7 +852,7 @@ $P.ready(function(){
                     
                     if( (end_pos-start_pos) > max_len ) { max_len = end_pos-start_pos; start_pos_final = start_pos; end_pos_final = end_pos }
                     
-                    console.log("smooth",start_pos_final, end_pos_final)
+                    // console.log("smooth",start_pos_final, end_pos_final)
                     
                     /* filtration */ 
                     for(i=end_pos_final; i<schedule_list.length-1; i++){
@@ -900,7 +907,7 @@ $P.ready(function(){
                     show_schedule();
                     schedule_list_orig_len = schedule_list.length
                     update_date_label()
-	            update_schedule()	
+										update_schedule()	
                     update_msg_board()			   
                     save_history();
                     
@@ -916,159 +923,13 @@ $P.ready(function(){
 	 * important to keep consistency.
 	 */
 	$('#create-task').click(function(e) {
-                if(flag_week_format == 1){
-                        dialog.open("alert_box", "please enter the date of your first assignment")
-                        return
-                }
 		e.preventDefault();
+		if(flag_week_format == 1){
+			dialog.open("alert_box", "please enter the date of your first assignment");
+      return;
+    }
+		editorAction.promptTaskCreation(schedule_list);
 
-		var selectionForm = $('#class-selection-form-skeleton').clone();
-		selectionForm.attr('id', 'class-selection-form');
-		var content = '<div class="dialog-content">' +
-			'<div class="confirm-message">' +
-				"<h2>Before we submit everything, let's take a final look... </h2>" + 
-				'<ul>' +
-					'<li><span class="orange-checker">&#10004;</span> Are all the dates correct?</li>' +
-					'<li><span class="orange-checker">&#10004;</span> Are there missing assignments?</li>' +
-					'<li><span class="orange-checker">&#10004;</span> Do the assignments make sense?</li>' +
-				'</ul>' +
-				'<h3>If everything works, Fill out the the form below and hit submit.</h3>' +
-			'</div>' +
-		'</div>';
-		dialog.open('confirm-class', content);
-		$('.confirm-message').after(selectionForm);
-		selectionForm.removeClass('hidden');
-
-		var classEdit = new ClassEdit('#class-selection-form', '#suggest-input');
-
-		/**
-		 * Confirm task creation
-		 *
-		 * This action has two different flow depend on where user comes from.
-		 *  - /welcome: this is a first-time user and goes on to register for an 
-		 *    account
-		 *  - /home, /calendar, and /class: the user already has an account,
-		 *    proceeds to the enroll in the class, and then go to the class page
-		 */
-		$('.confirm', selectionForm).live('click', function(e) {
-			e.preventDefault();
-			var taskCreationForm = $('#task-creation-form');
-			var processState = $('input[name=process_state]', taskCreationForm).val();
-			var creationForm = $('#task-creation-form');
-			var taskEle = $('.schedule_elem');
-			creationForm.append('<input type="hidden" name="task_count" value="' + taskEle.length + '" />');
-
-			$('.dialog-close').live('click', function(e) {
-				e.preventDefault();
-				dialog.close()
-			});
-                       /* 
-			taskEle.each(function(index, value) {
-				date = $('.schedule_elem_date', value).text().replace('Date:', '') + '/2011';
-				objective = $('.sch_content', value).text();
-				creationForm.append('<input type="hidden" name="date_' + index + '" value="' + date + '" />');
-				creationForm.append('<input type="hidden" name="objective_' + index + '" value="' + objective + '" />');
-			});*/
-                        
-      cnt = 0; 
-      for(i=0; i<schedule_list.length; i++){
-				if(schedule_list[i].deleted == false){
-					curr_date =  schedule_list[i].date
-					sch_date = (curr_date.getMonth() + 1) + "/" + (curr_date.getDate()) + "/" + "2011"
-					sch_content = schedule_list[i].content
-					creationForm.append('<input type="hidden" name="date_' + cnt + '" value="' + sch_date + '" />');
-					creationForm.append('<input type="hidden" name="objective_' + cnt + '" value="' + sch_content + '" />');
-					cnt = cnt + 1
-        }
-      }
-			var content = '';
-
-			$.ajax({
-				url: '/task-add-from-doc',
-				type: 'post',
-				cache: false,
-				data: creationForm.serialize() + '&section_id=' + $('#section-id', selectionForm).val(),
-				success: function(response) {
-					var section_id = $('#section-id', selectionForm).val();
-					content = '<h3 class="title">' + response.message + '</h3>' + 
-					'<hr />' +
-					'<div class="suggested-reading">' +
-						'<div id="enroll-book-list" class="book-list">' + 
-						'</div>' +
-					'</div>';
-
-					/**
-					 * In this case, the user comes from /welcome and should be greeted with 
-					 * option to sign up.
-					 *
-					 * @see js/model/register.js
-					 */
-					if (processState == 'sign-up') {
-						var signUpOption = SignUp.getOptions();
-						var fbUid = '';
-						$FB(function() {
-							FB.getLoginStatus(function(response) {
-								if (response.authResponse) {
-									fbUid = response.authResponse.userID;
-								}
-							});
-						});
-
-						content += "<h2>In the meantime, why don't we create an account?</h2>" + SignUp.getOptions();
-						$('.dialog-inner').delegate('a.sign-up', 'click', function(e) {
-							e.preventDefault();
-							var target = $(this);
-							var url = target.attr('href') + '?section_id=' + section_id;
-							if (target.hasClass('facebook')) {
-								window.location = url + '&fb=true&fb_uid=' + fbUid;
-							} else {
-								window.location = url;
-							}
-						});
-
-					// otherwise, the user is an existing user and needs to be added to the
-					// class
-					} else if (processState == 'redirect') {
-						content += '<a href="#" class="go-to-class-page button">go to class page</a>';
-						$.ajax({
-							url: '/college-class-enroll',
-							type: 'post',
-							data: 'section_id=' + $('#section-id', selectionForm).val(),
-							success: function(response) {
-								if (response.error) {
-									$('.suggested-reading').after('<h3 class="warning">' +
-										'It appears you have more than 6 classes. This class will not be added to your list' +
-									'</h3>');
-									$('.dialog-content a.button').text('back to home page');
-									response.redirect = '/home';
-								}
-
-								// binding redirect actions to class page
-								if (response.redirect) {
-
-									// a helper function to redirect page
-									var goToClassPage = function(url) {
-										window.location = response.redirect;
-									};
-
-									$('.dialog-close', $P).live('click', function(e) {
-										goToClassPage(response.redirect);
-									});
-									$('.go-to-class-page', $P).live('click', function(e) {
-										goToClassPage(response.redirect);
-									});
-								}
-
-							}
-						});
-					}
-
-					$('.dialog-inner .dialog-content').html(content);
-					bookList = new BookSuggest('.book-list');
-					bookList.getBookList($('#section-id', selectionForm).val())
-				}
-			});
-		});
 	});
 
 });

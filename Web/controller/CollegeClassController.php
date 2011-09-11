@@ -13,7 +13,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			'college-class-update'  => 'updateClass',
 			'college-class-remove'  => 'removeClass',
 			'college-class-info'    => 'getClassDetail',
-			'college-class-list'    => 'getListOfClass',
+			'college-class-list'    => 'getClassList',
 			'college-class-suggest' => 'suggestClass',
 			'college-class-enroll'  => 'enrollClass',
 			'college-class-reading' => 'getClassBookList',
@@ -65,7 +65,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	/**
 	 * Get a list of class
 	 */
-	public function getListOfClass() {
+	public function getClassList() {
 	}
 
 	/**
@@ -126,6 +126,15 @@ class CollegeClassController extends Controller implements ControllerInterface {
 				// error_log(__METHOD__ . ' : class_list - ' . print_r($class_list, true));
 
 				$this->user_session->setUserClassList($class_list);
+			} elseif (isset($result['error'])) {
+				switch ($result['error']) {
+					case 'exceed_max':
+						$result['class_list'] = $this->user_session->getUserClassList();
+						break;
+					case 'already_enrolled':
+						break;
+					default:
+				}
 			}
 
 			$this->output = new JSONView($result);

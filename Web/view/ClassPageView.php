@@ -26,6 +26,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 		$this->addJS('timer.js');
 		$this->addJS('controller/class.js');
 		$this->addCSS('dialog.css');
+		$this->addCSS('class-remove.css');
 		$this->addCSS('class.css');
 		$this->addCSS('panel.css');
 		$this->addCSS('task.css');

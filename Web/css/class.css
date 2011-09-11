@@ -113,12 +113,3 @@
 .class .upload-form .button{
   width: 200px;
 }
-.class a.remove.button {
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding: 0 3px;
-	font-size: 16px;
-	height: 18px;
-	line-height: 18px;
-}
