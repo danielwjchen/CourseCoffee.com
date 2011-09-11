@@ -44,11 +44,11 @@ class TutorialPageView extends PageView implements PageViewInterface {
 		<div class="tale body">
 			<div class="body-inner">
 				<div class="content">
-					<h2>How do I find my syllabus?<h2>
+					<h2>How do I find my syllabus?</h2>
 					<p>At the beginning of the semester, your professor will give you a syllabus -- a document that outlines every assignment you will have to complete throughout the semester. By uploading your syllabus to CourseCoffee.com, you can quickly generate a calendar that keeps track of your upcoming assignments, readings, quizzes, and exams.</p>
 					<h3>Michigan State University</h3>
 					<p>MSU students can find their course syllabus at <a href="www.angel.msu.edu">www.angel.msu.edu</a>.</p>
-					<ul>
+					<ul style="margin-left:90px">
 						<li>After logging on with your MSU user ID and password, click on the class you want to download the syllabus from on the left-hand column.</li>
 						<li>Click on the “Resources” or “Lessons” tab at the top of the class page to find the syllabus.</li>
 						<li>Download the syllabus to your computer, then upload it to CourseCoffee.com to create your calendar.</li>

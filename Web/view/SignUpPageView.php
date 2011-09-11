@@ -115,10 +115,10 @@ HTML;
 							<div class="field"> 
 								<input type="password" name="confirm" /> 
 							</div> 
+						</div> 
 						<div class="row">
 							<p>*For security reasons, password needs to contain more than 8 characters.<p>
 						</div>
-						</div> 
 						<a href="#" class="button sign-up">Join</a> 
 					</form> 
 					{$legal}
