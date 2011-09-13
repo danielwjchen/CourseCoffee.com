@@ -124,6 +124,7 @@ class UserSchema extends DefaultSchema implements SchemaInterface {
 						'default' => 0,
 						'description' => 'the primary key that identifies a supported language',
 					),
+					*/
 					'status_id' => array(
 						'type' => 'int',
 						'signed' => TRUE,
@@ -136,7 +137,6 @@ class UserSchema extends DefaultSchema implements SchemaInterface {
 						'default' => 0,
 						'description' => 'the primary key that identifies user role',
 					),
-					*/
 					'tou_vid' => array(
 						'type' => 'int',
 						'signed' => TRUE,
@@ -151,9 +151,10 @@ class UserSchema extends DefaultSchema implements SchemaInterface {
 					/**
 					 * @to-do
 					 *
+					'language_id' => array('language_id'),
+					 */
 					'status_id' => array('status_id'),
 					'role_id'   => array('role_id'),
-					 */
 					'term_id' => array('term_id'),
 					'tou_vid' => array('tou_vid'),
 				),

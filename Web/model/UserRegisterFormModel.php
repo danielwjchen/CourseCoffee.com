@@ -10,12 +10,12 @@ class UserRegisterFormModel extends FormModel {
 	 * @{
    * Error messages for the user when an error is encountered
 	 */
-	const ERROR_FAILED_TO_CREATE     = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
-	const ERROR_FORM_EXPIRED         = 'The form has expired. Please try again.';
-	const ERROR_FORM_EMPTY           = 'You have empty fields. Please try again.';
-	const ERROR_EMAIL_TAKEN          = 'An account is already registered with this emaill address.';
-	const ERROR_PASSWORD_NOT_MATCH   = 'The password and confirmation do not match.';
-	const ERROR_INVALID_EMAIL        = 'Please enter a valid email account';
+	const ERROR_FAILED_TO_CREATE   = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
+	const ERROR_FORM_EXPIRED       = 'The form has expired. Please try again.';
+	const ERROR_FORM_EMPTY         = 'You have empty fields. Please try again.';
+	const ERROR_EMAIL_TAKEN        = 'An account is already registered with this emaill address.';
+	const ERROR_PASSWORD_NO_MATCH  = 'The password and confirmation do not match.';
+	const ERROR_INVALID_EMAIL      = 'Please enter a valid email account';
 	const ERROR_PASSWORD_TOO_SHORT = 'Attempt to register with password that is too short';
 	
 	/**
@@ -27,15 +27,15 @@ class UserRegisterFormModel extends FormModel {
 	 * @{
 	 * Log messges to track events
 	 */
-	const EVENT_FAILED_TO_CREATE = 'Failed to create user';
-	const EVENT_NEW_ATTEMPT      = 'New user attempt to register';
-	const EVENT_FORM_EMPTY       = 'An empty user registration submission is made. How is this possible?';
-	const EVENT_NEW_USER         = 'New user registered';
-	const EVENT_FORM_EXPIRED     = 'User registration form expired';
-	const EVENT_EMAIL_TAKEN      = 'Attempt to register with an existing email account';
-	const EVENT_UNKNOWN_SCHOOL   = 'Attempt to register with a unknown school. Record created';
-	const EVENT_INVALID_EMAIL    = 'Attempt to register with an invalid email';
-	const EVENT_PASSWORD_NOT_MATCH = 'Attempt to register with password and confirmation that do not match';
+	const EVENT_FAILED_TO_CREATE   = 'Failed to create user';
+	const EVENT_NEW_ATTEMPT        = 'New user attempt to register';
+	const EVENT_FORM_EMPTY         = 'An empty user registration submission is made. How is this possible?';
+	const EVENT_NEW_USER           = 'New user registered';
+	const EVENT_FORM_EXPIRED       = 'User registration form expired';
+	const EVENT_EMAIL_TAKEN        = 'Attempt to register with an existing email account';
+	const EVENT_UNKNOWN_SCHOOL     = 'Attempt to register with a unknown school. Record created';
+	const EVENT_INVALID_EMAIL      = 'Attempt to register with an invalid email';
+	const EVENT_PASSWORD_NO_MATCH  = 'Attempt to register with password and confirmation that do not match';
 	const EVENT_PASSWORD_TOO_SHORT = 'Attempt to register with password that is too short';
 	/**
 	 * @} End of event_messages
@@ -366,9 +366,9 @@ class UserRegisterFormModel extends FormModel {
 
 		// check if the password and confirmation match
 		if ($password !== $confirm) {
-			Logger::write(self::EVENT_PASSWORD_NOT_MATCH, Logger::SEVERITY_HIGH);
+			Logger::write(self::EVENT_PASSWORD_NO_MATCH, Logger::SEVERITY_HIGH);
 			return array(
-				'error'          => self::ERROR_PASSWORD_NOT_MATCH,
+				'error'          => self::ERROR_PASSWORD_NO_MATCH,
 				'first_name'     => $first_name,
 				'last_name'      => $last_name,
 				'institution_id' => $institution_id,

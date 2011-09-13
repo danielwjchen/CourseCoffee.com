@@ -41,3 +41,9 @@ Router::Build();
  */
 Crypto::Init($config->db['default']);
 Crypto::Build();
+
+/**
+ * Update setting records in Database
+ */
+require_once SETTING_PATH . '/Setting.php';
+Setting::Populate();

@@ -6,7 +6,7 @@
  * This is heavily influenced by drupal 6.
  */ 
 
-require_once Schema_PATH . '/Schema.php';
+require_once SCHEMA_PATH . '/Schema.php';
 
 /**
  * Handle database administrative tasks.

@@ -10,7 +10,7 @@
  *  - user_id
  *  - signature
  *  - profile
-       - account/email
+ *     - account/email
  *     - first_name
  *     - last_name
  *     - institution
