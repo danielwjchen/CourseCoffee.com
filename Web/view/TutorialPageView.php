@@ -50,7 +50,7 @@ class TutorialPageView extends PageView implements PageViewInterface {
 					<p>MSU students can find their course syllabus at <a href="www.angel.msu.edu">www.angel.msu.edu</a>.</p>
 					<ul style="margin-left:90px">
 						<li>After logging on with your MSU user ID and password, click on the class you want to download the syllabus from on the left-hand column.</li>
-						<li>Click on the “Resources” or “Lessons” tab at the top of the class page to find the syllabus.</li>
+						<li>Click on the "Resources" or "Lessons" tab at the top of the class page to find the syllabus.</li>
 						<li>Download the syllabus to your computer, then upload it to CourseCoffee.com to create your calendar.</li>
 					</ul>
 				</div>
