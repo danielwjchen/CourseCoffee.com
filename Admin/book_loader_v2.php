@@ -10,7 +10,7 @@ require_once __DIR__ . '/../Web/config.php';
 
 function load($file) {
 	global $config;
-	$db = new DB($config->db['institution']['msu']);
+	$db = new DB($config->db['institution']['umich']);
 
 	$ouput = '';
 	exec('catdoc ' . __DIR__ . '/' . $file, $output);
@@ -103,4 +103,4 @@ function load($file) {
 	}
 }
 
-load('MSU_book-final');
+load('UM_book-BN');

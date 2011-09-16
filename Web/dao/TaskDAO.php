@@ -72,7 +72,7 @@ class TaskDAO extends DAO implements DAOInterface{
 	 *   - description: optional
 	 */
 	public function create($params) {
-		$params['type'] = QuestType::TASK;
+		$params['type'] = QuestTypeSetting::TASK;
 		$quest_id = $this->quest->create($params);
 		$date_id = $this->date->create(array(
 			'timestamp' => $params['due_date'],
