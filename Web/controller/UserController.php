@@ -76,7 +76,7 @@ class UserController extends Controller implements ControllerInterface {
 	 * Since this is our first semester, some of information is hard-coded
 	 */
 	public function registerUserByFB() {
-		$fb_model = new FBModel();
+		$fb_model = new FBModel($this->sub_domain);
 
 		// debug
 		//error_log(__METHOD__ . ' : $_REQUEST - ' . print_r($_REQUEST, true));

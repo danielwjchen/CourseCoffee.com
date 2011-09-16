@@ -230,6 +230,16 @@ class UserSessionModel extends Model {
 	}
 
 	/**
+	 * Get the role of the user currently in session
+	 *
+	 * @return int
+	 */
+	public function getUserRole() {
+		$profile = Session::Get(self::USER_PROFILE);
+		return $profile['role'];
+	}
+
+	/**
 	 * Get the id of the user currently in session
 	 *
 	 * @return int

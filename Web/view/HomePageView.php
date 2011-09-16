@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Generate the Home page for visiters
+ * Generate the Home page for registered users
  */
 class HomePageView extends PageView implements PageViewInterface {
 
@@ -34,6 +34,7 @@ class HomePageView extends PageView implements PageViewInterface {
 		return array(
 			'header' => array(
 				'callback' => 'NavigationBlockView',
+				'params'   => array('role'),
 			),
 			'upload_form' => array(
 				'callback' => 'UploadFormBlockView',

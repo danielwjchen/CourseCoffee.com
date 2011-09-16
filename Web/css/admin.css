@@ -1,0 +1,167 @@
+/**
+ * @file
+ * Define styles for /admin
+ */
+.admin .panel-01,
+.admin .panel-02{
+	padding-bottom: 50px;
+}
+.admin .panel-01,
+.admin .panel-01 .panel-inner {
+	width: 260px;
+}
+.queue-menu,
+.queue-list {
+	width: 259px;
+	clear: both;
+	float: left;
+}
+.queue-menu {
+	margin-top: 10px;
+}
+.queue-menu ul,
+.queue-menu li {
+	float: left;
+	list-style: none;
+	z-index: 20;
+}
+.queue-menu ul {
+	margin-left: 10px;
+	width: 249px;
+}
+.queue-menu li {
+	padding: 3px 8px 0;
+	font-weight: bold;
+	text-shadow: 0 0 2px #787474;
+	-moz-text-shadow: 0 0 2px #787474;
+	-webkit-text-shadow: 0 0 2px #787474;
+	margin-right: 10px;
+	z-index: 30;
+}
+.queue-menu li.active {
+	padding-bottom: 2px;
+	color: #333333;
+	background: #fefefe;
+	border: solid #d5d4d2;
+	border-width: 1px 1px 0 1px;
+	border-radius: 8px 8px 0 0;
+	text-shadow: 0 0 2px #787474;
+	-moz-text-shadow: 0 0 2px #787474;
+	-webkit-text-shadow: 0 0 2px #787474;
+}
+.queue-menu li:hover {
+	cursor: pointer; 
+	cursor: hand;
+}
+.queue-list {
+	z-index: 9;
+	min-height: 400px;
+	padding-top: 20px;
+	border: solid #d5d4d2;
+	border-width: 1px 0 0;
+	margin-bottom: 30px;
+}
+.queue-list .queue-list-inner{
+	overflow-y: scroll;
+	height: 500px;
+}
+.queue-list ul,
+.queue-list ul li{
+	list-style: none;
+	width: 225px;
+	clear: both;
+	float: left;
+}
+.queue-list ul li{
+	padding-bottom: 30px;
+	border-bottom: 1px solid #d5d4d2;
+}
+.queue-list ul li.active {
+	background: #E0F8E0;
+}
+.queue-list .action .button {
+	float: right;
+	width: 50px;
+}
+.button.more {
+	width: 100%;
+	height: 20px;
+	float: left;
+}
+.queue-list dl {
+	position: relative;
+}
+.queue-list dt {
+	font-weight: bold;
+	font-size: 14px;
+}
+.queue-list dd.comment {
+	text-align: right;
+	padding-top: 5px;
+}
+.queue-list dd.comment a {
+	color: #1A3C6C;
+	border-bottom: 1px solid #1A3C6C;
+}
+.queue-list dd.comment a:active {
+	color: #1A3C6C;
+}
+.queue-list dd.status {
+	position: absolute;
+	bottom: -2px;
+	right: 80px;
+	padding: 0 4px;
+}
+.queue-list dd.status a {
+	color: white;
+	text-decoration: none;
+}
+.queue-list dd.status.done {
+	color: white;
+	display: block;
+	border: 1px solid #ff8400;
+	border-radius: 4px;
+	text-align: center;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 0 6px #8a4c0a;
+	-moz-text-shadow: 0 0 6px #8a4c0a;
+	-webkit-text-shadow: 0 0 6px #8a4c0a;
+	background: #ff8400;
+	background-image: -moz-linear-gradient(#ff8400, #d06e06);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
+}
+/**
+ * define styles for panels
+ */
+.admin .panel-02 {
+	margin-left: 279px;
+	width: 669px;
+}
+.admin .panel-02 .panel-inner,
+.admin .panel-02 .task-list {
+	width: 659px;
+}
+.task-list li {
+	clear: both;
+	width: 100%;
+	float: left;
+	min-height: 90px;
+	border-bottom: 1px solid #d5d4d2;
+}
+.task-list .due_date {
+	position: absolute;
+	bottom: 0;
+	right: 100px;
+}
+.task-list .action {
+	position: absolute;
+	right: 10px;
+	top: 0;
+}
+.task-list .action .button {
+	float: right;
+	clear: both;
+	margin: 10px 0;
+	width: 75px;
+}

@@ -56,6 +56,8 @@ class UserRegisterFormModel extends FormModel {
 	 * Access to database records
 	 */
 	private $user_dao;
+	private $user_role_dao;
+	private $user_status_dao;
 	private $user_setting_dao;
 	private $facebook_linkage_dao;
 	private $person_dao;
@@ -73,6 +75,8 @@ class UserRegisterFormModel extends FormModel {
 	function __construct($sub_domain) {
 		parent::__construct($sub_domain);
 		$this->user_dao                = new UserDAO($this->default_db);
+		$this->user_role_dao           = new UserRoleDAO($this->default_db);
+		$this->user_status_dao         = new UserStatusDAO($this->default_db);
 		$this->user_setting_dao        = new UserSettingDAO($this->default_db);
 		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->default_db);
 
@@ -193,11 +197,16 @@ class UserRegisterFormModel extends FormModel {
 
 		$term_id = $this->institution_term_dao->id;
 
+		$this->user_role_dao->read(array('name' => UserRoleSetting::MEMBER));
+		$this->user_status_dao->read(array('name' => UserStatusSetting::NEWLY_CREATED));
+
 		// debug 
 		// error_log('institution_id - ' . $institution_id . ', year_id - ' . $year_id . ', term_id - ' . $term_id);
 
 		$this->user_setting_dao->create(array(
 			'user_id'        => $user_id,
+			'role_id'        => $this->user_role_dao->id,
+			'status_id'      => $this->user_status_dao->id,
 			'institution_id' => $institution_id,
 			'year_id'        => $year_id,
 			'term_id'        => $term_id,

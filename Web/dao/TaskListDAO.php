@@ -207,7 +207,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 
 		}
 
-		$data = $this->db->fetch($sql, $sql_params);
+		$data = $this->db->fetchList($sql, $sql_params);
 
 		// debug
 		// error_log(__METHOD__ . ' : data - ' . print_r($data, true));

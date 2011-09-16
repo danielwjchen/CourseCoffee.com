@@ -8,6 +8,11 @@
 class CollegeClassListModel extends Model {
 
 	/**
+	 * Number of records to fetch
+	 */
+	const COUNT = 10;
+
+	/**
 	 * @defgroup error_messages
 	 * @{
 	 * Error message for the user when an error is encountered
@@ -158,6 +163,33 @@ class CollegeClassListModel extends Model {
 		// error_log(__METHOD__ . 'formatted user class list - ' . print_r($result, true));
 
 		return $result;
+	}
+
+	/**
+	 * Get a list of class based on syllabus status
+	 */
+	public function getClassListBySyllabusStatus($syllabus_status, $timestamp, $paginate = 0) {
+		$this->list_dao = new CollegeClassListDAO($this->institution_db);
+		$has_records = $this->list_dao->read(array(
+			'syllabus_status' => $syllabus_status,
+			'limit' => array(
+				'offset' => $paginate * self::COUNT,
+				'count'  => self::COUNT,
+			)
+		));
+
+		if ($has_records) {
+			return array(
+				'success' => true,
+				'message' => '',
+				'list'    => $this->list_dao->list,
+			);
+		} else {
+			return array(
+				'error'   => true,
+				'message' => '',
+			);
+		}
 	}
 
 }

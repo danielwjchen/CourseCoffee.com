@@ -42,6 +42,7 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		return array(
 			'header' => array(
 				'callback' => 'NavigationBlockView',
+				'params'   => array('role'),
 			),
 			'upload_form' => array(
 				'callback' => 'UploadFormBlockView',

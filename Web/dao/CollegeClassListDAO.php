@@ -3,12 +3,17 @@
  * @file
  * Represent college section records in database
  */
-class CollegeClassSuggestDAO extends ListDAO implements ListDAOInterface {
+class CollegeClassListDAO extends ListDAO implements ListDAOInterface {
 
 	/**
 	 * Implement DAOInterface::read().
 	 *
 	 * @param array $params
+	 *  - id
+	 *  - institution_id
+	 *  - year_id
+	 *  - term_id
+	 *  - course_id
 	 *  - section_num
 	 *  - like
 	 *     - institution_id
@@ -52,6 +57,11 @@ class CollegeClassSuggestDAO extends ListDAO implements ListDAOInterface {
 			$where_clause[] = "s.`course_id` = :course_id";
 			$sql_params['course_id'] = $params['course_id'];
 
+		// get all section based on syllabus status
+		} elseif (isset($params['syllabus_status'])) {
+			$where_clause[] = "s.`syllabus_status` = :syllabus_status";
+			$sql_params['syllabus_status'] = $params['syllabus_status'];
+
 		// match string pattern
 		} elseif (isset($params['like'])) {
 
@@ -93,6 +103,7 @@ class CollegeClassSuggestDAO extends ListDAO implements ListDAOInterface {
 		$sql .= implode(' AND ', $where_clause);
 		$sql .= ' ORDER BY sub.abbr, c.num, s.num';
 
+		$sql = isset($params['limit']) ? $this->setLimit($sql, $params['limit']) : $sql;
 
 		$this->list = $this->db->fetchList($sql, $sql_params);
 		return !empty($this->list);
