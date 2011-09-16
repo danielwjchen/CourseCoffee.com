@@ -44,7 +44,7 @@ class DocumentController extends Controller implements ControllerInterface {
 		$user_id  = empty($user_id) ? 1 : $user_id;
 		$filename = 'document';
 		// process form and save the file
-		$result = $file_form->processForm($user_id, $token, $filename, FileType::SYLLABUS);
+		$result = $file_form->processForm($user_id, $token, $filename, FileTypeSetting::SYLLABUS);
 		$data = array(
 			'file_id'    => $result['file_id'],
 			'mime'       => str_replace('application/', '', $result['mime']),
