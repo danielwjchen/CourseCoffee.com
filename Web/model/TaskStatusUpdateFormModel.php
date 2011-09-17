@@ -7,8 +7,9 @@
  */
 class TaskStatusUpdateFormModel extends Model {
 
-	const TASK_TYPE   = 'status';
-	const TASK_STATUS = 'done';
+	const STATUS_TYPE   = 'status';
+	const STATUS_DONE   = 'done';
+	const STATUS_HIDDEN = 'hidden';
 
 	private $task_status_dao;
 
@@ -28,8 +29,8 @@ class TaskStatusUpdateFormModel extends Model {
 	 *
 	 * @return array
 	 */
-	public function processForm($user_id, $task_id) {
-		return $this->task_status_dao->set($user_id, $task_id, self::TASK_TYPE, self::TASK_STATUS);
+	public function processForm($user_id, $task_id, $status = self::STATUS_DONE) {
+		return $this->task_status_dao->set($user_id, $task_id, self::STATUS_TYPE, $status);
 	}
 
 }

@@ -49,6 +49,8 @@ class TaskDAO extends DAO implements DAOInterface{
 	protected function defineAttribute() {
 		return array(
 			'id',
+			'status',
+			'status_id',
 			'type',
 			'type_id',
 			'creator_id',
@@ -72,7 +74,8 @@ class TaskDAO extends DAO implements DAOInterface{
 	 *   - description: optional
 	 */
 	public function create($params) {
-		$params['type'] = QuestTypeSetting::TASK;
+		$params['type']   = QuestTypeSetting::TASK;
+		$params['status'] = QuestStatusSetting::PENDING;
 		$quest_id = $this->quest->create($params);
 		$date_id = $this->date->create(array(
 			'timestamp' => $params['due_date'],

@@ -50,8 +50,9 @@ class TaskController extends Controller implements ControllerInterface {
 	public function updateTaskStatus() {
 		$user_id = $this->getUserId();
 		$task_id = Input::Post('task_id');
+		$status  = Input::Post('status');
 		$task_updater = new TaskStatusUpdateFormModel($this->sub_domain);
-		$result = $task_updater->processForm($user_id, $task_id);
+		$result = $task_updater->processForm($user_id, $task_id, $status);
 		if ($result) {
 			$result['success'] = true;
 			$this->output = new JSONView($result);

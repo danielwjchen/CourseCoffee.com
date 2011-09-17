@@ -164,7 +164,7 @@ window.Task = function(creationFormName, optionFormName) {
 					$('.optional').addClass('hidden');
 					$('.show-detail').text('mode detail');
 
-					setTimeout(callback(), 500);
+					setTimeout(callback, 500);
 				}
 			}
 		});
@@ -266,7 +266,7 @@ TaskUpdater = function(regionName) {
 			url: '/task-status-update',
 			type: 'POST',
 			cache: false,
-			data: 'task_id=' + taskId,
+			data: 'task_id=' + taskId + '&status=done',
 			success: function(response) {
 				if (response.success) {
 					target.html(response.stats + " done!");

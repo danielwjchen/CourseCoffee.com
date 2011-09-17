@@ -9,14 +9,40 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 	 * Compound the where clause based on given filter value
 	 */
 	private function makeFilterCondition($filter) {
-		if ($filter == 'pending') {
-			return " AND qa.value IS NULL ";
-
-		} elseif ($filter == 'finished') {
-			return " AND qa.value = 'done' ";
+		$condition = ' AND (';
+		$condition_array = null;
+		/**
+		foreach ($status_array as $status) {
+			$condition_array[] = " `quest_status`.`name` = '{$status}' ";
 		}
+		$condition .= implode(' OR ', $condition_array);
+		return $condition;
+		**/
 
-		return '';
+		
+		switch ($filter) {
+			case 'pending':
+				$condition .= " qa.value IS NULL ";
+				break;
+			case 'finished':
+				$condition .= " qa.value = 'done' ";
+				$condition .= " AND `qa`.`value` != 'removed' ";
+				break;
+		}
+		$condition .= ' ) ';
+		return $condition;
+	}
+
+	private function makeStatusCondition($status_array) {
+		$condition = ' AND (';
+		$condition_array = null;
+		foreach ($status_array as $status) {
+			$condition_array[] = " `quest_status`.`name` = '{$status}' ";
+		}
+		$condition .= implode(' OR ', $condition_array);
+		$condition .= ' ) ';
+
+		return $condition;
 	}
 
 	/**
@@ -92,6 +118,9 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 				ON q.id = qa_stats.quest_id
 				AND qa_stats.type_id = qat.id
 				AND qat.name = 'status'
+			INNER JOIN (quest_status)
+				ON q.status_id = quest_status.id
+				" . $this->makeStatusCondition($params['status']) . "
 			LEFT JOIN (quest_attribute qa)
 				ON q.id = qa.quest_id
 				AND qa.user_id = " . $params['user_id'] . "

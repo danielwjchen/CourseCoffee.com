@@ -8,6 +8,12 @@ class TaskListModel extends Model {
 	 * Number of records to fetch
 	 */
 	const COUNT = 10;
+	/**
+	 * We don't do pagination for now, because tasks should be limited by the 
+	 * date range. However, we do want to limit the result to 100 records since
+	 * more will crash the browser.
+	 */
+	const CALENDAR_TASK_LIMIT = 100;
 
 	const ERROR_NO_TASK = 'No scheduled assignments.';
 
@@ -15,6 +21,7 @@ class TaskListModel extends Model {
 	 * Access to task record
 	 */
 	private $task_list_dao;
+	private $task_status;
 
 	/**
 	 * Extend Model::__construct()
@@ -22,6 +29,7 @@ class TaskListModel extends Model {
 	function __construct($sub_domain) {
 		parent::__construct($sub_domain);
 		$this->task_list_dao = new TaskListDAO($this->institution_db);
+		$this->task_status = array(QuestStatusSetting::PENDING, QuestStatusSetting::APPROVED);
 	}
 
 	/**
@@ -44,6 +52,7 @@ class TaskListModel extends Model {
 		$has_record = $this->task_list_dao->read(array(
 			'user_id' => $user_id,
 			'filter'  => $filter,
+			'status'  => $this->task_status,
 			'limit'   => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
@@ -84,6 +93,7 @@ class TaskListModel extends Model {
 			'user_id'    => $user_id,
 			'section_id' => $section_id,
 			'filter'     => $filter,
+			'status'     => $this->task_status,
 			'limit' => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
@@ -124,17 +134,16 @@ class TaskListModel extends Model {
 		$has_record = $this->task_list_dao->read(array(
 			'user_id' => $user_id,
 			'filter'  => $filter,
+			'status'  => $this->task_status,
 			'range'   => array(
 				'begin_date' => $begin_date,
 				'end_date'   => $end_date,
 			),
 			/**
-			 * We don't do pagination for now, because tasks should be limited by the 
-			 * date range
 			 */
 			'limit'   => array(
-				'offset' => $paginate * self::COUNT * 10,
-				'count'  => self::COUNT * 10,
+				'offset' => 0,
+				'count'  => TaskListModel::CALENDAR_TASK_LIMIT,
 			),
 		));
 		if ($has_record) {

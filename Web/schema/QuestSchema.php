@@ -27,6 +27,13 @@ class QuestSchema extends InstitutionSchema implements SchemaInterface{
 						'default' => 0,
 						'description' => 'the primary key that identifies the creating user',
 					),
+					'status_id' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'the primary key that identifies a quest status',
+					),
 					'type_id' => array(
 						'type' => 'int',
 						'unsigned' => TRUE,
@@ -113,6 +120,27 @@ class QuestSchema extends InstitutionSchema implements SchemaInterface{
 						'length' => 64,
 						'not null' => TRUE,
 						'description' => 'the name of the type',
+					),
+				),
+				'primary' => array('id'),
+				'unique' => array(
+					'name' => array('name'),
+				),
+			),
+			'quest_status' => array(
+				'description' => 'define possible quest status',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'description' => 'the primary key that identifies a attribute status',
+					),
+					'name' => array(
+						'type' => 'char',
+						'length' => 64,
+						'not null' => TRUE,
+						'description' => 'the name of the status',
 					),
 				),
 				'primary' => array('id'),

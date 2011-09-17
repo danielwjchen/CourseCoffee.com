@@ -10,6 +10,8 @@ window.AdminSyllabus = function(optionMenu, optionFormClassName, regionClassName
 	_creationForm.removeClass('task-create-form-wrapper-skeleton').addClass('task-create-form-wrapper');
 
 	$('.panel-02').html('<div class="panel-inner">' + 
+		'<div class="class-info" >' +
+		'</div>' +
 		_creationForm.html() +
 		'<form name="class-option" id="class-option-form">' +
 			'<input type="hidden" name="section_id" />' +
@@ -23,7 +25,7 @@ window.AdminSyllabus = function(optionMenu, optionFormClassName, regionClassName
 		_getTaskList($('input[name=section_id]', _option).val());
 	});
 
-	var _list = $('.task-list');
+	var _task_list = $('.task-list');
 	var _task = new Task('#class-task-creation-form', '#class-option-form');
 	var _task_option = $('#class-option-form');
 	var _status = {
@@ -45,31 +47,58 @@ window.AdminSyllabus = function(optionMenu, optionFormClassName, regionClassName
 	}
 
 	/**
+	 * Bind task editor action to newly created task list
+	 */
+	var _bindTaskEditorAction = function() {
+		$('.action', _task_list).delegate('a.button', 'click', function(e) {
+			e.preventDefault();
+			var target = $(this);
+			if (target.hasClass('edit')) {
+			} else if (target.hasClass('remove')) {
+				$.ajax({
+					url: '/task-status-update',
+					type: 'POST',
+					cache: false,
+					data: 'task_id=' + $('input[name=id]', target).val()+ '&status=removed',
+					success: function(response) {
+						if (response.success) {
+							target.html("removed");
+							target.unbind('click');
+						}
+					}
+				});
+
+			}
+		});
+	};
+
+	/**
 	 * Implement Task::getTaskList()
 	 *
 	 * Get to-do list from server
 	 */
 	var _getTaskList = function(sectionId) {
 		var paginate   = $('input[name=paginate]', _task_option).val();
-		_list.addClass('loading');
+		_task_list.addClass('loading');
 		$.ajax({
 			url: '/class-list-task',
 			type: 'POST',
 			cache: false,
 			data: 'section_id=' + sectionId + '&paginate=' + paginate + '&filter=all',
 			success: function(response) {
-				_list.removeClass('loading');
+				_task_list.removeClass('loading');
 				if (response.success) {
 
 					// debug
 					// console.log(response.list);
 					var tasks = _task.AddUrlToTask(response.list);
 
-					Task.generateList(tasks, _list);
+					Task.generateList(tasks, _task_list);
+					_bindTaskEditorAction();
 				}
 
 				if (response.error) {
-					_task.setError(response.message, _list);
+					_task.setError(response.message, _task_list);
 				}
 			}
 		});
@@ -77,7 +106,7 @@ window.AdminSyllabus = function(optionMenu, optionFormClassName, regionClassName
 
 
 	/**
-	 * Generate a list 
+	 * Generate a queue list 
 	 */
 	var _generateList = function(list, region) {
 		var html = '';
@@ -138,7 +167,7 @@ window.AdminSyllabus = function(optionMenu, optionFormClassName, regionClassName
 					_region.removeClass('loading');
 					$('input[name=section_id]', _task_option).val(response.content.section_id);
 					$('input[name=section_id]', _option).val(response.content.section_id);
-					_list.html('');
+					_task_list.html('');
 					_getTaskList(response.content.section_id);
 				}
 			});
@@ -209,16 +238,17 @@ Task.generateList = function(list, region) {
 			html += "<dt>" + item['objective'] + "</dt>";
 		}
 
-		var section_info = "<form name='section-info'>" +
+		var task_info = "<form name='section-info'>" +
 				'<input type="hidden" name="section_id" value="' + item['section_id'] + '" />' +
+				'<input type="hidden" name="task_id" value="' + item['id'] + '" />' +
 			"</form>";
 
 		html += "<dd class='action'>" +
-			"<a href='#' class='edit button'>remove &#187;" +
-				section_info +
+			"<a href='#' class='remove button'>remove &#187;" +
+				task_info +
 			"</a>" +
 			"<a href='#' class='edit button'>edit &#187;" +
-				section_info +
+				task_info +
 			"</a>" +
 		"</dd>";
 
@@ -257,7 +287,5 @@ Task.generateList = function(list, region) {
 	$('.count-down', region).each(function(i) {
 		$(this).translateTime();
 	});
-
-	var commentPanel = new CommentPanel();
 
 };

@@ -11,6 +11,8 @@ class QuestDAO extends DAO implements DAOInterface{
 	protected function defineAttribute() {
 		return array(
 			'id',
+			'status',
+			'status_id',
 			'type',
 			'type_id',
 			'user_id',
@@ -34,17 +36,19 @@ class QuestDAO extends DAO implements DAOInterface{
 		} else {
 			return $this->db->insert("
 				INSERT INTO `quest`
-					(`objective`, `description`, `user_id`, `type_id`, `created`, `updated`)
+					(`objective`, `description`, `user_id`, `type_id`, `status_id`, `created`, `updated`)
 				VALUES (
 					:objective,
 					:description,
 					:user_id,
 					(SELECT `id` FROM `quest_type` WHERE name = :type),
+					(SELECT `id` FROM `quest_status` WHERE name = :status),
 					UNIX_TIMESTAMP(),
 					UNIX_TIMESTAMP()
 				)",
 				array(
 					'type' => $params['type'],
+					'status' => $params['status'],
 					'user_id' => $params['user_id'],
 					'objective' => $params['objective'],
 					'description' => $params['description'],
