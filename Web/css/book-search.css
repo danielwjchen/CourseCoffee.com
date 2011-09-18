@@ -100,7 +100,7 @@
 	z-index: 10;
 	float: right;
 	padding: 0 10px;
-	width: 400px;
+	width: 460px;
 	border: 1px solid #f6f5f4;
 	border-radius: 8px;
 	-moz-box-shadow: 2px 2px #003d01;
@@ -111,7 +111,7 @@
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
 }
 .book-search .social .fb-like {
-	width: 270px;
+	width: 300px;
 }
 /**
  * Define styles for autocomplete
