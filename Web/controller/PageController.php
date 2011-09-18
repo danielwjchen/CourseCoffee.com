@@ -230,6 +230,7 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get the book search page
 	 */
 	public function getBookSearchPage() {
+		global $config;
 		if ($this->sub_domain == self::DEFAULT_DOMAIN) {
 			$this->output = new WelcomePageView(array(
 				'domain'      => $this->domain,
@@ -239,6 +240,7 @@ class PageController extends Controller implements ControllerInterface {
 
 			$login_form = new UserLoginFormModel($this->sub_domain);
 			$this->output = new BookSearchPageView(array(
+				'base_url'   => 'http://' . $config->domain,
 				'role'       => $this->user_session->getUserRole(),
 				'is_loggedIn' => $this->getUserId(),
 				'login_token' => $login_form->initializeFormToken(),
@@ -272,9 +274,11 @@ class PageController extends Controller implements ControllerInterface {
 	 * Get task page
 	 */
 	public function getTaskPage() {
+		global $config;
 		$this->redirectUnsupportedDomain();
 
 		$this->output = new BookSearchPageView(array(
+			'base_url'   => 'http://' . $config->domain,
 			'is_loggedIn' => $this->getUserId(),
 		));
 	}
