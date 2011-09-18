@@ -93,6 +93,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 	<input type="hidden" name="section-num" value="{$section_num}" />
 	<input type="hidden" name="section-id" value="{$section_id}" />
 	<input type="hidden" name="syllabus-id" value="{$syllabus_id}" />
+	<input type="hidden" name="syllabus-status" value="{$syllabus_status}" />
 HTML;
 		} else {
 			return <<<HTML
@@ -106,6 +107,7 @@ HTML;
 	<input type="hidden" name="section-num" value="" />
 	<input type="hidden" name="section-id" value="{$section_id}" />
 	<input type="hidden" name="syllabus-id" value="" />
+	<input type="hidden" name="syllabus-status" value="" />
 HTML;
 		}
 	}

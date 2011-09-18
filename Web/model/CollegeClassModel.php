@@ -16,6 +16,10 @@ class CollegeClassModel extends Model {
 	const EVENT_ALREADY_HAS_SYLLABUS = 'Attempt to upload syllabus to a class already has one';
 	const SYLLABUS_SUCCESS = 'Congratulations! The syllabus is now uploaded!';
 
+	const SYLLABUS_APPROVED = 'approved';
+	const SYLLABUS_NEW      = 'has_syllabus';
+	const SYLLABUS_REMOVED  = 'removed';
+
 	/**
 	 * Access to college class records
 	 */
@@ -111,7 +115,23 @@ class CollegeClassModel extends Model {
 		// error_log(__METHOD__ . ' : result ' . print_r($section_dao->attribute, true));
 
 		$result = $section_dao->attribute;
-		return $result['syllabus_id'] != 0;
+		return $result['syllabus_status'] != self::SYLLABUS_REMOVED;
+	}
+
+	/**
+	 * Update section syllabus status
+	 */
+	public function updateClassSyllabusStatus($section_id, $syllabus_id, $status) {
+		$section_dao = new SectionDAO($this->institution_db);
+		$has_record = $section_dao->read(array('id' => $section_id));
+		$section_dao->syllabus_id     = $syllabus_id;
+		$section_dao->syllabus_status = $status;
+		$section_dao->update();
+
+		// debug
+		// error_log(__METHOD__ . ' : result ' . print_r($section_dao->attribute, true));
+
+		return $has_record;
 	}
 
 }

@@ -142,12 +142,51 @@
 .admin .panel-02 .task-list {
 	width: 659px;
 }
+.admin .task-create-form {
+	width: 465px;
+	float: left;
+}
+.admin .class-info {
+	float: left;
+	margin-left: 20px;
+}
+.admin .class-info ul,
+.admin .class-info li {
+	list-style: none;
+}
+.admin .syllabus-remove,
+.admin .syllabus-remove .dialog-inner {
+	height: 200px;
+}
+.admin .syllabus-remove p {
+	margin: 20px 0;
+}
+.admin .syllabus-remove .action {
+	margin: 40px auto;
+	width: 450px;
+}
+.admin .syllabus-remove .button {
+	width: 200px;
+	float: left;
+	margin: 0 10px;
+}
+.admin .class-info li {
+	width: 150px;
+	margin-bottom: 15px;
+}
 .task-list li {
 	clear: both;
 	width: 100%;
 	float: left;
 	min-height: 90px;
 	border-bottom: 1px solid #d5d4d2;
+}
+.task-list dl{
+	padding-bottom: 25px;
+}
+.task-list .objective {
+	width: 500px;
+	clear: both;
 }
 .task-list .due_date {
 	position: absolute;

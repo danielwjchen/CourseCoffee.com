@@ -10,24 +10,16 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 	 */
 	private function makeFilterCondition($filter) {
 		$condition = ' AND (';
-		$condition_array = null;
-		/**
-		foreach ($status_array as $status) {
-			$condition_array[] = " `quest_status`.`name` = '{$status}' ";
-		}
-		$condition .= implode(' OR ', $condition_array);
-		return $condition;
-		**/
-
-		
 		switch ($filter) {
 			case 'pending':
 				$condition .= " qa.value IS NULL ";
 				break;
 			case 'finished':
 				$condition .= " qa.value = 'done' ";
-				$condition .= " AND `qa`.`value` != 'removed' ";
 				break;
+			default:
+				$condition .= " qa.value IS NULL ";
+				$condition .= " OR qa.value = 'done' ";
 		}
 		$condition .= ' ) ';
 		return $condition;
@@ -92,7 +84,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 	 */
 	public function read($params) {
 
-		$filter = isset($params['filter']) ? $params['filter'] : 'pending';
+		$filter = empty($params['filter']) ?  'pending' : $params['filter'];
 
 		$data = array();
 		$sql_params = array();
@@ -132,7 +124,17 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 				ON qd.id = qd_linkage.date_id
 		";
 
-		if (isset($params['range'])) {
+		if (isset($params['by_section_id'])) {
+			$sql = " 
+				SELECT 
+					DISTINCT q.id
+				FROM quest q
+				INNER JOIN (quest_section_linkage qs_linkage)
+						ON qs_linkage.quest_id = q.id
+				WHERE qs_linkage.section_id = :section_id 
+			";
+			$sql_params = array('section_id' => $params['by_section_id']);
+		} elseif (isset($params['range'])) {
 			$sql = $this->getUnionQuery($sql);
 
 			$sql = isset($params['limit']) ? $this->setLimit($sql, $params['limit']) : $sql;

@@ -72,7 +72,7 @@ class QuestDAO extends DAO implements DAOInterface{
 				ON q.type_id = qt.id
 		";
 
-		if (isset($params['id']) && !empty($params['id'])) {
+		if (isset($params['id'])) {
 			$sql .= 'WHERE q.id = :id';
 			$data = $this->db->fetch($sql, array('id' => $params['id']));
 
@@ -123,14 +123,16 @@ class QuestDAO extends DAO implements DAOInterface{
 				q.description = :description,
 				q.objective = :objective,
 				q.type_id = (SELECT qt.id FROM quest_type qt WHERE qt.name = :type),
+				q.status_id = (SELECT qt.id FROM quest_status qt WHERE qt.name = :status),
 				q.updated = UNIX_TIMESTAMP()
 			WHERE q.id = :id
 		";
 
-		$this->db->perform($sql, array(
+		return $this->db->perform($sql, array(
 			'description' => $this->attr['description'],
 			'objective' => $this->attr['objective'],
 			'type' => $this->attr['type'],
+			'status' => $this->attr['status'],
 			'user_id' => $this->attr['user_id'],
 			'id' => $this->attr['id']
 		));

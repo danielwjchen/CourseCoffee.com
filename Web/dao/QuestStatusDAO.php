@@ -3,7 +3,7 @@
  * @file
  * Represent quest status
  */
-class QuestStatusDAO extends StatusDAO{
+class QuestStatusDAO extends TypeDAO{
 
 	/**
 	 * Implement TypeDAO::defineType()

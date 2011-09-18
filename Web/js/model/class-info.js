@@ -106,6 +106,7 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 		$('input[name=section-id]', option).val(data.section_id);
 		$('input[name=section-num]', option).val(data.section_num);
 		$('input[name=syllabus-id]', option).val(data.syllabus_id);
+		$('input[name=syllabus-status]', option).val(data.syllabus_status);
 	};
 	
 	/**
@@ -114,7 +115,7 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	var displayClassInfo = function() {
 		var content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>' +
 			'<a href="#" class="remove-class button">&times;</a>';
-		if ($('input[name=syllabus-id]', option).val() != 0) {
+		if ($('input[name=syllabus-status]', option).val() != 'removed') {
 			$('a.button.upload').addClass('disabled');
 		} else {
 			$('a.button.upload').removeClass('disabled');

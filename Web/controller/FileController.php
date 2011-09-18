@@ -47,6 +47,7 @@ class FileController extends Controller implements ControllerInterface {
 	 * Handle the file download requests
 	 */
 	public function downloadFile() {
+		header("Content-type: application/octet-stream");
 	}
 
 	/**

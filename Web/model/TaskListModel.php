@@ -159,4 +159,28 @@ class TaskListModel extends Model {
 			);
 		}
 	}
+
+	/**
+	 * Remove all quests belong to section
+	 */
+	public function removeAllQuestBelongToSection($section_id) {
+		$quest_dao = new QuestDAO($this->institution_db);
+		$has_record = $this->task_list_dao->read(array(
+			'user_id'    => 1,
+			'by_section_id' => $section_id,
+			'filter'  => 'all',
+			'status'  => $this->task_status,
+		));
+
+		$list = $this->task_list_dao->list;
+		foreach ($list as $key => $value) {
+			$quest_dao->read(array('id' => $value['id']));
+			$quest_dao->status = QuestStatusSetting::DELETED;
+			$quest_dao->update();
+		}
+
+		return array(
+			'list' => $list,
+		);
+	}
 }

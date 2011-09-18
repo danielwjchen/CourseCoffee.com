@@ -106,7 +106,9 @@ class AdminPageView extends PageView implements PageViewInterface {
 							</form>
 							<ul>
 								<li><a href="#" id="admin-option-sylabus" class="option syllabus active">syllabus</a></li>
+								<!--
 								<li><a href="#" id="admin-option-user" class="option user">user</a></li>
+								-->
 							</ul>
 						</div>
 					</div>
@@ -121,8 +123,10 @@ class AdminPageView extends PageView implements PageViewInterface {
 							<div id="syllabus-queue-menu" class="queue-menu">
 								<ul>
 									<li id="option-new" class="active">new</li>
+									<!--
 									<li id="option-processed" >processed</li>
 									<li id="option-all">all</li>
+									-->
 								</ul>
 							</div>
 							<div id="syallbus-queue-list" class="queue-list">
