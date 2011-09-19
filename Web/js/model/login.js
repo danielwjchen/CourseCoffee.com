@@ -16,7 +16,7 @@ window.login = {
 	 */
 	'submit' : function() {
 		if ($('input[name=email]').val() == '' || $('input[name=email]').val() == 'email' || $('input[name=password]').val() == '' || $('input[name=password]').val() == 'password') {
-			login.error('You have empty fileds. Please try again.');
+			login.error('You have empty fields. Please try again.');
 			return ;
 		}
 		var formData = $('#user-login-form').serialize();
