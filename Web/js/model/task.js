@@ -101,7 +101,7 @@ window.Task = function(creationFormName, optionFormName) {
 		region.append("<h3 class='error'>" +
 			message + 
 		"</h3>");
-		$('.button.more').addClass('disabled');
+		$('.panel-02 .button.more').addClass('disabled');
 	};
 
 	/**
@@ -176,7 +176,7 @@ window.Task = function(creationFormName, optionFormName) {
 /**
  * Generate a list of task
  *
- * This is a statis method
+ * This is a static method
  *
  * @param object list
  *  a JSON list retrieved from the server

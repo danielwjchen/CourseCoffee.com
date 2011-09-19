@@ -30,6 +30,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		if ($this->data['is_loggedIn']) {
 			$header = array(
 				'callback' => 'NavigationBlockView',
+				'params'   => array('role'),
 			);
 		} else {
 			$header = array(

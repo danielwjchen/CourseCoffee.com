@@ -246,13 +246,13 @@ class BookSuggestModel extends Model {
 			'eCampus'	=> $ecampusSearch->getLowestUsedPrice(),
 			'BookRenter'	=> $bookrenterSearch->getLowestUsedPrice(),
 			'AmazonMarket'  => $this->amazonSearch->getMarketPlaceLowestUsedPrice(),
-			'eCampusMArket' => $ecampusSearch->getLowestMarketPlacePrice()
+			'eCampusMarket' => $ecampusSearch->getLowestMarketPlacePrice()
 		);
 		$usedlink = array(
 			'eCampus'	=> (string)$ecampusSearch->getLowestUsedLink(),
 			'BookRenter'	=> (string)$bookrenterSearch->getLowestUsedLink(),
 			'AmazonMarket'  => (string)$this->amazonSearch->getLowestNewLink(),
-			'eCampusMArket' => (string)$ecampusSearch->getLowestMarketPlaceLink()
+			'eCampusMarket' => (string)$ecampusSearch->getLowestMarketPlaceLink()
 		);
 
 		//rental

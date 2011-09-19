@@ -74,6 +74,7 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 	 *
 	 */
 	public function read($params) {
+		error_log(print_r($params, true));
 		$sql = "SELECT * FROM `{$this->linkage}` WHERE ";
 
 		if (isset($params['id'])) {

@@ -10,7 +10,7 @@
  *  - user_id
  *  - signature
  *  - profile
-       - account/email
+ *     - account/email
  *     - first_name
  *     - last_name
  *     - institution
@@ -227,6 +227,16 @@ class UserSessionModel extends Model {
 		Cookie::Del(self::COOKIE_SIGNATURE);
 		Cookie::Set(self::COOKIE_AUTO_LOGIN, 'false');
 		session_destroy();
+	}
+
+	/**
+	 * Get the role of the user currently in session
+	 *
+	 * @return int
+	 */
+	public function getUserRole() {
+		$profile = Session::Get(self::USER_PROFILE);
+		return $profile['role'];
 	}
 
 	/**

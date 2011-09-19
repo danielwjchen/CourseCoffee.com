@@ -11,6 +11,9 @@ class Autoloader {
 	 */
 	const FAIL_EMPTY_PATH = 'failed to resolve path';
 	const WRONG_PATH      = 'path is pointed to a file that does not exist.';
+	/**
+	 * @}
+	 */
 
 	/**
 	 * A map of component paths and the regular expression that identifies an 
@@ -18,7 +21,8 @@ class Autoloader {
 	 */
 	private static $paths = array(
 		CACHE_PATH      => '/Cache\.php$/',
-		Schema_PATH     => '/Schema\.php$/',
+		SETTING_PATH    => '/Setting\.php$/',
+		SCHEMA_PATH     => '/Schema\.php$/',
 		DAO_PATH        => '/DAO\.php$/',
 		MODEL_PATH      => '/Model\.php$/',
 		CONTROLLER_PATH => '/Controller\.php$/',

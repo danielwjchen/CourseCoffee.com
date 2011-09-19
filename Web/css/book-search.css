@@ -45,7 +45,7 @@
  */
 .book-search .search-message,
 .book-search .content {
-	width: 600px;
+	width: 800px;
 	margin: 0 auto 30px;
 	float: none;
 	clear: both;
@@ -73,16 +73,22 @@
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
 }
 .book-search .book-list {
-	width: 560px;
+	width: 760px;
 	min-height: 200px;
 	margin: 20px auto;
+}
+.book-search .book-list .title {
+	width: 525px;
 }
 .book-search .book-list h3 {
 	text-align: center;
 }
 .book-search .book-list ul {
-	width: 440px;
+	width: 640px;
 	margin: 0 auto;
+}
+.book-search .book-list .offer {
+	width: 575px;
 }
 .book-search .underline {
 	border-bottom: 1px white solid;

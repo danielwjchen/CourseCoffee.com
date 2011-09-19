@@ -170,6 +170,13 @@ HTML;
 	}
 
 	/**
+	 * Get requested domain
+	 */
+	protected function getRequestedDomain() {
+		return $_SERVER['HTTP_HOST'];
+	}
+
+	/**
 	 * Get current sub-domain
 	 */
 	protected function getRequestedSubDomain() {

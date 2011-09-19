@@ -78,9 +78,10 @@ class FBModel extends Model {
 
 	/**
 	 * Generate fields for the facebook registraion plugin
+	 *
+	 * @param string $current_domain
 	 */
-	public function generateSignUpForm() {
-		global $config;
+	public function generateSignUpForm($current_domain) {
 		return array(
 			'fields' => "[
 				{'name' : 'name'},
@@ -89,7 +90,7 @@ class FBModel extends Model {
 				{'name' : 'email'},
 				{'name' : 'password'}
 			]",
-			'redirect' => 'http://' . $config->domain . "/user-register-facebook",
+			'redirect' => 'http://' . $current_domain . "/user-register-facebook",
 		);
 
 	}

@@ -119,7 +119,7 @@ ClassEnroll.handleError = function(response) {
 			content += '<a href="#" class="go-to-class-page button">go to class page</a>';
 			break;
 		case 'exceed_max':
-			content += "<p>Well, this is akward. You will have to remove a class to make room for the new one. Remember, you can always add it back, and the assignment you've created won't be lost.</p>" +
+			content += "<p>Well, this is awkward. You will have to remove a class to make room for the new one. Remember, you can always add it back, and the assignment you've created won't be lost.</p>" +
 			ClassRemove.listClassToRemove(response.class_list) +
 			'<div class="options">' +
 				'<a href="#" class="button disabled confirm-action">confirm</a>' +

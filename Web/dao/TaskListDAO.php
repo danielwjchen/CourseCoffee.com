@@ -87,7 +87,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 			FROM quest q
 			INNER JOIN quest_type qt
 				ON q.type_id = qt.id
-				AND qt.name = '" . QuestType::TASK . "'
+				AND qt.name = '" . QuestTypeSetting::TASK . "'
 			LEFT JOIN (quest_attribute qa_stats, quest_attribute_type qat)
 				ON q.id = qa_stats.quest_id
 				AND qa_stats.type_id = qat.id
@@ -207,7 +207,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 
 		}
 
-		$data = $this->db->fetch($sql, $sql_params);
+		$data = $this->db->fetchList($sql, $sql_params);
 
 		// debug
 		// error_log(__METHOD__ . ' : data - ' . print_r($data, true));

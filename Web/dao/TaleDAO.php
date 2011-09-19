@@ -10,9 +10,9 @@ class TaleDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db_name = 'default') {
-		parent::__construct($db_name);
-		$this->version_dao = new TaleVersionDAO();
+	function __construct($db) {
+		parent::__construct($db);
+		$this->version_dao = new TaleVersionDAO($db);
 	}
 
 	/**

@@ -13,7 +13,7 @@ class CollegeClassController extends Controller implements ControllerInterface {
 			'college-class-update'  => 'updateClass',
 			'college-class-remove'  => 'removeClass',
 			'college-class-info'    => 'getClassDetail',
-			'college-class-list'    => 'getClassList',
+			'college-class-list'    => 'getClassListBySyllabusStatus',
 			'college-class-suggest' => 'suggestClass',
 			'college-class-enroll'  => 'enrollClass',
 			'college-class-reading' => 'getClassBookList',
@@ -63,9 +63,16 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Get a list of class
+	 * Get a list of class based on syllabus status
 	 */
-	public function getClassList() {
+	public function getClassListBySyllabusStatus() {
+		$list_model = new CollegeClassListModel($this->sub_domain);
+		$result = $list_model->getClassListBySyllabusStatus(
+			Input::Post('status'), 
+			Input::Post('timestamp'), 
+			Input::Post('paginate')
+		);
+		$this->output = new JSONView($result);
 	}
 
 	/**

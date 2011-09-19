@@ -16,6 +16,7 @@ class PageController extends Controller implements ControllerInterface {
 			// We decided to use /book-search as default page 8/31/2011
 			// 'welcome'         => 'getWelcomePage',
 			'welcome'         => 'getBookSearchPage',
+			'admin'           => 'getAdminPage',
 			'home'            => 'getHomePage',
 			'calendar'        => 'getCalendarPage',
 			'class'           => 'getClassPage',
@@ -61,17 +62,33 @@ class PageController extends Controller implements ControllerInterface {
 		// debug
 		// error_log(__METHOD__ . ' - user session - ' . print_r($_SESSION, true));
 
-		$user_session_model = new UserSessionModel($this->sub_domain);
-		$profile = $user_session_model->getUserProfile();
-		$class_list = $user_session_model->getUserClassList();
+		$profile    = $this->user_session->getUserProfile();
+		$class_list = $this->user_session->getUserClassList();
 		$this->output = new HomePageView(array(
-			'fb_uid'     => $user_session_model->getFbUserId(),
-			'user_id'    => $user_session_model->getUserId(),
+			'fb_uid'     => $this->user_session->getFbUserId(),
+			'user_id'    => $this->user_session->getUserId(),
+			'role'       => $this->user_session->getUserRole(),
 			'profile'    => $profile,
 			'class_list' => $class_list,
 			'timestamp'  => time(),
 		));
 	}
+
+	/**
+	 * Get the admin page for user
+	 */
+	public function getAdminPage() {
+		$this->redirectUnsupportedDomain();
+		$this->redirectUnknownUser();
+		$this->output = new AdminPageView(array(
+			'user_id'    => $this->user_session->getUserId(),
+			'role'       => $this->user_session->getUserRole(),
+			'profile'    => $profile,
+			'class_list' => $class_list,
+			'timestamp'  => time(),
+		));
+	}
+
 
 	/**
 	 * Get signup output for visiters
@@ -92,7 +109,7 @@ class PageController extends Controller implements ControllerInterface {
 		if ($fb) {
 			$fb_model = new FBModel($this->sub_domain);
 			if (!$fb_model->checkFbUid($fb_uid)) {
-				$form_fields = $fb_model->generateSignUpForm();
+				$form_fields = $fb_model->generateSignUpForm($this->getRequestedDomain());
 				$this->output = new FBSignUpPageView($form_fields);
 				return ;
 			} else {
@@ -116,12 +133,12 @@ class PageController extends Controller implements ControllerInterface {
 	public function getCalendarPage() {
 		$this->redirectUnknownUser();
 
-		$user_session_model = new UserSessionModel($this->sub_domain);
-		$class_list    = $user_session_model->getUserClassList();
-		$user_profile  = $user_session_model->getUserProfile(); 
+		$class_list   = $this->user_session->getUserClassList();
+		$user_profile = $this->user_session->getUserProfile(); 
 
 		$this->output = new CalendarPageView(array(
-			'user_id'    => $user_session_model->getUserId(),
+			'user_id'    => $this->user_session->getUserId(),
+			'role'       => $this->user_session->getUserRole(),
 			'timestamp' => time(),
 			'class_list' => $class_list,
 			'institution_uri' => $user_profile['institution_uri'],
@@ -162,6 +179,7 @@ class PageController extends Controller implements ControllerInterface {
 			$result['default_class'] = $class_info;
 
 		}
+		$result['role'] = $this->user_session->getUserRole();
 
 		$this->output = new ClassPageView($result);
 	}
@@ -221,6 +239,7 @@ class PageController extends Controller implements ControllerInterface {
 
 			$login_form = new UserLoginFormModel($this->sub_domain);
 			$this->output = new BookSearchPageView(array(
+				'role'       => $this->user_session->getUserRole(),
 				'is_loggedIn' => $this->getUserId(),
 				'login_token' => $login_form->initializeFormToken(),
 			));

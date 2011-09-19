@@ -146,7 +146,7 @@ class TaskDAO extends DAO implements DAOInterface{
 
 		$data = $this->db->fetch($sql, array(
 			'id' => $params['id'],
-			'type_name' => QuestType::TASK,
+			'type_name' => QuestTypeSetting::TASK,
 		));
 
 		// debug
