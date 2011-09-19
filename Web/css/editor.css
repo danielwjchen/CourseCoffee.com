@@ -36,9 +36,7 @@
 	margin-bottom: 400px;
 }
 .editor .content {
-        color: red;
         font-size: 14px;
-        line-height: 150%;
         font-family: "Sans-Serif";
 	margin: 20px 0 20px;
 	padding: 40px;
@@ -47,10 +45,9 @@
 	font-size: 12px;
 }
 .editor .content p {
-	margin: 20px 0;
+        margin: 20px 0;
 }
 .editor .task-wrap {
-	top: 1800px;
 	z-index: 99;
 	float: left;
 	margin-left: 540px; 
@@ -81,3 +78,35 @@
 
 }
 
+
+.editor .task .task_content_editing{
+        width: 380px;
+        height: 200px;
+}
+
+.editor .task .task_content{
+        word-wrap: break-word;
+}
+
+.highlight{
+    	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+
+}
+
+.date_label{
+        background: #09F;
+        color: white;
+        font-family: "Sans-Serif";
+        font-size: 18px;
+        border: 0px; solid white;
+        border-radius: 4px;
+
+}
+
+
+.date_label .btn{
+        text-decoration: none;
+
+}
