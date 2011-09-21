@@ -72,16 +72,16 @@
 /**
  * Define styles for book list
  */
-.book-search .double-underline,
-.book-search .double-underline a {
+.book-search .book-list .double-underline,
+.book-search .book-list .double-underline a {
 	width: 30px;
 }
-.book-search .double-underline {
+.book-search .book-list .double-underline {
 	position: absolute;
 	top: 2px;
 	right: 70px;
 }
-.book-search .double-underline a {
+.book-search .book-list .double-underline a {
 	text-decoration: underline;
 }
 .book-search .search-message,
