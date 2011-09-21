@@ -50,11 +50,19 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
-				<ul id="navigation-menu">
-					<li class="home active">
-						<a class="home button" href="/home">Home</a>
-					</li>
-				</ul>
+				<div id="navigation-menu">
+					<ul>
+						<li class="home active">
+							<a class="home button" href="/home">Home</a>
+						</li>
+					</ul>
+					<ul id="tool-menu">
+						<li><a class='button' id="undo" href="#">undo</a></li>
+						<li><a class='button' id="redo" href="#">redo</a></li>
+						<li><a class='button' id="new_assignment" href="#">new assignment</a></li>
+						<li><a class='button' id="create-task" href="#">submit</a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 		<div class="body">
@@ -83,26 +91,10 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
               <td class='data_col_left'><div id='orig_syl'></div><div id="info_box_left"></div></td>
               <td class='data_col_right'><div id="info_box_right"></div>
 <div id='parsed_data'></div>  
-                  <div id="tool_box">
-			<table>
-                            <tr>    
-		                <td>
-		                    <a class='toolbox_btn' id="undo" href="#">undo</a>
-                                    <a class='toolbox_btn' id="redo" href="#">redo</a>
-                                    <a class='toolbox_btn' id="new_assignment" href="#">new assignment</a>
-                                    <a class='toolbox_btn' id="create-task" href="#">submit</a>
-                                    <span class="hint" id="toolbox_hint"></span>
-				</td>
-                            </tr>
-                        </table>
-		    </div>
             </td>
             </tr>
 	    </table>
                   
-         <div id="msg_board">
-        </div>
-
 					</div>
 				</div>
 			</div>

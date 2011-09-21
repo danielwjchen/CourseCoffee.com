@@ -13,9 +13,8 @@ class PageController extends Controller implements ControllerInterface {
 		return array(
 			'doc-edit'        => 'getDocumentEditorPage',
 			'sign-up'         => 'getSignUpPage',
-			// We decided to use /book-search as default page 8/31/2011
-			// 'welcome'         => 'getWelcomePage',
-			'welcome'         => 'getBookSearchPage',
+			'welcome'         => 'getWelcomePage',
+			'portal'          => 'getPortalPage',
 			'admin'           => 'getAdminPage',
 			'home'            => 'getHomePage',
 			'calendar'        => 'getCalendarPage',
@@ -32,6 +31,18 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Get portal page
+	 *
+	 * The portal page serves as the redirect page when there is no requested 
+	 * subdomain, or the request does not map to a campus site
+	 */
+	public function getPortalPage() {
+		$this->output = new PortalPageView(array(
+			'domain' => $this->domain,
+		));
+	}
+
+	/**
 	 * Get the welcome output
 	 *
 	 * we redirect if the user is logged in
@@ -40,6 +51,7 @@ class PageController extends Controller implements ControllerInterface {
 		if ($this->isUserLoggedIn()) {
 			header('Location: ' . self::PAGE_HOME);
 		}
+		$this->redirectUnsupportedDomain();
 
 		$login_form    = new UserLoginFormModel($this->sub_domain);
 		$register_form = new UserRegisterFormModel($this->sub_domain);
@@ -231,21 +243,15 @@ class PageController extends Controller implements ControllerInterface {
 	 */
 	public function getBookSearchPage() {
 		global $config;
-		if ($this->sub_domain == self::DEFAULT_DOMAIN) {
-			$this->output = new WelcomePageView(array(
-				'domain'      => $this->domain,
-			));
-		} else {
-			$this->redirectUnsupportedDomain();
+		$this->redirectUnsupportedDomain();
 
-			$login_form = new UserLoginFormModel($this->sub_domain);
-			$this->output = new BookSearchPageView(array(
-				'base_url'   => 'http://' . $config->domain,
-				'role'       => $this->user_session->getUserRole(),
-				'is_loggedIn' => $this->getUserId(),
-				'login_token' => $login_form->initializeFormToken(),
-			));
-		}
+		$login_form = new UserLoginFormModel($this->sub_domain);
+		$this->output = new BookSearchPageView(array(
+			'base_url'   => 'http://' . $config->domain,
+			'role'       => $this->user_session->getUserRole(),
+			'is_loggedIn' => $this->getUserId(),
+			'login_token' => $login_form->initializeFormToken(),
+		));
 	}
 
 	/**
@@ -255,7 +261,7 @@ class PageController extends Controller implements ControllerInterface {
 		$this->redirectUnsupportedDomain();
 
 		if (!$this->getUserId()) {
-			$this->redirect(self::PAGE_DEFAULT);
+			$this->redirect(self::PAGE_WELCOME);
 		}
 
 		if (!$this->user_session->isNewlyRegistered()) {

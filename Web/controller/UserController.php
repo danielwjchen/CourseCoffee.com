@@ -13,6 +13,7 @@ class UserController extends Controller implements ControllerInterface {
 		return array(
 			'user-register-facebook' => 'registerUserByFB',
 			'user-register-regular'  => 'registerUserByUs',
+			'user-link-facebook' => 'linkUserWithFacebook',
 			'user-update'   => 'updateUser',
 			'user-remove'   => 'removeUser',
 			'user-profile'  => 'getUserProfile',
@@ -226,6 +227,22 @@ class UserController extends Controller implements ControllerInterface {
 			$this->user_session->beginUserSession($result['user_id'], $email, Crypto::Encrypt($password));
 		}
 
+		$this->output = new JSONView($result);
+	}
+
+	/**
+	 * Link user with facebook
+	 *
+	 * At the moment, this methd refreshes the page regardlessly
+	 */
+	public function linkUserWithFacebook() {
+		$user_id = $this->getUserId();
+		$fb_uid  = Input::Post('fb_uid');
+		$result['redirect'] = '/home';
+		$fb_model = new FBModel($this->sub_domain);
+		if ($fb_model->processFBLinkageRequest($fb_uid, $user_id)) {
+			$this->user_session->setFbUserId($fb_uid);
+		}
 		$this->output = new JSONView($result);
 	}
 

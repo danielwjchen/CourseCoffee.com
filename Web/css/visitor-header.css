@@ -5,7 +5,6 @@
 .visitor-header {
 	float: left;
 	text-align: left;
-  height: 45px;
 }
 .visitor-header {
   margin: 0 -960px -50px 450px;
@@ -28,8 +27,8 @@
 }
 .visitor-header .button {
 	float: left;
-	font-size: 18px !important;
-	line-height: 18px !important;
+	font-size: 15px !important;
+	line-height: 14px !important;
 	padding: 8px 12px !important;
 }
 .visitor-header .login-form{
@@ -40,8 +39,8 @@
 .visitor-header input{
 	color: #787474;
 	font-size: 12px;
-	line-height: 18px;
-	height: 28px;
+	line-height: 12px;
+	height: 24px;
 	border: 1px solid #457319;
 	border-radius: 4px;
 	margin: 5px 10px 5px 0;

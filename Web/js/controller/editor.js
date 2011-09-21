@@ -483,8 +483,6 @@ $P.ready(function(){
 
             $(window).scroll(function(){
                     adjust_parsed_data_pos();
-                    $("#tool_box").animate({"top": ($(window).scrollTop()-100)+"px"}, 10)
-                    $("#msg_board").animate({"top": ($(window).scrollTop()-100)+"px"}, 10)
             });
 
 
@@ -519,16 +517,9 @@ $P.ready(function(){
                     
                     $("#orig_syl").text("Loading Syllabus...");  
                     
-                    $("#msg_board").html("<li>Please double check your assignment dates as some mistakes may occur.</li>")
-                    $("#msg_board").fadeTo("fast", 0.8)                    
 
             }
 
-            function update_msg_board(){
-                    if(min_var > 2000){ // parsing is too bad
-                            $("#msg_board").html($("#msg_board").html() + "<li class='emph'>If the document has been inccorrectly processed, click <a href='#' class='delete_all'>here</a> to delete all assignments and edit manually!</li>")
-                    }
-            }
             
             /**
              *  filter out dates previous to current year
@@ -908,7 +899,6 @@ $P.ready(function(){
                     schedule_list_orig_len = schedule_list.length
                     update_date_label()
 										update_schedule()	
-                    update_msg_board()			   
                     save_history();
                     
 

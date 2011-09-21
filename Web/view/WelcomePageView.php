@@ -23,19 +23,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	 * Implement PageViewInterface::getBlocks()
 	 */
 	public function getBlocks() {
-		$header = array();
-		if ($this->data['is_loggedIn']) {
-			$header = array(
-				'callback' => 'NavigationBlockView',
-			);
-		} else {
-			$header = array(
-				'callback' => 'VisitorNavigationBlockView',
-				'params' => array('login_token'),
-			);
-		}
 		return array(
-			'header' => $header,
 			'footer' => array(
 				'callback' => 'FooterBlockView',
 			),
@@ -50,28 +38,56 @@ class WelcomePageView extends PageView implements PageViewInterface {
 		return <<<HTML
 <div class="welcome container">
 	<div class="container-inner">
-		<div class="header">
-			<div class="header-inner">
-			</div>
-		</div>
-		<div class="body">
-			<div class="body-inner">
-				<div class="select-school">
-					<img src="/images/logo.png" class="logo" />
-					<div class="select-school-inner">
-						<form id="select-school-form" name="select-school">
-							<div class="row">
-								<select id="school-options">
-									<option value="default">Please select school.</option>
-									<option value="msu.{$domain}">Michigan State University</option>
-									<option value="umich.{$domain}">University of Michigan</option>
-								</select>
+			<div class="body">
+				<div class="body-inner">
+					<div class="panel-top">
+						<div class="panel-inner">
+							<img src="images/logo.png" class="logo" />
+							<div class="user-action">
+								<div class="user-login">
+									<div class="login-form">
+										<form id="user-login-form" name="user-login" action="user-login" method="post">
+											<input type="hidden" name="token" value="{$login_token}" />
+											<input type="email" name="email" class="input" value="email" />
+											<input type="password" name="password" class="input" value="password" />
+											<a class="button login" href="#">login</a>
+										</form>
+									</div>
+								</div>
+								<a href="/sign-up" class="button sign-up">Sign Up</a>
 							</div>
-						</form>
+							<div class="login error hidden"></div>
+						</div>
+					</div>
+					<div class="panel-01">
+						<div class="panel-inner">
+							<h2>Upload your course syllabi to</h2>
+							<ul>
+								<li class="calendar">Instantly organize your assignments into one calendar</li>
+								<li class="text-book">Find the best book deals on online</li>
+								<li class="facebook">Collaborate with classmates</li>
+						 </ul>
+						 	<div class="links">
+								 <a href="/book-search">Or, just want books? Click here.</a>
+							</div>
+						</div>
+					</div>
+				<div class="panel-02">
+					<div class="panel-inner">
+						<div class="upload-form">
+							<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
+								<input type="hidden" name="token" />
+								<input type="file" name="document" />
+								<div class="error hidden"></div>
+								<a class="button submit" href="#">upload</a>
+							</form>
+							<a class="button upload" href="#">upload now!</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="clear-fix"></div>
 	</div>
 </div>
 <div class="footer">

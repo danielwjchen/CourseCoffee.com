@@ -234,6 +234,7 @@ HTML;
 		return <<<HTML
 <div id="fb-root"></div>
 <script>
+	window.fb_app_id = '{$config->facebook['id']}';
 
 	var \$FB = function(callback) {
 

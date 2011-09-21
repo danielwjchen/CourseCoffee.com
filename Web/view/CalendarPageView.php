@@ -79,6 +79,10 @@ HTML;
 				{$header}
 			</div>
 		</div>
+		<div class="system-message hidden">
+			<div class="system-message-inner">
+			</div>
+		</div>
 		<div class="calendar body">
 			<div class="body-inner">
 				<div class="content">

@@ -10,6 +10,7 @@ class VisitorNavigationBlockView extends BlockView implements BlockViewInterface
 	 */
 	public function getContent() {
 		$this->addCSS('visitor-header.css');
+		$this->addJS('model/class-suggest.js');
 		$this->addJS('model/login.js');
 		$this->addJS('model/register.js');
 		$this->addJS('controller/visitor-navigation.js');

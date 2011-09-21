@@ -14,7 +14,7 @@ Options -Indexes
 Options +FollowSymLinks
 
 # Make the system handle any 404 errors.
-ErrorDocument 404 /index.php?q=not-found
+ErrorDocument 404 /page-not-found
 
 # Force simple error message for requests for non-existent favicon.ico.
 <Files favicon.ico>

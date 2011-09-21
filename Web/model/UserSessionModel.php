@@ -263,6 +263,15 @@ class UserSessionModel extends Model {
 	}
 
 	/**
+	 * Set user's fb_uid if there is one
+	 */
+	public function setFbUserId($fb_uid) {
+		$setting = Session::Get(self::USER_SETTING);
+		$setting['fb_uid'] = $fb_uid;
+		Session::Set(self::USER_SETTING, $setting);
+	}
+
+	/**
 	 * Get user's fb_uid if there is one
 	 */
 	public function getFbUserId() {

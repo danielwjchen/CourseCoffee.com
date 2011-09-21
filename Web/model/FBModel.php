@@ -96,6 +96,24 @@ class FBModel extends Model {
 	}
 
 	/**
+	 * Link user with facebook
+	 */
+	public function processFBLinkageRequest($fb_uid, $user_id) {
+		if ($this->linkage->read(array('fb_uid' => $fb_uid))) {
+			Logger::Write(self::EVENT_FB_UID_TAKEN);
+			return array(
+				'error' => true,
+				'message' => self::ERROR_FB_UID_TAKEN,
+			);
+		}
+
+		return $this->linkage->create(array(
+			'user_id' => $user_id,
+			'fb_uid'  => $fb_uid,
+		));
+	}
+
+	/**
 	 * Process user registration request from facebook
 	 */
 	public function processSignUpRequest($request) {

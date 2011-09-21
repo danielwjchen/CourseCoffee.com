@@ -1,10 +1,9 @@
 /**
  * @file
- * Manage user events and their corresponding javascript actions on welcome 
+ * Manage user events and their corresponding javascript actions on portal 
  * page
  */
 $P.ready(function() {
-	blurInput('.login-form');
 	var fbUid = '';
 	$FB(function() {
 		FB.getLoginStatus(function(response) {
@@ -25,8 +24,8 @@ $P.ready(function() {
 		});
 	});
 
-	var welcome = $('.welcome');
-	$('#school-options', welcome).change(function(e) {
+	var portal = $('.portal');
+	$('#school-options', portal).change(function(e) {
 		window.location = window.location.protocol + '//' + $(this).val();
 	});
 
@@ -36,7 +35,7 @@ $P.ready(function() {
 			login.submit();
 		}
 	});
-	welcome.delegate('a.button', 'click', function(e) {
+	portal.delegate('a.button', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);
 		if (target.hasClass('login')) {
@@ -59,7 +58,7 @@ $P.ready(function() {
 			doc.init();
 		}
 	});
-	welcome.delegate('a.sign-up', 'click', function(e) {
+	portal.delegate('a.sign-up', 'click', function(e) {
 		e.preventDefault();
 		var target = $(this);
 		if (target.hasClass('facebook')) {

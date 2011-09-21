@@ -2,6 +2,9 @@
  * @file
  * Define styles for class body
  */
+.class .container-inner {
+  padding-bottom: 160px;
+}
 .class .panel-top{
 	position: absolute;
 	top: -35px;

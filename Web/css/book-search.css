@@ -3,10 +3,10 @@
  * Define styles for book search page
  */
 .book-search .body {
-	min-height: 100%;
+	margin: 0;
 }
 .book-search .search-block {
-	margin: 60px auto 0;
+	margin: 160px auto 0;
 	width: 550px;
 }
 .book-search .search-block .logo {
@@ -41,8 +41,49 @@
 	padding: 5px 0;
 }
 /**
+ * Define styles for book-search-explained dialog
+ */
+.book-search-explained,
+.book-search-explained .dialog-inner {
+	height: 520px;
+}
+.book-search-explained .explanation {
+	width: 480px;
+	margin: 20px 0;
+	float: left;
+	clear :both;
+}
+.book-search-explained p {
+	padding: 10px 0;
+}
+.book-search-explained .explanation img,
+.book-search-explained .explanation p {
+	float: left;
+	display: block;
+}
+.book-search-explained .explanation img {
+	width: 300px;
+}
+.book-search-explained .explanation p {
+	padding: 80px 5px 0;
+	font-size: 12px;
+	width: 170px;
+}
+/**
  * Define styles for book list
  */
+.book-search .double-underline,
+.book-search .double-underline a {
+	width: 30px;
+}
+.book-search .double-underline {
+	position: absolute;
+	top: 2px;
+	right: 70px;
+}
+.book-search .double-underline a {
+	text-decoration: underline;
+}
 .book-search .search-message,
 .book-search .content {
 	width: 800px;

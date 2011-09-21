@@ -49,7 +49,9 @@ abstract class Controller {
 	/**
 	 * Default home page
 	 */
-	const PAGE_DEFAULT   = '/welcome';
+	const PAGE_DEFAULT   = '/portal';
+	const PAGE_PORTAL    = '/portal';
+	const PAGE_WELCOME   = '/welcome';
 	const PAGE_HOME      = '/home';
 	const DEFAULT_DOMAIN = 'www';
 
@@ -89,7 +91,7 @@ abstract class Controller {
 	 * @param string $url
 	 *  url to redirect to, default to home
 	 */
-	public function redirectUnknownUser($url = self::PAGE_DEFAULT) {
+	public function redirectUnknownUser($url = self::PAGE_WELCOME) {
 		if(!$this->isUserLoggedIn()) {
 			$this->redirect($url);
 		}
@@ -107,7 +109,7 @@ abstract class Controller {
 				$url .= $user_domain . '.' . $this->domain;
 				$this->redirect($url);
 			}
-			$this->redirect($url . self::DEFAULT_DOMAIN . '.' . $this->domain);
+			$this->redirect($url . self::DEFAULT_DOMAIN . '.' . $this->domain . self::PAGE_PORTAL);
 		}
 
 	}
@@ -124,7 +126,7 @@ abstract class Controller {
 	}
 
 	/**
-	 *
+	 * Hanlid page redirection using javascript
 	 */
 	protected function clientRedirect($url) {
 		echo <<<HTML

@@ -7,6 +7,14 @@ window.$P = $(document);
 $P.ready(function() {
 	window.body = $(".body");
 	window.header = $(".header");
+	if(
+		 ($.browser.msie && parseInt($.browser.version, 10) < 9) ||
+		 ($.browser.mozilla && parseInt(jQuery.browser.version, 10) < 2) ||
+		 ($.browser.safari && parseInt(jQuery.browser.version, 10) < 5)
+	){
+		$('.system-message').removeClass('hidden');
+		$('.system-message-inner').html('<p>In order to experience the full awesomeness of CourseCoffee.com, we recommend upgrading your browser to Google Chrome, Firefox 4.0+, Safari 5.0+ or IE 9.0+</p>');
+	}
 });
 
 /**

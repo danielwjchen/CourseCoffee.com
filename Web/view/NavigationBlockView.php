@@ -11,6 +11,8 @@ class NavigationBlockView extends BlockView implements BlockViewInterface {
 	public function getContent() {
 		$this->addCSS('navigation.css');
 		$this->addJS('model/logout.js');
+		$this->addCSS('class-remove.css');
+		$this->addJS('model/class-remove.js');
 		$this->addJS('controller/navigation.js');
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');

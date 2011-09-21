@@ -140,6 +140,10 @@ HTML;
 				{$header}
 			</div>
 		</div>
+		<div class="system-message hidden">
+			<div class="system-message-inner">
+			</div>
+		</div>
 		<div class="class body">
 			<div class="body-inner">
 				<div class="content">

@@ -14,7 +14,6 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		$this->addJqueryUI();
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/doc.js');
-		$this->addJS('model/class-suggest.js');
 		$this->addJS('model/book-search.js');
 		$this->addJS('controller/book-search.js');
 		$this->addCSS('dialog.css');
@@ -57,6 +56,10 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 		<div class="header">
 			<div class="header-inner">
 				{$header}
+			</div>
+		</div>
+		<div class="system-message hidden">
+			<div class="system-message-inner">
 			</div>
 		</div>
 			<div class="body">
@@ -108,6 +111,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 					</div>
 			</div>
 		</div>
+		<div class="clear-fix"></div>
 	</div>
 </div>
 <div class="footer">
