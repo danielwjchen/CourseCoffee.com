@@ -50,24 +50,29 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
-				<div id="navigation-menu">
-					<ul>
-						<li class="home active">
-							<a class="home button" href="/home">Home</a>
-						</li>
-					</ul>
-					<ul id="tool-menu">
-						<li><a class='button' id="undo" href="#">undo</a></li>
-						<li><a class='button' id="redo" href="#">redo</a></li>
-						<li><a class='button' id="new_assignment" href="#">new assignment</a></li>
-						<li><a class='button' id="create-task" href="#">submit</a></li>
-					</ul>
-				</div>
+				<ul id="navigation-menu">
+					<li class="home active">
+						<a class="home button" href="/home">Home</a>
+                                        </li>
+                                                       <li class="undo undo_operation">
+                                                                <a class="undo button" href="#">undo</a>
+                                                        </li>
+                                                        <li class="redo redo_operation">
+                                                                <a class="redo button" href="#">redo</a>
+                                                        </li>
+                                                        <li class="add">
+                                                                <a class="add button add_new_task" href="#">new task</a>
+                                                        </li>
+                                                        <li class="submit" id="create-task">
+                                                                <a class="submit button" href="#">submit</a>
+                                                        </li>
+
+
+				</ul>
 			</div>
 		</div>
 		<div class="body">
-			<div class="body-inner">
-				<div class="content">
+                    <div class="body-inner">
 					<form id="processor-form" name="document-processor">
 						<input type="hidden" name="document" value="{$document}" />
 						<input type="hidden" name="mime" value="{$mime}" />
@@ -82,21 +87,14 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 					<div class="suggested-reading hidden">
 						<div id="enroll-book-list" class="book-list"></div>
 					</div>
-          <table id='main_container'>
-						<tr>
-							<td id='table_title_left'>original syllabus</td>
-              <td id='table_title_right' >parsed data</td>
-            </tr>
-            <tr>
-              <td class='data_col_left'><div id='orig_syl'></div><div id="info_box_left"></div></td>
-              <td class='data_col_right'><div id="info_box_right"></div>
-<div id='parsed_data'></div>  
-            </td>
-            </tr>
-	    </table>
                   
-					</div>
-				</div>
+        <div class="content-wrap">
+            
+            
+        </div>
+        <div class="task-wrap">
+                                
+                                </div>
 			</div>
 		</div>
 	</div>
