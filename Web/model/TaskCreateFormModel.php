@@ -26,6 +26,8 @@ class TaskCreateFormModel extends FormModel {
 	const EVENT_FORM_EMPTY       = 'An empty task form is submitted. How is this possible?';
 	const EVENT_FORM_EXPIRED     = 'Task creation form expired.';
 
+	const ADMIN_USER_ID = 1;
+
 	/**
 	 * @} End of even_messages
 	 */
@@ -47,6 +49,20 @@ class TaskCreateFormModel extends FormModel {
 		// form expires in an hour
 		$this->expire = 3600;
 	}
+
+	public function createTaskFromDoc($user_id, $objective, $timestamp, $section_id ='', $description = '') {
+		$task_id = $this->task_dao->create(array(
+			'user_id'     => self::ADMIN_USER_ID,
+			'objective'   => $objective,
+			'due_date'    => $timestamp,
+			'description' => $description,
+			'section_id'  => $section_id,
+		));
+		// debug
+		// error_log(__METHOD__ . $task_id);
+		return $task_id;
+	}
+
 
 	/**
 	 * Create task
