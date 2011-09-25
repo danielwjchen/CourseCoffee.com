@@ -160,13 +160,22 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Get Class info
+	 *
+	 * @param string $sub_abbr
+	 * @param string $crs_num
+	 * @param string $sec_num
+	 */
+	protected function getClassInfo($sub_abbr, $crs_num, $sec_num) {
+		$class_model = new CollegeClassModel($this->sub_domain);
+		return $class_model->getClassBySectionCode($sub_abbr, $crs_num, $sec_num);
+	}
+
+	/**
 	 * Get the class output for a user
 	 *
 	 * @param array $params
 	 *  optional, but when presnet it expects values to be in the following order
-	 *  - institution_uri
-	 *  - year
-	 *  - term
 	 *  - subject_abbr
 	 *  - course_num
 	 *  - section_num
@@ -181,16 +190,10 @@ class PageController extends Controller implements ControllerInterface {
 
 		// a paticular class is specified to be displayed as default
 		if (!empty($params)) {
-			$class = new CollegeClassModel($this->sub_domain);
 			list($subject_abbr, $course_num, $section_num) = $params;
-			$class_info = $class->getClassBySectionCode($subject_abbr, $course_num, $section_num);
-
-			// debug 
-			// error_log(__METHOD__ . ' : class_info - ' . print_r($class_info, true));
-
-			$result['default_class'] = $class_info;
-
+			$result['default_class'] = $this->getClassInfo($subject_abbr, $course_num, $section_num);
 		}
+
 		$result['role'] = $this->user_session->getUserRole();
 
 		$this->output = new ClassPageView($result);
@@ -240,18 +243,33 @@ class PageController extends Controller implements ControllerInterface {
 
 	/**
 	 * Get the book search page
+	 *
+	 * @param array $params
+	 *  optional, but when presnet it expects values to be in the following order
+	 *  - subject_abbr
+	 *  - course_num
+	 *  - section_num
 	 */
-	public function getBookSearchPage() {
+	public function getBookSearchPage($params = array()) {
 		global $config;
 		$this->redirectUnsupportedDomain();
-
 		$login_form = new UserLoginFormModel($this->sub_domain);
-		$this->output = new BookSearchPageView(array(
+
+		$result = array(
 			'base_url'   => 'http://' . $config->domain,
 			'role'       => $this->user_session->getUserRole(),
 			'is_loggedIn' => $this->getUserId(),
 			'login_token' => $login_form->initializeFormToken(),
-		));
+			'section_id' => '',
+		);
+
+		if (!empty($params)) {
+			list($subject_abbr, $course_num, $section_num) = $params;
+			$class_info = $this->getClassInfo($subject_abbr, $course_num, $section_num);
+			$result['section_id'] = $class_info['content']['section_id'];
+		}
+
+		$this->output = new BookSearchPageView($result);
 	}
 
 	/**

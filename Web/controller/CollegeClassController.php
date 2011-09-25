@@ -154,8 +154,13 @@ class CollegeClassController extends Controller implements ControllerInterface {
 	 */
 	public function getClassBookList() {
 		$section_id = Input::Post('section_id');
-		$list = new BookSuggestModel($this->sub_domain);
+		$list  = new BookSuggestModel($this->sub_domain);
+		$class = new CollegeClassModel($this->sub_domain);
+		$class_info = $class->getClassById($section_id);
 		$result = $list->getBookList($section_id);
+		$result['uri'] = $class_info['content']['subject_abbr'] . '/' . 
+			$class_info['content']['course_num'] . '/' . 
+			$class_info['content']['section_num'];
 		$this->output = new JSONView($result);
 	}
 

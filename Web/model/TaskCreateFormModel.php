@@ -61,13 +61,17 @@ class TaskCreateFormModel extends FormModel {
 	 *  the record id
 	 */
 	public function createTask($user_id, $objective, $timestamp, $section_id ='', $description = '') {
-		return $this->task_dao->create(array(
+		$task_id = $this->task_dao->create(array(
 			'user_id'     => $user_id,
 			'objective'   => $objective,
 			'due_date'    => $timestamp,
 			'description' => $description,
 			'section_id'  => $section_id,
 		));
+
+		// debug
+		// error_log(__METHOD__ . $task_id);
+		return $task_id;
 
 	}
 

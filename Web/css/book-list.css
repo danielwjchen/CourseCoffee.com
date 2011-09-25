@@ -84,3 +84,13 @@
 	-moz-text-shadow: 0 0 4px #D5D4D2;
 	-webkit-text-shadow: 0 0 4px #D5D4D2;
 }
+.book-list .share-result {
+	clear: both;
+}
+.book-list .share-result textarea {
+	font-family: Sans-Serif;
+	font-size: 22px;
+	font-weight: bold;
+	color: #5c6768;
+	width: 455px;
+}

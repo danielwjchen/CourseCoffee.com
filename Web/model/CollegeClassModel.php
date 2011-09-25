@@ -115,7 +115,14 @@ class CollegeClassModel extends Model {
 		// error_log(__METHOD__ . ' : result ' . print_r($section_dao->attribute, true));
 
 		$result = $section_dao->attribute;
-		return $result['syllabus_status'] != self::SYLLABUS_REMOVED;
+		switch ($result['syllabus_status']) {
+			case self::SYLLABUS_APPROVED:
+			case self::SYLLABUS_NEW:
+				return true;
+			default:
+			case self::SYLLABUS_REMOVED:
+				return false;
+		}
 	}
 
 	/**

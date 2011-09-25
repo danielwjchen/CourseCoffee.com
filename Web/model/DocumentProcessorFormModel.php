@@ -38,9 +38,9 @@ class DocumentProcessorFormModel extends FormModel{
 	const HAS_SYLLABUS = 'has_syllabus';
 
 	/**
-	 * Access to file records
+	 * A value used to delimit pages
 	 */
-	private $file_dao;
+	const LINE_PER_PAGE = 50;
 
 	/**
 	 * Access to section records
@@ -52,7 +52,6 @@ class DocumentProcessorFormModel extends FormModel{
 	 */
 	function __construct($sub_domain) {
 		parent::__construct($sub_domain);
-		$this->file_dao    = new FileDAO($this->default_db);
 		$this->section_dao = new SectionDAO($this->institution_db);
 		// form submission is limite to 5 times
 		$this->max_try = 5;
@@ -94,6 +93,18 @@ class DocumentProcessorFormModel extends FormModel{
 			);
 		}
 
+		return $output;
+	}
+
+	/**
+	 * Clean up output to a browser safe format
+	 */
+	private function cleanUpOutput($output) {
+		$output = htmlentities($output, ENT_QUOTES, 'UTF-8');
+
+		$output = str_replace("\n","[NEWLINE]", $output);
+		$output = utf8_encode(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $output));
+		$output = str_replace("[NEWLINE]", "\n", $output);
 		return $output;
 	}
 
@@ -147,28 +158,25 @@ class DocumentProcessorFormModel extends FormModel{
 			return $output;
 		}
 
-		$line_count = count($output);
-		$search_range = $line_count > 50 ? 50 : $line_count;
-		$params = array();
+		$paged_output = array_chunk($output, self::LINE_PER_PAGE);
+		$page_count = count($paged_output);
+		$result = array();
 
+		for($i = 0; $i < $page_count; $i++) {
+			$result[] = $this->cleanUpOutput(implode("\n", $paged_output[$i]));
+		}
 
-		$result = implode("\n", $output);
-		$result = htmlentities($result, ENT_QUOTES, 'UTF-8');
+		$content = implode('PAGE_BREAK', $result);
 
-		// This broke the covernsion!! 
-		// $result = str_replace("\n","[NEWLINE]", $result);
-		// $result = utf8_encode(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $result));
-		// $result = str_replace("[NEWLINE]", "\n", $result);
-		// $result = iconv("UTF-8","UTF-8//IGNORE", $result);
 
 		// debug
 		// error_log('document procesor section_id - ' . $section_id);
 
 
 		return array(
-			'success'        => true,
-			'file_id'        => $this->file_dao->id,
-			'content'        => $result
+			'success'    => true,
+			'page_count' => $page_count,
+			'content'    => $content,
 		);
 	}
 

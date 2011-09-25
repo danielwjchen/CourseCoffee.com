@@ -68,6 +68,9 @@ dt{
 hr {
 	margin: 15px 20px;
 }
+textarea {
+	font-family: Sans-Serif;
+}
 .no-scroll {
 	overflow: hidden;
 }

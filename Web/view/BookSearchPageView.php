@@ -68,10 +68,7 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 						<img src="/images/logo.png" class="logo" />
 						<div class="class-suggest-inner">
 							<form id="book-suggest-form" name="book-suggest">
-								<input type="hidden" name="term_id" value="1" />
-								<input type="hidden" name="year_id" value="1" />
-								<input type="hidden" id="section-id" name="section_id" />
-								<input type="hidden" id="section-id" name="section_id" />
+								<input type="hidden" name="section_id" value="{$section_id}" />
 								<div class="row">
 									<input type="text" name="string" id="suggest-input" value="enter you class, e.g. CSE 231 001" />
 								</div>

@@ -17,7 +17,8 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 		$this->addJS('model/class-remove.js');
 		$this->addJS('model/class-enroll.js');
 		$this->addJS('model/class-edit.js');
-		$this->addJS('model/editor-action.js');
+		$this->addJS('model/editor-flow.js');
+		$this->addJS('model/editor-processor.js');
 		$this->addJS('model/register.js');
 		$this->addJS('controller/editor.js');
     $this->addJS('lib/date.js');
@@ -53,21 +54,21 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 				<ul id="navigation-menu">
 					<li class="home active">
 						<a class="home button" href="/home">Home</a>
-                                        </li>
-                                                       <li class="undo undo_operation">
-                                                                <a class="undo button" href="#">undo</a>
-                                                        </li>
-                                                        <li class="redo redo_operation">
-                                                                <a class="redo button" href="#">redo</a>
-                                                        </li>
-                                                        <li class="add">
-                                                                <a class="add button add_new_task" href="#">new task</a>
-                                                        </li>
-                                                        <li class="submit" id="create-task">
-                                                                <a class="submit button" href="#">submit</a>
-                                                        </li>
-
-
+          </li>
+				</ul>
+				<ul id="editor-action-menu">
+          <li class="undo undo_operation">
+						<a class="undo button" href="#">undo</a>
+          </li>
+          <li class="redo redo_operation">
+						<a class="redo button" href="#">redo</a>
+          </li>
+          <li class="add">
+						<a class="add button add_new_task" href="#">new task</a>
+          </li>
+          <li class="submit" id="create-task">
+						<a class="submit button" href="#">submit</a>
+					</li>
 				</ul>
 			</div>
 		</div>

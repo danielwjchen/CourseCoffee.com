@@ -9,6 +9,11 @@ $P.ready(function() {
 
 	var bookSearchSuggest = new BookSearchSuggest('#book-suggest-form', '#suggest-input');
 
+	var default_section = $('#book-suggest-form input[name=section_id]').val();
+	if (default_section != '') {
+		bookSearchSuggest.submit();
+	}
+
 	bookSearch.delegate('a', 'click', function(e) {
 		var target = $(this);
 		if (target.hasClass('suggest')) {

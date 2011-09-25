@@ -2,7 +2,7 @@
  * @file
  * Interact with user when action is taken on /doc-editor
  */
-window.EditorAction = function(taskCreationFormClassName) {
+window.EditorFlow = function(taskCreationFormClassName) {
 	var _taskCreationForm   = $(taskCreationFormClassName);
 	var _section_id_field   = $('input[name=section_id]', _taskCreationForm);
 	var _section_code_field = $('input[name=section_code]', _taskCreationForm);
@@ -164,8 +164,7 @@ window.EditorAction = function(taskCreationFormClassName) {
 			var taskCreationForm = $('#task-creation-form');
 			var processState = $('input[name=process_state]', taskCreationForm).val();
 			var creationForm = $('#task-creation-form');
-			var taskEle = $('.schedule_elem');
-			creationForm.append('<input type="hidden" name="task_count" value="' + taskEle.length + '" />');
+			creationForm.append('<input type="hidden" name="task_count" value="' + taskList.length + '" />');
 
 			$('.dialog-close').live('click', function(e) {
 				e.preventDefault();
@@ -193,7 +192,7 @@ window.EditorAction = function(taskCreationFormClassName) {
 				url: '/task-add-from-doc',
 				type: 'post',
 				cache: false,
-				data: creationForm.serialize() + '&section_id=' + _section_id,
+				data: creationForm.serialize(),
 				success: function(response) {
 					var bookList = $('.suggested-reading').clone();
 					bookList.removeClass('hidden');

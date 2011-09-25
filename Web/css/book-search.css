@@ -113,23 +113,30 @@
 	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
 }
-.book-search .book-list {
+.book-search .content .book-list {
 	width: 760px;
 	min-height: 200px;
 	margin: 20px auto;
 }
-.book-search .book-list .title {
+.book-search .content .book-list .title {
 	width: 525px;
 }
-.book-search .book-list h3 {
+.book-search .content .book-list textarea {
+	width: 740px;
+	padding: 5px;
+}
+.book-search .content .book-list h3 {
 	text-align: center;
 }
-.book-search .book-list ul {
+.book-search .content .book-list ul {
 	width: 640px;
 	margin: 0 auto;
 }
-.book-search .book-list .offer {
+.book-search .content .book-list .offer {
 	width: 575px;
+}
+.book-search .content .book-list .offer ul {
+	width: 162px;
 }
 .book-search .underline {
 	border-bottom: 1px white solid;

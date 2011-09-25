@@ -3,30 +3,57 @@
  * Define styles for editor v2 mock-up
  */
 
-#navigation-menu{
+#editor-action-menu{
+	float: right;
+}
+#editor-action-menu ul,
+#editor-action-menu li{
+	list-style: none;
+}
+#editor-action-menu ul{
+}
+#editor-action-menu li{
+	margin-top: 3px;
 	float: left;
+	padding: 5px;
+	height: 24px;
+	display: block;
 }
-#navigation-menu li.cancel {
+#editor-action-menu .button{
+	color: white;
+	font-size: 14px;
+	line-height: 14px;
+	font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	padding: 6px 10px;
+	display: block;
+	background: none;
+	border: none;
 }
-#navigation-menu li.upload {
+#editor-action-menu .button:hover {
+	border-radius: 8px;
+	text-shadow: none;
+	background: #5c5c5c;
+	-moz-box-shadow: 2px 2px #444444;
+	-webkit-box-shadow: 2px 2px 5px #444444;
+	box-shadow: 2px 2px 5px #444444;
+}
+
+#editor-action-menu li.cancel {
+}
+#editor-action-menu li.upload {
 	margin-right: 300px;
 }
-#navigation-menu li.undo {
+#editor-action-menu li.undo {
 }
-#navigation-menu li.redo {
+#editor-action-menu li.redo {
 }
-#navigation-menu li.add new{
+#editor-action-menu li.add {
  }
-#navigation-menu li.submit {
+#editor-action-menu li.submit {
 }
 
-
-.editor .header {
-	position: fixed;
-	z-index: 999;
-	top: 0;
-	height: 55px;
-}
 .editor .content-wrap {
 	z-index: 9;
 	float: left;
@@ -35,16 +62,16 @@
 	margin-bottom: 400px;
 }
 .editor .content {
- font-size: 14px;
- font-family: "Sans-Serif";
+	float: left;
+	min-height: 810px;
 	margin: 20px 0 20px;
 	padding: 40px;
 	width: 560px;
-	height: 820px;
 	font-size: 12px;
+	border-radius: 1px;
 }
 .editor .content p {
-        margin: 20px 0;
+	margin: 20px 0;
 }
 .editor .task-wrap {
 	z-index: 99;

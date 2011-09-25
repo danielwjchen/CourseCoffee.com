@@ -98,6 +98,13 @@ window.BookSuggest = function(regionName) {
 					});
 					html += '</ul>';
 
+					// share result
+					var uri = window.location.protocol + '//' + window.location.host + '/book-search/' + response.uri;
+					html += '<div class="share-result">' +
+						'<h2>Share this with your friends!</h2>' +
+						'<textarea>' + uri + '</textarea>' +
+					'</div>';
+
 
 					// debug
 					// console.log('book suggest cache');
