@@ -25,6 +25,9 @@ $P.ready(function() {
 		});
 	});
 
+	var slideShow = new SlideShow('.slide-show');
+	slideShow.perform();
+
 	var welcome = $('.welcome');
 	$('#school-options', welcome).change(function(e) {
 		window.location = window.location.protocol + '//' + $(this).val();

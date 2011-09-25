@@ -14,8 +14,10 @@ class WelcomePageView extends PageView implements PageViewInterface {
 		$this->addJS('model/login.js');
 		$this->addJS('model/register.js');
 		$this->addJS('model/doc.js');
+		$this->addJS('model/slide-show.js');
 		$this->addJS('controller/welcome.js');
 		$this->addCSS('dialog.css');
+		$this->addCSS('slide-show.css');
 		$this->addCSS('welcome.css');
 	}
 
@@ -61,12 +63,25 @@ class WelcomePageView extends PageView implements PageViewInterface {
 					</div>
 					<div class="panel-01">
 						<div class="panel-inner">
-							<h2>Upload your course syllabi to</h2>
-							<ul>
-								<li class="calendar">Instantly organize your assignments into one calendar</li>
-								<li class="text-book">Find the best book deals on online</li>
-								<li class="facebook">Collaborate with classmates</li>
-						 </ul>
+							<div class="slide-show">
+								<ul>
+									<li class="show">
+										<img src="/images/slides/book.png" rel="<li class='text-book'>Find the best book deals on the internet</li>" />
+									</li>
+									<li>
+										<img src="/images/slides/calendar.png" rel="<li class='calendar'>Instantly organize your assignments into one calendar</li>" />
+									</li>
+									<li>
+										<img src="/images/slides/class.png" rel="<li class='facebook'>Collaborate with classmates</li>" />
+									</li>
+									<li>
+										<img src="/images/slides/editor.png" rel="<li class='calendar'>Instantly organize your assignments into one calendar</li>" />
+									</li>
+								</ul>
+								<div class="caption">
+									<ul class="caption-content"></ul>
+								</div>
+							</div>
 						 	<div class="links">
 								 <a href="/book-search">Or, just want books? Click here.</a>
 							</div>

@@ -125,27 +125,26 @@
 	-moz-text-shadow: 0 0 6px #000;
 	-webkit-text-shadow: 0 0 6px #000;
 }
-.welcome .panel-01 ul,
-.welcome .panel-01 li{
+.welcome .caption-content {
+	height: 60px;
+}
+.welcome .caption-content ul,
+.welcome .caption-content li{
   font-size: 18px;
 	line-height: 20px;
   list-style: none;
 }
-.welcome .panel-01 ul{
-	width: 325px;
-  margin: 20px auto 40px;
-}
-.welcome .panel-01 li{
-  padding: 20px 0 20px 50px;
+.welcome .caption-content li{
+  padding: 0 0 0 50px;
 	height: 40px;
 }
-.welcome .panel-01 li.calendar {
+.welcome .caption-content li.calendar {
 	background: url('/images/calendar.png') left center no-repeat;
 }
-.welcome .panel-01 li.text-book {
+.welcome .caption-content li.text-book {
 	background: url('/images/text-book.png') left center no-repeat;
 }
-.welcome .panel-01 li.facebook {
+.welcome .caption-content li.facebook {
 	background: url('/images/facebook.png') left center no-repeat;
 }
 .welcome .panel-01 a{
@@ -166,7 +165,7 @@
  * Define styles for panel-02
  */
 .welcome .panel-02{
-	margin-top: -80px;
+	margin-top: -40px;
 }
 .welcome .panel-02 .panel-inner{
   height: 475px;
