@@ -136,6 +136,7 @@
 }
 .welcome .caption-content li{
   padding: 0 0 0 50px;
+	width: 400px;
 	height: 40px;
 }
 .welcome .caption-content li.calendar {
@@ -178,7 +179,7 @@
 	text-align: center;
 }
 .welcome .panel-02 .upload{
-	font-size: 30px;
+	font-size: 24px;
 	height: 46px;
 	line-height: 46px;
 }
