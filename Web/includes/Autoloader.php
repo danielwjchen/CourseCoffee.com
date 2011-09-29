@@ -20,7 +20,7 @@ class Autoloader {
 	/**
 	 * Singleton instance
 	 */
-	private static $instance;
+	public static $instance;
 
 	/**
 	 * A map of component paths and the regular expression that identifies an 
@@ -57,7 +57,7 @@ class Autoloader {
 	}
 
 	/**
-	 * Initialize
+	 * Initialize an Autoloader instance
 	 *
 	 * This checks if an instance of this class already exists
 	 */

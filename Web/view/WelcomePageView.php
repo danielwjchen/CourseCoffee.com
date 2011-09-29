@@ -82,12 +82,27 @@ class WelcomePageView extends PageView implements PageViewInterface {
 									<ul class="caption-content"></ul>
 								</div>
 							</div>
-						 	<div class="links">
-								 <a href="/book-search">Or, just want books? Click here.</a>
+							<div class="social-plugins">
+								<strong>Share this with your friends</strong>
+								<ul>
+									<li>
+										<div class="fb-like" data-href="http://www.coursecoffee.com" data-send="false" data-layout="box_count" data-width="50" data-show-faces="true"></div>
+									</li>
+									<li>
+										<g:plusone size="tall"></g:plusone>
+									</li>
+									<li>
+										<a href="https://twitter.com/share" class="twitter-share-button" data-url="www.coursecoffee.com" data-text="College made easy." data-count="vertical" data-via="CourseCoffee">Tweet</a>
+										<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>
 				<div class="panel-02">
+					<div class="tagline">
+						<h1>College made easy.</h1>
+					</div>
 					<div class="panel-inner">
 						<div class="upload-form">
 							<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
@@ -97,6 +112,9 @@ class WelcomePageView extends PageView implements PageViewInterface {
 								<a class="button submit" href="#">upload</a>
 							</form>
 							<a class="button upload" href="#">upload now!</a>
+						</div>
+						<div class="links">
+							 <a href="/book-search">Or, just want books? Click here.</a>
 						</div>
 					</div>
 				</div>

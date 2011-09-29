@@ -146,6 +146,70 @@ class SystemSchema extends DefaultSchema implements SchemaInterface {
 					'class' => array('class'),
 				),
 			),
+			'email_queue' => array(
+				'description' => 'keep track of emails need to be processed',
+				'column' => array(
+					'id' => array(
+						'type' => 'serial',
+						'description' => 'the primary key',
+					),
+					'from' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'message sender',
+					),
+					'to' => array(
+						'type' => 'char',
+						'length' => 255,
+						'not null' => TRUE,
+						'description' => 'message recipient',
+					),
+					'subject' => array(
+						'type' => 'char',
+						'length' => 128,
+						'not null' => TRUE,
+						'description' => 'message subject',
+					),
+					'message' => array(
+						'type' => 'text',
+						'size' => 'medium',
+						'not null' => TRUE,
+						'value' => 'message text',
+					),
+					'priority' => array(
+						'type' => 'char',
+						'length' => 32,
+						'not null' => TRUE,
+						'description' => 'a priority flag to indicate the state of the queued item, e.g. HIGH, MEDIUM, LOW.',
+					),
+					'status' => array(
+						'type' => 'char',
+						'length' => 32,
+						'not null' => TRUE,
+						'description' => 'a status flag to indicate the state of the queued item, e.g. NEW, SENT, FAILED.',
+					),
+					'created' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'UNIX timestamp of the moment when the item is created.',
+					),
+					'updated' => array(
+						'type' => 'int',
+						'unsigned' => TRUE,
+						'not null' => TRUE,
+						'default' => 0,
+						'description' => 'UNIX timestamp of the moment when the item is processed.',
+					),
+				),
+				'primary' => array('id'),
+				'index' => array(
+					'priority' => array('priority'),
+					'status' => array('status'),
+				),
+			),
 			'book_crawler_queue' => array(
 				'description' => 'keep track of book lists stored in cache that needed to be refreshed.',
 				'column' => array(

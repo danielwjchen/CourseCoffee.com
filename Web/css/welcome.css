@@ -58,6 +58,17 @@
 }
 
 /**
+ * Define styles for tagline
+ */
+.welcome .tagline h1 {
+	text-align: center;
+	font-size: 32px;
+	color: white;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
+}
+/**
  * Define styles for login
  */
 .welcome .user-login{
@@ -110,9 +121,6 @@
   font-size: 20px;
 	font-weight: bold;
 	color: white;
-	text-shadow: 0 0 6px #000;
-	-moz-text-shadow: 0 0 6px #000;
-	-webkit-text-shadow: 0 0 6px #000;
 }
 .welcome .panel-01 .panel-inner{
 }
@@ -148,18 +156,21 @@
 .welcome .caption-content li.facebook {
 	background: url('/images/facebook.png') left center no-repeat;
 }
-.welcome .panel-01 a{
-  text-decoration: none;
+.welcome .links {
+	text-align: center;
+	font-size: 24px;
+	font-weight: bold;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
+}
+.welcome .links a{
   color: white;
 }
-.welcome .panel-01 a:hover{
+.welcome .links a:hover {
 	text-shadow: 0 0 1px #fff;
 	-moz-text-shadow: 0 0 1px #fff;
 	-webkit-text-shadow: 0 0 1px #fff;
-}
-.welcome .links {
-	text-decoration: underline;
-	text-align: center;
 }
 
 /**
@@ -182,6 +193,41 @@
 	font-size: 24px;
 	height: 46px;
 	line-height: 46px;
+}
+/**
+ * Define styles for social-plugins on /welcome
+ */
+.welcome .social-plugins {
+	height: 75px;
+	padding: 5px;
+	border: 1px solid #f6f5f4;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: #ffffff;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+.welcome .social-plugins strong {
+	display: block;
+	color: #313131;
+	text-align: center;
+	text-shadow: #d5d5d3!important;
+	font-size: 14px;
+	line-height: 55px;
+	width: 225px;
+	float: left;
+}
+.welcome .social-plugins ul,
+.welcome .social-plugins li {
+	list-style: none;
+	height: 65px;
+}
+.welcome .social-plugins li {
+	width: 50px;
+	margin-right: 10px;
+	float: left;
 }
 /**
  * Define styles for upload

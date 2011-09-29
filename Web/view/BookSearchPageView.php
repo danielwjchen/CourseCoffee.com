@@ -98,13 +98,6 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 					<div class="social">
 						<div href="{$base_url}" class="fb-like" data-send="false" data-width="450" data-show-faces="false"></div>
 						<g:plusone size="medium"></g:plusone>
-						<script type="text/javascript">
-							(function() {
-								var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-								po.src = 'https://apis.google.com/js/plusone.js';
-								var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-							})();
-						</script>
 					</div>
 			</div>
 		</div>

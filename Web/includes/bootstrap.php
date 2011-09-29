@@ -16,6 +16,7 @@ define('FILE_CACHE_PATH', FILE_PATH . '/cache');
 
 require_once INCLUDES_PATH . '/Autoloader.php';
 require_once INCLUDES_PATH . '/Config.php';
+require_once INCLUDES_PATH . '/Emailer.php';
 require_once INCLUDES_PATH . '/Session.php';
 require_once INCLUDES_PATH . '/DB.php';
 require_once INCLUDES_PATH . '/File.php';

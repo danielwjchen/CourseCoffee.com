@@ -340,6 +340,13 @@ HTML;
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<meta http-equiv='data-type' data='text/html;charset=UTF-8' /> 
 		<meta http-equiv='Pragma' data='no-cache' /> 
+		<script type="text/javascript">
+			(function() {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			})();
+		</script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 		<title>{$title}</title>
