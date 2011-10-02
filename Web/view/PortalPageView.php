@@ -61,6 +61,7 @@ class PortalPageView extends PageView implements PageViewInterface {
 									<option value="default">Please select school.</option>
 									<option value="msu.{$domain}">Michigan State University</option>
 									<option value="umich.{$domain}">University of Michigan</option>
+									<option value="wayne.{$domain}">Wayne State University</option>
 								</select>
 							</div>
 						</form>
