@@ -92,7 +92,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 										<g:plusone size="tall"></g:plusone>
 									</li>
 									<li>
-										<a href="https://twitter.com/share" class="twitter-share-button" data-url="www.coursecoffee.com" data-text="College made easy." data-count="vertical" data-via="CourseCoffee">Tweet</a>
+										<a href="https://twitter.com/share" class="twitter-share-button" data-url="coursecoffee.com" data-text="College made easy." data-count="vertical" data-via="CourseCoffee">Tweet</a>
 										<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 									</li>
 								</ul>
