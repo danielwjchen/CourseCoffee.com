@@ -25,7 +25,7 @@ function grabPattern($pattern, $string) {
 
 function load($file) {
 	global $config;
-	$db = new DB($config->db['institution']['wayne']);
+	$db = new DB($config->db['institution']['osu']);
 
 	$ouput = '';
 
@@ -132,6 +132,7 @@ function load($file) {
 	}
 }
 // list of generated book list. the inactive ones are commented out
-$book_list_file = 'wayne_BN';
+//$book_list_file = 'wayne_BN';
+$book_list_file = 'OSU_BN';
 
 load($book_list_file);
