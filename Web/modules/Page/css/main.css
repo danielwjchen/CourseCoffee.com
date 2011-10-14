@@ -1,0 +1,438 @@
+/**
+ * @file
+ * Define styles shared across pages.
+ */
+* {
+  margin:0;
+  padding:0;
+}
+body,
+html {
+	padding: 0;
+	margin: 0;
+  height: 100%;
+}
+body{
+	font-family: Sans-Serif;
+	background: #457319;
+	overflow-y: scroll;
+}
+
+div{
+	padding:0;
+	margin:0;
+	position:relative;
+	display:block;
+}
+h1, h2, h3 {
+	font-weight: bold;
+	color: #333333;
+	padding: 0;
+	margin: 0;
+	text-shadow: 0 0 4px #D5D4D2;
+	-moz-text-shadow: 0 0 4px #D5D4D2;
+	-webkit-text-shadow: 0 0 4px #D5D4D2;
+}
+
+h1 {
+	font-size: 24px;
+}
+
+h2 {
+	font-size: 18px;
+}
+
+h3 {
+	font-size: 18px;
+}
+
+ul, li{
+	padding:0;
+	margin:0;
+}
+dl{
+	font-size:12px;
+}
+dl dt{
+	font-size:16px;
+}
+dl dl{
+	margin:0;
+}
+dl dl dt{
+	font-size:14px;
+}
+dt{
+	margin:5px 0;
+}
+hr {
+	margin: 15px 20px;
+}
+textarea {
+	font-family: Sans-Serif;
+}
+.no-scroll {
+	overflow: hidden;
+}
+.hidden {
+	display: none;
+}
+.double-underline {
+	border-bottom: 1px #3f6c19 solid;
+	display: block;
+	width: 45px;
+	text-align:center;
+}
+.double-underline a {
+	font-weight: bold;
+	color: #3f6c19;
+	display: block;
+	width: 45px;
+}
+.double-underline a:active {
+	color: #3f6c19;
+}
+/**
+ * Define styles for sticky footer
+ */
+.container{
+  min-height: 100%;
+  margin-bottom: -160px;
+}
+.container-inner{
+  overflow:auto;
+  padding-bottom: 60px;
+	background: #457319;
+	background-image: -moz-linear-gradient(#9cc24c, #457319);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#9cc24c), to(#457319)); 
+}
+/**
+ * Define styles for header, body, and footer sections
+ */
+.header,
+.body,
+.footer{
+	width: 100%;
+	clear: both;
+	padding: 0;
+	margin: 0;
+}
+.header-inner,
+.body-inner,
+.footer-inner{
+	padding: 0;
+	margin: 0 auto;
+}
+.system-message {
+	margin: 70px auto -70px;
+	width: 956px;
+	border: 2px solid #fb8200;
+}
+.system-message-inner {
+	background: #ffe3a5;
+	color: #787474;
+}
+.system-message-inner p {
+	padding: 5px;
+}
+
+/** 
+ * Define styles for the header section
+ */
+.header{
+	height: 40px;
+	background: #313131;
+	background-image: -moz-linear-gradient(#313131, #5e5b5b);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
+	-moz-box-shadow: 0 0 15px #333;
+	-webkit-box-shadow: 0 0 15px #333;
+	box-shadow: 0 0 15px #333;
+	position: fixed;
+	top: 0;
+	z-index: 8;
+}
+.header-inner{
+	width: 960px;
+}
+
+/** 
+ * Define styles for the body section
+ */
+.body {
+	margin: 115px 0;
+	min-height: 500px;
+	z-index: 7;
+}
+.body-inner{
+	width: 960px;
+}
+.content{
+	z-index: 10;
+	float: left;
+	width: 958px;
+	border: 1px solid #f6f5f4;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: #ffffff;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+
+/**
+ * Define styles for panels
+ */
+.panel-top{
+	position: relative;
+	width: 958px;
+	clear: both
+}
+.panel-top .panel-inner{
+}
+.panel-01,
+.panel-02,
+.panel-03{
+	float: left;
+	width: 469px;
+	position: relative;
+	padding: 5px;
+}
+.panel-01 .panel-inner,
+.panel-02 .panel-inner,
+.panel-03 .panel-inner{
+	padding: 5px;
+	width: 459px;
+	float: left;
+}
+
+.panel-01 {
+	margin-right: -479px;
+  clear: left;
+}
+.panel-02 {
+	margin-left: 479px;
+	margin-right: -958px;
+}
+.panel-03 {
+	z-index: 9;
+	min-height: 400px;
+	margin-top: 15px;
+	margin-left: 479px;
+	margin-right: -1437px;
+  padding-bottom: 150px;
+	border: solid #f6f5f4;
+	border: 1px 1px 1px 0;
+	border-radius: 0 8px 8px 0;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: #ffffff;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+
+.panel-03 a#remove-panel{
+	position: absolute;
+	bottom: 260px;
+	right: -15px;
+	width: 25px;
+	height: 125px;
+	z-index: 11;
+	background: url('../images/back.png') -34px center no-repeat;
+	/*
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: #ffffff;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, right bottom, from(#ffffff), to(#d5d4d2)); 
+	*/
+}
+.panel-03 a#remove-panel:hover {
+	background: url('../images/back.png') 0 center no-repeat;
+}
+
+/**
+ * Degine styles for loading
+ */
+.loading {
+	background: url('../images/loading.gif') center center no-repeat;
+}
+/**
+ * Define styles for orange buttons
+ */
+.button{
+	color: white;
+	display: block;
+	border: 1px solid #ff8400;
+	border-radius: 4px;
+	text-align: center;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 0 6px #8a4c0a;
+	-moz-text-shadow: 0 0 6px #8a4c0a;
+	-webkit-text-shadow: 0 0 6px #8a4c0a;
+	background: #ff8400;
+	background-image: -moz-linear-gradient(#ff8400, #d06e06);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
+}
+.button:hover{
+	text-shadow: 0 0 3px #fff;
+	-moz-text-shadow: 0 0 3px #fff;
+	-webkit-text-shadow: 0 0 3px #fff;
+}
+.button:active{
+	-moz-box-shadow: inset 0 0 15px 15px #d06e06;
+	-webkit-box-shadow: inset 0 0 15px 15px#d06e06;
+	box-shadow: inset 0 0 15px 15px #d06e06;
+}
+.button.disabled {
+	background: #868c8f !important;
+	border: #868c8f !important;
+	color: #b3b5b7 !important;
+	text-shadow: none !important;
+	pointer-events: none;
+	cursor: default;
+}
+/**
+ * Define styles for facebook button
+ */
+.button.facebook {
+	background: #627AAD;
+	border: 1px solid #1A3C6C;
+	text-shadow: 0 0 6px #1A3C6C;
+	-moz-text-shadow: 0 0 6px #1A3C6C;
+	-webkit-text-shadow: 0 0 6px #1A3C6C;
+	background-image: -moz-linear-gradient(#627AAD, #1A3C6C);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#627AAD), to(#1A3C6C)); 
+}
+.button.facebook:active {
+	-moz-box-shadow: inset 0 0 15px 15px #1A3C6C;
+	-webkit-box-shadow: inset 0 0 15px 15px#1A3C6C;
+	box-shadow: inset 0 0 15px 15px #1A3C6C;
+}
+
+/**
+ * Define styles for detail panel
+ */
+.details{
+	width: 449px;
+	padding: 0 5px;
+	font-size: 12px;
+}
+.details-inner{
+	width: 449px;
+	padding: 0 5px;
+}
+.details textarea{
+	width: 439px;
+	height: 50px;
+	margin: 5px;
+}
+.details #submit{
+	float: right;
+	margin-bottom: 25px;
+}
+.details ul,
+.details li{
+	list-style: none;
+}
+.details ul{
+}
+.details li{
+	clear: both;
+}
+.details li p{
+	width: 375px;
+	float: left;
+	margin: 0;
+	padding: 0;
+	margin-left: 60px;
+	margin-bottom: 25px
+}
+.details .comment-author-image{
+	padding: 5px;
+	float: left;
+	width: 50px;
+	margin-left: 0;
+	margin-right: -60px;
+}
+.new-course{
+	background: url("../images/body-background-off-focus.png") repeat;
+}
+.course-add-inner {
+	background: #ffffff;
+}
+
+/** 
+ * Define styles for footer 
+ */
+/* clear-fix in only used on pages where content isn't enough to push down the page, e.g. /book-search, /welcome */
+.clear-fix, 
+.footer {
+	height: 160px;
+	clear: both;
+}
+.footer {
+	position: relative;
+	bottom: 0;
+	background: #313131;
+	background-image: -moz-linear-gradient(#313131, #5e5b5b);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
+	-moz-box-shadow: 15px 0 0 #333;
+	-webkit-box-shadow: 15px 0 0 #333;
+	box-shadow: 15px 0 0 #333;
+}
+.footer-inner{
+	width: 960px;
+	margin 0 auto;
+}
+
+/**
+ * Define style for day-time selector
+ */
+.ui-datetime{
+	font-size: 10px;
+	top: 30px;
+}
+
+/**
+ * Define style for scrollable regions
+ */
+.scrollable {
+	overflow: hidden;
+	height: 400px;
+	width: 459px;
+	position: relative;
+}
+.scrollable-inner {
+	overflow: auto;
+	width: 459px;
+	height: 400px;
+}
+/**
+ * @to-do
+ * Disabled due lack of time to implement javascript scroll bar
+.scrollable .scroll-bar {
+	width: 8px;
+	height: 75px;
+	display: block;
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	background: #2395d6;
+	border: 1px #2395d6 solid;
+	border-radius: 8px;
+	box-shadow: 0 0 1px 1px #2395d6;
+	filter: alpha(opacity=20);
+	opacity: 0.2;
+}
+.scrollable .scroll-bar:hover {
+	width: 13px;
+	border-radius: 8px;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+*/
