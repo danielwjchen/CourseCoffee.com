@@ -2,6 +2,12 @@
 /**
  * @file
  * Manage logging
+ *
+ * @to-do
+ *  implement syslog as a loggin option, a database logging method, and log file
+ *  harvest method
+ *
+ * This class implements a singleton design. Be careful with that.
  */
 class Logger {
 
@@ -32,9 +38,29 @@ class Logger {
 	 */
 
 	/**
-	 * Initialize the logger
+	 * Singleton instance
+	 */
+	public static $instance;
+
+	/**
+	 * Initialize a Logger instance
 	 */
 	public static function Init() {
+		if (self::$instance == null) {
+			self::$instance = new static();
+		}
+	}
+
+	/**
+	 * Write event to log
+	 *
+	 * @param string $event
+	 *  a string that describes the event
+	 * @param string $severity
+	 *  a string that describes the severity of the event, default to NOTE
+	 */
+	public function writeLog($event, $severity = self::SEVERITY_NOTICE) {
+		error_log($severity . ' - ' . $event . ' IP - ' . $_SERVER['REMOTE_ADDR']);
 	}
 
 	/**
@@ -46,6 +72,7 @@ class Logger {
 	 *  a string that describes the severity of the event, default to NOTE
 	 */
 	public static function Write($event, $severity = self::SEVERITY_NOTICE) {
-		error_log($severity . ' - ' . $event . ' IP - ' . $_SERVER['REMOTE_ADDR']);
+		self::Init();
+		self::$instance->writeLog($event, $severity);
 	}
 }

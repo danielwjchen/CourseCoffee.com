@@ -154,7 +154,7 @@ class File {
 	 *  An associative array (keyed on the chosen key) of objects with 'uri', 
 	 *  'filename', and 'name' members corresponding to the matching files.
 	 */
-	public static function ScanDirectory($dir, $mask, $options = array(), $depth = 0) {
+	public static function Scan($dir, $mask, $options = array(), $depth = 0) {
 		// Merge in defaults.
 		$options += array(
 			'nomask' => '/(\.\.?|CVS)$/',
@@ -172,7 +172,7 @@ class File {
 					$uri = "$dir/$filename";
 					if (is_dir($uri) && $options['recurse']) {
 						// Give priority to files in this folder by merging them in after any subdirectory files.
-						$files = array_merge(self::ScanDirectory($uri, $mask, $options, $depth + 1), $files);
+						$files = array_merge(self::Scan($uri, $mask, $options, $depth + 1), $files);
 					}
 					elseif ($depth >= $options['min_depth'] && preg_match($mask, $filename)) {
 						// Always use this match over anything already set in $files with the

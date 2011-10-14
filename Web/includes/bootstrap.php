@@ -2,29 +2,25 @@
 
 define('INCLUDES_PATH', __DIR__);
 define('ROOT_PATH', str_replace('includes', '', INCLUDES_PATH));
-define('CACHE_PATH', ROOT_PATH . '/cache');
-define('SETTING_PATH', ROOT_PATH . '/setting');
-define('SCHEMA_PATH', ROOT_PATH . '/schema');
-define('DAO_PATH', ROOT_PATH . '/dao');
-define('CONTROLLER_PATH', ROOT_PATH . '/controller');
-define('MODEL_PATH', ROOT_PATH . '/model');
-define('VIEW_PATH', ROOT_PATH . '/view');
-define('LIB_PATH', ROOT_PATH . '/lib');
+define('MODULES_PATH', ROOT_PATH . '/modules');
 define('FILE_PATH', ROOT_PATH . '/files');
 define('FILE_CACHE_PATH', FILE_PATH . '/cache');
 
 
 require_once INCLUDES_PATH . '/Autoloader.php';
 require_once INCLUDES_PATH . '/Config.php';
-require_once INCLUDES_PATH . '/Emailer.php';
+require_once INCLUDES_PATH . '/Mailer.php';
 require_once INCLUDES_PATH . '/Session.php';
 require_once INCLUDES_PATH . '/DB.php';
 require_once INCLUDES_PATH . '/File.php';
-require_once INCLUDES_PATH . '/Router.php';
 require_once INCLUDES_PATH . '/Logger.php';
 require_once INCLUDES_PATH . '/Crypto.php';
 require_once INCLUDES_PATH . '/Cache.php';
 require_once INCLUDES_PATH . '/Cookie.php';
+
+require_once INCLUDES_PATH . '/modules/Controller.php';
+require_once INCLUDES_PATH . '/modules/Model.php';
+require_once INCLUDES_PATH . '/modules/View.php';
 
 /**
  * PHP settings:

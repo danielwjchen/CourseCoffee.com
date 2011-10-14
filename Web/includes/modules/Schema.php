@@ -1,22 +1,88 @@
 <?php
 /**
  * @file
- * Perform database administrative tasks
- *
- * This is heavily influenced by drupal 6.
- */ 
+ * Define the database schema to be created in a Schema request
+ */
+interface SchemaInterface {
 
-require_once INCLUDES_PATH . '/modules/Schema.php';
+	/**
+	 * Get the database which the schema will be appied to.
+	 *
+	 * @return array
+	 */
+	public function getDB() ;
+
+	/**
+	 * Get the definition of a database schema
+	 *
+	 * @return array $definition
+	 *  an associative array that uses keys and values to define a table
+	 *  - name
+	 *  - columns
+	 *  - key (optional)
+	 */
+	public function getDefinition();
+}
 
 /**
- * Handle database administrative tasks.
+ * Base class for child Schema classes that declare their tables in the default
+ * database.
  */
-class SchemaInvoker{
+class DefaultSchema {
+	/**
+	 * Get default database
+	 */
+	public function getDB() {
+		return array('default');
+	}
+}
+
+/**
+ * Base class for child Schema classes that declare their tables in institution
+ * databases.
+ */
+class InstitutionSchema {
+	/**
+	 * Get institution databases
+	 */
+	public function getDB() {
+		global $config;
+		return array_keys($config->db['institution']);
+	}
+}
+
+/**
+ * Base class for all SchemaInterface inplementation
+ */
+abstract class Schema {
+
+	/**
+	 * Singleton instance
+	 */
+	public static $instance;
 
 	/**
 	 * an associative array of PDO database connection
 	 */
-	static private $db;
+	private $db;
+
+	/**
+	 * 
+	 * @param array $config_db
+	 *  an associative array that defines the database configuration
+	 */
+	function __construct($config_db) {
+		$this->db['default'] = new DB($config_db['default']);
+		foreach ($config_db['institution'] as $name => $connection) {
+			$this->db[$name] = new DB($connection);
+		}
+		
+
+	}
+
+	function __destruct() {
+		$this->db = null;
+	}
 
 	/**
 	 * This maps a generic data type in combination with its data size
@@ -26,7 +92,7 @@ class SchemaInvoker{
    * it much easier for modules (such as schema.module) to map
    * database types back into schema types.
 	 */
-	static private function type_map($type) {
+	private function type_map($type) {
 		$map = array(
 			'varchar:normal'  => 'VARCHAR',
 			'char:normal'     => 'CHAR',
@@ -72,7 +138,7 @@ class SchemaInvoker{
 	 * @param $field
 	 *   A field description array, as specified in the schema documentation.
 	 */
-	static private function process_column($column) {
+	private function process_column($column) {
 
 		if (!isset($column['size'])) {
 			$column['size'] = 'normal';
@@ -101,7 +167,7 @@ class SchemaInvoker{
 	 * @param $spec
 	 *    The field specification, as per the schema data structure format.
 	 */
-	static private function create_column_sql($name, $spec) {
+	private function create_column_sql($name, $spec) {
 		$sql = "`". $name ."` ". $spec['mysql_type'];
 
 		if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
@@ -140,7 +206,7 @@ class SchemaInvoker{
 	/**
 	 * Create the key columns in an SQL query.
 	 */
-	static private function create_key_sql($keys) {
+	private function create_key_sql($keys) {
 		$key_array = array();
 		foreach ($keys as $key) {
 			if (is_array($key)) {
@@ -169,8 +235,9 @@ class SchemaInvoker{
 	 * @return array $schema_sql
 	 *  an array of key clause SQL queries
 	 */
-	static private function alter_key_sql($table_new, $table_old) {
+	private function alter_key_sql($table_new, $table_old) {
 		$schema_sql  = array();
+
 		$add_sql  = array();
 		$drop_sql = array();
 		$key_type = array('primary', 'unique', 'index');
@@ -245,16 +312,17 @@ class SchemaInvoker{
 	*/
 
 	/**
-	 * Initialize the SchemaInvoker
+	 * Initialize an Emailer instance
+	 *
+	 * This checks if an instance of this class already exists
 	 */
-	static function Init() {
+	public static function Init() {
 		global $config;
-		self::$db['default'] = new DB($config->db['default']);
-		foreach ($config->db['institution'] as $name => $connection) {
-			self::$db[$name] = new DB($connection);
+		if (self::$instance == null) {
+			self::$instance = new static($config->db);
 		}
-		
 	}
+
 
 	/**
 	 * Process a Schema Request.
@@ -414,7 +482,7 @@ class SchemaInvoker{
 	 *
 	 * @return bool $result
 	 */
-	static function Alter($schema_database, $schema_new, $schema_old) {
+	public static function Alter($schema_database, $schema_new, $schema_old) {
 		global $config;
 
 		$update_tables  = array();

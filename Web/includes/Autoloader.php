@@ -17,6 +17,8 @@ class Autoloader {
 	 * @}
 	 */
 
+	const MODULE_PATTERN = '/(Cache|Controller|DAO|Model|Schema|Setting|View)\.php$/';
+
 	/**
 	 * Singleton instance
 	 */
@@ -34,20 +36,16 @@ class Autoloader {
 	private $db;
 
 	/**
-	 * 
+	 * Default constructor 
 	 * @param array $config_db
 	 *  an associative array that defines the database configuration
 	 */
 	function __construct($config_db) {
 		$this->db = new DB($config_db);
 		$this->paths = array(
-			CACHE_PATH      => '/Cache\.php$/',
-			SETTING_PATH    => '/Setting\.php$/',
-			SCHEMA_PATH     => '/Schema\.php$/',
-			DAO_PATH        => '/DAO\.php$/',
-			MODEL_PATH      => '/Model\.php$/',
-			CONTROLLER_PATH => '/Controller\.php$/',
-			VIEW_PATH       => '/View\.php$/',
+			INCLUDES_PATH . '/modules' => self::MODULE_PATTERN,
+			MODULES_PATH => self::MODULE_PATTERN,
+			CACHE_PATH => '/Cache\.php$/',
 		);
 
 	}
@@ -83,7 +81,7 @@ class Autoloader {
 		";
 		$classes = array();
 		foreach ($this->paths as $path => $pattern) {
-			$classes = array_merge($classes, FILE::ScanDirectory($path, $pattern));
+			$classes = array_merge($classes, File::Scan($path, $pattern));
 		}
 		foreach ($classes as $path => $file) {
 			$this->db->perform(
@@ -105,6 +103,7 @@ class Autoloader {
 		);
 
 		if (empty($record['path'])) {
+	echo $classname . '<br />';
 			Logger::write(self::FAIL_EMPTY_PATH . ' - ' . $classname, Logger::SEVERITY_HIGH);
 			header('Location: /all-system-down');
 		}
