@@ -2,7 +2,9 @@
  * @file
  * Define popup modal
  *
- * The modal style is defined in css/modal.css
+ * @see css/modal.css
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
 window.Modal = function() {
 	/**

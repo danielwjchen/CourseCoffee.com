@@ -17,10 +17,18 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Implement ControllerInterface::defineRouting()
+	 * Implement ControllerInterface::Route()
 	 */
 	public static function Route() {
 		return array(
+			'get401Page' => array(
+				'401.html',
+				'unauthorized',
+			),
+			'get403Page' => array(
+				'403.html',
+				'forbidden',
+			),
 			'get404Page' => array(
 				'404.html',
 				'page-not-found',
@@ -32,14 +40,26 @@ class PageController extends Controller implements ControllerInterface {
 		);
 	}
 
-	public function beforeAction() {
+	/**
+	 * Implement ControllerInterface::action()
+	 */
+	public function action($callback, array $params = null) {
+		call_user_func_array(array($this, $callback), $params);
+		echo $this->output->render();
 	}
 
 	/**
-	 * Execute method after action is taken
+	 * Get the 401 output
 	 */
-	public function afterAction() {
-		echo $this->output->render();
+	public function get401Page() {
+		$this->output = new UnauthorizedPageView();
+	}
+	
+	/**
+	 * Get the 403 output
+	 */
+	public function get403Page() {
+		$this->output = new ForbiddenPageView();
 	}
 
 	/**

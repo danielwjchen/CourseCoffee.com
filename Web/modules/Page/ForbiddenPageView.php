@@ -1,24 +1,27 @@
 <?php
 /**
  * @file
- * Generate the InternalError page for visiters
+ * Generate 403 error HTML
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
-class InternalErrorPageView extends PageView implements PageViewInterface {
+class ForbiddenPageView extends PageView implements PageViewInterface {
 
 	/**
 	 * Extend PageView::__construct().
 	 */
 	function __construct($data = null) {
 		parent::__construct($data);
-		$this->setPageTitle('500 Internal Server Error');
-		$this->addCSS('Page/internal-error');
+		$this->setPageTitle('403 Forbidden');
+		$this->addJQuery();
+		$this->addCSS('Page/forbidden');
 	}
 
 	/**
 	 * Override View::getHeader()
 	 */
 	protected function getHeader() {
-    header(self::INTERNAL_ERROR);
+    header(self::FORBIDDEN);
 	}
 
 	/**
@@ -48,16 +51,16 @@ class InternalErrorPageView extends PageView implements PageViewInterface {
 				{$header}
 			</div>
 		</div>
-		<div class="internal-error body">
+		<div class="forbidden body">
 			<div class="body-inner">
-			<h1>500 Internal Server Error</h1>
+				<h1>403 Forbidden</h1>	
 			</div>
 		</div>
 	</div>
 </div>
 <div class="footer">
 	<div class="footer-inner">
-		{$footer}
+	{$footer}
 	</div>
 </div>
 HTML;

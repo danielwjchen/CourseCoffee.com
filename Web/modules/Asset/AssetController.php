@@ -29,20 +29,10 @@ class AssetController {
 	}
 
 	/**
-	 * Implement Controller::beforeAction()
-	 *
-	 *  this is a stub!
+	 * Implement ControllerInterface::action()
 	 */
-	public function beforeAction() {
-
-	}
-
-	/**
-	 * Implement ControllerInterface::afterAction()
-	 *
-	 *  this is a stub!
-	 */
-	public function afterAction() {
+	public function action($callback, array $params = null) {
+		call_user_func_array(array($this, $callback), $params);
 	}
 
 	/**

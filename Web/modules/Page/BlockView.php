@@ -2,13 +2,14 @@
 /**
  * @file
  * Base class for all child BlockViews
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
-
 interface BlockViewInterface {
 	public function getContent();
 }
 
-abstract class BlockView extends View implements ViewInterface {
+abstract class BlockView extends HTMLView implements ViewInterface {
 
 	/**
 	 * Override View::__construct()

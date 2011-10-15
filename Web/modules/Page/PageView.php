@@ -27,7 +27,7 @@ interface PageViewInterface {
 
 }
 
-abstract class PageView extends View implements ViewInterface {
+abstract class PageView extends HTMLView implements ViewInterface {
 
 	const CONTENT_TYPE = 'text/html; charset=utf-8';
 
