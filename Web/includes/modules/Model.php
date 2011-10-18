@@ -28,7 +28,7 @@ abstract class Model {
 	function __construct($domain) {
 		global $config;
 		$this->default_db = new DB($config->db['default']);
-		if ($domain != 'www') {
+		if ($domain != 'www' && $domain != '') {
 			$this->institution_db = new DB($config->db['institution'][$domain]);
 		}
 
@@ -43,7 +43,7 @@ abstract class Model {
 	 */
 	private function instantiateDAO($dao_array) {
 		foreach ($dao_array as $name => $definition) {
-			$this->dao[$name] = new $definition['class']($this->$definition['db']);
+			$this->dao[$name] = new $definition['dao']($this->$definition['db']);
 		}
 	}
 

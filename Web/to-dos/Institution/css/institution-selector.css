@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Define styles for institution selector
+ */
+#institution-domain-form select {
+	width: 500px;
+	height: 30px;
+	margin: 25px 0;
+	font-size: 24px;
+	font-weight: bold;
+}
+#institution-domain-form option {
+	height: 30px;
+	line-height: 30px;
+}

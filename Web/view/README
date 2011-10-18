@@ -1,9 +1,0 @@
-== README ==
-This directory contains classes serve as the "View" in the Model-view-controller 
-(MVC) software architecture concept. All model classes are child classes of View,
-which is defined in View.php.
-
-== Base classes ==
- - View
- - BlockView
- - PageView

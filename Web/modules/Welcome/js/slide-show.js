@@ -1,5 +1,7 @@
 /**
  * Display a series of images in an animated slide show
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
 window.SlideShow = function(regionName) {
 
@@ -62,7 +64,7 @@ window.SlideShow = function(regionName) {
      
     // Call the gallery function to run the slideshow, 6000 = change to next
 		// image after 2 seconds
-    setInterval('_loop()', 5000);
+    setInterval('_loop()', 6000);
 	};
 };
  

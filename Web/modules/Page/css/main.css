@@ -239,7 +239,7 @@ textarea {
 	width: 25px;
 	height: 125px;
 	z-index: 11;
-	background: url('../images/back.png') -34px center no-repeat;
+	background: url('/images/back.png') -34px center no-repeat;
 	/*
 	border-radius: 8px;
 	-moz-box-shadow: 2px 2px #003d01;
@@ -251,14 +251,14 @@ textarea {
 	*/
 }
 .panel-03 a#remove-panel:hover {
-	background: url('../images/back.png') 0 center no-repeat;
+	background: url('/images/back.png') 0 center no-repeat;
 }
 
 /**
  * Degine styles for loading
  */
 .loading {
-	background: url('../images/loading.gif') center center no-repeat;
+	background: url('/images/loading.gif') center center no-repeat;
 }
 /**
  * Define styles for orange buttons
@@ -360,7 +360,7 @@ textarea {
 	margin-right: -60px;
 }
 .new-course{
-	background: url("../images/body-background-off-focus.png") repeat;
+	background: url("/images/body-background-off-focus.png") repeat;
 }
 .course-add-inner {
 	background: #ffffff;

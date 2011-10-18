@@ -15,7 +15,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 		$this->setPageTitle('welcome');
 		$this->addJS('User/login');
 		$this->addJS('User/signup');
-		$this->addJS('User/doc');
+		$this->addJS('Document/doc');
 		$this->addJS('Welcome/slide-show');
 		$this->addJS('Welcome/welcome');
 		$this->addCSS('Page/modal');

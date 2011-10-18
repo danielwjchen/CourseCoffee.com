@@ -49,6 +49,16 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Implement ControllerInterface::getDefaultAction()
+	 *
+	 * Default behavior is 404 Page not found.
+	 */
+	public function getDefaultAction() {
+		Logger::Write(self::ERROR_404 . ' - ' . $uri, Logger::SEVERITY_LOW);
+		$this->output = new NotFoundPageView();
+	}
+
+	/**
 	 * Get the 401 output
 	 */
 	public function get401Page() {

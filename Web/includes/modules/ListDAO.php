@@ -18,7 +18,7 @@ interface ListDAOInterface {
 	 *      - count
 	 *   - like: optional, this would perform string matching
 	 */
-	public function read($params) ;
+	public function read(array $params = null) ;
 
 }
 

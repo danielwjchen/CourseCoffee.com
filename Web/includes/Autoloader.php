@@ -103,7 +103,6 @@ class Autoloader {
 		);
 
 		if (empty($record['path'])) {
-	echo $classname . '<br />';
 			Logger::write(self::FAIL_EMPTY_PATH . ' - ' . $classname, Logger::SEVERITY_HIGH);
 			header('Location: /all-system-down');
 		}

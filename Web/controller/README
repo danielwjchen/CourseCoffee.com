@@ -1,7 +1,0 @@
-== README ==
-This directory contains classes serve as the "Controller" in the Model-view-controller 
-(MVC) software architecture concept. All model classes are child classes of Controller,
-which is defined in Controller.php.
-
-== Base classes = 
- - Controller

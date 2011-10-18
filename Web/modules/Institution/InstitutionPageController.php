@@ -7,6 +7,16 @@
  */
 class InstitutionPageController extends PageController implements ControllerInterface {
 
+	/**
+	 * Default home page
+	 */
+	const PAGE_DEFAULT   = '/portal';
+	const PAGE_PORTAL    = '/portal';
+	const PAGE_WELCOME   = '/welcome';
+	const PAGE_HOME      = '/home';
+	const DEFAULT_DOMAIN = 'www';
+
+
 	protected $user_session;
 	protected $sub_domain;
 	protected $supported_domain;

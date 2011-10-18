@@ -16,7 +16,7 @@ require_once __DIR__ . '/config.php';
  */
 require_once INCLUDES_PATH . '/SchemaInvoker.php';
 SchemaInvoker::Init();
-$dbas = File::ScanDirectory(SCHEMA_PATH, '/^[a-zA-Z]+Schema\.php$/');
+$dbas = File::Scan(SCHEMA_PATH, '/^[a-zA-Z]+Schema\.php$/');
 foreach ($dbas as $path => $dba) {
 	try {
 		SchemaInvoker::Request($dba->name, $dba->uri);
@@ -31,6 +31,13 @@ foreach ($dbas as $path => $dba) {
 Autoloader::Build();
 
 /**
+ * Auto-load necessary files
+ */
+function __autoload($classname) {
+	Autoloader::Resolve($classname);
+}
+
+/**
  * Rebuild URI maps for routing
  */
 Router::Build();
@@ -38,5 +45,5 @@ Router::Build();
 /**
  * Update setting records in Database
  */
-require_once SETTING_PATH . '/Setting.php';
+require_once INCLUDES_PATH . '/modules/Setting.php';
 Setting::Populate();

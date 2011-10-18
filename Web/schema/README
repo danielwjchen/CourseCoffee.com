@@ -1,5 +1,0 @@
-== README ==
-Schema classes handle table schemas in the database. They are orgnaize in a way
-so they can be seperated into individual database and still be functional.
-
-The future plan is to incoporate it with DAO to minimize code duplication.

@@ -19,7 +19,6 @@ class DB{
 	 *
 	 */
 	function __construct($config) {
-
 		try {
 			$this->pdo = new PDO(
 				$config['driver'].':dbname='.$config['name'].';host='.$config['host'].';port='.$config['port'], 
@@ -28,7 +27,7 @@ class DB{
 			);
 
 		} catch (PDOException $e) {
-			echo 'Fail to init PDO: ' . $e->getMessage() . ' - ' . $config;
+			echo 'Fail to init PDO: ' . $e->getMessage() . ' - ' . print_r($config, true);
 		}
 	}
 
