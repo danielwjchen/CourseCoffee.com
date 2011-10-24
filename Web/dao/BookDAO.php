@@ -17,8 +17,7 @@ class BookDAO extends DAO implements DAOInterface {
 	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
-		if (!isset($params['isbn'])) 
-		{
+		if (!isset($params['isbn']))  {
 			throw new Exception('incomplete book params - ' . print_r($params, true));
 			return false;
 
@@ -64,11 +63,13 @@ class BookDAO extends DAO implements DAOInterface {
 	public function update() {
 		$sql = "
 			UPDATE `book` SET
+				title = :title,
 				isbn = :isbn
 			WHERE id = :id
 		";
 
 		$this->db->perform($sql, array(
+			'title' => $this->attr['title'],
 			'isbn' => $this->attr['isbn'],
 			'id' => $this->attr['id']
 		));

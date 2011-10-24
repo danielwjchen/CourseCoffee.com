@@ -41,7 +41,7 @@ class BookSuggestModel extends Model {
 	/**
 	 * Access to book list record
 	 */
-	protected $book_dao;
+	protected $book_list_dao;
 	protected $list;
 	protected $cache;
 
@@ -50,10 +50,11 @@ class BookSuggestModel extends Model {
 	 */
 	function __construct($sub_domain) {
 		parent::__construct($sub_domain);
-		$this->amazonSearch = new AmazonAPI();
-		$this->cache = new DBCache();
-		$this->book_dao = new BookListDAO($this->institution_db);
-		$this->crawler_dao = new BookCrawlerQueueDAO($this->default_db);
+		$this->amazonSearch  = new AmazonAPI();
+		$this->cache         = new DBCache();
+		$this->book_list_dao = new BookListDAO($this->institution_db);
+		$this->book_dao      = new BookDAO($this->institution_db);
+		$this->crawler_dao   = new BookCrawlerQueueDAO($this->default_db);
 	}
 
 	/**
@@ -63,16 +64,16 @@ class BookSuggestModel extends Model {
 	 * me know if you've found a two-way hash that can replace this.
 	 */
 	protected function encodeBookCacheKey() {
-		return gzcompress(json_encode($this->book_dao->list, true));
-		return Crypto::Digest(json_encode($this->book_dao->list, true));
+		return gzcompress(json_encode($this->book_list_dao->list, true));
+		return Crypto::Digest(json_encode($this->book_list_dao->list, true));
 	}
 
 	/**
 	 * Decompress the cache key to get the book list
 	 */
 	protected function decodeBookCacheKey($cache_key) {
-		$this->book_dao->list = json_decode(gzuncompress($cache_key), true);
-		return count($this->book_dao->list) == 1 ? self::BOOK_FOUND_SINGLE : self::BOOK_FOUND_MULTIPLE;
+		$this->book_list_dao->list = json_decode(gzuncompress($cache_key), true);
+		return count($this->book_list_dao->list) == 1 ? self::BOOK_FOUND_SINGLE : self::BOOK_FOUND_MULTIPLE;
 	}
 
 	/**
@@ -81,30 +82,52 @@ class BookSuggestModel extends Model {
 	 * @return string
 	 */
 	protected function generateBookList($section_id) {
-		$has_reading = $this->book_dao->read(array('section_id' => $section_id));
+		$has_reading = $this->book_list_dao->read(array('section_id' => $section_id));
 		
 		// debug
-		// error_log('asdfsadf' . print_r($this->book_dao->list, true));
+		// error_log('asdfsadf' . print_r($this->book_list_dao->list, true));
 
 		if (!$has_reading) {
 			return self::BOOK_FOUND_NONE;
 		}
 
-		return count($this->book_dao->list) == 1 ? self::BOOK_FOUND_SINGLE : self::BOOK_FOUND_MULTIPLE;
+		return count($this->book_list_dao->list) == 1 ? self::BOOK_FOUND_SINGLE : self::BOOK_FOUND_MULTIPLE;
 	}
 
 	/**
 	 * Process book list and query vendor APIs
 	 */
 	protected function processBookList() {
-		$book_list = $this->book_dao->list;
+		$book_list = $this->book_list_dao->list;
 		$list = array();
 		for ($i = 0; $i < count($book_list); $i++) {
+			$id    = $book_list[$i]['id'];
+			$title = $book_list[$i]['title'];
+			$isbn  = $book_list[$i]['isbn'];
+			$image = '';
 			try {
-				$isbn = $book_list[$i]['isbn'];
-				$this->amazonSearch->searchBookIsbn($isbn);
-				$title = (string)$this->amazonSearch->getTitle();
+				if (!empty($isbn)) {
+					$this->book_dao->read(array('id' => $id));
+					$this->amazonSearch->searchBookIsbn($isbn);
+					$title = (string)$this->amazonSearch->getTitle();
+					$this->book_dao->title = $title;
+					$this->book_dao->update();
+
+
+				} elseif (!empty($title)) {
+					$this->amazonSearch->searchBookTitle($title);
+					$isbn= (string)$this->amazonSearch->getISBN();
+					$this->book_dao->read(array('id' => $id));
+					// Assuming Amazon has the most correct database of books, we update
+					// our database accordingly
+					$title = (string)$this->amazonSearch->getTitle();
+					$this->book_dao->title = $title;
+					$this->book_dao->isbn = $isbn;
+					$this->book_dao->update();
+				}
+
 				if (empty($title)) {
+					// if title is still empty, we've got a problem
 					Logger::Write(self::INVALID_ISBN . $isbn);
 				} else {
 					$image = (string)$this->amazonSearch->getSmallImageLink(); 
