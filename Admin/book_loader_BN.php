@@ -25,7 +25,7 @@ function grabPattern($pattern, $string) {
 
 function load($file) {
 	global $config;
-	$db = new DB($config->db['institution']['osu']);
+	$db = new DB($config->db['institution']['um-dearborn']);
 
 	$ouput = '';
 
@@ -44,6 +44,11 @@ function load($file) {
 		$book_id    = '';
 
 		$book_info = explode(' ', $output[$i]);
+
+
+		// get rid of required book info.... because we don't need it for now
+		$output[$i] = preg_replace('/(yes|no)/i', '', $output[$i]);
+
 		$section_code = grabPattern("^{$subject_abbr_pattern}\s{$course_num_pattern}\s{$section_num_pattern}", $output[$i]);
 
 		// grab book info
@@ -132,7 +137,9 @@ function load($file) {
 	}
 }
 // list of generated book list. the inactive ones are commented out
-//$book_list_file = 'wayne_BN';
-$book_list_file = 'OSU_BN';
+// $book_list_file = 'wayne_BN';
+// $book_list_file = 'udmercy_BN';
+// $book_list_file = 'umflint_BN';
+$book_list_file = 'umd_BN';
 
 load($book_list_file);
