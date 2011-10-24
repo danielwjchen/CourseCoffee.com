@@ -30,7 +30,7 @@ function load($file) {
 	$ouput = '';
 
 	// regular expression patterns
-	$subject_abbr_pattern = '[a-z]+\s?[a-z]+';
+	$subject_abbr_pattern = '[a-z]+\s?&?[a-z]+';
 	$course_num_pattern   = '[0-9]+[a-z]?';
 	$section_num_pattern  = '[0-9]+[a-z]?';
 	$isbn_pattern         = '[0-9]+[a-z]?';
