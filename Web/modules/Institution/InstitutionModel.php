@@ -32,9 +32,15 @@ class InstitutionModel extends Model {
 	 * Get institution by sub domain
 	 *
 	 * @param string $domain
+	 *
+	 * @return mixed result
+	 *  institution attribute in an associative array or false when research 
+	 *  return none
 	 */
 	public function getInstitutionByDomain($domain) {
-		$this->dao['institution']->read(array('domain' => $domain));
+		if (!$this->dao['institution']->read(array('domain' => $domain))) {
+			return false;
+		}
 		return $this->dao['institution']->attribute;
 	}
 

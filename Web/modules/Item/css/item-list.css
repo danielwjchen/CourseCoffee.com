@@ -1,52 +1,52 @@
 /**
  * Define class for suggested reading
  */
-.book-list {
+.item-list {
 	overflow: auto;
 }
-.book-list#enroll-book-list {
+.item-list#enroll-item-list {
 	height: 150px;
 }
-.book-list#class-book-list {
+.item-list#class-item-list {
 	min-height: 400px;
 }
-.book-list h3 {
+.item-list h3 {
 	font-size: 18px;
 	margin-bottom: 15px;
 }
-.book-list ul,
-.book-list li {
+.item-list ul,
+.item-list li {
 	list-style: none;
 	display: block;
 }
-.book-list li.book {
+.item-list li.item {
 	float: left;
 	clear: both;
 	width: 440px;
 	margin-bottom: 20px;
 }
-.book-list a {
+.item-list a {
 	text-decoration: none;
 	font-size: 12px;
 	color: #333333;
 	display: block;
 }
-.book-list a:hover {
+.item-list a:hover {
 	text-decoration: underline;
 }
-.book-list .cover {
+.item-list .cover {
 	display: block;
 	float: left;
 	margin-right: -65px;
 }
-.book-list .info {
+.item-list .info {
 	float: left;
 	margin-left: 65px;
 	width: 375px;
 	margin-right: -440px;
 	clear: right;
 }
-.book-list .title {
+.item-list .title {
 	font-weight: bold;
 	font-size: 18px;
 	margin-bottom: 10px;
@@ -54,28 +54,28 @@
 	margin-right: -375px;
 	display: block;
 }
-.book-list .offer {
+.item-list .offer {
 	float: left;
 	width: 375px;
 	margin-right: -375px;
 	clear: right;
 }
-.book-list .offer ul {
+.item-list .offer ul {
 	float: left;
 	width: 162px;
 	padding-right: 10px;
 }
-.book-list .offer li {
+.item-list .offer li {
 	clear: both;
 	line-height: 16px;
 	height: 22px;
 }
-.book-list .offer .offer-type {
+.item-list .offer .offer-type {
 	font-weight: bold;
 	font-size: 16px;
 	text-transform: capitalize;
 }
-.book-list .offer .price {
+.item-list .offer .price {
 	color: #FF8400;
 	font-weight: bold;
 	font-size: 16px;
@@ -84,10 +84,10 @@
 	-moz-text-shadow: 0 0 4px #D5D4D2;
 	-webkit-text-shadow: 0 0 4px #D5D4D2;
 }
-.book-list .share-result {
+.item-list .share-result {
 	clear: both;
 }
-.book-list .share-result textarea {
+.item-list .share-result textarea {
 	font-family: Sans-Serif;
 	font-size: 22px;
 	font-weight: bold;

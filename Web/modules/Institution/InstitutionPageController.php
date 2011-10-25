@@ -22,7 +22,7 @@ class InstitutionPageController extends PageController implements ControllerInte
 	protected $supported_domain;
 
 	function __construct($config) {
-		$this->domain = $config->domain;
+		parent::__construct($config);
 		$this->sub_domain   = $this->getSubDomain();
 		$sub_domain = $config->db['institution'];
 		$this->supported_domain = array_flip(array_keys($sub_domain));
@@ -62,36 +62,6 @@ class InstitutionPageController extends PageController implements ControllerInte
 	}
 
 	/**
-	 * Handle page reedirection
-	 *
-	 * @param string $url
-	 *  url of the page to redirect to
-	 */
-	protected function redirect($url) {
-		header('Location: ' . $url);
-		exit();
-	}
-
-	/**
-	 * Hanlid page redirection using javascript
-	 */
-	protected function clientRedirect($url) {
-		echo <<<HTML
-<script type="text/javascript">
-	top.location.href='{$url}';
-</script>
-HTML;
-		exit();
-	}
-
-	/**
-	 * Get the requested protocol
-	 */
-	protected function getProtocol() {
-		return empty($_SERVER['HTTPS']) ? 'http://' : 'https://';
-	}
-
-	/**
 	 * Get user's id
 	 *
 	 * @return mixed
@@ -119,21 +89,6 @@ HTML;
 	}
 
 	/**
-	 * Get requested domain
-	 */
-	protected function getRequestedDomain() {
-		return $_SERVER['HTTP_HOST'];
-	}
-
-	/**
-	 * Get current sub-domain
-	 */
-	protected function getRequestedSubDomain() {
-		return str_replace('.', '', str_replace($this->domain, '', $_SERVER['SERVER_NAME']));
-;
-	}
-
-	/**
 	 * Get Subdomain
 	 *
 	 * @return mixed
@@ -147,13 +102,6 @@ HTML;
 			$domain = $this->getRequestedSubDomain();
 		}
 		return $domain;
-	}
-
-	/**
-	 * Get the HTTP referrer
-	 */
-	protected function getReferrer() {
-		return $_SERVER['HTTP_REFERER'];
 	}
 
 	/**

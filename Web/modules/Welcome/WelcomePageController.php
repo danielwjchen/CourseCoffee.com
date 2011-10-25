@@ -19,6 +19,15 @@ class WelcomePageController extends InstitutionPageController implements Control
 	}
 
 	/**
+	 * Implement ControllerInterface::action()
+	 */
+	public function action($callback, array $params = null) {
+		$this->redirectUnsupportedDomain();
+		call_user_func_array(array($this, $callback), $params);
+		echo $this->output->render();
+	}
+
+	/**
 	 * Get the welcome output
 	 *
 	 * we redirect if the user is logged in
@@ -27,7 +36,6 @@ class WelcomePageController extends InstitutionPageController implements Control
 		if ($this->isUserLoggedIn()) {
 			header('Location: ' . self::PAGE_HOME);
 		}
-		$this->redirectUnsupportedDomain();
 
 		$login_form    = new UserLoginFormModel($this->sub_domain);
 		$register_form = new UserRegisterFormModel($this->sub_domain);

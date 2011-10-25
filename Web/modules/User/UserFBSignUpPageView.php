@@ -11,7 +11,7 @@ class FBSignUpPageView extends PageView implements PageViewInterface {
 	function __construct($data) {
 		parent::__construct($data);
 		$this->setPageTitle('sign up with facebook');
-		$this->addCSS('fb-signup.css');
+		$this->addCSS('User/fb-signup');
 	}
 
 	/**

@@ -2,6 +2,8 @@
 /**
  * @file
  * Handle institution API related controller logics
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
 class InstitutionAPIController extends APIController implements ControllerInterface {
 

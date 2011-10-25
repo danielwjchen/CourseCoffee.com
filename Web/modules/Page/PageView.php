@@ -56,7 +56,9 @@ abstract class PageView extends HTMLView implements ViewInterface {
 		$this->addJQuery();
 		$this->addJS('Page/main');
 		$this->addJS('Page/cache');
+		$this->addJS('Page/modal');
 		$this->addCSS('Page/layout');
+		$this->addCSS('Page/modal');
 		$this->addCSS('Page/main');
 		//$this->cache = new FileCache();
 		$this->cache = new DBCache();

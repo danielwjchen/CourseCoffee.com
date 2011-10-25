@@ -1,20 +1,20 @@
 /**
  * @file
- * Define styles for book search page
+ * Define styles for item search page
  */
-.book-search .body {
+.item-search .body {
 	margin: 0;
 }
-.book-search .search-block {
+.item-search .search-block {
 	margin: 160px auto 0;
 	width: 550px;
 }
-.book-search .search-block .logo {
+.item-search .search-block .logo {
 	margin: 0 auto 15px;
 	width: 410px;
 	display: block;
 }
-.book-search .search-block input {
+.item-search .search-block input {
 	width: 550px;
 	margin: 5px 10px 5px 0;
 	clear: both;
@@ -30,68 +30,68 @@
 	-webkit-box-shadow: 0 0 25px 0 #457319;
 	box-shadow: 0 0 25px 0 #457319;
 }
-.book-search .search-block .row {
+.item-search .search-block .row {
 	width: 550px;
 	float: left;
 }
-.book-search .search-block .button {
+.item-search .search-block .button {
 	clear: both;
 	width: 150px;
 	margin: 20px auto;
 	padding: 5px 0;
 }
 /**
- * Define styles for book-search-explained dialog
+ * Define styles for item-search-explained dialog
  */
-.book-search-explained,
-.book-search-explained .dialog-inner {
+.item-search-explained,
+.item-search-explained .dialog-inner {
 	height: 520px;
 }
-.book-search-explained .explanation {
+.item-search-explained .explanation {
 	width: 480px;
 	margin: 20px 0;
 	float: left;
 	clear :both;
 }
-.book-search-explained p {
+.item-search-explained p {
 	padding: 10px 0;
 }
-.book-search-explained .explanation img,
-.book-search-explained .explanation p {
+.item-search-explained .explanation img,
+.item-search-explained .explanation p {
 	float: left;
 	display: block;
 }
-.book-search-explained .explanation img {
+.item-search-explained .explanation img {
 	width: 300px;
 }
-.book-search-explained .explanation p {
+.item-search-explained .explanation p {
 	padding: 80px 5px 0;
 	font-size: 12px;
 	width: 170px;
 }
 /**
- * Define styles for book list
+ * Define styles for item list
  */
-.book-search .book-list .double-underline,
-.book-search .book-list .double-underline a {
+.item-search .item-list .double-underline,
+.item-search .item-list .double-underline a {
 	width: 30px;
 }
-.book-search .book-list .double-underline {
+.item-search .item-list .double-underline {
 	position: absolute;
 	top: 2px;
 	right: 70px;
 }
-.book-search .book-list .double-underline a {
+.item-search .item-list .double-underline a {
 	text-decoration: underline;
 }
-.book-search .search-message,
-.book-search .content {
+.item-search .search-message,
+.item-search .content {
 	width: 800px;
 	margin: 0 auto 30px;
 	float: none;
 	clear: both;
 }
-.book-search .search-message h1 {
+.item-search .search-message h1 {
 	color: white;
 	font-size: 16px;
 	text-align: center;
@@ -99,7 +99,7 @@
 	-moz-text-shadow: 0 0 6px #000;
 	-webkit-text-shadow: 0 0 6px #000;
 }
-.book-search #hint-message {
+.item-search #hint-message {
 	position: absolute;
 	top: 34px;
 	text-align:center;
@@ -113,38 +113,38 @@
 	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
 }
-.book-search .content .book-list {
+.item-search .content .item-list {
 	width: 760px;
 	min-height: 200px;
 	margin: 20px auto;
 }
-.book-search .content .book-list .title {
+.item-search .content .item-list .title {
 	width: 525px;
 }
-.book-search .content .book-list textarea {
+.item-search .content .item-list textarea {
 	width: 740px;
 	padding: 5px;
 }
-.book-search .content .book-list h3 {
+.item-search .content .item-list h3 {
 	text-align: center;
 }
-.book-search .content .book-list ul {
+.item-search .content .item-list ul {
 	width: 640px;
 	margin: 0 auto;
 }
-.book-search .content .book-list .offer {
+.item-search .content .item-list .offer {
 	width: 575px;
 }
-.book-search .content .book-list .offer ul {
+.item-search .content .item-list .offer ul {
 	width: 162px;
 }
-.book-search .underline {
+.item-search .underline {
 	border-bottom: 1px white solid;
 }
-.book-search .underline a{
+.item-search .underline a{
 	color: white;
 }
-.book-search .social {
+.item-search .social {
 	z-index: 10;
 	float: right;
 	padding: 0 10px;
@@ -158,13 +158,13 @@
 	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
 }
-.book-search .social .fb-like {
+.item-search .social .fb-like {
 	min-width: 360px;
 }
 /**
  * Define styles for autocomplete
  */
-.book-search #class-suggest-form .message {
+.item-search #class-suggest-form .message {
 	top: 32px !important;
 }
 #class-suggest-form .message {

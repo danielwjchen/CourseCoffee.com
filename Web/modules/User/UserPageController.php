@@ -2,8 +2,10 @@
 /**
  * @file
  * Handle user page related controller logics
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
-class UserPageController extends PageController implements ControllerInterface {
+class UserPageController extends InstitutionPageController implements ControllerInterface {
 
 	/**
 	 * Implement ControllerInterface::Route()
@@ -20,10 +22,19 @@ class UserPageController extends PageController implements ControllerInterface {
 	}
 
 	/**
+	 * Override PageController::action()
+	 */
+	public function action($callback, array $params = null) {
+		$this->redirectUnsupportedDomain();
+
+		call_user_func_array(array($this, $callback), $params);
+		echo $this->output->render();
+	}
+
+	/**
 	 * Get user creation confirmation page
 	 */
 	public function getUserCreatedPage() {
-		$this->redirectUnsupportedDomain();
 
 		if (!$this->getUserId()) {
 			$this->redirect(self::PAGE_WELCOME);
@@ -45,9 +56,6 @@ class UserPageController extends PageController implements ControllerInterface {
 	 * Get signup output for visiters
 	 */
 	public function getSignUpPage() {
-		$this->redirectUnsupportedDomain();
-		$institution_id = $this->getInstitutionId();
-
 		$section_id = Input::Get('section_id');
 		$fb         = Input::Get('fb');
 		$fb_uid     = Input::Get('fb_uid');
@@ -70,11 +78,9 @@ class UserPageController extends PageController implements ControllerInterface {
 		}
 
 		$user_register = new UserRegisterFormModel($this->sub_domain);
-		$college       = new CollegeModel($this->sub_domain);
-		$this->output = new SignUpPageView(array(
+		$this->output  = new UserSignUpPageView(array(
 			'error'          => $error,
 			'register_token' => $user_register->initializeFormToken(),
-			'college_option' => $college->getCollegeOption(),
 		));
 	}
 

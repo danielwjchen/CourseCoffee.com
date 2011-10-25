@@ -54,10 +54,11 @@ $P.ready(function() {
 					signUpOption +
 				'</div>' + 
 			'</div>';
-			dialog.open('sign-up', content);
-			$('.dialog-close').live('click', function(e) {
+			var modal = new Modal();
+			modal.open('sign-up', content);
+			$('.modal-close').live('click', function(e) {
 				e.preventDefault();
-				dialog.close();
+				modal.close();
 			});
 
 		} else if (target.hasClass('upload')) {

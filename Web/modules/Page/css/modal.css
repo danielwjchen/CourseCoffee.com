@@ -49,7 +49,7 @@
 	position: absolute;
 	right: -5px;
 	top: -5px;
-	background: url('../images/modal-close.png') center center no-repeat;
+	background: url('/images/modal-close.png') center center no-repeat;
 }
 .modal-inner {
 	margin: 50px auto 0;
@@ -355,32 +355,6 @@
 .confirm-task .confirm-row {
 	margin-top: 50px;
 	width: 100%;
-}
-
-/**
- * Define styles for sign up modal
- */
-.sign-up.modal {
-	margin: 20px auto 0;
-	height: auto;
-}
-.sign-up h2 {
-	width: 400px;
-	font-size: 28px;
-	margin: 10px auto;
-}
-.sign-up .modal-inner {
-	height: auto;
-}
-.sign-up a.button {
-	clear: both;
-	text-align: center;
-	text-decoration: none;
-	font-size: 18px;
-	display: block;
-}
-.sign-up li {
-	margin: 15px 0 15px;
 }
 
 /**

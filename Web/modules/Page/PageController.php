@@ -12,10 +12,6 @@ class PageController extends Controller implements ControllerInterface {
 
 	const ERROR_404 = 'Fail to map request to callback.';
 
-	function __construct($config) {
-		$this->domain = $config->domain;
-	}
-
 	/**
 	 * Implement ControllerInterface::Route()
 	 */
@@ -41,6 +37,30 @@ class PageController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Handle page reedirection
+	 *
+	 * @param string $url
+	 *  url of the page to redirect to
+	 */
+	protected function redirect($url) {
+		header('Location: ' . $url);
+		exit();
+	}
+
+	/**
+	 * Hanlid page redirection using javascript
+	 */
+	protected function clientRedirect($url) {
+		echo <<<HTML
+<script type="text/javascript">
+	top.location.href='{$url}';
+</script>
+HTML;
+		exit();
+	}
+
+
+	/**
 	 * Implement ControllerInterface::action()
 	 */
 	public function action($callback, array $params = null) {
@@ -51,11 +71,12 @@ class PageController extends Controller implements ControllerInterface {
 	/**
 	 * Implement ControllerInterface::getDefaultAction()
 	 *
-	 * Default behavior is 404 Page not found.
+	 * This is not the best implementation as it introduce dependency on 
+	 * Institution module, which is a sub module.
+	 *
 	 */
 	public function getDefaultAction() {
-		Logger::Write(self::ERROR_404 . ' - ' . $uri, Logger::SEVERITY_LOW);
-		$this->output = new NotFoundPageView();
+		$this->redirect(InstitutionPageController::PAGE_WELCOME);
 	}
 
 	/**

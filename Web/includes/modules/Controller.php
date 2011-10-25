@@ -50,6 +50,42 @@ interface ControllerInterface {
  */
 class Controller {
 
+	function __construct($config) {
+		$this->domain = $config->domain;
+	}
+
+	/**
+	 * Get the HTTP referrer
+	 */
+	protected function getReferrer() {
+		return $_SERVER['HTTP_REFERER'];
+	}
+
+	/**
+	 * Get the requested protocol
+	 */
+	protected function getProtocol() {
+		return empty($_SERVER['HTTPS']) ? 'http://' : 'https://';
+	}
+
+	/**
+	 * Get requested domain
+	 */
+	protected function getRequestedDomain() {
+		return $_SERVER['HTTP_HOST'];
+	}
+
+	/**
+	 * Get current sub-domain
+	 */
+	protected function getRequestedSubDomain() {
+		return str_replace(
+			'.', 
+			'', 
+			str_replace($this->domain, '', $_SERVER['SERVER_NAME'])
+		);
+	}
+
 	/**
 	 * Initialize Controller
 	 *

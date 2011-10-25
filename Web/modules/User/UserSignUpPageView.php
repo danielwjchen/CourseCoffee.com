@@ -2,18 +2,20 @@
 /**
  * @file
  * Generate the registration page for visiters
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
-class SignUpPageView extends PageView implements PageViewInterface {
+class UserSignUpPageView extends PageView implements PageViewInterface {
 
 	/**
 	 * Extend PageView::__construct().
 	 */
-	function __construct($data) {
+	function __construct($data = null) {
 		parent::__construct($data);
 		$this->setPageTitle('sign up');
-		$this->addJS('controller/signup.js');
-		$this->addJS('model/register.js');
-		$this->addCSS('signup.css');
+		$this->addJS('User/signup');
+		$this->addJS('User/signup-model');
+		$this->addCSS('User/signup');
 	}
 
 	/**
@@ -31,15 +33,6 @@ class SignUpPageView extends PageView implements PageViewInterface {
 			'header' => array(
 				'callback' => 'LogoHeaderBlockView',
 			),
-			/**
-			'college_selector' => array(
-				'callback' => 'CollegeEnrollOptionBlockView',
-				'params'   => array('domain'),
-			),
-			**/
-			'legal' => array(
-				'callback' => 'UserAgreementBlockView',
-			),
 			'footer' => array(
 				'callback' => 'FooterBlockView',
 			),
@@ -56,15 +49,6 @@ class SignUpPageView extends PageView implements PageViewInterface {
 		} else {
 			$error_message = '<div class="row error hidden"></div>';
 		}
-		$option = '';
-		foreach ($college_option as $key => $value) {
-			$option .= "<option value='{$key}'>{$value}</option>";
-		}
-		$school_select = <<<HTML
-<select name="school">
-	{$option}
-</select>
-HTML;
 		return <<<HTML
 <div class="sign-up container">
 	<div class="container-inner">
@@ -127,7 +111,9 @@ HTML;
 						</div>
 						<a href="#" class="button sign-up">Join</a> 
 					</form> 
-					{$legal}
+					<div class="user-agreement">
+						<p>By clicking Join, you agree to CourseCoffee.com <a href="/terms-of-use" target="_blank">terms of use</a> and <a href="privacy-policy">privacy policy</a>.</p>
+					</div>
 				</div>
 			</div>
 		</div>

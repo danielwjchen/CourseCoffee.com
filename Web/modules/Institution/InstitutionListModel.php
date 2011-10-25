@@ -36,4 +36,17 @@ class InstitutionListModel extends Model {
 		$this->dao['institution_list']->read();
 		return $this->dao['institution_list']->list;
 	}
+
+	/**
+	 * Get supported institution domain list
+	 */
+	public function getInstittuionSubDomain() {
+		$this->dao['institution_list']->read();
+		$result = array();
+		foreach ($this->dao['institution_list']->list as $id => $institution) {
+			$result[] = $institution['domain'];
+		}
+		return $result;
+
+	}
 }

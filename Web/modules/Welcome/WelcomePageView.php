@@ -13,12 +13,12 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	function __construct($data) {
 		parent::__construct($data);
 		$this->setPageTitle('welcome');
-		$this->addJS('User/login');
-		$this->addJS('User/signup');
-		$this->addJS('Document/doc');
+
+		$this->addJS('File/doc');
+
 		$this->addJS('Welcome/slide-show');
 		$this->addJS('Welcome/welcome');
-		$this->addCSS('Page/modal');
+
 		$this->addCSS('Welcome/slide-show');
 		$this->addCSS('Welcome/welcome');
 	}
@@ -28,6 +28,12 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	 */
 	public function getBlocks() {
 		return array(
+			'userLoginForm' => array(
+				'callback' => 'UserLoginFormBlockView',
+			),
+			'userSignUpAction' => array(
+				'callback' => 'UserSignUpModalBlockView',
+			),
 			'footer' => array(
 				'callback' => 'FooterBlockView',
 			),
@@ -48,17 +54,8 @@ class WelcomePageView extends PageView implements PageViewInterface {
 						<div class="panel-inner">
 							<img src="images/logo.png" class="logo" />
 							<div class="user-action">
-								<div class="user-login">
-									<div class="login-form">
-										<form id="user-login-form" name="user-login" action="user-login" method="post">
-											<input type="hidden" name="token" value="{$login_token}" />
-											<input type="email" name="email" class="input" value="email" />
-											<input type="password" name="password" class="input" value="password" />
-											<a class="button login" href="#">login</a>
-										</form>
-									</div>
-								</div>
-								<a href="/sign-up" class="button sign-up">Sign Up</a>
+								{$userLoginForm}
+								{$userSignUpAction}
 							</div>
 							<div class="login error hidden"></div>
 						</div>

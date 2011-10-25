@@ -5,6 +5,11 @@
  */
 class APIController extends Controller implements ControllerInterface {
 
+	function __construct($config) {
+		parent::__construct($config);
+		$this->user_session = new UserSessionModel($this->sub_domain);
+	}
+
 	/**
 	 * Implement ControllerInterface::Route()
 	 */

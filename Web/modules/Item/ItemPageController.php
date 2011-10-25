@@ -2,6 +2,8 @@
 /**
  * @file
  * Handle quest API related controller logics
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
 class ItemPageController extends InstitutionPageController implements ControllerInterface {
 

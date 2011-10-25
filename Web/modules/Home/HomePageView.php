@@ -1,41 +1,31 @@
 <?php
 /**
  * @file
- * Generate the Calendar page for visiters
- *
- * @author Daniel Chen <daniel@coursecoffee.com>
+ * Generate the Home page for registered users
  */
-class CurriculumCalendarPageView extends PageView implements PageViewInterface {
+class HomePageView extends PageView implements PageViewInterface {
 
 	/**
 	 * Extend PageView::__construct().
 	 */
-	function __construct($content = null) {
-		parent::__construct($content);
-		$this->setPageTitle('calendar');
+	function __construct($data) {
+		parent::__construct($data);
+		$this->setPageTitle('home');
 
+		// get date-time selector
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
 		$this->addJS('Page/panel');
-
 		$this->addJS('Curriculum/timer');
 		$this->addJS('Curriculum/task');
-		$this->addJS('Curriculum/calendar-model');
-		$this->addJS('Curriculum/curriculum-calendar');
+		$this->addJS('Curriculum/to-do');
+		$this->addJS('Home/home');
 
 		$this->addCSS('Page/modal');
-		$this->addCSS('Page/panel');
 		$this->addCSS('Curriculum/task');
-		$this->addCSS('Curriculum/curriculum-calendar');
+		$this->addCSS('Home/home');
 		$this->addCSS('Item/item-list');
-	}
-
-	/**
-	 * Implement View::getHeader()
-	 */
-	protected function getHeader() {
-    header(self::STATUS_OK);
 	}
 
 	/**
@@ -48,7 +38,7 @@ class CurriculumCalendarPageView extends PageView implements PageViewInterface {
 				'params'   => array('role'),
 			),
 			'upload_form' => array(
-				'callback' => 'UploadFormBlockView',
+				'callback' => 'FileUploadFormBlockView',
 			),
 			'footer' => array(
 				'callback' => 'FooterBlockView',
@@ -62,9 +52,12 @@ class CurriculumCalendarPageView extends PageView implements PageViewInterface {
 	public function getContent() {
 		extract($this->data);
 		$option = '';
-		if (is_array($class_list)) {
+		$sections = '';
+		if (isset($class_list) && is_array($class_list)) {
 			foreach ($class_list as $section_id => $section_code) {
 				$option .= "<option value='{$section_id}'>{$section_code}</option>";
+				$readings .= "<input type='hidden' name='section_id' value='{$section_id}' />";
+				$sections .= "<input type='hidden' name='section-code' value='{$section_code}' />";
 			}
 		}
 		$class_select = <<<HTML
@@ -74,8 +67,10 @@ class CurriculumCalendarPageView extends PageView implements PageViewInterface {
 </select>
 HTML;
 
+		$profile_image = empty($fb_uid) ? 'images/default-profile.png' : 'https://graph.faceitem.com/' . $fb_uid . '/picture?type=large';
+
 		return <<<HTML
-<div class="calendar container">
+<div class="home container">
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
@@ -86,41 +81,20 @@ HTML;
 			<div class="system-message-inner">
 			</div>
 		</div>
-		<div class="calendar body">
+		<div class="body">
 			<div class="body-inner">
 				<div class="content">
-					<div class="calendar panel-menu">
-						<div class="panel-menu-inner">
-							<form name="calendar-option-form" id="calendar-option">
-								<input type="hidden" name="type" value="month" />
-								<input type="hidden" name="timestamp" value="{$timestamp}" />
-								<input type="hidden" name="begin" />
-								<input type="hidden" name="end" />
-								<input type="hidden" name="user_id" value="{$user_id}" />
-								<input type="hidden" name="filter" value="pending" />
-								<input type="hidden" name="paginate" value="0" />
-							</form>
-							<ul>
-								<li><a href="#" class="option month active">month</a></li>
-								<li><a href="#" class="option week">week</a></li>
-								<li><a href="#" class="option customized">4-day</a></li>
-								<li><a href="#" class="option today">day</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="panel-01">
+					<div class="panel-top">
 						<div class="panel-inner">
-							<div class="calendar-display">
+							<img class="profile-image" src="{$profile_image}" />
+							<div class="profile-info">
+								<div class="name">{$profile['first_name']} {$profile['last_name']}</div>
+								<div class="school">{$profile['institution']}</div>
+								<div class="semester">{$profile['term']} {$profile['year']}</div>
 							</div>
-							<a class="calendar-button button backward" href="#">&lt;</a>
-							<a class="calendar-button button forward" href="#">&gt;</a>
-						</div>
-					</div>
-					<div class="panel-02">
-						<div class="panel-inner">
-						{$upload_form}
+							{$upload_form}
 							<div class="task-create-form-wrapper">
-								<form id="calendar-task-creation-form" class="task-create-form" action="task/create" method="post">
+								<form id="to-do-creation-form" class="task-create-form" action="task/create" method="post">
 									<fieldset class="required">
 										<legend>NEW to-do</legend>
 										<input type="hidden" name="token" />
@@ -133,8 +107,6 @@ HTML;
 											<div class="row">
 												<label for="due_date" class="title">Due: </label>
 												<input type="text" name="due_date" id="time-picker" class="due_date" />
-											</div>
-											<div class="row">
 												<label for="section_id" class="title">Class: </label>
 												{$class_select}
 												<a href="#" class="button show-detail">more detail</a>
@@ -153,6 +125,26 @@ HTML;
 									</fieldset>
 								</form>
 							</div>
+						</div>
+					</div>
+					<div class="panel-01">
+						<h1>Item List</h1>
+						<form name="class-feed">
+							{$readings}
+						</form>
+						<div class="panel-inner">
+							<div id="home-item-list" class="item-list">
+							</div>
+						</div>
+					</div>
+					<div class="panel-02 panel-class">
+						<h1>Assignments</h1>
+						<form id="to-do-option" action="user/list-task" method="post">
+							<input type="hidden" name="user_id" value="{$user_id}" />
+							<input type="hidden" name="filter" value="pending" />
+							<input type="hidden" name="paginate" value="0" />
+						</form>
+						<div class="panel-inner">
 							<div id="task-info-menu">
 								<ul>
 									<li id="option-pending" class="active">to-do</li>
@@ -160,20 +152,20 @@ HTML;
 									<li id="option-all">all</li>
 								</ul>
 							</div>
-							<div id="calendar-task-list" class="task-list">
+							<div id="to-do-list" class="task-list">
 							</div>
+							<a href="#" class="button more">more</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<div class="footer">
-	<div class="footer-inner">
-		{$footer}
+	<div class="footer">
+		<div class="footer-inner">
+			{$footer}
+		</div>
 	</div>
-</div>
 HTML;
 	}
 }

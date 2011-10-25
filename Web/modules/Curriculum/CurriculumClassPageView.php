@@ -2,8 +2,10 @@
 /**
  * @file
  * Generate the Class page for visiters
+ *
+ * @author Daniel Chen <daniel@coursecoffee.com>
  */
-class ClassPageView extends PageView implements PageViewInterface {
+class CurriculumClassPageView extends PageView implements PageViewInterface {
 
 	/**
 	 * Extend PageView::__construct().
@@ -19,18 +21,20 @@ class ClassPageView extends PageView implements PageViewInterface {
 			$this->buildClassList($content['class_list']);
 		}
 
-		$this->addJS('model/panel.js');
-		$this->addJS('model/task.js');
-		$this->addJS('model/class-remove.js');
-		$this->addJS('model/class-info.js');
-		$this->addJS('timer.js');
-		$this->addJS('controller/class.js');
-		$this->addCSS('dialog.css');
-		$this->addCSS('class-remove.css');
-		$this->addCSS('class.css');
-		$this->addCSS('panel.css');
-		$this->addCSS('task.css');
-		$this->addCSS('book-list.css');
+		$this->addJS('Page/panel');
+
+		$this->addJS('Curriculum/timer');
+		$this->addJS('Curriculum/task');
+		$this->addJS('Curriculum/class-remove');
+		$this->addJS('Curriculum/class-info');
+		$this->addJS('Curriculum/curriculum-class');
+
+		$this->addCSS('Page/modal');
+		$this->addCSS('Page/panel');
+		$this->addCSS('Curriculum/class-remove');
+		$this->addCSS('Curriculum/curriculum-class');
+		$this->addCSS('Curriculum/task');
+		$this->addCSS('Item/item-list');
 	}
 
 	/**
@@ -162,11 +166,11 @@ HTML;
 							<div class="class-section-info"></div>
 							<div id="class-info-menu">
 								<ul>
-									<li id="option-book" class="active">books</li>
+									<li id="option-item" class="active">items</li>
 									<li id="option-comment" >comments</li>
 								</u>
 							</div>
-							<div id="class-book-list" class="book-list class-info-content" ></div>
+							<div id="class-item-list" class="item-list class-info-content" ></div>
 						</div>
 					</div>
 					<div class="panel-02">
