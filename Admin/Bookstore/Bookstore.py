@@ -12,6 +12,7 @@ import urllib
 import traceback
 import json
 import time
+from xml.sax.saxutils import escape
 
 class BaseClass(object):
     def __init__(self):
@@ -37,7 +38,7 @@ class BaseClass(object):
         timestring = time.strftime("%y/%m/%d %H:%M", time.gmtime())
         log = timestring + " - " + message
         print log
-        errorLog = open(self.errorLogFile, 'w+')
+        errorLog = open(self.errorLogFile, 'a+')
         errorLog.write(log)
         errorLog.close()
 
@@ -45,7 +46,7 @@ class BaseClass(object):
         """Encode params to url string"""
         return urllib.urlencode(self.params)
 
-    def sendRequest(self, url, pasueTime=5, retried=0, retryMax=5, success=False):
+    def sendRequest(self, url, pauseTime=5, retried=0, retryMax=5, success=False):
         """Send request to site for data
 
         param string url
@@ -106,7 +107,7 @@ class BaseClass(object):
         raise NotImplementedError()
 
 class ListWriter:
-    """Write item list to file in a certain format
+    """Write item list to file in plain format
 
     For now, things are stored in plain text. Maybe we should write this into 
     the database directly, or store in different file format such as XML or
@@ -122,7 +123,8 @@ class ListWriter:
 
 
         """
-        self.listFile = open(fileName, 'w')
+        self.listFile = open(fileName, 'w+')
+        self.fileFormat = fileFormat
         self.listFile.write("subject course session isbn required title\n")
 
     def __del__(self):
@@ -130,6 +132,46 @@ class ListWriter:
         self.listFile.close()
 
     def write(self, subject, course, section, isbn, required, title):
+        """write data to file in plain format"""
+        entry = subject + ' ' + course + ' ' + section + ' ' + isbn + ' ' + required + ' ' + title + "\n"
+        print entry
+        self.listFile.write(entry)
+
+
+class XMLWriter:
+    """Write item list to file in a XML format
+
+    For now, things are stored in plain text. Maybe we should write this into 
+    the database directly, or store in different file format such as XML or
+    JSON.
+    
+    """
+
+    def __init__(self, fileName):
+        """default constructor
+        
+        By default a file is opened for writting on instantiation with the first 
+        line specifing column names.
+
+
+        """
+        self.listFile = open("XML/" + fileName + '.xml', 'w+')
+        self.listFile.write("<?xml version='1.0'?>\n")
+        self.listFile.write("<items>\n")
+
+    def __del__(self):
+        """default destructor"""
+        self.listFile.write("</items>")
+        self.listFile.close()
+
+    def write(self, subject, course, section, isbn='', required='', title=''):
         """write data to file"""
-        print subject + ' ' + course + ' ' + section + ' ' + isbn + ' ' + required + ' ' + title + "\n"
-        self.listFile.write(subject + ' ' + course + ' ' + section + ' ' + isbn + ' ' + required + ' ' + title + "\n")
+        entry = "\t<item "\
+            "sub_abbr=\"" + escape(subject) + "\" "\
+            "crs=\"" + escape(course) + "\" "\
+            "sec=\"" + escape(section) + "\" "\
+            "isbn=\"" + isbn + "\" "\
+            "required=\"" + required + "\" "\
+            "title=\"" + escape(title) + "\" ></item>\n"
+        print entry 
+        self.listFile.write(entry)

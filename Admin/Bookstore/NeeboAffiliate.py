@@ -13,13 +13,15 @@ take for all Neebo's affiliate to switch, but it could be soon.
 
 """
 
+import re
 import Bookstore
 import xml.dom.minidom
+from BeautifulSoup import BeautifulSoup
 
 class NeeboAffiliate(Bookstore.BaseClass):
     """Query neebo affiliate for class reading list"""
     def __init__(self):
-        """Extend bookstore::__init__"""
+        """Extend BaseClass::__init__"""
         super(NeeboAffiliate, self).__init__()
         """Neebo affiliates each  have their own website"""
         self.AffiliateURL = ""
@@ -35,10 +37,18 @@ class NeeboAffiliate(Bookstore.BaseClass):
         """MSU Fall 2011"""
         #self.AffiliateURL = "http://http://www.spartanbook.com/"
         #self.setParams('term', '81')
+        """Nebraska Fall 2011"""
+        self.AffiliateURL = "http://www.nebraskabookstore.com"
+        super(NeeboAffiliate, self).setParam('term', '96')
+        super(NeeboAffiliate, self).setParam('campus', '54')
         """Wisconsin Fall 2011"""
-        self.AffiliateURL = "http://www.textbookunderground.com"
-        super(NeeboAffiliate, self).setParam('term', '3108')
-        super(NeeboAffiliate, self).setParam('campus', '73')
+        #self.AffiliateURL = "http://www.textbookunderground.com"
+        #super(NeeboAffiliate, self).setParam('term', '3108')
+        #super(NeeboAffiliate, self).setParam('campus', '73')
+        """Central Michigan Fall 2011"""
+        #self.AffiliateURL = "http://www.cmubookstore.com/"
+        #super(NeeboAffiliate, self).setParam('term', '30')
+        #super(NeeboAffiliate, self).setParam('campus', '28')
         """
         Neebo affiliates all use the same software for their website, and 
         /textbooks_xml.asp seems to be the request handler
@@ -48,7 +58,7 @@ class NeeboAffiliate(Bookstore.BaseClass):
     def getSubjectList(self):
         """Get subject list."""
         request = self.requestHandler + "?" + "control=campus" + "&" + self.encodeRequest()
-        text = super(NeeboAffiliate, self).sendRequest(request)
+        text = super(NeeboAffiliate, self).sendRequest(request, 1)
         if not text:
             return
 
@@ -64,7 +74,7 @@ class NeeboAffiliate(Bookstore.BaseClass):
         """Get course list for a given subject."""
         super(NeeboAffiliate, self).setParam('dept', subjectID)
         request = self.requestHandler + "?" + "control=department" + "&" + self.encodeRequest()
-        text = super(NeeboAffiliate, self).sendRequest(request)
+        text = super(NeeboAffiliate, self).sendRequest(request, 1)
         if not text:
             return
 
@@ -80,7 +90,7 @@ class NeeboAffiliate(Bookstore.BaseClass):
         """Get section list for a given course."""
         super(NeeboAffiliate, self).setParam('course', courseID)
         request = self.requestHandler + "?" + "control=course" + "&" + self.encodeRequest()
-        text = super(NeeboAffiliate, self).sendRequest(request)
+        text = super(NeeboAffiliate, self).sendRequest(request, 1)
         if not text:
             return
 
@@ -96,25 +106,34 @@ class NeeboAffiliate(Bookstore.BaseClass):
         """Get item list for a given section."""
         super(NeeboAffiliate, self).setParam('section', sectionID)
         request = self.requestHandler + "?" + "control=section" + "&" + self.encodeRequest()
-        text = super(NeeboAffiliate, self).sendRequest(request)
+        text = super(NeeboAffiliate, self).sendRequest(request, 1)
         if not text:
             return
 
-        """This section of code is copy&paste from Cheng's spartanbook.py."""
         result = []
-        b = text.split()
-        for elem3 in b:
-            if "Key" in elem3 and "src" in elem3:
-                elem31 = elem3.split("=")
-                elem311 = elem31[2].split("&")
-                isbn = elem311[0]
-                result.append(isbn)
+        detailMatch = re.findall(r"(<td class=\"book-desc\">.+</td>)", text)
+        for detail in detailMatch:
+            soup = BeautifulSoup(detail)
+            isbn = str(soup.find("span", {"class": "isbn"}))
+            if isbn:
+                isbn = isbn.replace("<span class=\"isbn\">", "")
+                isbn = isbn.replace("</span>", "")
+                isbn = isbn.replace("None", "")
 
+            title = str(soup.find("span", {"class": "book-title"}))
+            if title:
+                title = title.replace("<span class=\"book-title\">", "")
+                title = title.replace("</span>", "")
+                title = title.replace("No Text Required", "")
+
+            result.append({"title" : title, "isbn" : isbn})
 
         return result
 
 bookstore  = NeeboAffiliate()
-listWriter = Bookstore.ListWriter('WISC_Neebo')
+listWriter = Bookstore.XMLWriter('NEBRASKA_Neebo')
+#listWriter = Bookstore.XMLWriter('WISC_Neebo')
+#listWriter = Bookstore.XMLWriter('CMU_Neebo')
 bookstore.setInstitution()
 subjectList = bookstore.getSubjectList()
 for sub, subjectID in subjectList.iteritems():
@@ -124,7 +143,8 @@ for sub, subjectID in subjectList.iteritems():
         for sec, sectionID in sectionList.iteritems():
             itemList = bookstore.getItemList(sectionID)
             if not itemList:
-                listWriter.write(sub, crs, sec, 'NULL', 'NULL', 'NULL')
+                listWriter.write(sub, crs, sec)
             else:
-                for isbn in itemList:
-                    listWriter.write(sub, crs, sec, isbn, 'NULL', 'NULL')
+                for item in itemList:
+                    listWriter.write(
+                            sub, crs, sec, item["isbn"], "", item["title"])
