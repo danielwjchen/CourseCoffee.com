@@ -78,9 +78,6 @@ class BookSearchPageView extends PageView implements PageViewInterface {
 							</form>
 						</div>
 					</div>
-					<div class="message">
-						<h1>Find the lowest price on your textbooks from all over the internet.</h1>
-					</div>
 					<div class="content hidden">
 						<div id="book-suggest-list" class="book-list"></div>
 					</div>
