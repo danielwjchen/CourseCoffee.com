@@ -63,7 +63,7 @@ class CollegeClassListModel extends Model {
 	 */
 	public function suggestClassList($institution_id, $year_id, $term_id, $string) {
 
-		$string = preg_replace('/[^a-zA-Z0-9]/i', '', $string);
+		$string = preg_replace('/[^a-zA-Z0-9&\s\-]/i', '', $string);
 		preg_match('/^[a-z]{1,12}/i', $string, $matches);
 		$subject_abbr = is_array($matches) ? reset($matches) : '';
 

@@ -115,8 +115,9 @@ class BookSuggestModel extends Model {
 
 
 				} elseif (!empty($title)) {
+					$title = preg_replace('/(Subscription Days)\(?\[?.+\]?\)?/i', '', $title);
 					$this->amazonSearch->searchBookTitle($title);
-					$isbn= (string)$this->amazonSearch->getISBN();
+					$isbn = (string)$this->amazonSearch->getISBN();
 					$this->book_dao->read(array('id' => $id));
 					// Assuming Amazon has the most correct database of books, we update
 					// our database accordingly

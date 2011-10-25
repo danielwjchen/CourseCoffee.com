@@ -61,18 +61,31 @@ class BookDAO extends DAO implements DAOInterface {
 	 * Implement DAOInterface::update()
 	 */
 	public function update() {
-		$sql = "
-			UPDATE `book` SET
-				title = :title,
-				isbn = :isbn
-			WHERE id = :id
-		";
+		if (!empty($this->attr['title'])) {
+			$sql = "
+				UPDATE `book` SET
+					title = :title
+				WHERE id = :id
+			";
 
-		$this->db->perform($sql, array(
-			'title' => $this->attr['title'],
-			'isbn' => $this->attr['isbn'],
-			'id' => $this->attr['id']
-		));
+			$this->db->perform($sql, array(
+				'title' => $this->attr['title'],
+				'id' => $this->attr['id']
+			));
+		}
+
+		if (!empty($this->attr['isbn'])) {
+			$sql = "
+				UPDATE `book` SET
+					isbn = :isbn
+				WHERE id = :id
+			";
+
+			$this->db->perform($sql, array(
+				'isbn' => $this->attr['isbn'],
+				'id' => $this->attr['id']
+			));
+		}
 
 	}
 
