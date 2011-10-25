@@ -41,13 +41,14 @@ class CalendarPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'NavigationBlockView',
+				'callback' => 'NavigationBlockView',
+				'params'   => array('role'),
 			),
 			'upload_form' => array(
-				'UploadFormBlockView',
+				'callback' => 'UploadFormBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -78,15 +79,16 @@ HTML;
 				{$header}
 			</div>
 		</div>
+		<div class="system-message hidden">
+			<div class="system-message-inner">
+			</div>
+		</div>
 		<div class="calendar body">
 			<div class="body-inner">
 				<div class="content">
 					<div class="calendar panel-menu">
 						<div class="panel-menu-inner">
 							<form name="calendar-option-form" id="calendar-option">
-								<input type="hidden" name="institution-uri" value="{$institution_uri}" />
-								<input type="hidden" name="year" value="{$year}" />
-								<input type="hidden" name="term" value="{$term}" />
 								<input type="hidden" name="type" value="month" />
 								<input type="hidden" name="timestamp" value="{$timestamp}" />
 								<input type="hidden" name="begin" />
@@ -157,7 +159,6 @@ HTML;
 							</div>
 							<div id="calendar-task-list" class="task-list">
 							</div>
-							<a href="#" class="button more">more</a>
 						</div>
 					</div>
 				</div>

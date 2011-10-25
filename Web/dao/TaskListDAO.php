@@ -9,14 +9,32 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 	 * Compound the where clause based on given filter value
 	 */
 	private function makeFilterCondition($filter) {
-		if ($filter == 'pending') {
-			return " AND qa.value IS NULL ";
-
-		} elseif ($filter == 'finished') {
-			return " AND qa.value = 'done' ";
+		$condition = ' AND (';
+		switch ($filter) {
+			case 'pending':
+				$condition .= " qa.value IS NULL ";
+				break;
+			case 'finished':
+				$condition .= " qa.value = 'done' ";
+				break;
+			default:
+				$condition .= " qa.value IS NULL ";
+				$condition .= " OR qa.value = 'done' ";
 		}
+		$condition .= ' ) ';
+		return $condition;
+	}
 
-		return '';
+	private function makeStatusCondition($status_array) {
+		$condition = ' AND (';
+		$condition_array = null;
+		foreach ($status_array as $status) {
+			$condition_array[] = " `quest_status`.`name` = '{$status}' ";
+		}
+		$condition .= implode(' OR ', $condition_array);
+		$condition .= ' ) ';
+
+		return $condition;
 	}
 
 	/**
@@ -62,11 +80,11 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 
-		$filter = isset($params['filter']) ? $params['filter'] : 'pending';
+		$filter = empty($params['filter']) ?  'pending' : $params['filter'];
 
 		$data = array();
 		$sql_params = array();
@@ -75,7 +93,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 				DISTINCT q.id,
 				q.user_id AS creator_id,
 				qa.value AS status,
-				COUNT(qa.id) AS stats,
+				COUNT(qa_stats.id) AS stats,
 				sec.id AS section_id,
 				sec.num AS section_num,
 				crs.num AS course_num,
@@ -87,16 +105,36 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 			FROM quest q
 			INNER JOIN quest_type qt
 				ON q.type_id = qt.id
-				AND qt.name = '" . QuestType::TASK . "'
-			LEFT JOIN (quest_attribute qa, quest_attribute_type qat)
+				AND qt.name = '" . QuestTypeSetting::TASK . "'
+			LEFT JOIN (quest_attribute qa_stats, quest_attribute_type qat)
+				ON q.id = qa_stats.quest_id
+				AND qa_stats.type_id = qat.id
+				AND qat.name = 'status'
+			INNER JOIN (quest_status)
+				ON q.status_id = quest_status.id
+				" . $this->makeStatusCondition($params['status']) . "
+			LEFT JOIN (quest_attribute qa)
 				ON q.id = qa.quest_id
+				AND qa.user_id = " . $params['user_id'] . "
+				AND qa_stats.type_id = qat.id
+				AND qat.name = 'status'
 			INNER JOIN quest_date_linkage qd_linkage
 				ON qd_linkage.quest_id = q.id
 			INNER JOIN date qd
 				ON qd.id = qd_linkage.date_id
 		";
 
-		if (isset($params['range'])) {
+		if (isset($params['by_section_id'])) {
+			$sql = " 
+				SELECT 
+					DISTINCT q.id
+				FROM quest q
+				INNER JOIN (quest_section_linkage qs_linkage)
+						ON qs_linkage.quest_id = q.id
+				WHERE qs_linkage.section_id = :section_id 
+			";
+			$sql_params = array('section_id' => $params['by_section_id']);
+		} elseif (isset($params['range'])) {
 			$sql = $this->getUnionQuery($sql);
 
 			$sql = isset($params['limit']) ? $this->setLimit($sql, $params['limit']) : $sql;
@@ -186,7 +224,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 			} elseif ($filter == 'finished') {
 				$where_clause = "WHERE qa.value = 'done' ";
 			}
-			
+
 			$sql = sprintf($sql, $where_clause, $where_clause);
 			$sql = isset($params['limit']) ? $this->setLimit($sql, $params['limit']) : $sql;
 			$sql_params = array(
@@ -200,7 +238,7 @@ class TaskListDAO extends ListDAO implements ListDAOInterface{
 
 		}
 
-		$data = $this->db->fetch($sql, $sql_params);
+		$data = $this->db->fetchList($sql, $sql_params);
 
 		// debug
 		// error_log(__METHOD__ . ' : data - ' . print_r($data, true));

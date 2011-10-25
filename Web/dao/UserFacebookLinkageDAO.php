@@ -3,16 +3,25 @@
  * @file
  * Represent a linkage between a user and a facebook account
  */
-class UserFacebookLinkageDAO extends LinkageDAO{
+class UserFacebookLinkageDAO extends LinkageDAO {
 
 	/**
-	 * Extend LinkageDAO::__construct().
+	 * Implement LinkageDAO::defineColumn().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('user_id', 'fb_uid', 'id');
-		$this->linkage = 'user_facebook_linkage';
-		parent::__construct($db, $attr, $params);
+	protected function defineColumn() {
+		return array(
+			'parent_id' => 'user_id', 
+			'child_id'  => 'fb_uid',
+		);
 	}
+
+	/**
+	 * Implement LinkageDAO::defineLinkageTable().
+	 */
+	protected function defineLinkageTable() {
+		return 'user_facebook_linkage';
+	}
+
 	/**
 	 * Override LinkageDAO::read()
 	 *
@@ -25,26 +34,26 @@ class UserFacebookLinkageDAO extends LinkageDAO{
 			$params = array('id' => $params['id']);
 			$sql .= "id = :id";
 
-		} elseif (isset($params[$this->column[0]]) && 
-			isset($params[$this->column[1]])) 
+		} elseif (isset($params[$this->column['parent_id']]) && 
+			isset($params[$this->column['child_id']])) 
 		{
 			$params = array(
-				$this->column[0] => $params[$this->column[0]],
-				$this->column[1] => $params[$this->column[1]],
+				$this->column['parent_id'] => $params[$this->column['parent_id']],
+				$this->column['child_id'] => $params[$this->column['child_id']],
 			);
 
-			$sql .= "{$this->column[0]} = :{$this->column[0]} 
-				AND {$this->column[1]} = :{$this->column[1]}";
+			$sql .= "{$this->column['parent_id']} = :{$this->column['parent_id']} 
+				AND {$this->column['child_id']} = :{$this->column['child_id']}";
 
 		// return list of record based on parent
-		} elseif (isset($params[$this->column[0]])) {
-			$params = array($this->column[0] => $params[$this->column[0]]);
-			$sql .= "{$this->column[0]} = :{$this->column[0]}";
+		} elseif (isset($params[$this->column['parent_id']])) {
+			$params = array($this->column['parent_id'] => $params[$this->column['parent_id']]);
+			$sql .= "{$this->column['parent_id']} = :{$this->column['parent_id']}";
 
 		// return list of record based on child
-		} elseif (isset($params[$this->column[1]])) {
-			$params = array($this->column[1] => $params[$this->column[1]]);
-			$sql .= "{$this->column[1]} = :{$this->column[1]}";
+		} elseif (isset($params[$this->column['child_id']])) {
+			$params = array($this->column['child_id'] => $params[$this->column['child_id']]);
+			$sql .= "{$this->column['child_id']} = :{$this->column['child_id']}";
 
 		} else {
 			Logger::Write("unknown {$this->linkage} identifier - " . print_r($params, true));

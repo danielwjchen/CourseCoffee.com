@@ -2,6 +2,8 @@
 /**
  * @file
  * Resolve file paths automatically
+ *
+ * This class implements a singleton design. Be careful with that.
  */
 class Autoloader {
 
@@ -10,32 +12,60 @@ class Autoloader {
 	 * @{
 	 */
 	const FAIL_EMPTY_PATH = 'failed to resolve path';
+	const WRONG_PATH      = 'path is pointed to a file that does not exist.';
+	/**
+	 * @}
+	 */
+
+	/**
+	 * Singleton instance
+	 */
+	public static $instance;
 
 	/**
 	 * A map of component paths and the regular expression that identifies an 
 	 * implementation.
 	 */
-	private static $paths = array(
-		DBA_PATH => '/DBA\.php$/',
-		DAO_PATH => '/DAO\.php$/',
-		MODEL_PATH => '/Model\.php$/',
-		CONTROLLER_PATH => '/Controller\.php$/',
-		VIEW_PATH => '/View\.php$/',
-	);
+	private $paths;
 
 	/**
-	 * Manage database access
+	 * Database connection
 	 */
-	private static $db;
+	private $db;
 
 	/**
-	 * Initialize Autoload
-	 *
+	 * 
 	 * @param array $config_db
 	 *  an associative array that defines the database configuration
 	 */
-	public static function Init($config_db) {
-		self::$db = new DB($config_db);
+	function __construct($config_db) {
+		$this->db = new DB($config_db);
+		$this->paths = array(
+			CACHE_PATH      => '/Cache\.php$/',
+			SETTING_PATH    => '/Setting\.php$/',
+			SCHEMA_PATH     => '/Schema\.php$/',
+			DAO_PATH        => '/DAO\.php$/',
+			MODEL_PATH      => '/Model\.php$/',
+			CONTROLLER_PATH => '/Controller\.php$/',
+			VIEW_PATH       => '/View\.php$/',
+		);
+
+	}
+
+	function __destruct() {
+		$this->db = null;
+	}
+
+	/**
+	 * Initialize an Autoloader instance
+	 *
+	 * This checks if an instance of this class already exists
+	 */
+	private static function Init() {
+		global $config;
+		if (self::$instance == null) {
+			self::$instance = new static($config->db['default']);
+		}
 	}
 
 	/**
@@ -43,32 +73,34 @@ class Autoloader {
 	 *
 	 * WARNING!! This method clears the table and repopulates it with new data.
 	 */
-	public static function Build() {
-		self::$db->perform('TRUNCATE TABLE autoload');
+	public function buildPath() {
+		$this->db->perform('TRUNCATE TABLE `autoloader`');
 		$sql = "
-			INSERT INTO autoload
-				(class, path) 
+			INSERT INTO `autoloader`
+				(`class`, `path`) 
 			VALUES
 				(:class, :path)
 		";
 		$classes = array();
-		foreach (self::$paths as $path => $pattern) {
+		foreach ($this->paths as $path => $pattern) {
 			$classes = array_merge($classes, FILE::ScanDirectory($path, $pattern));
 		}
 		foreach ($classes as $path => $file) {
-			self::$db->perform(
+			$this->db->perform(
 				$sql, 
 				array('class' => $file->name, 'path' => $path)
 			);
 		}
 	}
 
-	/**
-	 * Add the necessary file
+	/** 
+	 * Resolve file paths and include necessary file
+	 *
+	 * @param string $classname
 	 */
-	public static function Add($classname) {
-		$record = self::$db->fetch(
-			'SELECT path FROM autoload WHERE class = :class',
+	public function resolvePath($classname) {
+		$record = $this->db->fetch(
+			'SELECT `path` FROM `autoloader` WHERE `class` = :class',
 			array('class' => $classname)
 		);
 
@@ -81,7 +113,32 @@ class Autoloader {
 			require_once $record['path'];
 
 		} catch (Exception $e) {
-			echo 'sss';
+			Logger::write(self::WRONG_PATH . ' - ' . $classname, Logger::SEVERITY_HIGH);
+			header('Location: /all-system-down');
 		}
+	}
+
+	/**
+	 * Scan and build a registry for the classes and their path.
+	 *
+	 * This is a factory method that creates a singleton instance
+	 *
+	 * WARNING!! This method clears the table and repopulates it with new data.
+	 */
+	public static function Build() {
+		self::Init();
+		self::$instance->buildPath();
+	}
+
+	/**
+	 * Resolve file paths and include necessary file
+	 *
+	 * This is a factory method that creates a singleton instance
+	 *
+	 * @param string $classname
+	 */
+	public static function Resolve($classname) {
+		self::Init();
+		self::$instance->resolvePath($classname);
 	}
 }

@@ -8,6 +8,11 @@
 class CollegeClassListModel extends Model {
 
 	/**
+	 * Number of records to fetch
+	 */
+	const COUNT = 10;
+
+	/**
 	 * @defgroup error_messages
 	 * @{
 	 * Error message for the user when an error is encountered
@@ -28,7 +33,6 @@ class CollegeClassListModel extends Model {
 	const EVENT_FAILED_TO_CREATE = 'Failed create task';
 	const EVENT_FORM_EMPTY       = 'An empty task form is submitted. How is this possible?';
 	const EVENT_FORM_EXPIRED     = 'Task creation form expired.';
-
 	/**
 	 * @} End of even_messages
 	 */
@@ -59,7 +63,7 @@ class CollegeClassListModel extends Model {
 	 */
 	public function suggestClassList($institution_id, $year_id, $term_id, $string) {
 
-		$string = preg_replace('/[^a-zA-Z0-9]/i', '', $string);
+		$string = preg_replace('/[^a-zA-Z0-9&\s\-]/i', '', $string);
 		preg_match('/^[a-z]{1,12}/i', $string, $matches);
 		$subject_abbr = is_array($matches) ? reset($matches) : '';
 
@@ -103,7 +107,7 @@ class CollegeClassListModel extends Model {
 		$params['limit']['offset'] = 0;
 		$params['limit']['count']  = 10;
 
-		$this->list_dao = new CollegeClassSuggestDAO($this->db);
+		$this->list_dao = new CollegeClassSuggestDAO($this->institution_db);
 		$has_records = $this->list_dao->read($params);
 
 		if ($has_records) {
@@ -131,7 +135,7 @@ class CollegeClassListModel extends Model {
 	 * @return array
 	 */
 	public function fetchUserClassList($user_id, $institution_id, $year_id, $term_id) {
-		$this->list_dao = new UserClassListDAO($this->db);
+		$this->list_dao = new UserClassListDAO($this->institution_db);
 
 		$has_record = $this->list_dao->read(array(
 			'user_id'        => $user_id,
@@ -159,6 +163,33 @@ class CollegeClassListModel extends Model {
 		// error_log(__METHOD__ . 'formatted user class list - ' . print_r($result, true));
 
 		return $result;
+	}
+
+	/**
+	 * Get a list of class based on syllabus status
+	 */
+	public function getClassListBySyllabusStatus($syllabus_status, $timestamp, $paginate = 0) {
+		$this->list_dao = new CollegeClassListDAO($this->institution_db);
+		$has_records = $this->list_dao->read(array(
+			'syllabus_status' => $syllabus_status,
+			'limit' => array(
+				'offset' => $paginate * self::COUNT,
+				'count'  => self::COUNT,
+			)
+		));
+
+		if ($has_records) {
+			return array(
+				'success' => true,
+				'message' => '',
+				'list'    => $this->list_dao->list,
+			);
+		} else {
+			return array(
+				'error'   => true,
+				'message' => '',
+			);
+		}
 	}
 
 }

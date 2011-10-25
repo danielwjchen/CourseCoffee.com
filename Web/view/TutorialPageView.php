@@ -10,7 +10,7 @@ class TutorialPageView extends PageView implements PageViewInterface {
 	 */
 	function __construct($data = null) {
 		parent::__construct($data);
-		$this->setPageTitle('how to find syllabus online');
+		$this->setPageTitle('tutorial');
 		$this->addCSS('tale.css');
 	}
 
@@ -20,10 +20,10 @@ class TutorialPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'LogoHeaderBlockView',
+				'callback' => 'LogoHeaderBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -44,10 +44,15 @@ class TutorialPageView extends PageView implements PageViewInterface {
 		<div class="tale body">
 			<div class="body-inner">
 				<div class="content">
-					<h2>Where do I find find my syllabus?</h2>
-					<p>At the beginning of the semester, your professor will give you a syllabus - a document containing the dates of every assignment you will have to complete for the semester. These syllabuses, or syllabi, are what you need to upload to our site to quickly generate your schedule of assignments.</p>
+					<h2>How do I find my syllabus?</h2>
+					<p>At the beginning of the semester, your professor will give you a syllabus -- a document that outlines every assignment you will have to complete throughout the semester. By uploading your syllabus to CourseCoffee.com, you can quickly generate a calendar that keeps track of your upcoming assignments, readings, quizzes, and exams.</p>
 					<h3>Michigan State University</h3>
-					<p>For MSU students, they are available at <a href="www.angel.msu.edu">www.angel.msu.edu</a>. After logging in with your MSU username, click on your class links on the left hand side of the page, and look under your "Classes" or "Lessons" tab for the syllabus .doc or .pdf files. Once you have found these documents, download them to your desktop, and then upload them to <a href="coursecoffee.com">coursecoffee.com</a>! Remember to double check the dates to make sure they have been processed correctly!</p>
+					<p>MSU students can find their course syllabus at <a href="http://www.angel.msu.edu">www.angel.msu.edu</a>.</p>
+					<ul style="margin-left:90px">
+						<li>After logging on with your MSU user ID and password, click on the class you want to download the syllabus from on the left-hand column.</li>
+						<li>Click on the "Resources" or "Lessons" tab at the top of the class page to find the syllabus.</li>
+						<li>Download the syllabus to your computer, then upload it to CourseCoffee.com to create your calendar.</li>
+					</ul>
 				</div>
 			</div>
 		</div>

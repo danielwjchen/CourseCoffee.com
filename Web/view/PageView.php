@@ -14,9 +14,9 @@ interface PageViewInterface {
 	 *
 	 * @return array
 	 *   - block variable name: the variable name that's expected by getContent()
-	 *      - class name: the BlockView child class reponsible for generating the 
+	 *      - callback: the BlockView child class reponsible for generating the 
 	 *        content.
-	 *      - parameters: an array of parameters needed to generate the content.
+	 *      - params: an array of parameters needed to generate the content.
 	 */
 	public function getBlocks();
 
@@ -36,6 +36,8 @@ abstract class PageView extends View implements ViewInterface {
 	 */
 	const HTML_HEADER = 'Content-type: text/html';
 
+	private $cache;
+
 	/**
 	 * Override the default constructor
 	 *
@@ -49,21 +51,14 @@ abstract class PageView extends View implements ViewInterface {
 		$this->data = $data;
 		$this->data['js']   = array();
 		$this->data['css']  = array();
-		$this->data['meta'] = '';
 		
 		$this->setPageTitle('CourseCoffee.com');
-		$this->addMeta(array(
-			'http-equiv' => 'data-type',
-			'data' => 'text/html;charset=UTF-8',
-		));
-		$this->addMeta(array(
-			'http-equiv' => 'Pragma',
-			'data' => 'no-cache'
-		));
-		$this->addJQuery();
+		// $this->addJQuery();
 		$this->addJS('main.js');
 		$this->addCSS('layout.css');
 		$this->addCSS('main.css');
+		//$this->cache = new FileCache();
+		$this->cache = new DBCache();
 	}
 
 	/**
@@ -78,6 +73,8 @@ abstract class PageView extends View implements ViewInterface {
 
 	/**
 	 * Add JQuery
+	 *
+	 * This is not used at the moment because Google API is faster
 	 */
 	protected function addJQuery() {
 		$this->addJS('lib/jquery-1.6.2.js');
@@ -87,7 +84,7 @@ abstract class PageView extends View implements ViewInterface {
 	 * Add JQuery UI
 	 */
 	protected function addJQueryUI() {
-		$this->data['jquery_ui']['js'][] = "/js/lib/jquery-ui/jquery-ui-1.8.14.custom.min.js";
+		//$this->data['jquery_ui']['js'][] = "/js/lib/jquery-ui/jquery-ui-1.8.14.custom.min.js";
 		$this->data['jquery_ui']['css'][] = "/js/lib/jquery-ui/themes/smoothness/jquery-ui-1.8.14.custom.css";
 	}
 
@@ -134,19 +131,6 @@ CSS;
 
 
 	/**
-	 * Add meta tags to a page
-	 */
-	public function addMeta($meta) {
-		$string = '';
-		foreach ($meta as $key => $value) {
-			$string .= "{$key} ='{$value}' ";
-		}
-		$this->data['meta'] .= <<<META
-<meta {$string} />\n
-META;
-	}
-
-	/**
 	 * Render the CSS files
 	 *
 	 * This file also creates cache if the compress flag is set true but no cached
@@ -162,9 +146,8 @@ META;
 			return implode("\n", $this->data['css']);
 		}
 
-		$cache_key   = sha1(implode('', $this->data['css']));
-		$db_cache    = new DBCache();
-		$cache_value = $db_cache->get($cache_key);
+		$cache_key   = sha1(implode('', $this->data['css']) . $config->build);
+		$cache_value = $this->cache->get($cache_key);
 		if (!$cache_value) {
 			foreach ($this->data['css'] as $css) {
 				$cache_value .= file_get_contents(ROOT_PATH . $css);
@@ -174,7 +157,7 @@ META;
 			/* remove tabs, spaces, newlines, etc. */
 			$cache_value = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $cache_value);
 			// expire not defined so it gets flushed when cron runs
-			$db_cache->set($cache_key, $cache_value);
+			$this->cache->set($cache_key, $cache_value);
 		}
 
 		$css_tag = '/css/' . $cache_key . '.css';
@@ -186,10 +169,37 @@ META;
 
 	/**
 	 * Render the JS files
+	 *
+	 * This file also creates cache if the compress flag is set true but no cached
+	 * value is available.
+	 *
+	 * It'is using DBCache(), which should be changed to FileCache() or even 
+	 * MemCache() in the future.
 	 */
 	protected function renderJS() {
-		array_walk($this->data['js'], 'PageView::setScriptTag');
-		return implode("\n", $this->data['js']);
+		global $config;
+		if (!$config->compressJS) {
+			array_walk($this->data['js'], 'PageView::setScriptTag');
+			return implode("\n", $this->data['js']);
+		}
+
+		require_once LIB_PATH . '/JSMin.php';
+
+		$cache_key   = sha1(implode('', $this->data['js']) . $config->build);
+		$cache_value = $this->cache->get($cache_key);
+		if (!$cache_value) {
+			foreach ($this->data['js'] as $js) {
+				$cache_value .= file_get_contents(ROOT_PATH . $js);
+			}
+			$cache_value = JSMIN::minify($cache_value);
+			$this->cache->set($cache_key, $cache_value);
+		}
+
+		$js_tag = '/js/' . $cache_key . '.js';
+
+		$this->setScriptTag($js_tag);
+		return $js_tag;
+		
 	}
 
 	/**
@@ -199,16 +209,15 @@ META;
 		global $config;
 		return <<<HTML
 <script type="text/javascript">
-
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', '{$config->google['analytics']}']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+	_gaq.push(['_setAccount', '{$config->google['analytics']}']);
+	_gaq.push(['_setDomainName', '.coursecoffee.com']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
 
 </script>
 HTML;
@@ -225,6 +234,7 @@ HTML;
 		return <<<HTML
 <div id="fb-root"></div>
 <script>
+	window.fb_app_id = '{$config->facebook['id']}';
 
 	var \$FB = function(callback) {
 
@@ -277,10 +287,13 @@ HTML;
 		foreach ($blocks as $name => $info) {
 			$block = array();
 
-			$block_object = new $info[0];
+			$block_object = new $info['callback'];
 
-			if (isset($info[1])) {
-				$params = array_intersect_key(array_flip($this->data, $info[1]));
+			if (isset($info['params'])) {
+				$params = array_flip($info['params']);
+				foreach ($params as $key => $value) {
+					$params[$key] = $this->data[$key];
+				}
 				$block = $block_object->render($params);
 			} else {
 				$block = $block_object->render();
@@ -307,10 +320,12 @@ HTML;
 		$js       = $this->renderJS();
 		$css      = $this->renderCSS();
 		// Add Jquery UI stuff because it doesn't play nice with others when cached
-		if (isset($this->data['jquery_ui'])) {
+		if (isset($this->data['jquery_ui']['js'])) {
 			array_walk($this->data['jquery_ui']['js'], 'PageView::setScriptTag');
+			$js .= implode("\n", $this->data['jquery_ui']['js']);
+		}
+		if (isset($this->data['jquery_ui']['css'])) {
 			array_walk($this->data['jquery_ui']['css'], 'PageView::setLinkTag');
-			$js  .= implode("\n", $this->data['jquery_ui']['js']);
 			$css .= implode("\n", $this->data['jquery_ui']['css']);
 		}
 		$content  = $this->getContent();
@@ -325,6 +340,15 @@ HTML;
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<meta http-equiv='data-type' data='text/html;charset=UTF-8' /> 
 		<meta http-equiv='Pragma' data='no-cache' /> 
+		<script type="text/javascript">
+			(function() {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			})();
+		</script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 		<title>{$title}</title>
 		{$js}
 		{$css}

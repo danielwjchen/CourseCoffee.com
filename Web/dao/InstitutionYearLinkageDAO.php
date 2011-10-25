@@ -6,12 +6,19 @@
 class InstitutionYearLinkageDAO extends LinkageDAO{
 
 	/**
-	 * Extend LinkageDAO::__construct().
+	 * Implement LinkageDAO::defineColumn().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('institution_id', 'year_id', 'id');
-		$this->linkage = 'institution_year_linkage';
-		parent::__construct($db, $attr, $params);
+	protected function defineColumn() {
+		return array(
+			'parent_id' => 'institution_id', 
+			'child_id'  => 'year_id',
+		);
 	}
 
+	/**
+	 * Implement LinkageDAO::defineLinkageTable().
+	 */
+	protected function defineLinkageTable() {
+		return 'institution_year_linkage';
+	}
 }

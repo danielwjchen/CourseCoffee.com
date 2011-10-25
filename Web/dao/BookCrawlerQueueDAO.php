@@ -6,21 +6,19 @@
 class BookCrawlerQueueDAO extends DAO implements DAOInterface {
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
+	protected function defineAttribute() {
+		return array(
 			'cache_key',
 			'status',
 			'created',
 			'updated',
 		);
-
-		parent::__construct($db, $attr, $params);
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		return $this->db->insert("
@@ -37,7 +35,7 @@ class BookCrawlerQueueDAO extends DAO implements DAOInterface {
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		$data = $this->db->fetch("
@@ -51,7 +49,7 @@ class BookCrawlerQueueDAO extends DAO implements DAOInterface {
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$this->db->perform("
@@ -68,7 +66,7 @@ class BookCrawlerQueueDAO extends DAO implements DAOInterface {
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = 'DELETE FROM `book_crawler_queue` WHERE ';

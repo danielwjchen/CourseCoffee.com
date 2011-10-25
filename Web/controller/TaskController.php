@@ -5,16 +5,7 @@
  */
 
 class TaskController extends Controller implements ControllerInterface {
-
-	private $output;
 	
-	/**
-	 * Extend Controller::__construct()
-	 */
-	function __construct() {
-		parent::__construct();
-	}
-
 	/**
 	 * Implement ControllerInterface::path()
 	 */
@@ -42,17 +33,10 @@ class TaskController extends Controller implements ControllerInterface {
 	}
 
 	/**
-	 * Implement ControllerInterface::afterAction()
-	 */
-	public function afterAction() {
-		echo $this->output->render();
-	}
-
-	/**
 	 * Issue a task token
 	 */
 	public function issueTaskToken() {
-		$task = new TaskCreateFormModel();
+		$task = new TaskCreateFormModel($this->sub_domain);
 		$this->output = new JSONView(array(
 			'token' => $task->initializeFormToken(),
 		));
@@ -64,12 +48,11 @@ class TaskController extends Controller implements ControllerInterface {
 	 * This really needs to be authenticated
 	 */
 	public function updateTaskStatus() {
-		$task_id = Input::Post('task_id');
 		$user_id = $this->getUserId();
-		$type = 'status';
-		$value = 'done';
-		$task_updater = new TaskStatusDAO();
-		$result = $task_updater->set($user_id, $task_id, $type, $value);
+		$task_id = Input::Post('task_id');
+		$status  = Input::Post('status');
+		$task_updater = new TaskStatusUpdateFormModel($this->sub_domain);
+		$result = $task_updater->processForm($user_id, $task_id, $status);
 		if ($result) {
 			$result['success'] = true;
 			$this->output = new JSONView($result);
@@ -89,12 +72,13 @@ class TaskController extends Controller implements ControllerInterface {
 	 * for a class.
 	 */
 	public function handleTaskCreationFromDoc() {
-		$task_model  = new TaskCreateFormModel();
-		$class_model = new CollegeClassModel();
+		$task_model  = new TaskCreateFormModel($this->sub_domain);
+		$class_model = new CollegeClassModel($this->sub_domain);
+
 		$task_count = Input::Post('task_count');
 		$file_id    = Input::Post('file_id');
 		$section_id = Input::Post('section_id');
-		$user_id = $this->GetUserId();
+		$user_id    = $this->getUserId();
 		$creator_id = ($user_id !== false) ? $user_id : 1;// super user id
 
 		if ($class_model->hasClassSyllabus($section_id)) {
@@ -104,10 +88,10 @@ class TaskController extends Controller implements ControllerInterface {
 			for ($i = 0; $i < $task_count; $i++) {
 				$date      = Input::Post('date_' . $i);
 				$objective = trim(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', Input::Post('objective_' . $i)));
-				$task_model->createTask($creator_id, $objective, strtotime($date), $section_id);
+				$task_model->createTaskFromDoc($creator_id, $objective, strtotime($date), $section_id);
 			}
 
-			$processor = new DocumentProcessorFormModel();
+			$processor = new DocumentProcessorFormModel($this->sub_domain);
 			$processor->setSectionSyllabus($section_id, $file_id);
 			$message = CollegeClassModel::SYLLABUS_SUCCESS;
 
@@ -123,7 +107,7 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Create new task
 	 */
 	public function handleTaskCreation() {
-		$task = new TaskCreateFormModel();
+		$task = new TaskCreateFormModel($this->sub_domain);
 
 		$user_id     = $this->getUserId();
 		$token       = Input::Post('token');
@@ -171,11 +155,11 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get tasks belong to a user
 	 */
 	public function getTaskBelongToUser() {
-		$user_id  = Input::Post('user_id');
+		$user_id  = $this->getUserId();
 		$begin    = Input::Post('begin');
 		$filter   = Input::Post('filter');
 		$paginate = Input::Post('paginate');
-		$list_model = new TaskListModel();
+		$list_model = new TaskListModel($this->sub_domain);
 		$result = $list_model->fetchUserToDoList($user_id, $begin, $filter, $paginate);
 		$this->output = new JSONView($result);
 	}
@@ -184,11 +168,11 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get task belong to a class
 	 */
 	public function getTaskBelongToClass() {
-		$user_id    = Input::Post('user_id');
+		$user_id    = $this->getUserId();
 		$section_id = Input::Post('section_id');
 		$filter   = Input::Post('filter');
 		$paginate   = Input::Post('paginate');
-		$list_model = new TaskListModel();
+		$list_model = new TaskListModel($this->sub_domain);
 		$result = $list_model->fetchUserClassList($user_id, $section_id, $filter, $paginate);
 		$this->output = new JSONView($result);
 	}
@@ -197,12 +181,12 @@ class TaskController extends Controller implements ControllerInterface {
 	 * Get task belong to a time period
 	 */
 	public function getTaskBelongToDate() {
-		$user_id  = Input::Post('user_id');
+		$user_id  = $this->getUserId();
 		$begin    = Input::Post('begin');
 		$end      = Input::Post('end');
 		$filter   = Input::Post('filter');
 		$paginate = Input::Post('paginate');
-		$list_model = new TaskListModel();
+		$list_model = new TaskListModel($this->sub_domain);
 		$result = $list_model->fetchUserCalendarList($user_id, $begin, $end, $filter, $paginate);
 		$this->output = new JSONView($result);
 	}

@@ -7,39 +7,52 @@ class UserProfileDAO extends DAO implements DAOInterface{
 
 	private $user_dao;
 	private $user_setting_dao;
+	private $user_role_dao;
+	private $user_status_dao;
 	private $person_dao;
+	private $tale_dao;
 	private $institution_linkage_dao;
 	private $institution_dao;
 	private $facebook_linkage_dao;
-	private $file_dao;
 
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
+	function __construct($db) {
+		parent::__construct($db);
+
+		$this->user_dao                = new UserDAO($db);
+		$this->user_role_dao           = new UserRoleDAO($db);
+		$this->user_status_dao         = new UserStatusDAO($db);
+		$this->user_setting_dao        = new UserSettingDAO($db);
+		$this->tale_dao                = new TaleDAO($db);
+		$this->person_dao              = new PersonDAO($db);
+		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($db);
+		$this->institution_dao         = new InstitutionDAO($db);
+
+	}
+
+	/**
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array(
 			'id',
 			'account',
+			'role',
+			'status',
 			'first_name',
 			'last_name',
 			'institution',
 			'institution_uri',
+			'institution_domain',
 			'year',
 			'term',
 		);
-
-		$this->user_dao                = new UserDAO($db);
-		$this->user_setting_dao        = new UserSettingDAO($db);
-		$this->person_dao              = new PersonDAO($db);
-		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($db);
-		$this->institution_dao         = new InstitutionDAO($db);
-		$this->file_dao                = new FileDAO($db);
-
-		parent::__construct($db, $attr, $params);
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 *
 	 * @param array $params
 	 *   - first_name
@@ -62,6 +75,9 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			'first_name' => $params['first_name'],
 			'last_name'  => $params['last_name'],
 		));
+
+		$this->user_role_dao->read(array('name' => $params['role_name']));
+		$this->user_status_dao->read(array('name' => $params['status_name']));
 		
 		$this->institution_dao->read(array('name' => $params['institution']));
 		$this->institution_linkage_dao->create(array(
@@ -74,12 +90,19 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			'fb_uid'  => $params['fb_uid'],
 		));
 
+		$this->user_setting_dao->create(array(
+			'user_id'   => $user_id,
+			'role_id'   => $this->user_role_dao->id,
+			'status_id' => $this->user_status_dao->id,
+		));
+
+
 		return $user_id;
 
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 *
 	 * @param array $params
 	 *   - user_id
@@ -96,8 +119,11 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				u.account,
 				p.first_name,
 				p.last_name,
+				u_r.name AS role,
+				u_s.name AS status,
 				i.name AS institution,
 				i.uri AS institution_uri,
+				i.domain AS institution_domain,
 				iy.period AS year,
 				it.name AS term
 			FROM `user` u
@@ -105,6 +131,9 @@ class UserProfileDAO extends DAO implements DAOInterface{
 				ON u.id = p.user_id
 			INNER JOIN `user_setting` us
 				ON u.id = us.user_id
+			INNER JOIN (`user_role` u_r, `user_status` u_s)
+				ON us.status_id = u_r.id
+				AND us.status_id = u_s.id
 			LEFT JOIN `user_institution_linkage` ui_linkage
 				ON u.id = ui_linkage.user_id
 				AND us.institution_id = ui_linkage.institution_id
@@ -130,7 +159,6 @@ class UserProfileDAO extends DAO implements DAOInterface{
 			 GROUP BY u.id
 			";
 			$data = $this->db->fetch($sql, array(
-				'file_type' => FileType::PROFILE_IMAGE,
 				'email'    => $params['email'],
 				'password' => $params['password'],
 			));
@@ -143,7 +171,7 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$this->user_dao->read(array('id' => $this->attr['id']));
@@ -165,13 +193,13 @@ class UserProfileDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$this->user_dao->destroy();
 		$this->person_dao->destroy();
 		$this->facebook_linkage_dao->destroy();
-		$this->location_linkage_dao->destroy();
+		$this->institution_dao->update();
 	}
 
 }

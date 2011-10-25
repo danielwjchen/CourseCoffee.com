@@ -8,7 +8,7 @@ require_once __DIR__ . '/includes/bootstrap.php';
 // require_once INCLUDES_PATH . '/Scheduler.php';
 require_once __DIR__ . '/config.php';
 
-Autoloader::Init($config->db);
+Autoloader::Init($config->db['default']);
 function __autoload($classname) {
 	Autoloader::Add($classname);
 }
@@ -17,5 +17,7 @@ function __autoload($classname) {
 $db_cache = new DBCache();
 $db_cache->expire();
 
-$book_queue = new BookQueueModel();
-$book_queue->processBookQueue();
+foreach($config->db['institution'] as $db_name => $db_config) {
+	$book_queue = new BookQueueModel($db_name);
+	$book_queue->processBookQueue();
+}

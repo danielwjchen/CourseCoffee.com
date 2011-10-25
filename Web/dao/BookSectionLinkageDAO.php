@@ -6,12 +6,19 @@
 class BookSectionClassLinkageDAO extends LinkageDAO {
 
 	/**
-	 * Extend LinkageDAO::__construct().
+	 * Implement LinkageDAO::defineColumn().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('book_id', 'section_id', 'id');
-		$this->linkage = 'book_section_linkage';
-		parent::__construct($db, $attr, $params);
+	protected function defineColumn() {
+		return array(
+			'parent_id' => 'book_id', 
+			'child_id'  => 'section_id',
+		);
 	}
 
+	/**
+	 * Implement LinkageDAO::defineLinkageTable().
+	 */
+	protected function defineLinkageTable() {
+		return 'book_section_linkage';
+	}
 }

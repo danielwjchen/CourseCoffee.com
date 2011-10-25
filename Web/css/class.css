@@ -2,6 +2,9 @@
  * @file
  * Define styles for class body
  */
+.class .container-inner {
+  padding-bottom: 160px;
+}
 .class .panel-top{
 	position: absolute;
 	top: -35px;
@@ -95,11 +98,7 @@
 .class .body a.button{
 	float: left;
 	clear: both;
-	color: white;
 	margin: 5px 0;
-	display: block;
-	border: 1px solid #ff8400;
-	border-radius: 4px;
 	font-size: 20px;
 	height: 26px;
 	line-height: 26px;
@@ -117,4 +116,3 @@
 .class .upload-form .button{
   width: 200px;
 }
-

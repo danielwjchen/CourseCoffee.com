@@ -33,17 +33,26 @@ class TaskDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
+	function __construct($db) {
+		parent::__construct($db);
 		$this->quest                 = new QuestDAO($db);
 		$this->date                  = new DateDAO($db);
 		$this->quest_date_linkage    = new QuestDateLinkageDAO($db);
 		$this->quest_section_linkage = new QuestSectionLinkageDAO($db);
 		$this->quest_user_linkage    = new QuestUserLinkageDAO($db);
 
-		$attr = array(
+	}
+
+	/**
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array(
 			'id',
-      'type',
-      'type_id',
+			'status',
+			'status_id',
+			'type',
+			'type_id',
 			'creator_id',
 			'user_id',
 			'due_date',
@@ -51,13 +60,10 @@ class TaskDAO extends DAO implements DAOInterface{
 			'objective',
 			'description',
 		);
-
-		parent::__construct($db, $attr, $params);
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 *
 	 * @param array $params
 	 *   - section_id: optional, e.g. an id to identify the class this task 
@@ -68,7 +74,8 @@ class TaskDAO extends DAO implements DAOInterface{
 	 *   - description: optional
 	 */
 	public function create($params) {
-		$params['type'] = QuestType::TASK;
+		$params['type']   = QuestTypeSetting::TASK;
+		$params['status'] = QuestStatusSetting::PENDING;
 		$quest_id = $this->quest->create($params);
 		$date_id = $this->date->create(array(
 			'timestamp' => $params['due_date'],
@@ -92,7 +99,7 @@ class TaskDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		if (!isset($params['id'])) {
@@ -142,7 +149,7 @@ class TaskDAO extends DAO implements DAOInterface{
 
 		$data = $this->db->fetch($sql, array(
 			'id' => $params['id'],
-			'type_name' => QuestType::TASK,
+			'type_name' => QuestTypeSetting::TASK,
 		));
 
 		// debug
@@ -152,7 +159,7 @@ class TaskDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 *
 	 * This is not tested!
 	 */
@@ -167,7 +174,7 @@ class TaskDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$this->quest->destroy();

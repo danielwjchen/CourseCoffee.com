@@ -11,16 +11,40 @@ interface ModelInterface {
  */
 abstract class Model {
 
+	const DEFAULT_DB     = 'default_db';
+	const INSTITUTION_DB = 'institution_db';
+
+	protected $default_db;
+	protected $institution_db;
+
 	/**
-	 * Manage database access
+	 * An array of dao resources
 	 */
-	protected $db;
+	protected $dao;
 
 	/**
 	 * Construct the model object
 	 */
-	function __construct() {
+	function __construct($domain) {
 		global $config;
-		$this->db = new DB($config->db);
+		$this->default_db = new DB($config->db['default']);
+		if ($domain != 'www') {
+			$this->institution_db = new DB($config->db['institution'][$domain]);
+		}
+
+		if (method_exists($this, 'defineDAO')) {
+			$this->instantiateDAO($this->defineDAO());
+		}
+
 	}
+
+	/**
+	 * Instantiate DAOs
+	 */
+	private function instantiateDAO($dao_array) {
+		foreach ($dao_array as $name => $definition) {
+			$this->dao[$name] = new $definition['class']($this->$definition['db']);
+		}
+	}
+
 }

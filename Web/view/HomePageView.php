@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Generate the Home page for visiters
+ * Generate the Home page for registered users
  */
 class HomePageView extends PageView implements PageViewInterface {
 
@@ -33,13 +33,14 @@ class HomePageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'NavigationBlockView',
+				'callback' => 'NavigationBlockView',
+				'params'   => array('role'),
 			),
 			'upload_form' => array(
-				'UploadFormBlockView',
+				'callback' => 'UploadFormBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -73,6 +74,10 @@ HTML;
 		<div class="header">
 			<div class="header-inner">
 				{$header}
+			</div>
+		</div>
+		<div class="system-message hidden">
+			<div class="system-message-inner">
 			</div>
 		</div>
 		<div class="body">
@@ -122,7 +127,7 @@ HTML;
 						</div>
 					</div>
 					<div class="panel-01">
-						<h1>book list</h1>
+						<h1>Book List</h1>
 						<form name="class-feed">
 							{$readings}
 						</form>

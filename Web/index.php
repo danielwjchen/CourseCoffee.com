@@ -7,12 +7,9 @@ require_once __DIR__ . '/config.php';
  * Auto-load necessary files
  */
 Session::Init();
-Autoloader::Init($config->db);
 function __autoload($classname) {
-	Autoloader::Add($classname);
+	Autoloader::Resolve($classname);
 }
-
-Router::Init($config->db);
 
 $uri    = '';
 $params = array();
@@ -30,4 +27,3 @@ if (isset($_GET['q'])) {
 }
 
 Router::Dispatch($uri, $params);
-

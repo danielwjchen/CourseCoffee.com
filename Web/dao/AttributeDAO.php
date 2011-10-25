@@ -6,37 +6,37 @@
 abstract class AttributeDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Name of the attribute table
+	 * The table of the DAO which this attribute complements.
 	 */
-	protected $attribute;
+	protected $dao_table;
 
 	/**
-	 * Name of the model which this attribute defines
+	 * Define the DAO class which this AttributeDAO complements.
+	 *
+	 * @return string
 	 */
-	protected $model;
+	abstract protected function defineDAOTable() ;
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
+	protected function defineAttribute() {
+		$this->dao_table = $this->defineDAO();
+		return array(
 			'id',
 			'value',
-			$this->model . '_id',
+			$this->dao_table . '_id',
 			'type',
 			'type_id',
 		);
-
-		parent::__construct($db, $attr, $params);
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (!isset($params['value']) || 
-				!isset($params[$this->model . '_id']) || 
+				!isset($params[$this->dao_table . '_id']) || 
 				!isset($params['type'])) 
 		{
 			throw new Exception('incomplete attribute params - '. print_r($params, true));
@@ -45,16 +45,16 @@ abstract class AttributeDAO extends DAO implements DAOInterface{
 		} 
 
 		parent::create("
-			INSERT INTO `{$this->model}_attribute`
-				(`value`, `{$this->model}_id`, `type_id`)
+			INSERT INTO `{$this->dao_table}_attribute`
+				(`value`, `{$this->dao_table}_id`, `type_id`)
 			VALUES (
 				:value,
-				:{$this->model}_id,
-				(SELECT `id` FROM `{$this->model}_attribute_type` WHERE name = :type)
+				:{$this->dao_table}_id,
+				(SELECT `id` FROM `{$this->dao_table}_attribute_type` WHERE name = :type)
 			)",
 				array(
 					'value' => $params['value'],
-					$this->model . '_id' => $params[$this->model . '_id'],
+					$this->dao_table . '_id' => $params[$this->dao_table . '_id'],
 					'type' => $params['type'],
 			)
 		);
@@ -62,7 +62,7 @@ abstract class AttributeDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		$sql ="
@@ -70,8 +70,8 @@ abstract class AttributeDAO extends DAO implements DAOInterface{
 				a.*, 
 				at.id AS type_id,
 				at.name AS type
-			FROM `{$this->model}_attribute` a
-			INNER JOIN `{$this->model}_attribute_type` at
+			FROM `{$this->dao_table}_attribute` a
+			INNER JOIN `{$this->dao_table}_attribute_type` at
 				ON a.type_id = at.id
 		";
 
@@ -79,25 +79,25 @@ abstract class AttributeDAO extends DAO implements DAOInterface{
 			$sql .= 'WHERE a.id = :id';
 			$data = parent::read($sql, array('id' => $params['id']));
 
-		} elseif (isset($params[$this->model . '_id']) && isset($params['type_id'])) {
-			$sql .= 'WHERE a.' . $this->model . '_id = :' . $this->model .'_id AND at.id = :type_id';
+		} elseif (isset($params[$this->dao_table . '_id']) && isset($params['type_id'])) {
+			$sql .= 'WHERE a.' . $this->dao_table . '_id = :' . $this->dao_table .'_id AND at.id = :type_id';
 			$data = parent::read($sql, array(
-				$this->model . '_id' => $params[$this->model . '_id'],
+				$this->dao_table . '_id' => $params[$this->dao_table . '_id'],
 				'type_id' => $params['type_id']
 			));
 
-		} elseif (isset($params[$this->model . '_id']) && isset($params['type'])) {
-			$sql .= 'WHERE a.' . $this->model .'_id = :' . $this->model .'_id AND at.name = :type';
+		} elseif (isset($params[$this->dao_table . '_id']) && isset($params['type'])) {
+			$sql .= 'WHERE a.' . $this->dao_table .'_id = :' . $this->dao_table .'_id AND at.name = :type';
 			$data = parent::read($sql, array(
-				$this->model . '_id' => $params[$this->model . '_id'],
+				$this->dao_table . '_id' => $params[$this->dao_table . '_id'],
 				'type' => $params['type']
 			));
 
-		} elseif (isset($params[$this->model . '_id'])) {
-			$sql .= 'WHERE a.' . $this->model . '_id = :' . $this->model .'_id';
+		} elseif (isset($params[$this->dao_table . '_id'])) {
+			$sql .= 'WHERE a.' . $this->dao_table . '_id = :' . $this->dao_table .'_id';
 			$data = parent::read(
 				$sql, 
-				array($this->model . '_id' => $params[$this->model . '_id'])
+				array($this->dao_table . '_id' => $params[$this->dao_table . '_id'])
 			);
 
 		} elseif (isset($params['type_id']) && isset($params['value'])) {
@@ -125,21 +125,21 @@ abstract class AttributeDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
-			UPDATE `{$this->model}_attribute` SET
+			UPDATE `{$this->dao_table}_attribute` SET
 				value = :value,
-				{$this->model}_id = :{$this->model}_id,
-				type_id = (SELECT id FROM {$this->model}_attribute_type WHERE name = :type)
+				{$this->dao_table}_id = :{$this->dao_table}_id,
+				type_id = (SELECT id FROM {$this->dao_table}_attribute_type WHERE name = :type)
 			WHERE id = :id
 		";
 
 		parent::update($sql, array(
 			'value' => $this->attr['value'],
 			'type' => $this->attr['type'],
-			$this->model . '_id' => $this->attr[$this->model . '_id'],
+			$this->dao_table . '_id' => $this->attr[$this->dao_table . '_id'],
 			'id' => $this->attr['id']
 		));
 
@@ -148,10 +148,10 @@ abstract class AttributeDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
-		$sql = "DELETE FROM `{$this->model}_attribute` WHERE id = :id";
+		$sql = "DELETE FROM `{$this->dao_table}_attribute` WHERE id = :id";
 		parent::destroy($sql, array('id' => $this->id));
 
 	}

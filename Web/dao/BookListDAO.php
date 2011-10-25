@@ -11,7 +11,11 @@ class BookListDAO extends ListDAO {
 	public function read($params) {
 		if (isset($params['section_id'])) {
 			$sql = "
-				SELECT b.isbn FROM book b
+				SELECT 
+					b.id,
+					b.title,
+					b.isbn 
+				FROM book b
 				INNER JOIN book_section_linkage bs_linkage
 					ON b.id = bs_linkage.book_id
 				WHERE bs_linkage.section_id = :section_id

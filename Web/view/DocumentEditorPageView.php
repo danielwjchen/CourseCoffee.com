@@ -14,7 +14,11 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 		$this->addJQueryUI();
 		$this->addJS('model/book-suggest.js');
 		$this->addJS('model/class-suggest.js');
+		$this->addJS('model/class-remove.js');
+		$this->addJS('model/class-enroll.js');
 		$this->addJS('model/class-edit.js');
+		$this->addJS('model/editor-flow.js');
+		$this->addJS('model/editor-processor.js');
 		$this->addJS('model/register.js');
 		$this->addJS('controller/editor.js');
     $this->addJS('lib/date.js');
@@ -23,6 +27,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 		$this->addCSS('dialog.css');
 		$this->addCSS('editor.css');
 		$this->addCSS('navigation.css');
+		$this->addCSS('class-remove.css');
 	}
 
 	/**
@@ -31,7 +36,7 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -41,15 +46,6 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 	 */
 	public function getContent() {
 		extract($this->data);
-		$option = '';
-		foreach ($college_option as $key => $value) {
-			$option .= "<option value='{$key}'>{$value}</option>";
-		}
-		$school_select = <<<HTML
-<select name="institution_id">
-	{$option}
-</select>
-HTML;
 		return <<<HTML
 <div class="editor container">
 	<div class="container-inner">
@@ -58,71 +54,48 @@ HTML;
 				<ul id="navigation-menu">
 					<li class="home active">
 						<a class="home button" href="/home">Home</a>
+          </li>
+				</ul>
+				<ul id="editor-action-menu">
+          <li class="undo undo_operation">
+						<a class="undo button" href="#">undo</a>
+          </li>
+          <li class="redo redo_operation">
+						<a class="redo button" href="#">redo</a>
+          </li>
+          <li class="add">
+						<a class="add button add_new_task" href="#">new task</a>
+          </li>
+          <li class="submit" id="create-task">
+						<a class="submit button" href="#">submit</a>
 					</li>
 				</ul>
 			</div>
 		</div>
 		<div class="body">
-			<div class="body-inner">
-				<div class="content">
+                    <div class="body-inner">
 					<form id="processor-form" name="document-processor">
 						<input type="hidden" name="document" value="{$document}" />
 						<input type="hidden" name="mime" value="{$mime}" />
 						<input type="hidden" name="token" value="{$processor_token}" />
 					</form>
-					<form id="class-selection-form-skeleton" class="hidden" name="class-selection">
-						<div class="hidden">
-							<input type="hidden" id="year-id" name="year_id" />
-							<input type="hidden" id="term-id" name="term_id" />
-							<input type="hidden" id="section-id" name="section_id" />
-						</div>
-						<div class="row">
-							<label for="institution_id">School:</label>
-							{$school_select}
-						</div>
-						<div class="row">
-							<label for="string">Class: </label>
-							<input type="text" id="suggest-input" name="string" />
-						</div>
-						<div class="confirm-row row">
-							<a href="#" class="button confirm disabled">confirm</a>
-						</div>
-					</form>
 					<form id="task-creation-form" name="task-creation">
+						<input type="hidden" name="section_id" value="{$section_id}" />
+						<input type="hidden" name="section_code" value="{$section_code}" />
 						<input type="hidden" name="process_state" value="{$process_state}" />
 						<input type="hidden" name="file_id" value="{$file_id}"/>
           </form>
-          <table id='main_container'>
-						<tr>
-							<td id='table_title_left'>original syllabus</td>
-              <td id='table_title_right' >parsed data</td>
-            </tr>
-            <tr>
-              <td class='data_col_left'><div id='orig_syl'></div><div id="info_box_left"></div></td>
-              <td class='data_col_right'><div id="info_box_right"></div>
-<div id='parsed_data'></div>  
-                  <div id="tool_box">
-			<table>
-                            <tr>    
-		                <td>
-		                    <a class='toolbox_btn' id="undo" href="#">undo</a>
-                                    <a class='toolbox_btn' id="redo" href="#">redo</a>
-                                    <a class='toolbox_btn' id="new_assignment" href="#">new assignment</a>
-                                    <a class='toolbox_btn' id="create-task" href="#">submit</a>
-                                    <span class="hint" id="toolbox_hint"></span>
-				</td>
-                            </tr>
-                        </table>
-		    </div>
-            </td>
-            </tr>
-	    </table>
-                  
-         <div id="msg_board">
-        </div>
-
+					<div class="suggested-reading hidden">
+						<div id="enroll-book-list" class="book-list"></div>
 					</div>
-				</div>
+                  
+        <div class="content-wrap">
+            
+            
+        </div>
+        <div class="task-wrap">
+                                
+                                </div>
 			</div>
 		</div>
 	</div>

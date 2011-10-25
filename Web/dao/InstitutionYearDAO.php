@@ -13,21 +13,24 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	/**
 	 * Extend DAO::__construct().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
-			'id',
-			`institution_id`,
-			'period',
-		);
-
-		$this->linkage_dao = new InstitutionYearLinkageDAO($this->db);
-
-		parent::__construct($db, $attr, $params);
-
+	function __construct($db) {
+		parent::__construct($db);
+		$this->linkage_dao = new InstitutionYearLinkageDAO($db);
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array(
+			'id',
+			'institution_id',
+			'period',
+		);
+	}
+
+	/**
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (!isset($params['institution_id']) || !isset($params['period'])) {
@@ -50,7 +53,7 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 *
 	 * This differs from other DAOs as it fetches all the records
 	 */
@@ -107,7 +110,7 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -123,7 +126,7 @@ class InstitutionYearDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = 'DELETE FROM `institution_year` WHERE id = :id';

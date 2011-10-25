@@ -12,9 +12,13 @@ class CollegeClassModel extends Model {
 	 */
 	const NO_CLASS_FOUND = 'We are sorry, but no class could be found with the provided information';
 
-	const ERROR_ALREADY_HAS_SYLLABUS = "hmmm... someone already uploaded a syllabus to this class, but that's okay!";
+	const ERROR_ALREADY_HAS_SYLLABUS = "hmmm... someone already uploaded a syllabus for this class, but that's okay!";
 	const EVENT_ALREADY_HAS_SYLLABUS = 'Attempt to upload syllabus to a class already has one';
 	const SYLLABUS_SUCCESS = 'Congratulations! The syllabus is now uploaded!';
+
+	const SYLLABUS_APPROVED = 'approved';
+	const SYLLABUS_NEW      = 'has_syllabus';
+	const SYLLABUS_REMOVED  = 'removed';
 
 	/**
 	 * Access to college class records
@@ -24,9 +28,9 @@ class CollegeClassModel extends Model {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->class_dao = new CollegeClassDAO($this->db);
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
+		$this->class_dao = new CollegeClassDAO($this->institution_db);
 	}
 
 	/**
@@ -72,12 +76,8 @@ class CollegeClassModel extends Model {
 	}
 
 	/**
-	 * Get college class information by name
+	 * Get college class information by section code
 	 *
-	 * @param string institution_uri
-	 *   an URI safe version of the college name
-	 * @param string year
-	 * @param string term
 	 * @param string subject_abbr
 	 * @param string course_num
 	 * @param string section_num
@@ -90,11 +90,8 @@ class CollegeClassModel extends Model {
 	 *   - error:
 	 *   - meessage:
 	 */
-	public function getClassByURI($institution_uri, $year, $term, $subject_abbr, $course_num, $section_num) {
+	public function getClassBySectionCode($subject_abbr, $course_num, $section_num) {
 		$has_record = $this->class_dao->read(array(
-			'institution_uri'  => $institution_uri,
-			'year'             => $year,
-			'term'             => $term,
 			'subject_abbr'     => strtoupper($subject_abbr),
 			'course_num'       => strtoupper($course_num),
 			'section_num'      => strtoupper($section_num),
@@ -111,14 +108,37 @@ class CollegeClassModel extends Model {
 	 *  return false where there is no syllabus
 	 */
 	public function hasClassSyllabus($section_id) {
-		$section_dao = new SectionDAO($this->db);
+		$section_dao = new SectionDAO($this->institution_db);
 		$has_record = $section_dao->read(array('id' => $section_id));
 
 		// debug
 		// error_log(__METHOD__ . ' : result ' . print_r($section_dao->attribute, true));
 
 		$result = $section_dao->attribute;
-		return $result['syllabus_id'] != 0;
+		switch ($result['syllabus_status']) {
+			case self::SYLLABUS_APPROVED:
+			case self::SYLLABUS_NEW:
+				return true;
+			default:
+			case self::SYLLABUS_REMOVED:
+				return false;
+		}
+	}
+
+	/**
+	 * Update section syllabus status
+	 */
+	public function updateClassSyllabusStatus($section_id, $syllabus_id, $status) {
+		$section_dao = new SectionDAO($this->institution_db);
+		$has_record = $section_dao->read(array('id' => $section_id));
+		$section_dao->syllabus_id     = $syllabus_id;
+		$section_dao->syllabus_status = $status;
+		$section_dao->update();
+
+		// debug
+		// error_log(__METHOD__ . ' : result ' . print_r($section_dao->attribute, true));
+
+		return $has_record;
 	}
 
 }

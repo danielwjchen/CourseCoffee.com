@@ -26,6 +26,8 @@ class TaskCreateFormModel extends FormModel {
 	const EVENT_FORM_EMPTY       = 'An empty task form is submitted. How is this possible?';
 	const EVENT_FORM_EXPIRED     = 'Task creation form expired.';
 
+	const ADMIN_USER_ID = 1;
+
 	/**
 	 * @} End of even_messages
 	 */
@@ -38,15 +40,29 @@ class TaskCreateFormModel extends FormModel {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->task_dao = new TaskDAO($this->db);
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
+		$this->task_dao = new TaskDAO($this->institution_db);
 		$this->form_name = 'task_creation_form';
 		// form submission is limite to 5 times
 		$this->max_try = 5;
 		// form expires in an hour
 		$this->expire = 3600;
 	}
+
+	public function createTaskFromDoc($user_id, $objective, $timestamp, $section_id ='', $description = '') {
+		$task_id = $this->task_dao->create(array(
+			'user_id'     => self::ADMIN_USER_ID,
+			'objective'   => $objective,
+			'due_date'    => $timestamp,
+			'description' => $description,
+			'section_id'  => $section_id,
+		));
+		// debug
+		// error_log(__METHOD__ . $task_id);
+		return $task_id;
+	}
+
 
 	/**
 	 * Create task
@@ -61,13 +77,17 @@ class TaskCreateFormModel extends FormModel {
 	 *  the record id
 	 */
 	public function createTask($user_id, $objective, $timestamp, $section_id ='', $description = '') {
-		return $this->task_dao->create(array(
+		$task_id = $this->task_dao->create(array(
 			'user_id'     => $user_id,
 			'objective'   => $objective,
 			'due_date'    => $timestamp,
 			'description' => $description,
 			'section_id'  => $section_id,
 		));
+
+		// debug
+		// error_log(__METHOD__ . $task_id);
+		return $task_id;
 
 	}
 
@@ -99,6 +119,7 @@ class TaskCreateFormModel extends FormModel {
 		if (!$this->validateFormToken($token)) {
 			$token = $this->initializeFormToken();
 			Logger::write(self::EVENT_FORM_EXPIRED, Logger::SEVERITY_LOW);
+			/*
 			return array(
 				'objective' => $objective,
 				'due_date' => $due_date,
@@ -106,6 +127,7 @@ class TaskCreateFormModel extends FormModel {
 				'token' => $token,
 				'error' => self::ERROR_FORM_EXPIRED
 			);
+			*/
 		}
 
 		$this->unsetFormToken();

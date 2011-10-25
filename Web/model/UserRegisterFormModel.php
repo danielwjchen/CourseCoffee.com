@@ -10,12 +10,12 @@ class UserRegisterFormModel extends FormModel {
 	 * @{
    * Error messages for the user when an error is encountered
 	 */
-	const ERROR_FAILED_TO_CREATE     = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
-	const ERROR_FORM_EXPIRED         = 'The form has expired. Please try again.';
-	const ERROR_FORM_EMPTY           = 'You have empty fields. Please try again.';
-	const ERROR_EMAIL_TAKEN          = 'An account is already registered with this emaill address.';
-	const ERROR_PASSWORD_NOT_MATCH   = 'The password and confirmation do not match.';
-	const ERROR_INVALID_EMAIL        = 'Please enter a valid email account';
+	const ERROR_FAILED_TO_CREATE   = 'Oh no! the server monkeys are revolting! Quick! Get the bananas!';
+	const ERROR_FORM_EXPIRED       = 'The form has expired. Please try again.';
+	const ERROR_FORM_EMPTY         = 'You have empty fields. Please try again.';
+	const ERROR_EMAIL_TAKEN        = 'An account is already registered with this emaill address.';
+	const ERROR_PASSWORD_NO_MATCH  = 'The password and confirmation do not match.';
+	const ERROR_INVALID_EMAIL      = 'Please enter a valid email account';
 	const ERROR_PASSWORD_TOO_SHORT = 'Attempt to register with password that is too short';
 	
 	/**
@@ -27,15 +27,15 @@ class UserRegisterFormModel extends FormModel {
 	 * @{
 	 * Log messges to track events
 	 */
-	const EVENT_FAILED_TO_CREATE = 'Failed to create user';
-	const EVENT_NEW_ATTEMPT      = 'New user attempt to register';
-	const EVENT_FORM_EMPTY       = 'An empty user registration submission is made. How is this possible?';
-	const EVENT_NEW_USER         = 'New user registered';
-	const EVENT_FORM_EXPIRED     = 'User registration form expired';
-	const EVENT_EMAIL_TAKEN      = 'Attempt to register with an existing email account';
-	const EVENT_UNKNOWN_SCHOOL   = 'Attempt to register with a unknown school. Record created';
-	const EVENT_INVALID_EMAIL    = 'Attempt to register with an invalid email';
-	const EVENT_PASSWORD_NOT_MATCH = 'Attempt to register with password and confirmation that do not match';
+	const EVENT_FAILED_TO_CREATE   = 'Failed to create user';
+	const EVENT_NEW_ATTEMPT        = 'New user attempt to register';
+	const EVENT_FORM_EMPTY         = 'An empty user registration submission is made. How is this possible?';
+	const EVENT_NEW_USER           = 'New user registered';
+	const EVENT_FORM_EXPIRED       = 'User registration form expired';
+	const EVENT_EMAIL_TAKEN        = 'Attempt to register with an existing email account';
+	const EVENT_UNKNOWN_SCHOOL     = 'Attempt to register with a unknown school. Record created';
+	const EVENT_INVALID_EMAIL      = 'Attempt to register with an invalid email';
+	const EVENT_PASSWORD_NO_MATCH  = 'Attempt to register with password and confirmation that do not match';
 	const EVENT_PASSWORD_TOO_SHORT = 'Attempt to register with password that is too short';
 	/**
 	 * @} End of event_messages
@@ -56,6 +56,8 @@ class UserRegisterFormModel extends FormModel {
 	 * Access to database records
 	 */
 	private $user_dao;
+	private $user_role_dao;
+	private $user_status_dao;
 	private $user_setting_dao;
 	private $facebook_linkage_dao;
 	private $person_dao;
@@ -70,17 +72,19 @@ class UserRegisterFormModel extends FormModel {
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->user_dao                = new UserDAO($this->db);
-		$this->user_setting_dao        = new UserSettingDAO($this->db);
-		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->db);
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
+		$this->user_dao                = new UserDAO($this->default_db);
+		$this->user_role_dao           = new UserRoleDAO($this->default_db);
+		$this->user_status_dao         = new UserStatusDAO($this->default_db);
+		$this->user_setting_dao        = new UserSettingDAO($this->default_db);
+		$this->facebook_linkage_dao    = new UserFacebookLinkageDAO($this->default_db);
 
-		$this->person_dao              = new PersonDAO($this->db);
-		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($this->db);
-		$this->institution_dao         = new InstitutionDAO($this->db);
-		$this->institution_year_dao    = new InstitutionYearDAO($this->db);
-		$this->institution_term_dao    = new InstitutionTermDAO($this->db);
+		$this->person_dao              = new PersonDAO($this->default_db);
+		$this->institution_linkage_dao = new UserInstitutionLinkageDAO($this->default_db);
+		$this->institution_dao         = new InstitutionDAO($this->default_db);
+		$this->institution_year_dao    = new InstitutionYearDAO($this->default_db);
+		$this->institution_term_dao    = new InstitutionTermDAO($this->default_db);
 
 		$this->form_name = 'user_register_form';
 		// form submission is limite to 5 times
@@ -193,11 +197,16 @@ class UserRegisterFormModel extends FormModel {
 
 		$term_id = $this->institution_term_dao->id;
 
+		$this->user_role_dao->read(array('name' => UserRoleSetting::MEMBER));
+		$this->user_status_dao->read(array('name' => UserStatusSetting::NEWLY_CREATED));
+
 		// debug 
 		// error_log('institution_id - ' . $institution_id . ', year_id - ' . $year_id . ', term_id - ' . $term_id);
 
 		$this->user_setting_dao->create(array(
 			'user_id'        => $user_id,
+			'role_id'        => $this->user_role_dao->id,
+			'status_id'      => $this->user_status_dao->id,
 			'institution_id' => $institution_id,
 			'year_id'        => $year_id,
 			'term_id'        => $term_id,
@@ -366,9 +375,9 @@ class UserRegisterFormModel extends FormModel {
 
 		// check if the password and confirmation match
 		if ($password !== $confirm) {
-			Logger::write(self::EVENT_PASSWORD_NOT_MATCH, Logger::SEVERITY_HIGH);
+			Logger::write(self::EVENT_PASSWORD_NO_MATCH, Logger::SEVERITY_HIGH);
 			return array(
-				'error'          => self::ERROR_PASSWORD_NOT_MATCH,
+				'error'          => self::ERROR_PASSWORD_NO_MATCH,
 				'first_name'     => $first_name,
 				'last_name'      => $last_name,
 				'institution_id' => $institution_id,

@@ -6,16 +6,14 @@
 class TaleVersionDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('id',	'story');
-		parent::__construct($db, $attr, $params);
-
+	protected function defineAttribute() {
+		return array('id',	'story');
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (!isset($params['story'])) {
@@ -33,7 +31,7 @@ class TaleVersionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		$sql ="SELECT * FROM `tale_version`";
@@ -53,7 +51,7 @@ class TaleVersionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 
@@ -68,7 +66,7 @@ class TaleVersionDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = 'DELETE FROM tale_version WHERE id = :id';

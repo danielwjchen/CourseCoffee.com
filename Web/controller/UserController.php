@@ -7,30 +7,13 @@
 class UserController extends Controller implements ControllerInterface {
 
 	/**
-	 * Access to user session values
-	 */
-	private $user_session_model;
-
-	/**
-	 * Handle output in JSON format
-	 */
-	private $output;
-
-	/**
-	 * Extend Controller::__construct()
-	 */
-	function __construct() {
-		parent::__construct();
-		$this->user_session_model = new UserSessionModel();
-	}
-
-	/**
 	 * Implement ControllerInterface::path()
 	 */
 	public static function path() {
 		return array(
 			'user-register-facebook' => 'registerUserByFB',
 			'user-register-regular'  => 'registerUserByUs',
+			'user-link-facebook' => 'linkUserWithFacebook',
 			'user-update'   => 'updateUser',
 			'user-remove'   => 'removeUser',
 			'user-profile'  => 'getUserProfile',
@@ -44,14 +27,8 @@ class UserController extends Controller implements ControllerInterface {
 	 * Override Controller::beforeAction()
 	 */
 	public function beforeAction() {
+		$this->redirectUnsupportedDomain();
 
-	}
-
-	/**
-	 * Override Controller::beforeAction()
-	 */
-	public function afterAction() {
-		echo $this->output->render();
 	}
 
 	/**
@@ -68,27 +45,27 @@ class UserController extends Controller implements ControllerInterface {
 	 * registerUserByUs()
 	 */
 	private function processRegistration($user_record, $section_id) {
-		$this->user_session_model->setUserSessionCookie($user_record['user_id'], $email, $password);
-		$this->user_session_model->setUserProfile($user_record['profile']);
-		$this->user_session_model->setUserSetting($user_record['setting']);
+		$this->user_session->setUserSessionCookie($user_record['user_id'], $email, $password);
+		$this->user_session->setUserProfile($user_record['profile']);
+		$this->user_session->setUserSetting($user_record['setting']);
 
 		$class_list = array();
 		if (!empty($section_id)) {
 			Session::Del('section_id');
-			$college_class = new CollegeClassModel();
+			$college_class = new CollegeClassModel($this->sub_domain);
 			$class_info = $college_class->getClassById($section_id);
 
 			// check if the requested section id is valid
 			if (isset($class_info['content'])) {
 
-				$user_enroll_class_model = new UserEnrollClassModel();
+				$user_enroll_class_model = new UserEnrollClassModel($this->sub_domain);
 				$user_enroll_class_model->createLinkage(
 					$user_record['user_id'], 
 					$section_id
 				);
 				$class_list[$section_id] = $class_info['content']['section_code'];
 			}
-			$this->user_session_model->setUserClassList($class_list);
+			$this->user_session->setUserClassList($class_list);
 
 
 		}
@@ -100,7 +77,7 @@ class UserController extends Controller implements ControllerInterface {
 	 * Since this is our first semester, some of information is hard-coded
 	 */
 	public function registerUserByFB() {
-		$fb_model = new FBModel();
+		$fb_model = new FBModel($this->sub_domain);
 
 		// debug
 		//error_log(__METHOD__ . ' : $_REQUEST - ' . print_r($_REQUEST, true));
@@ -112,12 +89,12 @@ class UserController extends Controller implements ControllerInterface {
 			// debug 
 			// error_log(__METHOD__ . ' : result - ' . print_r($result, true));
 
-			$user_register_form = new UserRegisterFormModel();
-			$tou_model = new TermsOfUseModel();
+			$user_register_form = new UserRegisterFormModel($this->sub_domain);
+			$tou_model = new TermsOfUseModel($this->sub_domain);
 			$tou_vid        = $tou_model->getLatest();
 			$first_name     = $result['first_name'];
 			$last_name      = $result['last_name'];
-			$institution_id = $result['school'];
+			$institution_id = $this->getInstitutionId();
 			$section_id     = Session::Get('section_id');
 			$year           = '2011';
 			$term           = 'fall';
@@ -151,11 +128,11 @@ class UserController extends Controller implements ControllerInterface {
 	 * Since this is our first semester, some of information is hard-coded
 	 */
 	public function registerUserByUs() {
-		$tou_model = new TermsOfUseModel();
+		$tou_model = new TermsOfUseModel($this->sub_domain);
 		$tou_vid        = $tou_model->getLatest();
 		$first_name     = Input::Post('first-name');
 		$last_name      = Input::Post('last-name');
-		$institution_id = Input::Post('school');
+		$institution_id = $this->getInstitutionId();
 		$section_id     = Session::Get('section_id');
 		$year           = '2011';
 		$term           = 'fall';
@@ -164,7 +141,7 @@ class UserController extends Controller implements ControllerInterface {
 		$password       = Input::Post('password');
 		$confirm        = Input::Post('confirm');
 
-		$user_register_form = new UserRegisterFormModel();
+		$user_register_form = new UserRegisterFormModel($this->sub_domain);
 
 		$user_record = $user_register_form->processForm(
 			$first_name,
@@ -216,12 +193,11 @@ class UserController extends Controller implements ControllerInterface {
 			return ;
 		}
 		$fb_uid = Input::Post('fb_uid');
-		$user_login_model = new UserLoginFormModel();
+		$user_login_model = new UserLoginFormModel($this->sub_domain);
 		$result = $user_login_model->processFBLogInRequest($fb_uid);
 		// begin user session on success
 		if (isset($result['success'])) {
-			$this->user_session_model = new UserSessionModel();
-			$this->user_session_model->beginUserSession(
+			$this->user_session->beginUserSession(
 				$result['user_id'], 
 				$result['email'], 
 				Crypto::Encrypt($result['password'])
@@ -238,7 +214,7 @@ class UserController extends Controller implements ControllerInterface {
 	 * Accept user login request and begin session
 	 */
 	public function loginUser() {
-		$login_form   = new UserLoginFormModel();
+		$login_form = new UserLoginFormModel($this->sub_domain);
 
 		$email    = Input::Post('email', FILTER_SANITIZE_EMAIL);
 		$password = Input::Post('password');
@@ -248,10 +224,25 @@ class UserController extends Controller implements ControllerInterface {
 
 		// begin user session on success
 		if (isset($result['success'])) {
-			$this->user_session_model = new UserSessionModel();
-			$this->user_session_model->beginUserSession($result['user_id'], $email, Crypto::Encrypt($password));
+			$this->user_session->beginUserSession($result['user_id'], $email, Crypto::Encrypt($password));
 		}
 
+		$this->output = new JSONView($result);
+	}
+
+	/**
+	 * Link user with facebook
+	 *
+	 * At the moment, this methd refreshes the page regardlessly
+	 */
+	public function linkUserWithFacebook() {
+		$user_id = $this->getUserId();
+		$fb_uid  = Input::Post('fb_uid');
+		$result['redirect'] = '/home';
+		$fb_model = new FBModel($this->sub_domain);
+		if ($fb_model->processFBLinkageRequest($fb_uid, $user_id)) {
+			$this->user_session->setFbUserId($fb_uid);
+		}
 		$this->output = new JSONView($result);
 	}
 
@@ -259,11 +250,11 @@ class UserController extends Controller implements ControllerInterface {
 	 * Log out a user
 	 */
 	public function logoutUser() {
-		$logout_model = new UserLogoutModel();
-		$user_id = $this->user_session_model->getUserId();
+		$logout_model = new UserLogoutModel($this->sub_domain);
+		$user_id = $this->getUserId();
 		$result = $logout_model->terminate($user_id);
 
-		$this->user_session_model->endUserSession();
+		$this->user_session->endUserSession();
 
 		$this->output = new JSONView($result);
 	}

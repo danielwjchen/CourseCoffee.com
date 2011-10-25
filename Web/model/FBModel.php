@@ -17,14 +17,14 @@ class FBModel extends Model {
 	private $facebook;
 	private $linkage;
 
-	function __construct() {
-		parent::__construct();
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
 		$this->fb = new Facebook(array(
 			'appId'  => $config->facebook['id'],
 			'secret' => $config->facebook['secret'],
 		));
-		$this->college_list_dao = new CollegeListDAO($this->db);
-		$this->linkage          = new UserFacebookLinkageDAO($this->db);
+		$this->college_list_dao = new CollegeListDAO($this->default_db);
+		$this->linkage          = new UserFacebookLinkageDAO($this->default_db);
 	}
 
 	private function base64UrlDecode($input) {
@@ -78,24 +78,39 @@ class FBModel extends Model {
 
 	/**
 	 * Generate fields for the facebook registraion plugin
+	 *
+	 * @param string $current_domain
 	 */
-	public function generateSignUpForm() {
-		global $config;
+	public function generateSignUpForm($current_domain) {
 		return array(
 			'fields' => "[
 				{'name' : 'name'},
 				{'name' : 'first_name'},
 				{'name' : 'last_name'},
-				{'name' : 'school', 
-					'description' : 'The current school you are attending', 
-					'type' : 'select',
-					'options' : {1 : 'Michigan State University'}},
 				{'name' : 'email'},
 				{'name' : 'password'}
 			]",
-			'redirect' => 'http://' . $config->domain . "/user-register-facebook",
+			'redirect' => 'http://' . $current_domain . "/user-register-facebook",
 		);
 
+	}
+
+	/**
+	 * Link user with facebook
+	 */
+	public function processFBLinkageRequest($fb_uid, $user_id) {
+		if ($this->linkage->read(array('fb_uid' => $fb_uid))) {
+			Logger::Write(self::EVENT_FB_UID_TAKEN);
+			return array(
+				'error' => true,
+				'message' => self::ERROR_FB_UID_TAKEN,
+			);
+		}
+
+		return $this->linkage->create(array(
+			'user_id' => $user_id,
+			'fb_uid'  => $fb_uid,
+		));
 	}
 
 	/**

@@ -16,11 +16,37 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 	protected $column;
 
 	/**
-	 * Implement DAO::__construct().
+	 * Define the columns
+	 *
+	 * @return array
 	 */
-	function __construct($db, $attr, $params = NULL) {
-		$this->column = $attr;
-		parent::__construct($db, $attr, $params);
+	abstract protected function defineColumn() ;
+
+	/**
+	 * Define the linkage table
+	 *
+	 * @return string
+	 */
+	abstract protected function defineLinkageTable() ;
+
+	/**
+	 * Implement DAO::defineAttribute().
+	 */
+	protected function defineAttribute() {
+		return array(
+			'id',
+			$this->column['parent_id'],
+			$this->column['child_id'],
+		);
+	}
+
+	/**
+	 * Extend DAO::__construct().
+	 */
+	function __construct($db) {
+		$this->column  = $this->defineColumn();
+		$this->linkage = $this->defineLinkageTable();
+		parent::__construct($db);
 	}
 
 	/**
@@ -29,11 +55,11 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 	public function create($params) {
 		$sql = "
 			INSERT INTO `{$this->linkage}` (
-				`{$this->column[0]}`, 
-				`{$this->column[1]}`
+				`{$this->column['parent_id']}`, 
+				`{$this->column['child_id']}`
 			) VALUES (
-				:{$this->column[0]}, 
-				:{$this->column[1]}
+				:{$this->column['parent_id']}, 
+				:{$this->column['child_id']}
 			)
 		";
 
@@ -48,34 +74,35 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 	 *
 	 */
 	public function read($params) {
+		error_log(print_r($params, true));
 		$sql = "SELECT * FROM `{$this->linkage}` WHERE ";
 
 		if (isset($params['id'])) {
 			$params = array('id' => $params['id']);
 			$sql .= "id = :id";
 
-		} elseif (isset($params[$this->column[0]]) && 
-			isset($params[$this->column[1]])) 
+		} elseif (isset($params[$this->column['parent_id']]) && 
+			isset($params[$this->column['child_id']])) 
 		{
 			$params = array(
-				$this->column[0] => $params[$this->column[0]],
-				$this->column[1] => $params[$this->column[1]],
+				$this->column['parent_id'] => $params[$this->column['parent_id']],
+				$this->column['child_id'] => $params[$this->column['child_id']],
 			);
 
-			$sql .= "{$this->column[0]} = :{$this->column[0]} 
-				AND {$this->column[1]} = :{$this->column[1]}";
+			$sql .= "{$this->column['parent_id']} = :{$this->column['parent_id']} 
+				AND {$this->column['child_id']} = :{$this->column['child_id']}";
 
 		// return list of record based on parent
-		} elseif (isset($params[$this->column[0]])) {
-			$params = array($this->column[0] => $params[$this->column[0]]);
-			$sql .= "{$this->column[0]} = :{$this->column[0]}";
+		} elseif (isset($params[$this->column['parent_id']])) {
+			$params = array($this->column['parent_id'] => $params[$this->column['parent_id']]);
+			$sql .= "{$this->column['parent_id']} = :{$this->column['parent_id']}";
 			$this->list = $this->db->fetch($sql, $params);
 			return count($this->list);
 
 		// return list of record based on child
-		} elseif (isset($params[$this->column[1]])) {
-			$params = array($this->column[1] => $params[$this->column[1]]);
-			$sql .= "{$this->column[1]} = :{$this->column[1]}";
+		} elseif (isset($params[$this->column['child_id']])) {
+			$params = array($this->column['child_id'] => $params[$this->column['child_id']]);
+			$sql .= "{$this->column['child_id']} = :{$this->column['child_id']}";
 			$this->list = $this->db->fetch($sql, $params);
 			return count($this->list);
 
@@ -97,13 +124,11 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 	public function update() {
 		$sql = "
 			UPDATE `{$this->linkage}` SET
-				`{$this->column[0]}` = :{$this->column[0]}, 
-				`{$this->column[1]}` = :{$this->column[1]}
+				`{$this->column['parent_id']}` = :{$this->column['parent_id']}, 
+				`{$this->column['child_id']}` = :{$this->column['child_id']}
 			WHERE `id` = :id
 		";
-		parent::update($sql);
-		$this->read($this->attr);
-
+		$this->db->perform($sql, $this->attr);
 	}
 
 	/**
@@ -111,7 +136,7 @@ abstract class LinkageDAO extends DAO implements DAOInterface{
 	 */
 	public function destroy() {
 		$sql = "DELETE FROM `{$this->linkage}` WHERE `id` = :id";
-		parent::destroy($sql, array('id' => $this->id));
+		$this->db->perform($sql, array('id' => $this->id));
 
 	}
 

@@ -38,9 +38,9 @@ class DocumentProcessorFormModel extends FormModel{
 	const HAS_SYLLABUS = 'has_syllabus';
 
 	/**
-	 * Access to file records
+	 * A value used to delimit pages
 	 */
-	private $file_dao;
+	const LINE_PER_PAGE = 50;
 
 	/**
 	 * Access to section records
@@ -50,10 +50,9 @@ class DocumentProcessorFormModel extends FormModel{
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->file_dao    = new FileDAO($this->db);
-		$this->section_dao = new SectionDAO($this->db);
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
+		$this->section_dao = new SectionDAO($this->institution_db);
 		// form submission is limite to 5 times
 		$this->max_try = 5;
 		// form expires in three hours
@@ -70,16 +69,16 @@ class DocumentProcessorFormModel extends FormModel{
 		$doc = escapeshellarg($doc);
 
 		$output = null;
-		if (strpos($mime, 'pdf')) {
+		if (strpos($mime, 'pdf') !== false) {
 			exec('pdftotext ' . FILE_PATH . '/' . $doc . ' -  -layout', $output);
 
-		} elseif (strpos($mime, 'word')) {
+		} elseif (strpos($mime, 'word') !== false) {
 			exec('catdoc ' . FILE_PATH . '/' . $doc, $output);
 
-		} elseif (strpos($mime, 'html')) {
+		} elseif (strpos($mime, 'html') !== false) {
 			exec('html2text ' . FILE_PATH . '/' . $doc, $output);
 
-		} elseif (strpos($mime, 'plain')) {
+		} elseif (strpos($mime, 'plain') !== false) {
 			exec('cat ' . FILE_PATH . '/' . $doc, $output);
 
 		}
@@ -94,6 +93,18 @@ class DocumentProcessorFormModel extends FormModel{
 			);
 		}
 
+		return $output;
+	}
+
+	/**
+	 * Clean up output to a browser safe format
+	 */
+	private function cleanUpOutput($output) {
+		$output = htmlentities($output, ENT_QUOTES, 'UTF-8');
+
+		$output = str_replace("\n","[NEWLINE]", $output);
+		$output = utf8_encode(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $output));
+		$output = str_replace("[NEWLINE]", "\n", $output);
 		return $output;
 	}
 
@@ -147,147 +158,25 @@ class DocumentProcessorFormModel extends FormModel{
 			return $output;
 		}
 
-		$line_count = count($output);
-		$search_range = $line_count > 50 ? 50 : $line_count;
-		$params = array();
+		$paged_output = array_chunk($output, self::LINE_PER_PAGE);
+		$page_count = count($paged_output);
+		$result = array();
 
-		/**
-		 * List possible institution name string patterns 
-		 *
-		 * This should be improved in the future and utilize records in the 
-		 * institution_alias table.
-		 */
-		$institution_list = array(
-			'/michigan state/i' => 'Michigan State University',
-			'/msu/i' => 'Michigan State University',
-			'/university of michigan/i' => 'University of Michigan',
-			'/um/i' => 'University of Michigan',
-		);
-		// flag to escape doulbe loop
-		$escape = false;
-
-		for ($i = 0; $i < $search_range; $i++) {
-			foreach($institution_list as $key => $value) {
-				preg_match($key, $output[$i], $matches);
-				if (!empty($matches)) {
-					$school_string = $value;
-					$escape = true;
-					break;
-				}
-			}
-			if ($escape) {
-				break;
-			}
+		for($i = 0; $i < $page_count; $i++) {
+			$result[] = $this->cleanUpOutput(implode("\n", $paged_output[$i]));
 		}
 
-		$school = new InstitutionDAO($this->db);
-		$school->read(array('name' => $school_string));
-		$params['institution_id'] = $school->id;
+		$content = implode('PAGE_BREAK', $result);
 
-		/**
-		 * @to-do
-		 * we hardcode year and term id to 1 because there is only one semester
-		 */
-		$params['year_id'] = 1;
-		$params['term_id'] = 1;
-
-		/**
-		 * Find first 5 unique matches as possible course code candidate
-		 */
-		$course_code_array = array();
-		for ($i = 0; $i < $search_range; $i++) {
-			$matches = array();
-			preg_match('/[a-z]{2,12}.[0-9]{3,4}[a-z]?/i', $output[$i], $matches);
-			if (!empty($matches)) {
-				$course_code_array = array_unique(array_merge($course_code_array, $matches));
-			}
-
-			if (count($course_code_array) == 5) {
-				break ;
-			}
-		}
-
-		/**
-		 * Look for section number
-		 * 
-		 * This will look for the section keyword and try to break apart into numeric 
-		 * values
-		 */
-		$section_match = array();
-		for ($i = 0; $i < $search_range; $i++) {
-			preg_match('/section.?[0-9]?[a-z]{0,2}.?[0-9]?[a-z]{0,2}/i', $output[$i], $matches);
-			if (!empty($matches)) {
-				$section_match = array_unique(array_merge($section_match, $matches));
-			}
-		}
-		
-		// get the numeric value
-		$section_array = array();
-		for ($i = 0; $i < count($section_match); $i++) {
-			$section_array = array_unique(array_merge($section_array, preg_split('/[^0-9]?/', preg_replace('/section/i', '', $section_match[$i]))));
-		}
-
-		/**
-		 * Compare string with record
-		 */
-		$course_code = '';
-		$section_id = '';
-		$list = array();
-		for ($i = 0; $i < count($course_code_array); $i++) {
-			preg_match('/[a-z]{1,12}/i', $course_code_array[$i], $matches);
-			$subject_abbr = $matches[0];
-			$params['like']['subject_abbr'] = $subject_abbr;
-			
-			$course_num = str_replace($subject_abbr, '', $course_code_array[$i]);
-			$params['like']['course_num'] = trim($course_num);
-
-			$params['limit']['offset'] = 0;
-			$params['limit']['count']  = 10;
-
-			$class_list = new CollegeClassSuggestDAO($this->db);
-			$has_no_record = $class_list->read($params);
-			if (!$has_no_record) {
-				$course_code = strtoupper($course_code_array[$i]);
-				$list = $class_list->list;
-				if (isset($list['section_num'])) {
-					if (in_array($list[$i]['section_num'], $section_array)) {
-						$section_id = $list[$i]['section_id'];
-					}
-					break;
-				}
-				for ($i = 0; $i < count($list); $i++) {
-					if (in_array($list[$i]['section_num'], $section_array)) {
-						$section_id = $list[$i]['section_id'];
-						break;
-					}
-				}
-				break;
-			}
-		}
-
-
-		$result = implode("\n", $output);
-		$result = htmlentities($result, ENT_QUOTES, 'UTF-8');
-
-		// This broke the covernsion!! 
-		// $result = str_replace("\n","[NEWLINE]", $result);
-		// $result = utf8_encode(preg_replace('/[^(\x20-\x7F)\x0A]*/', '', $result));
-		// $result = str_replace("[NEWLINE]", "\n", $result);
-		// $result = iconv("UTF-8","UTF-8//IGNORE", $result);
 
 		// debug
 		// error_log('document procesor section_id - ' . $section_id);
 
 
 		return array(
-			'success'        => true,
-			'institution_id' => $params['institution_id'],
-			'year_id'        => $params['year_id'],
-			'term_id'        => $params['term_id'],
-			'section_id'     => $section_id,
-			'course_code'    => $course_code,
-			'file_id'        => $this->file_dao->id,
-			'content'        => $result
+			'success'    => true,
+			'page_count' => $page_count,
+			'content'    => $content,
 		);
 	}
 

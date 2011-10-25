@@ -10,7 +10,7 @@
  *  - user_id
  *  - signature
  *  - profile
-       - account/email
+ *     - account/email
  *     - first_name
  *     - last_name
  *     - institution
@@ -59,10 +59,11 @@ class UserSessionModel extends Model {
 	/**
 	 * Extend Model::construct()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->user_cookie_dao = new UserCookieDAO($this->db);
-		$this->user_session_dao = new UserSessionDAO($this->db);
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
+		$this->user_dao         = new UserDAO($this->default_db);
+		$this->user_cookie_dao  = new UserCookieDAO($this->default_db);
+		$this->user_session_dao = new UserSessionDAO($this->default_db);
 	}
 
 	/**
@@ -110,6 +111,30 @@ class UserSessionModel extends Model {
 	}
 
 	/**
+	 * Restart user session
+	 *
+	 * @param string $signature
+	 *  a unique signature generated from user's account and password
+	 */
+	public function reviveUserSession($signature) {
+		$has_record = $this->user_cookie_dao->read(array('signature' => $signature));
+		if (!$has_record) {
+			return false;
+		}
+
+		$user_id = $this->user_cookie_dao->user_id;
+
+		$has_record = $this->user_dao->read(array('id' => $user_id));
+		if (!$has_record) {
+			return false;
+		}
+
+		$record = $this->user_dao->attribute;
+		$this->beginUserSession($record['id'], $record['account'], $recrod['password']);
+		
+	}
+
+	/**
 	 * Begin user session
 	 *
 	 * we drop a cookie so we can automatically log in when the user comes 
@@ -127,7 +152,7 @@ class UserSessionModel extends Model {
 	public function beginUserSession($user_id, $email, $password) {
 		$this->setUserSessionCookie($user_id, $email, $password);
 
-		$user_profile_dao = new UserProfileDAO($this->db);
+		$user_profile_dao = new UserProfileDAO($this->default_db);
 		$user_profile_dao->read(array('user_id' => $user_id));
 		$user_profile = $user_profile_dao->attribute;;
 		$user_profile['account'] = $email;
@@ -138,10 +163,10 @@ class UserSessionModel extends Model {
 
 		$this->setUserProfile($user_profile);
 
-		$user_setting_dao = new UserSettingDAO($this->db);
+		$user_setting_dao = new UserSettingDAO($this->default_db);
 		$user_setting_dao->read(array('user_id' => $user_id));
 		$user_setting = $user_setting_dao->attribute;;
-		$fb_linkage_dao = new UserFacebookLinkageDAO($this->db);
+		$fb_linkage_dao = new UserFacebookLinkageDAO($this->default_db);
 		$fb_linkage_dao->read(array('user_id' => $user_id));
 		$user_setting['fb_uid'] = $fb_linkage_dao->fb_uid;
 
@@ -153,7 +178,7 @@ class UserSessionModel extends Model {
 
 		$this->setUserSetting($user_setting);
 
-		$user_class_list_dao = new UserClassListDAO($this->db);
+		$user_class_list_dao = new UserClassListDAO($this->institution_db);
 		$user_class_list_dao->read(array(
 			'user_id'        => $user_id,
 			'institution_id' => $user_setting['institution_id'],
@@ -161,10 +186,6 @@ class UserSessionModel extends Model {
 			'term_id'        => $user_setting['term_id'],
 		));
 		$record = $user_class_list_dao->list;;
-		// another ugly hack! 
-		if (isset($record['section_id'])) {
-			$record = array($record);
-		}
 
 		// debug
 		// error_log(__METHOD__ . 'user class list record- ' . print_r($record, true));
@@ -209,12 +230,45 @@ class UserSessionModel extends Model {
 	}
 
 	/**
+	 * Get the role of the user currently in session
+	 *
+	 * @return int
+	 */
+	public function getUserRole() {
+		$profile = Session::Get(self::USER_PROFILE);
+		return $profile['role'];
+	}
+
+	/**
 	 * Get the id of the user currently in session
 	 *
 	 * @return int
 	 */
 	public function getUserId() {
 		return Session::Get('user_id');
+	}
+
+	/**
+	 * Get the sub domain of the user in session
+	 *
+	 * @return string
+	 */
+	public function getUserDomain() {
+		$profile = Session::Get(self::USER_PROFILE);
+		if (isset($profile['institution_domain'])) {
+			return $profile['institution_domain'];
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Set user's fb_uid if there is one
+	 */
+	public function setFbUserId($fb_uid) {
+		$setting = Session::Get(self::USER_SETTING);
+		$setting['fb_uid'] = $fb_uid;
+		Session::Set(self::USER_SETTING, $setting);
 	}
 
 	/**

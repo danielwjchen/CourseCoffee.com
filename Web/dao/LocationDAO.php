@@ -6,10 +6,10 @@
 class LocationDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
+	protected function defineAttribute() {
+		return array(
 			'id',
 			'name',
 			'longitude',
@@ -17,13 +17,10 @@ class LocationDAO extends DAO implements DAOInterface{
 			'type',
 			'type_id',
 		);
-
-		parent::__construct($db, $attr, $params);
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (!isset($params['name']) || 
@@ -57,7 +54,7 @@ class LocationDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		$sql ="
@@ -100,7 +97,7 @@ class LocationDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -123,7 +120,7 @@ class LocationDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = '

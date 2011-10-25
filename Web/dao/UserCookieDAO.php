@@ -6,16 +6,14 @@
 class UserCookieDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('user_id', 'signature');
-		parent::__construct($db, $attr, $params);
-
+	protected function defineAttribute() {
+		return array('user_id', 'signature');
 	}
 
 	/**
-	 * Extend DAO::create().
+	 * Implement DAOInterface::create().
 	 */
 	public function create($params) {
 		if (!isset($params['user_id']) || !isset($params['signature'])) {
@@ -36,7 +34,7 @@ class UserCookieDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read().
+	 * Implement DAOInterface::read().
 	 */
 	public function read($params) {
 		$sql = "SELECT * FROM `user_cookie` WHERE ";
@@ -60,7 +58,7 @@ class UserCookieDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -77,7 +75,7 @@ class UserCookieDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy().
+	 * Implement DAOInterface::destroy().
 	 */
 	public function destroy() {
 		$sql = "DELETE FROM `user_cookie` WHERE `user_id` = :user_id";

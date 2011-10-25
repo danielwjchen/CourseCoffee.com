@@ -6,11 +6,13 @@
 class UserSettingDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
+	protected function defineAttribute() {
+		return array(
 			'user_id',
+			'role_id',
+			'status_id',
 			'tou_vid',
 			'institution_id',
 			'year_id',
@@ -18,16 +20,16 @@ class UserSettingDAO extends DAO implements DAOInterface{
 			'created',
 			'updated',
 		);
-		parent::__construct($db, $attr, $params);
-
 	}
 
 	/**
-	 * Extend DAO::create().
+	 * Implement DAOInterface::create().
 	 */
 	public function create($params) {
 		if (
 			!isset($params['user_id']) || 
+			!isset($params['role_id']) || 
+			!isset($params['status_id']) || 
 			!isset($params['tou_vid']) ||
 			!isset($params['institution_id']) ||
 			!isset($params['year_id']) ||
@@ -39,12 +41,30 @@ class UserSettingDAO extends DAO implements DAOInterface{
 		}else{
 			return $this->db->insert("
 				INSERT INTO `user_setting` (
-					`user_id`, `tou_vid`, `institution_id`, `year_id`, `term_id`, `created`, `updated`
+					`user_id`, 
+					`role_id`,
+					`status_id`,
+					`tou_vid`, 
+					`institution_id`, 
+					`year_id`, 
+					`term_id`, 
+					`created`, 
+					`updated`
 				) VALUES (
-					:user_id, :tou_vid, :institution_id, :year_id, :term_id, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
-				",
+					:user_id, 
+					:role_id,
+					:status_id,
+					:tou_vid, 
+					:institution_id, 
+					:year_id, 
+					:term_id, 
+					UNIX_TIMESTAMP(), 
+					UNIX_TIMESTAMP()
+				)",
 			array(
 				'user_id'        => $params['user_id'], 
+				'role_id'        => $params['role_id'],
+				'status_id'      => $params['status_id'],
 				'tou_vid'        => $params['tou_vid'],
 				'institution_id' => $params['institution_id'],
 				'year_id'        => $params['year_id'],
@@ -56,7 +76,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read().
+	 * Implement DAOInterface::read().
 	 */
 	public function read($params) {
 		$sql = "SELECT * FROM `user_setting` us ";
@@ -81,7 +101,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -96,6 +116,8 @@ class UserSettingDAO extends DAO implements DAOInterface{
 		$this->db->perform($sql, array(
 			'id'             => $this->attr['id'],
 			'user_id'        => $this->attr['user_id'], 
+			'role_id'        => $this->attr['role_id'],
+			'status_id'      => $this->attr['status_id'],
 			'tou_vid'        => $this->attr['tou_vid'], 
 			'institution_id' => $this->attr['institution_id'],
 			'term_id'        => $this->attr['term_id'],
@@ -105,7 +127,7 @@ class UserSettingDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy().
+	 * Implement DAOInterface::destroy().
 	 */
 	public function destroy() {
 		$sql = "DELETE FROM `user_setting` WHERE `user_id` = :user_id";

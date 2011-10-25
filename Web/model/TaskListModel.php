@@ -8,6 +8,12 @@ class TaskListModel extends Model {
 	 * Number of records to fetch
 	 */
 	const COUNT = 10;
+	/**
+	 * We don't do pagination for now, because tasks should be limited by the 
+	 * date range. However, we do want to limit the result to 100 records since
+	 * more will crash the browser.
+	 */
+	const CALENDAR_TASK_LIMIT = 100;
 
 	const ERROR_NO_TASK = 'No scheduled assignments.';
 
@@ -15,20 +21,23 @@ class TaskListModel extends Model {
 	 * Access to task record
 	 */
 	private $task_list_dao;
+	private $task_status;
 
 	/**
 	 * Extend Model::__construct()
 	 */
-	function __construct() {
-		parent::__construct();
-		$this->task_list_dao = new TaskListDAO($this->db);
+	function __construct($sub_domain) {
+		parent::__construct($sub_domain);
+		$this->task_list_dao = new TaskListDAO($this->institution_db);
+		$this->task_status = array(QuestStatusSetting::PENDING, QuestStatusSetting::APPROVED);
 	}
 
 	/**
 	 * Fetch a list of task record for a user
 	 *
-	 * @param string $user_id
-	 * @param int $filter
+	 * @param int $user_id
+	 * @param int $begin_date
+	 * @param string $filter
 	 * @param int $paginate
 	 *
 	 * @return array
@@ -43,6 +52,7 @@ class TaskListModel extends Model {
 		$has_record = $this->task_list_dao->read(array(
 			'user_id' => $user_id,
 			'filter'  => $filter,
+			'status'  => $this->task_status,
 			'limit'   => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
@@ -80,9 +90,11 @@ class TaskListModel extends Model {
 	 */
 	public function fetchUserClassList($user_id, $section_id, $filter, $paginate) {
 		$has_record = $this->task_list_dao->read(array(
+			'user_id'    => $user_id,
 			'section_id' => $section_id,
-			'filter'  => $filter,
-			'limit'   => array(
+			'filter'     => $filter,
+			'status'     => $this->task_status,
+			'limit' => array(
 				'offset' => $paginate * self::COUNT,
 				'count'  => self::COUNT,
 			),
@@ -122,17 +134,16 @@ class TaskListModel extends Model {
 		$has_record = $this->task_list_dao->read(array(
 			'user_id' => $user_id,
 			'filter'  => $filter,
+			'status'  => $this->task_status,
 			'range'   => array(
 				'begin_date' => $begin_date,
 				'end_date'   => $end_date,
 			),
 			/**
-			 * We don't do pagination for now, because tasks should be limited by the 
-			 * date range
 			 */
 			'limit'   => array(
-				'offset' => $paginate * self::COUNT * 10,
-				'count'  => self::COUNT * 10,
+				'offset' => 0,
+				'count'  => TaskListModel::CALENDAR_TASK_LIMIT,
 			),
 		));
 		if ($has_record) {
@@ -147,5 +158,29 @@ class TaskListModel extends Model {
 				'message' => self::ERROR_NO_TASK,
 			);
 		}
+	}
+
+	/**
+	 * Remove all quests belong to section
+	 */
+	public function removeAllQuestBelongToSection($section_id) {
+		$quest_dao = new QuestDAO($this->institution_db);
+		$has_record = $this->task_list_dao->read(array(
+			'user_id'    => 1,
+			'by_section_id' => $section_id,
+			'filter'  => 'all',
+			'status'  => $this->task_status,
+		));
+
+		$list = $this->task_list_dao->list;
+		foreach ($list as $key => $value) {
+			$quest_dao->read(array('id' => $value['id']));
+			$quest_dao->status = QuestStatusSetting::DELETED;
+			$quest_dao->update();
+		}
+
+		return array(
+			'list' => $list,
+		);
 	}
 }

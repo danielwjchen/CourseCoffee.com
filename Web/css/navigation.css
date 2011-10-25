@@ -10,25 +10,24 @@
 #navigation-menu ul{
 }
 #navigation-menu li{
+	margin-top: 3px;
 	float: left;
 	padding: 5px;
-	margin-top: 3px;
-	margin-right: 10px;
-	height: 35px;
+	height: 24px;
 	display: block;
 }
 #navigation-menu li.active{
-	margin-top: 0;
+	margin-top: 0px;
 	border-top: 3px solid #da3838;
 }
 #navigation-menu .button{
 	color: white;
-	font-size: 18px;
-	line-height: 18px;
+	font-size: 14px;
+	line-height: 14px;
 	font-weight: bold;
 	text-decoration: none;
 	text-align: center;
-	padding: 8px 12px;
+	padding: 6px 10px;
 	display: block;
 	background: none;
 	border: none;
@@ -64,13 +63,13 @@
 #navigation-menu li.class-suggest {
 }
 #navigation-menu li.class-suggest input{
-	font-size: 14px;
+	font-size: 12px;
 	color: #777777;
 	font-weight: bold;
 	width: 168px;
 	float: left;
-	height: 36px;
-	line-height: 36px;
+	height: 26px;
+	line-height: 12px;
 	border: 1px solid #313131;
 	border-radius: 4px 0 0 4px;
 }
@@ -186,7 +185,7 @@
 }
 #class-suggest-form .message {
 	position: absolute;
-	top: 36px;
+	top: 28px;
 	text-align:center;
 	border: 1px solid #585656;
 	padding: 10px 5px;

@@ -2,6 +2,9 @@
  * @file
  * Define styles for calendar page
  */
+.calendar .container-inner {
+  padding-bottom: 160px;
+}
 .calendar .panel-01,
 .calendar .panel-02{
 	padding-bottom: 50px;

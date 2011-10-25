@@ -46,7 +46,24 @@ window.BookSuggest = function(regionName) {
 	this.getBookList = function(sectionId) {
 		region.empty();
 		region.addClass('loading');
-		region.html('<h3>Please wait while we find the lowest price on your textbooks.</h3>');
+		region.html('<h3>Please wait while we find the lowest price on your textbooks.</h3>' +
+			'<span class="double-underline"><a href="#">how?</a></span>');
+		$('.double-underline a', region).click(function(e) {
+			e.preventDefault();
+			var content = '<h2>How does this work?</h2>' +
+				"<p>It's a simple idea, really. We capture the most lengendary textbook vendors on the internet (Amazon, Chegg, ValoreBooks, eCampus, e.t.c.), and cage them in a gladiator battle royal duel to provide you the best deal possible, pokemon style.<p>" +
+				'<div class="explanation">' +
+					'<img src="/images/gundamu.png" />' +
+					"<p>*Because of copyright and trademark reasons, we can't legally show logos of said compaies or pictures of our favorite pokemon. We do have this cool robot, though.</p>" +
+				'</div>' +
+				"<h3>No worries. No feelings is hurt during the production of this awesome website.</h3>";
+			;
+			dialog.open('book-search-explained', content);
+			$('.dialog-close').click(function(e) {
+			e.preventDefault();
+				dialog.close();
+			});
+		});
 		var cachedValue = cache.get(sectionId);
 		if (cachedValue) {
 			region.removeClass('loading');
@@ -81,6 +98,13 @@ window.BookSuggest = function(regionName) {
 					});
 					html += '</ul>';
 
+					// share result
+					var uri = window.location.protocol + '//' + window.location.host + '/book-search/' + response.uri;
+					html += '<div class="share-result">' +
+						'<h2>Share this with your friends!</h2>' +
+						'<textarea>' + uri + '</textarea>' +
+					'</div>';
+
 
 					// debug
 					// console.log('book suggest cache');
@@ -98,7 +122,6 @@ window.BookSuggest = function(regionName) {
 	 */
 	this.getAllBookList = function(sectionForm) {
 		region.addClass('loading');
-		region.html('<h3>Here is a list of books we think you might need for this class.</h3>');
 		var sectionId = '';
 		var html = '';
 		$(sectionForm).each(function(i, el) {

@@ -6,12 +6,9 @@
 class QuestAttributeDAO extends AttributeDAO{
 
 	/**
-	 * Extend AttributeDAO::__construct().
+	 * Implements AttributeDAO::defineDAOTable().
 	 */
-	function __construct($db, $params = NULL) {
-		$this->model = 'quest';
-		parent::__construct($db, $params);
-
+	protected function defineDAOTable() {
+		return 'quest';
 	}
-
 }

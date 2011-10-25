@@ -7,24 +7,17 @@
 class BookDAO extends DAO implements DAOInterface {
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
-			'id',
-			'isbn',
-		);
-
-		parent::__construct($db, $attr, $params);
-
+	protected function defineAttribute() {
+		return array('id', 'isbn');
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
-		if (!isset($params['isbn'])) 
-		{
+		if (!isset($params['isbn']))  {
 			throw new Exception('incomplete book params - ' . print_r($params, true));
 			return false;
 
@@ -40,7 +33,7 @@ class BookDAO extends DAO implements DAOInterface {
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		$sql ="SELECT * FROM `book`";
@@ -65,24 +58,39 @@ class BookDAO extends DAO implements DAOInterface {
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
-		$sql = "
-			UPDATE `book` SET
-				isbn = :isbn
-			WHERE id = :id
-		";
+		if (!empty($this->attr['title'])) {
+			$sql = "
+				UPDATE `book` SET
+					title = :title
+				WHERE id = :id
+			";
 
-		$this->db->perform($sql, array(
-			'isbn' => $this->attr['isbn'],
-			'id' => $this->attr['id']
-		));
+			$this->db->perform($sql, array(
+				'title' => $this->attr['title'],
+				'id' => $this->attr['id']
+			));
+		}
+
+		if (!empty($this->attr['isbn'])) {
+			$sql = "
+				UPDATE `book` SET
+					isbn = :isbn
+				WHERE id = :id
+			";
+
+			$this->db->perform($sql, array(
+				'isbn' => $this->attr['isbn'],
+				'id' => $this->attr['id']
+			));
+		}
 
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = '

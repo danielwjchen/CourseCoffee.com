@@ -2,11 +2,11 @@
  * @file
  * Define styles for book search page
  */
-/**
- * Define style for search block
- */
+.book-search .body {
+	margin: 0;
+}
 .book-search .search-block {
-	margin: 60px auto 0;
+	margin: 160px auto 0;
 	width: 550px;
 }
 .book-search .search-block .logo {
@@ -41,16 +41,57 @@
 	padding: 5px 0;
 }
 /**
+ * Define styles for book-search-explained dialog
+ */
+.book-search-explained,
+.book-search-explained .dialog-inner {
+	height: 520px;
+}
+.book-search-explained .explanation {
+	width: 480px;
+	margin: 20px 0;
+	float: left;
+	clear :both;
+}
+.book-search-explained p {
+	padding: 10px 0;
+}
+.book-search-explained .explanation img,
+.book-search-explained .explanation p {
+	float: left;
+	display: block;
+}
+.book-search-explained .explanation img {
+	width: 300px;
+}
+.book-search-explained .explanation p {
+	padding: 80px 5px 0;
+	font-size: 12px;
+	width: 170px;
+}
+/**
  * Define styles for book list
  */
-.book-search .message,
+.book-search .book-list .double-underline,
+.book-search .book-list .double-underline a {
+	width: 30px;
+}
+.book-search .book-list .double-underline {
+	position: absolute;
+	top: 2px;
+	right: 70px;
+}
+.book-search .book-list .double-underline a {
+	text-decoration: underline;
+}
+.book-search .search-message,
 .book-search .content {
-	width: 600px;
-	margin: 0 auto;
+	width: 800px;
+	margin: 0 auto 30px;
 	float: none;
 	clear: both;
 }
-.book-search .message h1 {
+.book-search .search-message h1 {
 	color: white;
 	font-size: 16px;
 	text-align: center;
@@ -58,17 +99,67 @@
 	-moz-text-shadow: 0 0 6px #000;
 	-webkit-text-shadow: 0 0 6px #000;
 }
-.book-search .book-list {
-	width: 560px;
+.book-search #hint-message {
+	position: absolute;
+	top: 34px;
+	text-align:center;
+	border: 1px solid #585656;
+	padding: 10px 5px;
+	border-radius: 0 0 4px 4px;
+	-moz-box-shadow: 1px 1px #003d01;
+	-webkit-box-shadow: 1px 1px 5px #003d01;
+	box-shadow: 1px 1px 5px #003d01;
+	background: white;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+.book-search .content .book-list {
+	width: 760px;
 	min-height: 200px;
 	margin: 20px auto;
 }
-.book-search .book-list h3 {
+.book-search .content .book-list .title {
+	width: 525px;
+}
+.book-search .content .book-list textarea {
+	width: 740px;
+	padding: 5px;
+}
+.book-search .content .book-list h3 {
 	text-align: center;
 }
-.book-search .book-list ul {
-	width: 440px;
+.book-search .content .book-list ul {
+	width: 640px;
 	margin: 0 auto;
+}
+.book-search .content .book-list .offer {
+	width: 575px;
+}
+.book-search .content .book-list .offer ul {
+	width: 162px;
+}
+.book-search .underline {
+	border-bottom: 1px white solid;
+}
+.book-search .underline a{
+	color: white;
+}
+.book-search .social {
+	z-index: 10;
+	float: right;
+	padding: 0 10px;
+	min-width: 460px;
+	border: 1px solid #f6f5f4;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: #ffffff;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+.book-search .social .fb-like {
+	min-width: 360px;
 }
 /**
  * Define styles for autocomplete

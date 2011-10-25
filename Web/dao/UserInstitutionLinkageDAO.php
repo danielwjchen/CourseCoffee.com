@@ -6,12 +6,19 @@
 class UserInstitutionLinkageDAO extends LinkageDAO {
 
 	/**
-	 * Extend LinkageDAO::__construct().
+	 * Implement LinkageDAO::defineColumn().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('user_id', 'institution_id', 'id');
-		$this->linkage = 'user_institution_linkage';
-		parent::__construct($db, $attr, $params);
+	protected function defineColumn() {
+		return array(
+			'parent_id' => 'user_id', 
+			'child_id'  => 'institution_id',
+		);
 	}
 
+	/**
+	 * Implement LinkageDAO::defineLinkageTable().
+	 */
+	protected function defineLinkageTable() {
+		return 'user_institution_linkage';
+	}
 }

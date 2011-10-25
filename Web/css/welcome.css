@@ -1,12 +1,10 @@
 /**
  * @file
  * Define CSS for the /welcome
- *
- * Define styles for header
  */
-.body {
-	/* override default */
+.welcome .body {
 	margin: 0;
+	min-height: 400px;
 }
 .welcome .body-inner{
   margin: 0 auto;
@@ -20,7 +18,34 @@
 	float: left;
 	clear: both;
 	width: 960px;
+	position: relative;
 	height: 160px;
+}
+.welcome .panel-top .panel-inner {
+	position: relative;
+	float: left;
+	width: 960px;
+}
+.welcome .user-action {
+	position: absolute;
+	width: 500px;
+	right: 0;
+	top: 0;
+	background: #313131;
+	background-image: -moz-linear-gradient(#313131, #5e5b5b);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
+  border: #313131 1px solid;
+  border-radius: 0 0 8px 8px;
+	-moz-box-shadow: 0 0 15px #333;
+	-webkit-box-shadow: 0 0 15px #333;
+	box-shadow: 0 0 15px #333;
+}
+.welcome .user-action .button {
+	float: left;
+	padding: 8px 12px;
+}
+.welcome .user-action .sign-up {
+  margin-top: 3px;
 }
 /**
  * Define styles for log and slogan 
@@ -33,22 +58,24 @@
 }
 
 /**
+ * Define styles for tagline
+ */
+.welcome .tagline h1 {
+	text-align: center;
+	font-size: 32px;
+	color: white;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
+}
+/**
  * Define styles for login
  */
 .welcome .user-login{
 	float: left;
 	text-align: left;
-  margin: 0 -960px -50px 520px;
 	width: 405px;
   height: 45px;
-	background: #313131;
-	background-image: -moz-linear-gradient(#313131, #5e5b5b);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#313131), to(#5e5b5b)); 
-  border: #313131 1px solid;
-  border-radius: 0 0 8px 8px;
-	-moz-box-shadow: 0 0 15px #333;
-	-webkit-box-shadow: 0 0 15px #333;
-	box-shadow: 0 0 15px #333;
 }
 .welcome .login.error{
 	color: white;
@@ -64,16 +91,6 @@
 .welcome .user-login .error p{
 	margin: 0;
 	padding: 0 5px;
-}
-.welcome .user-login a{
-	color: white;
-	font-size: 18px;
-	line-height: 18px;
-	font-weight: bold;
-	text-decoration: none;
-	text-align: center;
-	padding: 8px 12px;
-	display: block;
 }
 .welcome .user-login .login-form{
   padding-top: 3px;
@@ -97,47 +114,6 @@
 .welcome .user-login input[name=password] {
 	width: 108px;
 }
-.welcome .user-login .button{
-	float: left;
-}
-/**
- * We were goin to provide a button to login via facebook on /welcome
- *
-.welcome .button.fb-login {
-	float: left;
-	color: white;
-	background: #627AAD;
-	border: 1px solid #1A3C6C;
-	text-shadow: 0 0 6px #1A3C6C;
-	-moz-text-shadow: 0 0 6px #1A3C6C;
-	-webkit-text-shadow: 0 0 6px #1A3C6C;
-	background-image: -moz-linear-gradient(#627AAD, #1A3C6C);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#627AAD), to(#1A3C6C)); 
-}
-.welcome .button.fb-login:active {
-	-moz-box-shadow: inset 0 0 15px 15px #1A3C6C;
-	-webkit-box-shadow: inset 0 0 15px 15px #1A3C6C;
-	box-shadow: inset 0 0 15px 15px #1A3C6C;
-}
-*/
-.welcome .slogan{
-  float: left;
-  width: 480px;
-	height: 115px;
-	background: url('../images/slogan.png') no-repeat center center;
-  margin: 80px -960px 20px 480px;
-	/**
-  text-align: center;
-	line-height: 30px;
-	padding: 50px 0 0px;
-	font-size: 30px;
-	font-weight: bold;
-	color: white;
-	text-shadow: 0 0 6px #000;
-	-moz-text-shadow: 0 0 6px #000;
-	-webkit-text-shadow: 0 0 6px #000;
-	**/
-}
 /**
  * Define styles for panel-01
  */
@@ -145,83 +121,63 @@
   font-size: 20px;
 	font-weight: bold;
 	color: white;
-	text-shadow: 0 0 6px #000;
-	-moz-text-shadow: 0 0 6px #000;
-	-webkit-text-shadow: 0 0 6px #000;
 }
 .welcome .panel-01 .panel-inner{
 }
 .welcome .panel-01 h2{
 	color: white;
-	margin-top: 20px;
+	margin: 20px auto;
+	text-align: center;
   font-size: 24px;
 	text-shadow: 0 0 6px #000;
 	-moz-text-shadow: 0 0 6px #000;
 	-webkit-text-shadow: 0 0 6px #000;
 }
-.welcome .panel-01 ul,
-.welcome .panel-01 li{
-  font-size: 14px;
+.welcome .caption-content {
+	height: 60px;
+}
+.welcome .caption-content ul,
+.welcome .caption-content li{
+  font-size: 18px;
 	line-height: 20px;
   list-style: none;
 }
-.welcome .panel-01 ul{
-	width: 325px;
-  margin: 20px auto 40px;
-}
-.welcome .panel-01 li{
-  padding: 20px 0 20px 50px;
+.welcome .caption-content li{
+  padding: 0 0 0 50px;
+	width: 400px;
 	height: 40px;
 }
-.welcome .panel-01 li.calendar {
+.welcome .caption-content li.calendar {
 	background: url('/images/calendar.png') left center no-repeat;
 }
-.welcome .panel-01 li.text-book {
+.welcome .caption-content li.text-book {
 	background: url('/images/text-book.png') left center no-repeat;
 }
-.welcome .panel-01 li.facebook {
+.welcome .caption-content li.facebook {
 	background: url('/images/facebook.png') left center no-repeat;
 }
-.welcome .panel-01 a{
-  text-decoration: none;
+.welcome .links {
+	text-align: center;
+	font-size: 24px;
+	font-weight: bold;
+	text-shadow: 0 0 6px #000;
+	-moz-text-shadow: 0 0 6px #000;
+	-webkit-text-shadow: 0 0 6px #000;
+}
+.welcome .links a{
   color: white;
 }
-.welcome .panel-01 a:hover{
-	text-shadow: 0 0 3px #fff;
-	-moz-text-shadow: 0 0 3px #fff;
-	-webkit-text-shadow: 0 0 3px #fff;
-}
-.welcome .panel-01 .sign-up-shortcut{
-	font-size: 12px;
-	float: right;
-	margin-top: 20px;
-	width: 220px;
-}
-.welcome .tutorial {
-	text-decoration: underline;
-	text-align: center;
-}
-.welcome .panel-01 .sign-up-shortcut p{
-	width: 150px;
-	float: left;
-	margin-right: -210px;
-	margin-left: 60px;
-	display block;
-	height: 24px;
-	line-height: 24px;
-}
-.welcome .panel-01 .sign-up{
-	font-size: 14px;
-	margin-left: 150px;
-	height: 24px;
-	line-height: 24px;
-	width: 60px;
+.welcome .links a:hover {
+	text-shadow: 0 0 1px #fff;
+	-moz-text-shadow: 0 0 1px #fff;
+	-webkit-text-shadow: 0 0 1px #fff;
 }
 
 /**
  * Define styles for panel-02
  */
 .welcome .panel-02{
+	margin-top: -40px;
 }
 .welcome .panel-02 .panel-inner{
   height: 475px;
@@ -234,9 +190,44 @@
 	text-align: center;
 }
 .welcome .panel-02 .upload{
-	font-size: 30px;
+	font-size: 24px;
 	height: 46px;
 	line-height: 46px;
+}
+/**
+ * Define styles for social-plugins on /welcome
+ */
+.welcome .social-plugins {
+	height: 75px;
+	padding: 5px;
+	border: 1px solid #f6f5f4;
+	border-radius: 8px;
+	-moz-box-shadow: 2px 2px #003d01;
+	-webkit-box-shadow: 2px 2px 5px #003d01;
+	box-shadow: 2px 2px 5px #003d01;
+	background: #ffffff;
+	background-image: -moz-linear-gradient(#ffffff, #d5d4d2);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#d5d4d2)); 
+}
+.welcome .social-plugins strong {
+	display: block;
+	color: #313131;
+	text-align: center;
+	text-shadow: #d5d5d3!important;
+	font-size: 14px;
+	line-height: 55px;
+	width: 225px;
+	float: left;
+}
+.welcome .social-plugins ul,
+.welcome .social-plugins li {
+	list-style: none;
+	height: 65px;
+}
+.welcome .social-plugins li {
+	width: 50px;
+	margin-right: 10px;
+	float: left;
 }
 /**
  * Define styles for upload

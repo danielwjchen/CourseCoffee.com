@@ -6,16 +6,14 @@
 class UserDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('account', 'password', 'id');
-		parent::__construct($db, $attr, $params);
-
+	protected function defineAttribute() {
+		return array('account', 'password', 'id');
 	}
 
 	/**
-	 * Extend DAO::create().
+	 * Implement DAOInterface::create().
 	 */
 	public function create($params) {
 		if (!isset($params['account']) || !isset($params['password'])) {
@@ -36,7 +34,7 @@ class UserDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read().
+	 * Implement DAOInterface::read().
 	 */
 	public function read($params) {
 		$sql = "SELECT * FROM `user` WHERE ";
@@ -67,7 +65,7 @@ class UserDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -85,7 +83,7 @@ class UserDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy().
+	 * Implement DAOInterface::destroy().
 	 */
 	public function destroy() {
 		$sql = "DELETE FROM `user` WHERE `id` = :id";

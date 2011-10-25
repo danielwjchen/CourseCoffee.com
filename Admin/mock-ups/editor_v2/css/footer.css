@@ -1,0 +1,42 @@
+/**
+ * Define style for footer
+ */
+.footer {
+}
+.footer {
+	color: #d2d2cd;
+	font-size: 12px;
+}
+.footer .copyright {
+	float: left;
+	width: 400px;
+	margin-right: -400px;
+	padding: 5px;
+	display: block;
+}
+.footer .directory {
+	padding: 5px 0;
+	float: left;
+	width: 560px;
+	margin-left: 400px;
+	margin-right: -960px;
+}
+.footer .directory ul,
+.footer .directory li {
+	font-size: 12px;
+}
+.footer .directory ul {
+	float: right;
+}
+.footer .directory li {
+	float: left;
+	padding: 0 15px 0 0;
+	display: block;
+}
+.footer a {
+	color: #d2d2cd;
+	text-decoration: none;
+}
+.footer a:hover {
+	text-decoration: underline;
+}

@@ -7,6 +7,14 @@
 	color: #d2d2cd;
 	font-size: 12px;
 }
+.footer .facebook,
+.footer .twitter {
+	vertical-align: top;
+}
+.footer .facebook img,
+.footer .twitter img {
+	width: 15px;
+}
 .footer .copyright {
 	float: left;
 	width: 400px;

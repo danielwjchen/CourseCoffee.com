@@ -6,12 +6,19 @@
 class QuestUserLinkageDAO extends LinkageDAO{
 
 	/**
-	 * Extend LinkageDAO::__construct().
+	 * Implement LinkageDAO::defineColumn().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('quest_id', 'user_id', 'id');
-		$this->linkage = 'quest_user_linkage';
-		parent::__construct($db, $attr, $params);
+	protected function defineColumn() {
+		return array(
+			'parent_id' => 'quest_id', 
+			'child_id'  => 'user_id',
+		);
 	}
 
+	/**
+	 * Implement LinkageDAO::defineLinkageTable().
+	 */
+	protected function defineLinkageTable() {
+		return 'quest_user_linkage';
+	}
 }

@@ -28,6 +28,15 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 	var _taskUpdater = '';
 
 	/**
+	 * Refresh class page
+	 *
+	 * this is a callback function when the class is successfully removed
+	 */
+	var _classRemovedCallback = function() {
+		window.location = '/class';
+	}
+
+	/**
 	 * Process default class data if specified
 	 */
 	var defaultData = option.serializeArray();
@@ -97,20 +106,27 @@ window.ClassInfo = function(regionName, optionFormName, listName, creationFormNa
 		$('input[name=section-id]', option).val(data.section_id);
 		$('input[name=section-num]', option).val(data.section_num);
 		$('input[name=syllabus-id]', option).val(data.syllabus_id);
+		$('input[name=syllabus-status]', option).val(data.syllabus_status);
 	};
 	
 	/**
 	 * Display class information stored in option
 	 */
 	var displayClassInfo = function() {
-		var content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>';
-			//'<a href="#" class="remove">&times;</a>';
-		if ($('input[name=syllabus-id]', option).val() != 0) {
+		var content = '<h3 class="course-title">' + $('input[name=course-title]', option).val() + '</h3>' +
+			'<a href="#" class="remove-class button">&times;</a>';
+		if ($('input[name=syllabus-status]', option).val() != 'removed') {
 			$('a.button.upload').addClass('disabled');
 		} else {
 			$('a.button.upload').removeClass('disabled');
 		}
 		region.html(content);
+		var class_remove = new ClassRemove(regionName, $('input[name=section-id]', option).val());
+		var section_code = $('input[name=subject-abbr]', option).val() + '-' + 
+			$('input[name=course-num]', option).val() + ' ' + 
+			$('input[name=section-num]', option).val();
+
+		class_remove.promptAction(section_code, _classRemovedCallback);
 	}
 
 	/**

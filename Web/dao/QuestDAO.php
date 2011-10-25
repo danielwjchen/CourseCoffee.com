@@ -6,24 +6,23 @@
 class QuestDAO extends DAO implements DAOInterface{
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
+	protected function defineAttribute() {
+		return array(
 			'id',
-      'type',
-      'type_id',
+			'status',
+			'status_id',
+			'type',
+			'type_id',
 			'user_id',
 			'objective',
 			'description',
 		);
-
-		parent::__construct($db, $attr, $params);
-
 	}
 
 	/**
-	 * Extend DAO::create()
+	 * Implement DAOInterface::create()
 	 */
 	public function create($params) {
 		if (!isset($params['objective']) || 
@@ -37,17 +36,19 @@ class QuestDAO extends DAO implements DAOInterface{
 		} else {
 			return $this->db->insert("
 				INSERT INTO `quest`
-					(`objective`, `description`, `user_id`, `type_id`, `created`, `updated`)
+					(`objective`, `description`, `user_id`, `type_id`, `status_id`, `created`, `updated`)
 				VALUES (
 					:objective,
 					:description,
 					:user_id,
 					(SELECT `id` FROM `quest_type` WHERE name = :type),
+					(SELECT `id` FROM `quest_status` WHERE name = :status),
 					UNIX_TIMESTAMP(),
 					UNIX_TIMESTAMP()
 				)",
 				array(
 					'type' => $params['type'],
+					'status' => $params['status'],
 					'user_id' => $params['user_id'],
 					'objective' => $params['objective'],
 					'description' => $params['description'],
@@ -59,7 +60,7 @@ class QuestDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::read()
+	 * Implement DAOInterface::read()
 	 */
 	public function read($params) {
 		$sql ="
@@ -71,7 +72,7 @@ class QuestDAO extends DAO implements DAOInterface{
 				ON q.type_id = qt.id
 		";
 
-		if (isset($params['id']) && !empty($params['id'])) {
+		if (isset($params['id'])) {
 			$sql .= 'WHERE q.id = :id';
 			$data = $this->db->fetch($sql, array('id' => $params['id']));
 
@@ -113,7 +114,7 @@ class QuestDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 		$sql = "
@@ -122,14 +123,16 @@ class QuestDAO extends DAO implements DAOInterface{
 				q.description = :description,
 				q.objective = :objective,
 				q.type_id = (SELECT qt.id FROM quest_type qt WHERE qt.name = :type),
+				q.status_id = (SELECT qt.id FROM quest_status qt WHERE qt.name = :status),
 				q.updated = UNIX_TIMESTAMP()
 			WHERE q.id = :id
 		";
 
-		$this->db->perform($sql, array(
+		return $this->db->perform($sql, array(
 			'description' => $this->attr['description'],
 			'objective' => $this->attr['objective'],
 			'type' => $this->attr['type'],
+			'status' => $this->attr['status'],
 			'user_id' => $this->attr['user_id'],
 			'id' => $this->attr['id']
 		));
@@ -137,7 +140,7 @@ class QuestDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::destroy()
+	 * Implement DAOInterface::destroy()
 	 */
 	public function destroy() {
 		$sql = '

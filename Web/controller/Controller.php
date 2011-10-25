@@ -40,22 +40,38 @@ interface ControllerInterface {
  */
 abstract class Controller {
 
+	protected $user_session;
+	protected $domain;
+	protected $sub_domain;
+	protected $supported_domain;
+	protected $output;
+
 	/**
 	 * Default home page
 	 */
-	const PAGE_DEFAULT = '/welcome';
-	const PAGE_HOME = '/home';
+	const PAGE_DEFAULT   = '/portal';
+	const PAGE_PORTAL    = '/portal';
+	const PAGE_WELCOME   = '/welcome';
+	const PAGE_HOME      = '/home';
+	const DEFAULT_DOMAIN = 'www';
 
 	function __construct() {
-		// we are not doing OAuth2 at the moment.
-		// $this->oauth2 = new OAuth2Model();
+		global $config;
+		$this->domain       = $config->domain;
+		$this->sub_domain   = $this->getSubDomain();
+		$sub_domain = $config->db['institution'];
+		$this->supported_domain = array_flip(array_keys($sub_domain));
+
+		if (array_key_exists($this->getRequestedSubDomain(), $this->supported_domain)) {
+			$this->user_session = new UserSessionModel($this->sub_domain);
+		}
 
 	}
 
 	/**
 	 * Implement Controller::beforeAction()
-	 * 
-	 * This is a stub!
+	 *
+	 *  this is a stub!
 	 */
 	public function beforeAction() {
 
@@ -63,11 +79,11 @@ abstract class Controller {
 
 	/**
 	 * Implement ControllerInterface::afterAction()
-	 *
-	 * This is a stub!
 	 */
 	public function afterAction() {
+		echo $this->output->render();
 	}
+
 
 	/**
 	 * Redirect unknown user 
@@ -75,9 +91,25 @@ abstract class Controller {
 	 * @param string $url
 	 *  url to redirect to, default to home
 	 */
-	public function redirectUnknownUser($url = self::PAGE_DEFAULT) {
+	public function redirectUnknownUser($url = self::PAGE_WELCOME) {
 		if(!$this->isUserLoggedIn()) {
 			$this->redirect($url);
+		}
+	}
+
+	/**
+	 * Redirect unknow domain
+	 */
+	protected function redirectUnsupportedDomain() {
+		$requested   = $this->getRequestedSubDomain();
+		$user_domain = $this->getSubDomain();
+		$url = $this->getProtocol();
+		if (!array_key_exists($requested, $this->supported_domain)) {
+			if (array_key_exists($user_domain, $this->supported_domain)) {
+				$url .= $user_domain . '.' . $this->domain;
+				$this->redirect($url);
+			}
+			$this->redirect($url . self::DEFAULT_DOMAIN . '.' . $this->domain . self::PAGE_PORTAL);
 		}
 
 	}
@@ -94,7 +126,7 @@ abstract class Controller {
 	}
 
 	/**
-	 *
+	 * Hanlid page redirection using javascript
 	 */
 	protected function clientRedirect($url) {
 		echo <<<HTML
@@ -106,29 +138,68 @@ HTML;
 	}
 
 	/**
+	 * Get the requested protocol
+	 */
+	protected function getProtocol() {
+		return empty($_SERVER['HTTPS']) ? 'http://' : 'https://';
+	}
+
+	/**
 	 * Get user's id
 	 *
 	 * @return mixed
 	 *  return the user id or boolean false
 	 */
 	public function getUserId() {
-		$user_session = new UserSessionModel();
-		$user_id = $user_session->getUserId();
+		if (!is_object($this->user_session)) {
+			return false;
+		}
+		$user_id = $this->user_session->getUserId();
 		if (empty($user_id)) {
 			$signature  = Cookie::Get(UserSessionModel::COOKIE_SIGNATURE);
 			$auto_login = Cookie::Get(UserSessionModel::COOKIE_AUTO_LOGIN); 
 			if ($auto_login != 'false' && !empty($signature)) {
-				global $config;
-				$user_cookie_dao = new UserCookieDAO(new DB($config->db));
-				$user_cookie_dao->read(array('signature' => $signature));
-				$user_id = $user_cookie_dao->user_id;
-				if (!empty($user_id)){
-					Session::Set('user_id', $user_id);
+				$result = $this->user_session->reviveUserSession($signature);
+				if (!$result) {
+					return false;
 				}
+
+				$user_id = $this->user_session->getUserId();
+
 			}
 		}
-
 		return $user_id == '' ? false : $user_id;
+	}
+
+	/**
+	 * Get requested domain
+	 */
+	protected function getRequestedDomain() {
+		return $_SERVER['HTTP_HOST'];
+	}
+
+	/**
+	 * Get current sub-domain
+	 */
+	protected function getRequestedSubDomain() {
+		return str_replace('.', '', str_replace($this->domain, '', $_SERVER['SERVER_NAME']));
+;
+	}
+
+	/**
+	 * Get Subdomain
+	 *
+	 * @return mixed
+	 */
+	protected function getSubDomain() {
+		$domain = null;
+		if (is_object($this->user_session)) {
+			$domain = $this->user_session->getUserDomain();
+		}
+		if (empty($domain)) {
+			$domain = $this->getRequestedSubDomain();
+		}
+		return $domain;
 	}
 
 	/**
@@ -139,12 +210,15 @@ HTML;
 	}
 
 	/**
-	 * Get the id of user's institution
+	 * Get institution id
 	 * 
 	 * THIS IS A STUB!!!
 	 */
-	public function getUserInstitutionId() {
-		return 1;
+	public function getInstitutionId() {
+		$domain = $this->getRequestedSubDomain();
+		$college = new CollegeModel($this->sub_domain);
+		$record = $college->getCollegeByDomain($domain);
+		return $record['id'];
 	}
 
 	/**
@@ -170,11 +244,11 @@ HTML;
 	 *
 	 * This is an alias of getUserID()
 	 *
-	 * @return mixed
-	 *  return the user id or boolean false
+	 * @return bool
 	 */
 	public function isUserLoggedIn() {
-		return $this->getUserId();
+		$user_id = $this->getUserId();
+		return !empty($user_id);
 	}
 	
 

@@ -3,20 +3,13 @@
  * @file
  * Represent a college class record in database
  */
-class CollegeClassDAO extends DAO implements DAOInterface{
+class CollegeClassDAO extends DAO implements DAOInterface {
 
 	/**
-	 * Extend DAO::__construct().
+	 * Implement DAO::defineAttribute().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array(
-			'institution_id',
-			'institution',
-			'institution_uri',
-			'year_id',
-			'year',
-			'term_id',
-			'term',
+	protected function defineAttribute() {
+		return array(
 			'subject_id',
 			'subject_abbr',
 			'course_id',
@@ -29,24 +22,19 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 			'syllabus_status',
 			'syllabus_id',
 		);
-		parent::__construct($db, $attr, $params);
-
 	}
 
 	/**
-	 * Extend DAO::create().
+	 * Implement DAOInterface::create().
 	 */
 	public function create($params) {
 	}
 
 	/**
-	 * Extend DAO::read().
+	 * Implement DAOInterface::read().
 	 *
 	 * @param array $params
 	 *  - id
-	 *  - institution_id
-	 *  - year_id
-	 *  - term_id
 	 *  - subject_abbr
 	 *  - course_num
 	 *  - section_num
@@ -66,82 +54,33 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 				CONCAT(sub.abbr, '-', crs.num) AS course_code,
 				sub.id AS subject_id,
 				sub.abbr AS subject_abbr,
-				sub.title AS subject_title,
-				it.id AS term_id,
-				it.name AS term,
-				iy.id AS year_id,
-				iy.period AS year,
-				i.id AS institution_id,
-				i.uri AS institution_uri,
-				i.name AS institution
+				sub.title AS subject_title
 			FROM `section` sec
 			INNER JOIN course crs
 				ON sec.course_id = crs.id
 			INNER JOIN subject sub
 				ON crs.subject_id = sub.id
-			INNER JOIN subject_term_linkage st_linkage
-				ON sub.id = st_linkage.subject_id
-			INNER JOIN institution_term it
-				ON st_linkage.term_id = it.id
-			INNER JOIN institution_year iy
-				ON it.year_id = iy.id
-			INNER JOIN institution_year_linkage iy_linkage
-				ON iy.id = iy_linkage.year_id
-			INNER JOIN institution i
-				ON iy_linkage.institution_id = i.id
 		";
 
 		if (isset($params['id'])) {
 			$sql .= "WHERE sec.id = :id";
 			$sql_param = array('id' => $params['id']);
 		} else if (
-				isset($params['institution_uri']) &&
-				isset($params['year']) &&
-				isset($params['term']) &&
 				isset($params['subject_abbr']) &&
 				isset($params['course_num']) &&
 				isset($params['section_num'])
 		) {
 			$sql .= "
-				WHERE i.uri = :institution_uri
-					AND iy.period = :year
-					AND it.name = :term
-					AND sub.abbr = :subject_abbr
+				WHERE sub.abbr = :subject_abbr
 					AND crs.num = :course_num
 					AND sec.num = :section_num
 			";
 			$sql_param = array(
-				'institution_uri' => $params['institution_uri'],
-				'year'            => $params['year'],
-				'term'            => $params['term'],
 				'subject_abbr'    => $params['subject_abbr'],
 				'course_num'      => $params['course_num'],
 				'section_num'     => $params['section_num'],
 			);
-		} else if (
-				isset($params['institution_id']) &&
-				isset($params['year_id']) &&
-				isset($params['term_id']) &&
-				isset($params['subject_abbr']) &&
-				isset($params['course_num']) &&
-				isset($params['section_num'])
-		) {
-			$sql .= "
-				WHERE i.id = :institution_id
-					AND iy.id = :year_id
-					AND it.id = :term_id
-					AND sub.abbr = :subject_abbr
-					AND crs.num = :course_num
-					AND sec.num = :section_num
-			";
-			$sql_param = array(
-				'institution_id' => $params['institution_id'],
-				'year_id'        => $params['year_id'],
-				'term_id'        => $params['term_id'],
-				'subject_abbr'   => $params['subject_abbr'],
-				'course_num'     => $params['course_num'],
-				'section_num'    => $params['section_num'],
-			);
+
 		} else {
 			throw new Exception('unknow college class identifier');
 		}
@@ -157,13 +96,13 @@ class CollegeClassDAO extends DAO implements DAOInterface{
 	}
 
 	/**
-	 * Extend DAO::update()
+	 * Implement DAOInterface::update()
 	 */
 	public function update() {
 	}
 
 	/**
-	 * Extend DAO::destroy().
+	 * Implement DAOInterface::destroy().
 	 */
 	public function destroy() {
 	}

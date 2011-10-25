@@ -61,6 +61,14 @@ abstract class DAO{
 	protected $db;
 
 	/**
+	 * Define the attributes of the dao object.
+	 *
+	 * @return array
+	 */
+	abstract protected function defineAttribute() ;
+
+
+	/**
 	 * Set the object attribute
 	 *
 	 * @param array $attribute
@@ -77,7 +85,7 @@ abstract class DAO{
 	 * @param array $data
 	 *  an assciative array that contains data
 	 *
-	 * @
+	 * @return bool
 	 */
 	protected function updateAttribute($data) {
 		if (!empty($data)) {
@@ -108,23 +116,10 @@ abstract class DAO{
 
 	/**
 	 * Load a the data for child classes
-	 *
-	 * @param $db
-	 *  a database object
-	 * @param array $attr
-	 *  an associative array of object attributes
-	 * @param array $params
-	 *  an associative array of params to be executed with the SQL query
 	 */
-	function __construct($db, $attr, $params = NULL) {
-		$this->setAttribute($attr);
+	function __construct($db) {
 		$this->db = $db;
-
-		if (!empty($params)) {
-			$this->read($params);
-
-		}
-
+		$this->setAttribute($this->defineAttribute());
 	}
 
   /**

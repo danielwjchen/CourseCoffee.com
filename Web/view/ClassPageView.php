@@ -21,10 +21,12 @@ class ClassPageView extends PageView implements PageViewInterface {
 
 		$this->addJS('model/panel.js');
 		$this->addJS('model/task.js');
+		$this->addJS('model/class-remove.js');
 		$this->addJS('model/class-info.js');
 		$this->addJS('timer.js');
 		$this->addJS('controller/class.js');
 		$this->addCSS('dialog.css');
+		$this->addCSS('class-remove.css');
 		$this->addCSS('class.css');
 		$this->addCSS('panel.css');
 		$this->addCSS('task.css');
@@ -44,13 +46,14 @@ class ClassPageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'header' => array(
-				'NavigationBlockView',
+				'callback' => 'NavigationBlockView',
+				'params'   => array('role'),
 			),
 			'upload_form' => array(
-				'UploadFormBlockView',
+				'callback' => 'UploadFormBlockView',
 			),
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -90,6 +93,7 @@ class ClassPageView extends PageView implements PageViewInterface {
 	<input type="hidden" name="section-num" value="{$section_num}" />
 	<input type="hidden" name="section-id" value="{$section_id}" />
 	<input type="hidden" name="syllabus-id" value="{$syllabus_id}" />
+	<input type="hidden" name="syllabus-status" value="{$syllabus_status}" />
 HTML;
 		} else {
 			return <<<HTML
@@ -103,6 +107,7 @@ HTML;
 	<input type="hidden" name="section-num" value="" />
 	<input type="hidden" name="section-id" value="{$section_id}" />
 	<input type="hidden" name="syllabus-id" value="" />
+	<input type="hidden" name="syllabus-status" value="" />
 HTML;
 		}
 	}
@@ -133,6 +138,10 @@ HTML;
 		<div class="header">
 			<div class="header-inner">
 				{$header}
+			</div>
+		</div>
+		<div class="system-message hidden">
+			<div class="system-message-inner">
 			</div>
 		</div>
 		<div class="class body">

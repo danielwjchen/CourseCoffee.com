@@ -69,39 +69,73 @@
 	opacity: 1;
 }
 .dialog .button{
-	color: white;
-	display: block;
-	border: 1px solid #ff8400;
-	border-radius: 4px;
 	font-size: 24px;
 	height: 36px;
 	line-height: 36px;
-	text-align: center;
+}
+.dialog .orange-checker {
+	color: #FF8400;
 	font-weight: bold;
-	text-decoration: none;
-	text-shadow: 0 0 6px #8a4c0a;
-	-moz-text-shadow: 0 0 6px #8a4c0a;
-	-webkit-text-shadow: 0 0 6px #8a4c0a;
-	background: #ff8400;
-	background-image: -moz-linear-gradient(#ff8400, #d06e06);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ff8400), to(#d06e06)); 
+	font-size: 26px;
 }
-.dialog .button:hover{
-	text-shadow: 0 0 3px #fff;
-	-moz-text-shadow: 0 0 3px #fff;
-	-webkit-text-shadow: 0 0 3px #fff;
+
+/**
+ * Define styles for sign up options
+ *
+ * This is for the sign-up-option section, not the sign-up pop-up.
+ */
+.sign-up-option {
 }
-.dialog .button:active{
-	-moz-box-shadow: inset 0 0 15px 15px #d06e06;
-	-webkit-box-shadow: inset 0 0 15px 15px#d06e06;
-	box-shadow: inset 0 0 15px 15px #d06e06;
+.sign-up-option ul,
+.sign-up-option li {
+	list-style: none;
+}
+.sign-up-option ul{
+	width: 325px;
+	margin: 20px auto 40px;
+}
+.sign-up-option li{
+	padding: 10px 0 10px 50px;
+	height: 40px;
+	font-weight: bold;
+	font-size: 16px;
+}
+.sign-up-option li.calendar {
+	background: url('/images/calendar.png') left center no-repeat;
+}
+.sign-up-option li.text-book {
+	background: url('/images/text-book.png') left center no-repeat;
+}
+.sign-up-option li.facebook {
+	background: url('/images/facebook.png') left center no-repeat;
+}
+.sign-up-option a.facebook {
+	width: 100%;
+	float: left;
+}
+.sign-up-option .alternative {
+	margin-top: 30px;
+	width: 330px;
+	float: right;
+	clear: both;
+}
+.sign-up-option p,
+.sign-up-option span {
+	font-size: 12px;
+	float: left;
+}
+.sign-up-option p {
+	padding-top: 2px;
+	padding-right: 10px;
+	height: 14px;
+	line-height: 14px;
 }
 
 /**
  * Define styles for upload dialog
  */
 .upload.dialog {
-	margin: 200px auto 0;
+	margin: 40px auto 0;
 	position: relative;
 }
 
@@ -111,15 +145,45 @@
 }
 .upload .error{
 	color: red;
+	font-size: 12px;
+	font-weight: bold;
 	text-align: center;
 	clear: both;
 	margin-bottom: 25px;
 }
+.upload .row,
+.upload .description,
 .upload input[type=file] {
+	float: left;
+	display: block;
+}
+.upload .row {
+	width: 450px;
+	clear: both;
+}
+.upload .row p {
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+}
+.upload input[type=file] {
+	width: 250px;
+	text-align: center;
+	margin: 35px 0 20px 120px;
+}
+.upload p {
+	margin: 10px 0;
+	text-align: center;
+}
+.upload .button {
+	float: left;
 	clear: both;
 	width: 458px;
-	text-align: center;
-	margin: 35px auto;
+}
+.upload img {
+	width: 300px;
+	margin: 20px auto;
+	display:block;
 }
 /**
  * Define styles for enrollment dialog
@@ -161,67 +225,31 @@
 /**
  * Define styles for confirm class info dialog
  */
-.confirm-class.dialog {
-	margin: 35px auto 0;
-}
-
+.confirm-class.dialog,
 .confirm-class .dialog-inner {
-	margin: 25px auto 0;
-	width: 500px;
-	height: auto;
+	margin: 50px auto 0;
+	height: 270px;
 }
-.confirm-class .title {
-	width: 400px;
-	margin: 0 auto;
-	text-align: left;
+.confirm-class.dialog {
 }
-.confirm-class .error{
-	color: red;
+.confirm-class .dialog-inner {
+}
+.confirm-class {
+}
+.confirm-class h1,
+.confirm-class h2 {
 	text-align: center;
-	clear: both;
-	margin-bottom: 25px;
+}
+.confirm-class h2 {
+	margin: 20px auto 50px;
 }
 .confirm-class .row {
 	margin: 5px 0;
 	float: left;
 	text-align: left;
 }
-.confirm-class .confirm-message {
-	margin: 10px 5px 25px;
-	font-size: 12px;
-	float: left;
-	width: 448px;
-}
-.confirm-class .confirm-message h2 {
-	clear: both;
-	margin: 5px 0;
-	font-size: 22px;
-	text-align: left;
-}
-.confirm-class .confirm-message h3 {
-	clear: both;
-	margin: 15px 0;
-	font-size: 18px;
-	text-align: left;
-}
-.confirm-class .confirm-message ul,
-.confirm-class .confirm-message li {
-	display: block;
-	float: left;
-}
-.confirm-class .confirm-message ul {
-	margin : 25px 0 25px 120px;
-	width: 300px;
-	clear: both;
-}
-.confirm-class .confirm-message li {
-	font-weight: bold;
-	padding: 2px 0;
-	font-size: 14px;
-}
 .confirm-class label,
-.confirm-class input,
-.confirm-class select {
+.confirm-class input {
 	height: 34px;
 	line-height: 34px;
 	float: left;
@@ -229,11 +257,9 @@
 .confirm-class .row input {
 	border: 1px solid #313131;
 	font-size: 20px;
+	color: #868C8F;
+	font-weight: bold;
 	width: 330px;
-}
-.confirm-class select {
-	font-size: 18px;
-	width: 333px;
 }
 .confirm-class label {
 	font-size: 20px;
@@ -244,31 +270,101 @@
 	width: 115px;
 }
 .confirm-class .confirm-row {
-	margin-top: 105px;
+	margin-top: 50px;
 	width: 100%;
 }
-.confirm-class .book-list {
-	height: 325px !important;
+/**
+ * Define styles for confirm task creation dialog
+ */
+.confirm-task.dialog {
+	margin: 15px auto 0;
+}
+
+.confirm-task .dialog-inner {
+	margin: 25px auto 0;
+	width: 500px;
+	height: auto;
+}
+.confirm-task .title {
+	width: 400px;
+	margin: 0 auto;
+	text-align: left;
+}
+.confirm-task .error{
+	color: red;
+	text-align: center;
+	clear: both;
+	margin-bottom: 25px;
+}
+.confirm-task .row {
+	margin: 5px 0;
+	float: left;
+	text-align: left;
+}
+.confirm-task .confirm-message {
+	margin: 10px 5px;
+	font-size: 12px;
+	float: left;
+	width: 490px;
+}
+.confirm-task .confirm-message h2 {
+	clear: both;
+	margin: 5px 0;
+	font-size: 22px;
+	text-align: left;
+}
+.confirm-task .confirm-message h3 {
+	clear: both;
+	margin: 15px 0;
+	width: 490px;
+	font-size: 14px;
+	text-align: center;
+}
+.confirm-task .confirm-message ul,
+.confirm-task .confirm-message li {
+	display: block;
+	float: left;
+}
+.confirm-task .confirm-message ul {
+	margin : 25px 0 55px 90px;
+	width: 380px;
+	clear: both;
+}
+.confirm-task .confirm-message li {
+	font-weight: bold;
+	padding: 2px 0;
+	font-size: 18px;
+	line-height: 26px;
+}
+.confirm-task .book-list {
 	margin-bottom: 20px;
 }
-.confirm-class .message {
+.confirm-task .message {
 	position: absolute;
 	width: 100%;
 	top: 365px;
 	text-align: center;
 }
-.confirm-class .warning {
+.confirm-task .warning {
 	text-align: left;
+}
+.confirm-task .confirm-row {
+	margin-top: 50px;
+	width: 100%;
 }
 
 /**
  * Define styles for sign up dialog
  */
 .sign-up.dialog {
-	margin: 200px auto 0;
+	margin: 20px auto 0;
 	height: auto;
 }
-
+.sign-up h2 {
+	width: 400px;
+	font-size: 28px;
+	margin: 10px auto;
+}
 .sign-up .dialog-inner {
 	height: auto;
 }
@@ -279,39 +375,32 @@
 	font-size: 18px;
 	display: block;
 }
-.sign-up-option {
+.sign-up li {
+	margin: 15px 0 15px;
 }
-.sign-up-option a.facebook {
-	width: 100%;
+
+/**
+ * Define styles for class remove dialog
+ */
+.remove-class.dialog,
+.remove-class .dialog-inner {
+	height: 235px;
+}
+.remove-class.dialog {
+	margin: 150px auto 0;
+}
+.remove-class.dialog p {
+	padding: 20px 25px;
+}
+.remove-class.dialog strong {
+	font-size: 14px;
+}
+.remove-class .remove-option {
+	width: 440px;
+	margin: 40px auto 0;
+}
+.remove-class .remove-option .button {
+	width: 198px;
+	margin: 0 10px;
 	float: left;
-	color: white;
-	background: #627AAD;
-	border: 1px solid #1A3C6C;
-	text-shadow: 0 0 6px #1A3C6C;
-	-moz-text-shadow: 0 0 6px #1A3C6C;
-	-webkit-text-shadow: 0 0 6px #1A3C6C;
-	background-image: -moz-linear-gradient(#627AAD, #1A3C6C);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#627AAD), to(#1A3C6C)); 
-}
-.sign-up-option a.facebook:active {
-	-moz-box-shadow: inset 0 0 15px 15px #1A3C6C;
-	-webkit-box-shadow: inset 0 0 15px 15px#1A3C6C;
-	box-shadow: inset 0 0 15px 15px #1A3C6C;
-}
-.sign-up-option .alternative {
-	margin-top: 30px;
-	width: 330px;
-	float: right;
-	clear: both;
-}
-.sign-up-option p,
-.sign-up-option span {
-	font-size: 12px;
-	float: left;
-}
-.sign-up-option p {
-	padding-top: 2px;
-	padding-right: 10px;
-	height: 14px;
-	line-height: 14px;
 }

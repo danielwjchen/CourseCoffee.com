@@ -3,15 +3,22 @@
  * @file
  * Represent a linkage between a quest and a date
  */
-class QuestDateLinkageDAO extends LinkageDAO{
+class QuestDateLinkageDAO extends LinkageDAO {
 
 	/**
-	 * Extend LinkageDAO::__construct().
+	 * Implement LinkageDAO::defineColumn().
 	 */
-	function __construct($db, $params = NULL) {
-		$attr = array('quest_id', 'date_id', 'id');
-		$this->linkage = 'quest_date_linkage';
-		parent::__construct($db, $attr, $params);
+	protected function defineColumn() {
+		return array(
+			'parent_id' => 'quest_id', 
+			'child_id'  => 'date_id',
+		);
 	}
 
+	/**
+	 * Implement LinkageDAO::defineLinkageTable().
+	 */
+	protected function defineLinkageTable() {
+		return 'quest_date_linkage';
+	}
 }

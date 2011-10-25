@@ -6,11 +6,10 @@
 class StatisticTypeDAO extends TypeDAO{
 
 	/**
-	 * Extend TypeDAO::__construct().
+	 * Implement TypeDAO::defineType()
 	 */
-	function __construct($db, $params = NULL) {
-		$this->type = 'statistic_type';
-		parent::__construct($db, $params);
+	protected function defineType() {
+		return 'statistic_type';
 	}
 
 }

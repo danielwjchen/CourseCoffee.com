@@ -14,25 +14,29 @@ require_once __DIR__ . '/config.php';
  * This is not 100% reliable.... It checks with the existing DAB schema entries 
  * but not the actual table schemas.
  */
-require_once INCLUDES_PATH . '/DBAInvoker.php';
-DBAInvoker::Init($config->db);
-$dbas = File::ScanDirectory(DBA_PATH, '/DBA\.php$/');
+require_once INCLUDES_PATH . '/SchemaInvoker.php';
+SchemaInvoker::Init();
+$dbas = File::ScanDirectory(SCHEMA_PATH, '/^[a-zA-Z]+Schema\.php$/');
 foreach ($dbas as $path => $dba) {
 	try {
-		DBAInvoker::Request($dba->name, $dba->uri);
+		SchemaInvoker::Request($dba->name, $dba->uri);
 	} catch (Exception $e) {
 		echo $e->Message();
-		}
+	}
 }
 
 /**
  * Rebuild paths for autoloading
  */
-Autoloader::Init($config->db);
 Autoloader::Build();
 
 /**
  * Rebuild URI maps for routing
  */
-Router::Init($config->db);
 Router::Build();
+
+/**
+ * Update setting records in Database
+ */
+require_once SETTING_PATH . '/Setting.php';
+Setting::Populate();

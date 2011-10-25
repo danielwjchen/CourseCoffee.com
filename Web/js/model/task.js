@@ -101,7 +101,7 @@ window.Task = function(creationFormName, optionFormName) {
 		region.append("<h3 class='error'>" +
 			message + 
 		"</h3>");
-		$('.button.more').addClass('disabled');
+		$('.panel-02 .button.more').addClass('disabled');
 	};
 
 	/**
@@ -164,7 +164,7 @@ window.Task = function(creationFormName, optionFormName) {
 					$('.optional').addClass('hidden');
 					$('.show-detail').text('mode detail');
 
-					setTimeout(callback(), 500);
+					setTimeout(callback, 500);
 				}
 			}
 		});
@@ -176,7 +176,7 @@ window.Task = function(creationFormName, optionFormName) {
 /**
  * Generate a list of task
  *
- * This is a statis method
+ * This is a static method
  *
  * @param object list
  *  a JSON list retrieved from the server
@@ -266,7 +266,7 @@ TaskUpdater = function(regionName) {
 			url: '/task-status-update',
 			type: 'POST',
 			cache: false,
-			data: 'task_id=' + taskId,
+			data: 'task_id=' + taskId + '&status=done',
 			success: function(response) {
 				if (response.success) {
 					target.html(response.stats + " done!");

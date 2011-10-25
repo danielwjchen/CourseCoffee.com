@@ -14,8 +14,10 @@ class WelcomePageView extends PageView implements PageViewInterface {
 		$this->addJS('model/login.js');
 		$this->addJS('model/register.js');
 		$this->addJS('model/doc.js');
+		$this->addJS('model/slide-show.js');
 		$this->addJS('controller/welcome.js');
 		$this->addCSS('dialog.css');
+		$this->addCSS('slide-show.css');
 		$this->addCSS('welcome.css');
 	}
 
@@ -25,7 +27,7 @@ class WelcomePageView extends PageView implements PageViewInterface {
 	public function getBlocks() {
 		return array(
 			'footer' => array(
-				'FooterBlockView',
+				'callback' => 'FooterBlockView',
 			),
 		);
 	}
@@ -43,38 +45,64 @@ class WelcomePageView extends PageView implements PageViewInterface {
 					<div class="panel-top">
 						<div class="panel-inner">
 							<img src="images/logo.png" class="logo" />
-							<div class="user-login">
-								<div class="login-form">
-									<form id="user-login-form" name="user-login" action="user-login" method="post">
-										<input type="hidden" name="token" value="{$login_token}" />
-										<input type="email" name="email" class="input" value="email" />
-										<input type="password" name="password" class="input" value="password" />
-										<a class="button login" href="#">login</a>
-									</form>
+							<div class="user-action">
+								<div class="user-login">
+									<div class="login-form">
+										<form id="user-login-form" name="user-login" action="user-login" method="post">
+											<input type="hidden" name="token" value="{$login_token}" />
+											<input type="email" name="email" class="input" value="email" />
+											<input type="password" name="password" class="input" value="password" />
+											<a class="button login" href="#">login</a>
+										</form>
+									</div>
 								</div>
+								<a href="/sign-up" class="button sign-up">Sign Up</a>
 							</div>
 							<div class="login error hidden"></div>
-							<p class="slogan"><span class="hidden">School is hectic! <br />Instantly organize!</span></p>
 						</div>
 					</div>
 					<div class="panel-01">
 						<div class="panel-inner">
-							<h2>Upload your course syllabi to:</h2>
-							<ul>
-								<li class="calendar">Automatically organize all your class assignments into one calendar</li>
-								<li class="text-book">Instantly find the cheapest deals on your textbooks online</li>
-								<li class="facebook">Collaborate with your classmates on facebook</li>
-						 </ul>
-						 	<div class="tutorial">
-								 <a href="/how-to-find-syllabus">Help: where do I find my syllabus?</a>
+							<div class="slide-show">
+								<ul>
+									<li class="show">
+										<img src="/images/slides/book.png" rel="<li class='text-book'>Find the best book deals on the internet</li>" />
+									</li>
+									<li>
+										<img src="/images/slides/calendar.png" rel="<li class='calendar'>Instantly organize your assignments into one calendar</li>" />
+									</li>
+									<li>
+										<img src="/images/slides/class.png" rel="<li class='facebook'>Collaborate with classmates</li>" />
+									</li>
+									<li>
+										<img src="/images/slides/editor.png" rel="<li class='calendar'>Instantly organize your assignments into one calendar</li>" />
+									</li>
+								</ul>
+								<div class="caption">
+									<ul class="caption-content"></ul>
+								</div>
 							</div>
-							 <div class="sign-up-shortcut">
-									<p>or... manually</p>
-									<a href="/sign-up" class="button sign-up">Sign Up</a>
-							 </div>
+							<div class="social-plugins">
+								<strong>Share this with your friends</strong>
+								<ul>
+									<li>
+										<div class="fb-like" data-href="http://www.coursecoffee.com" data-send="false" data-layout="box_count" data-width="50" data-show-faces="true"></div>
+									</li>
+									<li>
+										<g:plusone size="tall"></g:plusone>
+									</li>
+									<li>
+										<a href="https://twitter.com/share" class="twitter-share-button" data-url="coursecoffee.com" data-text="College made easy." data-count="vertical" data-via="CourseCoffee">Tweet</a>
+										<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+									</li>
+								</ul>
+							</div>
 						</div>
 					</div>
 				<div class="panel-02">
+					<div class="tagline">
+						<h1>College made easy.</h1>
+					</div>
 					<div class="panel-inner">
 						<div class="upload-form">
 							<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">
@@ -83,12 +111,16 @@ class WelcomePageView extends PageView implements PageViewInterface {
 								<div class="error hidden"></div>
 								<a class="button submit" href="#">upload</a>
 							</form>
-							<a class="button upload" href="#">start here!</a>
+							<a class="button upload" href="#">upload now!</a>
+						</div>
+						<div class="links">
+							 <a href="/book-search">Or, just want books? Click here.</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="clear-fix"></div>
 	</div>
 </div>
 <div class="footer">

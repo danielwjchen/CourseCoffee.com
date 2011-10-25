@@ -4,6 +4,7 @@
  * page
  */
 $P.ready(function() {
+	blurInput('.login-form');
 	var fbUid = '';
 	$FB(function() {
 		FB.getLoginStatus(function(response) {
@@ -24,8 +25,13 @@ $P.ready(function() {
 		});
 	});
 
-	window.welcome = $('.welcome');
-	blurInput(welcome);
+	var slideShow = new SlideShow('.slide-show');
+	slideShow.perform();
+
+	var welcome = $('.welcome');
+	$('#school-options', welcome).change(function(e) {
+		window.location = window.location.protocol + '//' + $(this).val();
+	});
 
 	// submit login form on press enter
 	$('#user-login-form input').keypress(function(e){
