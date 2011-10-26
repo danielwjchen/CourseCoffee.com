@@ -63,18 +63,18 @@ class UserAPIController extends APIController implements ControllerInterface {
 		$class_list = array();
 		if (!empty($section_id)) {
 			Session::Del('section_id');
-			$college_class = new CollegeClassModel($this->sub_domain);
-			$class_info = $college_class->getClassById($section_id);
+			$curriculumClass = new CurriculumClassModel($this->sub_domain);
+			$classInfo = $curriculumClass->getClassById($section_id);
 
 			// check if the requested section id is valid
-			if (isset($class_info['content'])) {
+			if (isset($classInfo['content'])) {
 
 				$user_enroll_class_model = new UserEnrollClassModel($this->sub_domain);
 				$user_enroll_class_model->createLinkage(
 					$user_record['user_id'], 
 					$section_id
 				);
-				$class_list[$section_id] = $class_info['content']['section_code'];
+				$class_list[$section_id] = $classInfo['content']['section_code'];
 			}
 			$this->user_session->setUserClassList($class_list);
 
@@ -140,6 +140,7 @@ class UserAPIController extends APIController implements ControllerInterface {
 	 */
 	public function registerUserByUs() {
 		$tou_model = new TermsOfUseModel($this->sub_domain);
+
 		$tou_vid        = $tou_model->getLatest();
 		$first_name     = Input::Post('first-name');
 		$last_name      = Input::Post('last-name');

@@ -11,6 +11,16 @@ class APIController extends Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Get institution id
+	 */
+	protected function getInstitutionId() {
+		$domain = $this->getRequestedSubDomain();
+		$institution = new InstitutionModel($this->sub_domain);
+		$record = $college->getInstitutionByDomain($domain);
+		return $record['id'];
+	}
+
+	/**
 	 * Implement ControllerInterface::Route()
 	 */
 	public static function Route() {
@@ -36,7 +46,9 @@ class APIController extends Controller implements ControllerInterface {
 	 */
 	public function getDefaultAction() {
 		Logger::Write(self::ERROR_404 . ' - ' . $uri, Logger::SEVERITY_LOW);
-		$this->output = new NotFoundPageView();
+		$this->output = new APIJSONView(array(
+			'error' => '404 Page Not Found.',
+		));
 	}
 
 }

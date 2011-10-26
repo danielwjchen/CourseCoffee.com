@@ -105,7 +105,7 @@ class CurriculumListModel extends Model {
 		$params['limit']['offset'] = 0;
 		$params['limit']['count']  = 10;
 
-		$this->list_dao = new CollegeClassListDAO($this->institution_db);
+		$this->list_dao = new CurriculumClassListDAO($this->institution_db);
 		$has_records = $this->list_dao->read($params);
 
 		if ($has_records) {
@@ -167,7 +167,7 @@ class CurriculumListModel extends Model {
 	 * Get a list of class based on syllabus status
 	 */
 	public function getClassListBySyllabusStatus($syllabus_status, $timestamp, $paginate = 0) {
-		$this->list_dao = new CollegeClassListDAO($this->institution_db);
+		$this->list_dao = new CurriculumClassListDAO($this->institution_db);
 		$has_records = $this->list_dao->read(array(
 			'syllabus_status' => $syllabus_status,
 			'limit' => array(

@@ -14,7 +14,7 @@ class UserClassListDAO extends ListDAO implements ListDAOInterface {
 	 *  - year_id
 	 *  - term_id
 	 */
-	public function read($params) {
+	public function read(array $params = null) {
 		if (!isset($params['user_id']) ||
 				!isset($params['institution_id']) ||
 				!isset($params['year_id']) ||
