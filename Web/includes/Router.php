@@ -61,7 +61,7 @@ class Router {
 	 */
 	public function buildPath() {
 		$this->db->perform('TRUNCATE TABLE router');
-		$controllers = File::ScanDirectory(CONTROLLER_PATH, '/[a-z]+Controller\.php$/i');
+		$controllers = File::ScanDirectory(MODULES_PATH, '/[a-z]+Controller\.php$/i');
 		$paths = array();
 		$sql = "
 			INSERT INTO router
@@ -69,10 +69,13 @@ class Router {
 			VALUES
 				(:path, :controller, :action)
 		";
-		require_once CONTROLLER_PATH . '/Controller.php';
 		foreach ($controllers as $path => $object) {
 			require_once $path;
-			$mapping = call_user_func($object->name . '::path');
+			$class = new ReflectionClass($object->name);
+			if ($class->isAbstract()) {
+				continue;
+			}
+			$mapping = call_user_func($object->name . '::Route');
 			foreach ($mapping as $uri => $action) {
 				$this->db->perform($sql, array(
 					'path' => $uri,
@@ -143,7 +146,17 @@ class Router {
 	 * @return string
 	 *  the corresponding controller class name
 	 */
-	public static function Dispatch($uri, $params = array()) {
+	public static function Dispatch($uri = 'welcome', $params = array()) {
+		if (isset($_GET['q'])) {
+			$request = explode('/', $_GET['q']);
+			$uri = array_shift($request);
+			$params = $request;
+
+			// debug
+			// error_log('uri - ' .$uri);
+			// error_log('params - ' . print_r($params, true));
+
+		}
 		self::Init();
 		self::$instance->dispatchController($uri, $params);
 	}
