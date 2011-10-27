@@ -42,12 +42,7 @@ class Autoloader {
 		$this->db = new DB($config_db);
 		$this->paths = array(
 			CACHE_PATH      => '/Cache\.php$/',
-			SETTING_PATH    => '/Setting\.php$/',
-			SCHEMA_PATH     => '/Schema\.php$/',
-			DAO_PATH        => '/DAO\.php$/',
-			MODEL_PATH      => '/Model\.php$/',
-			CONTROLLER_PATH => '/Controller\.php$/',
-			VIEW_PATH       => '/View\.php$/',
+			MODULES_PATH    => '/(Cache|Setting|Schema|DAO|Model|Controller|View)\.php$/',
 		);
 
 	}

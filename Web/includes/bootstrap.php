@@ -3,12 +3,7 @@
 define('INCLUDES_PATH', __DIR__);
 define('ROOT_PATH', str_replace('includes', '', INCLUDES_PATH));
 define('CACHE_PATH', ROOT_PATH . '/cache');
-define('SETTING_PATH', ROOT_PATH . '/setting');
-define('SCHEMA_PATH', ROOT_PATH . '/schema');
-define('DAO_PATH', ROOT_PATH . '/dao');
-define('CONTROLLER_PATH', ROOT_PATH . '/controller');
-define('MODEL_PATH', ROOT_PATH . '/model');
-define('VIEW_PATH', ROOT_PATH . '/view');
+define('MODULES_PATH', ROOT_PATH . '/modules');
 define('LIB_PATH', ROOT_PATH . '/lib');
 define('FILE_PATH', ROOT_PATH . '/files');
 define('FILE_CACHE_PATH', FILE_PATH . '/cache');
