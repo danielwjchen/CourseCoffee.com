@@ -8,13 +8,7 @@ interface BlockViewInterface {
 	public function getContent();
 }
 
-abstract class BlockView extends View implements ViewInterface {
-
-	/**
-	 * Override View::__construct()
-	 */
-	function __construct() {
-	}
+abstract class BlockView extends HTMLView implements ViewInterface {
 
 	/**
 	 * Implement ViewInterface::render()
