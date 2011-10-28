@@ -12,22 +12,27 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 		parent::__construct($data);
 		$this->setPageTitle('editor');
 		$this->addJQueryUI();
-		$this->addJS('model/book-suggest.js');
-		$this->addJS('model/class-suggest.js');
-		$this->addJS('model/class-remove.js');
-		$this->addJS('model/class-enroll.js');
-		$this->addJS('model/class-edit.js');
-		$this->addJS('model/editor-flow.js');
-		$this->addJS('model/editor-processor.js');
-		$this->addJS('model/register.js');
-		$this->addJS('controller/editor.js');
-    $this->addJS('lib/date.js');
-    $this->addJQueryUIPlugin('datetime');
-		$this->addCSS('book-list.css');
-		$this->addCSS('dialog.css');
-		$this->addCSS('editor.css');
-		$this->addCSS('navigation.css');
-		$this->addCSS('class-remove.css');
+        $this->addJQueryUIPlugin('datetime');
+
+		$this->addJS('Item/book-suggest-model');
+		$this->addJS('Curriculum/class-suggest-model');
+		$this->addJS('Curriculuml/class-remove-model');
+		$this->addJS('Curriculuml/class-enroll-model');
+		$this->addJS('Curriculuml/class-edit-model');
+
+		$this->addJS('User/register-model');
+
+		$this->addJS('Document/editor-flow-model');
+		$this->addJS('Document/editor-processor-model');
+		$this->addJS('Document/editor-controller');
+
+        $this->addJS('Document/date');
+
+		$this->addCSS('Item/book-list');
+		$this->addCSS('CourseCoffee/dialog');
+		$this->addCSS('Document/editor');
+		$this->addCSS('CourseCoffee/navigation');
+		$this->addCSS('Curriculum/class-remove');
 	}
 
 	/**

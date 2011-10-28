@@ -11,7 +11,7 @@ class PrivacyPolicyPageView extends PageView implements PageViewInterface {
 	function __construct($data = null) {
 		parent::__construct($data);
 		$this->setPageTitle('privacy policy');
-		$this->addCSS('tale.css');
+		$this->addCSS('Tale/tale');
 	}
 
 	/**

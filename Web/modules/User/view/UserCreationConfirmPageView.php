@@ -10,7 +10,7 @@ class UserCreationConfirmPageView extends PageView implements PageViewInterface 
 	 */
 	function __construct($data = null) {
 		parent::__construct($data);
-		$this->addCSS('account-created.css');
+		$this->addCSS('User/account-created');
 	}
 
 	/**

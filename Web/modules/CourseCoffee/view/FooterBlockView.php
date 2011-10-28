@@ -9,7 +9,7 @@ class FooterBlockView extends BlockView implements BlockViewInterface {
 	 * Implement BlockViewInterface::gEtcontentlear().
 	 */
 	public function getContent() {
-		$this->addCSS('footer.css');
+		$this->addCSS('CourseCoffee/footer');
 		$current_year = date('Y');
 		return <<<HTML
 <span class="copyright">CourseCoffee.com &copy; {$current_year}</span>

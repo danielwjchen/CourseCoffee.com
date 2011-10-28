@@ -11,12 +11,13 @@ class PortalPageView extends PageView implements PageViewInterface {
 	function __construct($data) {
 		parent::__construct($data);
 		$this->setPageTitle('portal');
-		$this->addJS('model/login.js');
-		$this->addJS('model/register.js');
-		$this->addJS('model/doc.js');
-		$this->addJS('controller/portal.js');
-		$this->addCSS('dialog.css');
-		$this->addCSS('portal.css');
+
+		$this->addJS('User/login-model');
+		$this->addJS('User/register-model');
+		$this->addJS('Document/doc-model');
+		$this->addJS('Portal/portal-controller');
+		$this->addCSS('CourseCoffee/dialog');
+		$this->addCSS('Portal/portal');
 	}
 
 	/**

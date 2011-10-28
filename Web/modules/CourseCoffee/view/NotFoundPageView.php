@@ -1,23 +1,25 @@
 <?php
 /**
  * @file
- * Generate the InternalError page for visiters
+ * Generate the NotFound page for visiters
  */
-class InternalErrorPageView extends PageView implements PageViewInterface {
+class NotFoundPageView extends PageView implements PageViewInterface {
 
 	/**
 	 * Extend PageView::__construct().
 	 */
-	function __construct($data = null) {
+	function __construct($data) {
 		parent::__construct($data);
-		$this->addCSS('internal-error.css');
+		$this->setPageTitle('404 Page not found.');
+		$this->addJQuery();
+		$this->addCSS('CourseCoffee/not-found');
 	}
 
 	/**
 	 * Override View::getHeader()
 	 */
 	protected function getHeader() {
-    header(self::INTERNAL_ERROR);
+    header(self::NOT_FOUND);
 	}
 
 	/**
@@ -47,16 +49,16 @@ class InternalErrorPageView extends PageView implements PageViewInterface {
 				{$header}
 			</div>
 		</div>
-		<div class="internal-error body">
+		<div class="not-found body">
 			<div class="body-inner">
-			<h1>500 Internal Server Error</h1>
+				<h1>404 Not Found</h1>	
 			</div>
 		</div>
 	</div>
 </div>
 <div class="footer">
 	<div class="footer-inner">
-		{$footer}
+	{$footer}
 	</div>
 </div>
 HTML;

@@ -9,11 +9,11 @@ class VisitorNavigationBlockView extends BlockView implements BlockViewInterface
 	 * Implement BlockViewInterface::gEtcontentlear().
 	 */
 	public function getContent() {
-		$this->addCSS('visitor-header.css');
-		$this->addJS('model/class-suggest.js');
-		$this->addJS('model/login.js');
-		$this->addJS('model/register.js');
-		$this->addJS('controller/visitor-navigation.js');
+		$this->addCSS('CourseCoffee/visitor-header');
+		$this->addJS('Curriculum/class-suggest-model');
+		$this->addJS('User/login-model');
+		$this->addJS('User/register-model');
+		$this->addJS('CourseCoffee/visitor-navigation-controller');
 		return <<<HTML
 <div class="visitor-header">
 	<div class="login-form">

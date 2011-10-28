@@ -11,9 +11,9 @@ class SignUpPageView extends PageView implements PageViewInterface {
 	function __construct($data) {
 		parent::__construct($data);
 		$this->setPageTitle('sign up');
-		$this->addJS('controller/signup.js');
-		$this->addJS('model/register.js');
-		$this->addCSS('signup.css');
+		$this->addJS('User/signup-controller');
+		$this->addJS('User/register-model');
+		$this->addCSS('User/signup');
 	}
 
 	/**

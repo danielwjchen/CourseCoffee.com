@@ -9,7 +9,7 @@ class UploadFormBlockView extends BlockView implements BlockViewInterface {
 	 * Implement BlockViewInterface::gEtcontentlear()
 	 */
 	public function getContent() {
-		$this->addJS('model/doc.js');
+		$this->addJS('Document/doc-model');
 		return <<<HTML
 <div class="upload-form">
 	<form class="hidden" id="doc-upload-form-skeleton" enctype="multipart/form-data" name="doc-upload" action="?q=doc-upload" method="post">

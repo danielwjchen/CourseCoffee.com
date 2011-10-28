@@ -9,14 +9,16 @@ class NavigationBlockView extends BlockView implements BlockViewInterface {
 	 * Implement BlockViewInterface::gEtcontentlear().
 	 */
 	public function getContent() {
-		$this->addCSS('navigation.css');
-		$this->addJS('model/logout.js');
-		$this->addCSS('class-remove.css');
-		$this->addJS('model/class-remove.js');
-		$this->addJS('controller/navigation.js');
-		$this->addJS('model/book-suggest.js');
-		$this->addJS('model/class-suggest.js');
-		$this->addJS('model/class-enroll.js');
+		$this->addJS('User/logout-model');
+		$this->addJS('Curriculum/class-remove-model');
+		$this->addJS('Curriculum/class-suggest-model');
+		$this->addJS('Curriculum/class-enroll-model');
+		$this->addJS('CourseCoffee/navigation-controller');
+		$this->addJS('Item/book-suggest-model');
+
+		$this->addCSS('CourseCoffee/navigation');
+		$this->addCSS('Curriculum/class-remove');
+
 		switch ($this->data['role']) {
 			case 'super_admin':
 			case 'admin':

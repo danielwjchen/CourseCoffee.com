@@ -11,7 +11,7 @@ class TutorialPageView extends PageView implements PageViewInterface {
 	function __construct($data = null) {
 		parent::__construct($data);
 		$this->setPageTitle('tutorial');
-		$this->addCSS('tale.css');
+		$this->addCSS('Tale/tale');
 	}
 
 	/**

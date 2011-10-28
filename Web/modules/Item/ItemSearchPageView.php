@@ -12,13 +12,14 @@ class ItemSearchPageView extends PageView implements PageViewInterface {
 		parent::__construct($data);
 		$this->setPageTitle('item search');
 		$this->addJqueryUI();
-		$this->addJS('model/book-suggest.js');
-		$this->addJS('model/doc.js');
-		$this->addJS('model/book-search.js');
-		$this->addJS('controller/book-search.js');
-		$this->addCSS('dialog.css');
-		$this->addCSS('book-search.css');
-		$this->addCSS('book-list.css');
+
+		$this->addJS('Item/book-suggest-model');
+		$this->addJS('Document/doc-model');
+		$this->addJS('Item/book-search-model');
+		$this->addJS('Item/book-search-controller');
+		$this->addCSS('CourseCoffee/dialog');
+		$this->addCSS('Item/book-search');
+		$this->addCSS('Item/book-list');
 	}
 
 	/**

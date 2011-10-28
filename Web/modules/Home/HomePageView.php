@@ -16,15 +16,16 @@ class HomePageView extends PageView implements PageViewInterface {
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
-		$this->addJS('model/panel.js');
-		$this->addJS('model/task.js');
-		$this->addJS('model/to-do.js');
-		$this->addJS('controller/home.js');
-		$this->addJS('timer.js');
-		$this->addCSS('dialog.css');
-		$this->addCSS('task.css');
-		$this->addCSS('home.css');
-		$this->addCSS('book-list.css');
+		$this->addJS('CourseCoffee/panel-model');
+		$this->addJS('Quest/task-model');
+		$this->addJS('Quest/to-do.js');
+		$this->addJS('Home/home-controller');
+		$this->addJS('CourseCoffee/timer');
+
+		$this->addCSS('CourseCoffee/dialog');
+		$this->addCSS('Quest/task');
+		$this->addCSS('Home/home');
+		$this->addCSS('Item/book-list');
 	}
 
 	/**

@@ -1,24 +1,23 @@
 <?php
 /**
  * @file
- * Generate the registration page for visiters
+ * Generate the InternalError page for visiters
  */
-class FBSignUpPageView extends PageView implements PageViewInterface {
+class InternalErrorPageView extends PageView implements PageViewInterface {
 
 	/**
 	 * Extend PageView::__construct().
 	 */
-	function __construct($data) {
+	function __construct($data = null) {
 		parent::__construct($data);
-		$this->setPageTitle('sign up with facebook');
-		$this->addCSS('fb-signup.css');
+		$this->addCSS('CourseCoffee/internal-error');
 	}
 
 	/**
-	 * Implement View::getHeader()
+	 * Override View::getHeader()
 	 */
 	protected function getHeader() {
-    header(self::STATUS_OK);
+    header(self::INTERNAL_ERROR);
 	}
 
 	/**
@@ -28,9 +27,6 @@ class FBSignUpPageView extends PageView implements PageViewInterface {
 		return array(
 			'header' => array(
 				'callback' => 'LogoHeaderBlockView',
-			),
-			'legal' => array(
-				'callback' => 'UserAgreementBlockView',
 			),
 			'footer' => array(
 				'callback' => 'FooterBlockView',
@@ -44,20 +40,16 @@ class FBSignUpPageView extends PageView implements PageViewInterface {
 	public function getContent() {
 		extract($this->data);
 		return <<<HTML
-<div class="fb-sign-up container">
+<div class="container">
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
 				{$header}
 			</div>
 		</div>
-		<div class="body">
+		<div class="internal-error body">
 			<div class="body-inner">
-				<div class="content"> 
-					<fb:registration fields="{$fields}" redirect-uri="{$redirect}" width="530">
-					</fb:registration>
-					{$legal}
-				</div>
+			<h1>500 Internal Server Error</h1>
 			</div>
 		</div>
 	</div>

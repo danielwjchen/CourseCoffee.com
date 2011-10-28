@@ -16,16 +16,18 @@ class AdminPageView extends PageView implements PageViewInterface {
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
-		$this->addJS('model/panel.js');
-		$this->addJS('model/task.js');
-		$this->addJS('model/admin-user.js');
-		$this->addJS('model/admin-syllabus.js');
-		$this->addJS('controller/admin.js');
-		$this->addJS('timer.js');
-		$this->addCSS('dialog.css');
-		$this->addCSS('panel.css');
-		$this->addCSS('task.css');
-		$this->addCSS('admin.css');
+		$this->addJS('Quest/task-model');
+		$this->addJS('CourseCoffee/timer');
+		$this->addJS('CourseCoffee/panel-model');
+
+		$this->addJS('Admin/admin-user-model');
+		$this->addJS('Admin/admin-syllabus-model');
+		$this->addJS('Admin/admin-controller');
+
+		$this->addCSS('CourseCoffee/dialog');
+		$this->addCSS('CourseCoffee/panel');
+		$this->addCSS('Quest/task');
+		$this->addCSS('Admin/admin');
 	}
 
 	/**

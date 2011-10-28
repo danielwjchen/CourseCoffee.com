@@ -1,5 +1,5 @@
 <?php
-require_once LIB_PATH . '/facebook/src/facebook.php';
+require_once __DIR__ . '/lib/src/facebook.php';
 /**
  * @file
  * Handle facebook related tasks

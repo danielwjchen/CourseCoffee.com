@@ -15,24 +15,25 @@ class CalendarPageView extends PageView implements PageViewInterface {
 		$this->addJQueryUI();
 		$this->addJQueryUIPlugin('datetime');
 
-		$this->addJS('model/task.js');
-		$this->addJS('model/panel.js');
-		$this->addJS('model/scrollbar.js');
-		$this->addJS('timer.js');
-		$this->addJS('model/calendar.js');
-		$this->addJS('controller/calendar.js');
-		$this->addCSS('dialog.css');
-		$this->addCSS('panel.css');
-		$this->addCSS('calendar.css');
-		$this->addCSS('task.css');
-		$this->addCSS('book-list.css');
+		$this->addJS('Quest/task-model');
+		$this->addJS('CourseCoffee/panel-model');
+		$this->addJS('CourseCoffee/scrollbar-model');
+		$this->addJS('CourseCoffee/timer');
+		$this->addJS('Curriculum/calendar-model');
+		$this->addJS('Curriculum/calendar-controller');
+
+		$this->addCSS('CourseCoffee/dialog');
+		$this->addCSS('CourseCoffee/panel');
+		$this->addCSS('Curriculum/calendar');
+		$this->addCSS('Quest/task');
+		$this->addCSS('Item/book-list');
 	}
 
 	/**
 	 * Implement View::getHeader()
 	 */
 	protected function getHeader() {
-    header(self::STATUS_OK);
+        header(self::STATUS_OK);
 	}
 
 	/**

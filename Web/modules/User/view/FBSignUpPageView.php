@@ -1,25 +1,24 @@
 <?php
 /**
  * @file
- * Generate the NotFound page for visiters
+ * Generate the registration page for visiters
  */
-class NotFoundPageView extends PageView implements PageViewInterface {
+class FBSignUpPageView extends PageView implements PageViewInterface {
 
 	/**
 	 * Extend PageView::__construct().
 	 */
 	function __construct($data) {
 		parent::__construct($data);
-		$this->setPageTitle('404 Page not found.');
-		$this->addJQuery();
-		$this->addCSS('not-found.css');
+		$this->setPageTitle('sign up with facebook');
+		$this->addCSS('User/fb-signup');
 	}
 
 	/**
-	 * Override View::getHeader()
+	 * Implement View::getHeader()
 	 */
 	protected function getHeader() {
-    header(self::NOT_FOUND);
+        header(self::STATUS_OK);
 	}
 
 	/**
@@ -29,6 +28,9 @@ class NotFoundPageView extends PageView implements PageViewInterface {
 		return array(
 			'header' => array(
 				'callback' => 'LogoHeaderBlockView',
+			),
+			'legal' => array(
+				'callback' => 'UserAgreementBlockView',
 			),
 			'footer' => array(
 				'callback' => 'FooterBlockView',
@@ -42,23 +44,27 @@ class NotFoundPageView extends PageView implements PageViewInterface {
 	public function getContent() {
 		extract($this->data);
 		return <<<HTML
-<div class="container">
+<div class="fb-sign-up container">
 	<div class="container-inner">
 		<div class="header">
 			<div class="header-inner">
 				{$header}
 			</div>
 		</div>
-		<div class="not-found body">
+		<div class="body">
 			<div class="body-inner">
-				<h1>404 Not Found</h1>	
+				<div class="content"> 
+					<fb:registration fields="{$fields}" redirect-uri="{$redirect}" width="530">
+					</fb:registration>
+					{$legal}
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="footer">
 	<div class="footer-inner">
-	{$footer}
+		{$footer}
 	</div>
 </div>
 HTML;

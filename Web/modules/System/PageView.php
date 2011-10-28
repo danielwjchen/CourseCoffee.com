@@ -8,13 +8,17 @@ interface PageViewInterface {
 	/**
 	 * Define blocks on page
 	 *
-	 * This function defines the association of a block of information and the 
-	 * BlockView child class responsible for generating the content. It also 
+	 * This function defines the association of a block of information and
+the 
+	 * BlockView child class responsible for generating the content. It
+also 
 	 * specifies the params expected.
 	 *
 	 * @return array
-	 *   - block variable name: the variable name that's expected by getContent()
-	 *      - callback: the BlockView child class reponsible for generating the 
+	 *   - block variable name: the variable name that's expected by
+getContent()
+	 *      - callback: the BlockView child class reponsible for generating
+the 
 	 *        content.
 	 *      - params: an array of parameters needed to generate the content.
 	 */
@@ -42,7 +46,8 @@ abstract class PageView extends HTMLView implements ViewInterface {
 	 * Override the default constructor
 	 *
 	 * @param array $data
-	 *  an associative array that holds blocks to be rendered into a HTML page
+	 *  an associative array that holds blocks to be rendered into a HTML
+page
 	 *  - header
 	 *  - body
 	 *  - footer
@@ -51,12 +56,15 @@ abstract class PageView extends HTMLView implements ViewInterface {
 		$this->data = $data;
 		$this->data['js']   = array();
 		$this->data['css']  = array();
-		
+
 		$this->setPageTitle('CourseCoffee.com');
-		// $this->addJQuery();
-		$this->addJS('main.js');
-		$this->addCSS('layout.css');
-		$this->addCSS('main.css');
+		$this->addJQuery();
+		$this->addJS('Page/main');
+		$this->addJS('Page/cache');
+		$this->addJS('Page/modal');
+		$this->addCSS('Page/layout');
+		$this->addCSS('Page/modal');
+		$this->addCSS('Page/main');
 		//$this->cache = new FileCache();
 		$this->cache = new DBCache();
 	}
@@ -74,28 +82,44 @@ abstract class PageView extends HTMLView implements ViewInterface {
 	/**
 	 * Add JQuery
 	 *
-	 * This is not used at the moment because Google API is faster
+	 * This is using Google API to speed things up
 	 */
 	protected function addJQuery() {
-		$this->addJS('lib/jquery-1.6.2.js');
+		$this->addJS(
+		
+'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
+			'external'
+		);
 	}
 
 	/**
 	 * Add JQuery UI
+	 *
+	 * This is using Google API to speed things up
 	 */
 	protected function addJQueryUI() {
-		//$this->data['jquery_ui']['js'][] = "/js/lib/jquery-ui/jquery-ui-1.8.14.custom.min.js";
-		$this->data['jquery_ui']['css'][] = "/js/lib/jquery-ui/themes/smoothness/jquery-ui-1.8.14.custom.css";
+		$this->addJS(
+		
+'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js',
+			'external'
+		);
+		$this->data['jquery_ui']['css'][] =
+"/js/lib/jquery-ui/themes/smoothness/jquery-ui-1.8.14.custom.css";
 	}
 
 	/**
 	 * Add JQuery UI plugin
+	 *
+	 * Please note JQuery UI is handled differently from regular JS and CSS
+files.
 	 */
 	public function addJQueryUIPlugin($name) {
 		switch ($name) {
 			case 'datetime':
-				$this->data['jquery_ui']['js'][]  = "/js/lib/jquery-ui/plugins/datetime/jquery.ui.datetime.src.js";
-				$this->data['jquery_ui']['css'][] = "/js/lib/jquery-ui/plugins/datetime/jquery.ui.datetime.css";
+				$this->data['jquery_ui']['js'][]  =
+"/js/lib/jquery-ui/plugins/datetime/jquery.ui.datetime.src.js";
+				$this->data['jquery_ui']['css'][] =
+"/js/lib/jquery-ui/plugins/datetime/jquery.ui.datetime.css";
 				break;
 
 		}
@@ -129,77 +153,153 @@ JS;
 CSS;
 	}
 
+	/**
+	 * Render external CSS links
+	 */
+	protected function renderExternalCSS() {
+		array_walk($this->data['css']['external'],
+'PageView::setLinkTag');
+		return implode("\n", $this->data['css']['external']);
+	}
 
 	/**
-	 * Render the CSS files
+	 * Render external CSS links
 	 *
-	 * This file also creates cache if the compress flag is set true but no cached
+	 * @return string css_tag
+	 *  formated <link> stylesheet tags
+	 */
+	protected function renderInternalCSS() {
+		if (!$config->compressCSS) {
+			array_walk($this->data['css']['internal'],
+'PageView::setLinkTag');
+			return implode("\n", $this->data['css']['internal']);
+
+		} else {
+			$cache_key   =
+sha1(implode($this->data['css']['internal']) . $config->build);
+			$cache_value = $this->cache->get($cache_key);
+			if (!$cache_value) {
+				foreach ($this->data['css']['internal'] as $css)
+{
+					$css_info = explode('/', $css);
+					$cache_value .= file_get_contents(
+						MODULES_PATH . '/' .
+$css_info[2]. '/css/' . $css_info[3]
+					);
+				}
+				/* remove comments */
+				$cache_value =
+preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $cache_value);
+				/* remove tabs, spaces, newlines, etc. */
+				$cache_value = str_replace(array("\r\n", "\r",
+"\n", "\t", '  ', '    ', '    '), '', $cache_value);
+				// expire not defined so it gets flushed when
+cron runs
+				$this->cache->set($cache_key, $cache_value);
+			}
+
+			$cache_css_link = '/css/' . $cache_key . '.css';
+			$this->setLinkTag($cache_css_link);
+			return $cache_css_link;
+		}
+	}
+
+	/**
+	 * Render CSS links
+	 *
+	 * This file also creates cache if the compress flag is set true but no
+cached
 	 * value is available.
 	 *
-	 * It'is using DBCache(), which should be changed to FileCache() or even 
+	 * It'is using DBCache(), which should be changed to FileCache() or
+even 
 	 * MemCache() in the future.
 	 */
 	protected function renderCSS() {
 		global $config;
-		if (!$config->compressCSS) {
-			array_walk($this->data['css'], 'PageView::setLinkTag');
-			return implode("\n", $this->data['css']);
+		$css_tag = '';
+		if (isset($this->data['css']['external'])) {
+			$css_tag .= $this->renderExternalCSS();
 		}
 
-		$cache_key   = sha1(implode('', $this->data['css']) . $config->build);
-		$cache_value = $this->cache->get($cache_key);
-		if (!$cache_value) {
-			foreach ($this->data['css'] as $css) {
-				$cache_value .= file_get_contents(ROOT_PATH . $css);
-			}
-			/* remove comments */
-			$cache_value = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $cache_value);
-			/* remove tabs, spaces, newlines, etc. */
-			$cache_value = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $cache_value);
-			// expire not defined so it gets flushed when cron runs
-			$this->cache->set($cache_key, $cache_value);
+		if (isset($this->data['css']['internal'])) {
+			$css_tag .= $this->renderInternalCSS();
 		}
 
-		$css_tag = '/css/' . $cache_key . '.css';
-
-		$this->setLinkTag($css_tag);
 		return $css_tag;
-		
+
+	}
+
+	/**
+	 * Render external JS links
+	 */
+	protected function renderExternalJS() {
+		array_walk($this->data['js']['external'],
+'PageView::setScriptTag');
+		return implode("\n", $this->data['js']['external']);
+	}
+
+	/**
+	 * Render external JS links
+	 *
+	 * @return string js_tag
+	 *  formated <script> javasript tags
+	 */
+	protected function renderInternalJS() {
+		if (!$config->compressJS) {
+			array_walk($this->data['js']['internal'],
+'PageView::setScriptTag');
+			return implode("\n", $this->data['js']['internal']);
+
+		} else {
+			require_once MODULES_PATH . '/System/lib/JSMin.php';
+
+			$cache_key   = sha1(implode('', $this->data['js']) .
+$config->build);
+			$cache_value = $this->cache->get($cache_key);
+			if (!$cache_value) {
+				foreach ($this->data['js'] as $js) {
+					$js_info = explode('/', $js);
+					$cache_value .=
+file_get_contents(MODULES_PATH . '/' . $js_info[2]. '/js/' . $js_info[3]);
+				}
+				$cache_value = JSMIN::minify($cache_value);
+				$this->cache->set($cache_key, $cache_value);
+			}
+
+			$cache_js_tag = '/js/' . $cache_key . '.js';
+
+			$this->setScriptTag($js_tag);
+			return $cache_js_link;
+		}
 	}
 
 	/**
 	 * Render the JS files
 	 *
-	 * This file also creates cache if the compress flag is set true but no cached
+	 * This file also creates cache if the compress flag is set true but no
+cached
 	 * value is available.
 	 *
-	 * It'is using DBCache(), which should be changed to FileCache() or even 
+	 * It'is using DBCache(), which should be changed to FileCache() or
+even 
 	 * MemCache() in the future.
 	 */
 	protected function renderJS() {
 		global $config;
-		if (!$config->compressJS) {
-			array_walk($this->data['js'], 'PageView::setScriptTag');
-			return implode("\n", $this->data['js']);
+		$js_tag = '';
+		if (isset($this->data['js']['external'])) {
+			$js_tag .= $this->renderExternalJS();
 		}
 
-		require_once LIB_PATH . '/JSMin.php';
-
-		$cache_key   = sha1(implode('', $this->data['js']) . $config->build);
-		$cache_value = $this->cache->get($cache_key);
-		if (!$cache_value) {
-			foreach ($this->data['js'] as $js) {
-				$cache_value .= file_get_contents(ROOT_PATH . $js);
-			}
-			$cache_value = JSMIN::minify($cache_value);
-			$this->cache->set($cache_key, $cache_value);
+		if (isset($this->data['js']['internal'])) {
+			$js_tag .= $this->renderInternalJS();
 		}
 
-		$js_tag = '/js/' . $cache_key . '.js';
-
-		$this->setScriptTag($js_tag);
 		return $js_tag;
-		
+
+		return $js_tag;
+
 	}
 
 	/**
@@ -214,9 +314,12 @@ CSS;
 	_gaq.push(['_setDomainName', '.coursecoffee.com']);
 	_gaq.push(['_trackPageview']);
 	(function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		var ga = document.createElement('script'); ga.type =
+'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+: 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(ga, s);
 	})();
 
 </script>
@@ -226,7 +329,8 @@ HTML;
 	/**
 	 * Get Facebook Javascript SDK 
 	 *
-	 * This loads the library asynchronously and provides FBSDK() as a callback
+	 * This loads the library asynchronously and provides FBSDK() as a
+callback
 	 * function to execute facebook api calls.
 	 */
 	protected function getFacebookSDK() {
@@ -272,7 +376,8 @@ HTML;
 
 	(function() {
 		var e = document.createElement('script'); e.async = true;
-		e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+		e.src = document.location.protocol +
+'//connect.facebook.net/en_US/all.js';
 		document.getElementById('fb-root').appendChild(e);
 }());
 </script>
@@ -302,10 +407,40 @@ HTML;
 			$this->data[$name] = $block['content'];
 
 			if (isset($block['js'])) {
-				$this->data['js'] = array_merge($this->data['js'], $block['js']);
+				if (isset($block['js']['external'])) {
+					$this->data['js']['external'] =
+array_merge(
+						$this->data['js']['external'],
+$block['js']['external']
+					);
+				}
+
+				if (isset($block['js']['internal'])) {
+					$this->data['js']['internal'] =
+array_merge(
+						$this->data['js']['internal'],
+$block['js']['internal']
+					);
+				}
+
 			}
 			if (isset($block['css'])) {
-				$this->data['css'] = array_merge($this->data['css'], $block['css']);
+				if (isset($block['css']['external'])) {
+					$this->data['css']['external'] =
+array_merge(
+						$this->data['css']['external'],
+$block['css']['external']
+					);
+				}
+
+				if (isset($block['css']['internal'])) {
+					$this->data['css']['internal'] =
+array_merge(
+						$this->data['css']['internal'],
+$block['css']['internal']
+					);
+				}
+
 			}
 
 		}
@@ -317,17 +452,23 @@ HTML;
 	public function render() {
 		$this->setHeader();
 		$this->renderBlocks();
-		$js       = $this->renderJS();
-		$css      = $this->renderCSS();
-		// Add Jquery UI stuff because it doesn't play nice with others when cached
+
+		$js  = $this->renderJS();
+		$css = $this->renderCSS();
+
+		// Render Jquery UI stuff because it doesn't play nice with
+others when cached
 		if (isset($this->data['jquery_ui']['js'])) {
-			array_walk($this->data['jquery_ui']['js'], 'PageView::setScriptTag');
+			array_walk($this->data['jquery_ui']['js'],
+'PageView::setScriptTag');
 			$js .= implode("\n", $this->data['jquery_ui']['js']);
 		}
 		if (isset($this->data['jquery_ui']['css'])) {
-			array_walk($this->data['jquery_ui']['css'], 'PageView::setLinkTag');
+			array_walk($this->data['jquery_ui']['css'],
+'PageView::setLinkTag');
 			$css .= implode("\n", $this->data['jquery_ui']['css']);
 		}
+
 		$content  = $this->getContent();
 		$title    = $this->data['title'];
 		$facebook = $this->getFacebookSDK();
@@ -335,20 +476,23 @@ HTML;
 
 		return <<<HTML
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:fb="http://www.facebook.com/2008/fbml">
 	<head>
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link rel="shortcut icon" href="/favicon.ico"
+type="image/x-icon" />
 		<meta http-equiv='data-type' data='text/html;charset=UTF-8' /> 
 		<meta http-equiv='Pragma' data='no-cache' /> 
 		<script type="text/javascript">
 			(function() {
-				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-				po.src = 'https://apis.google.com/js/plusone.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+				var po = document.createElement('script');
+po.type = 'text/javascript'; po.async = true;
+				po.src =
+'https://apis.google.com/js/plusone.js';
+				var s =
+document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 			})();
 		</script>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 		<title>{$title}</title>
 		{$js}
 		{$css}

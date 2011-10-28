@@ -19,18 +19,19 @@ class ClassPageView extends PageView implements PageViewInterface {
 			$this->buildClassList($content['class_list']);
 		}
 
-		$this->addJS('model/panel.js');
-		$this->addJS('model/task.js');
-		$this->addJS('model/class-remove.js');
-		$this->addJS('model/class-info.js');
-		$this->addJS('timer.js');
-		$this->addJS('controller/class.js');
-		$this->addCSS('dialog.css');
-		$this->addCSS('class-remove.css');
-		$this->addCSS('class.css');
-		$this->addCSS('panel.css');
-		$this->addCSS('task.css');
-		$this->addCSS('book-list.css');
+		$this->addJS('Quest/task-model');
+		$this->addJS('CourseCoffee/timer');
+		$this->addJS('CourseCoffee/panel-model');
+		$this->addJS('Curriculum/class-remove-model');
+		$this->addJS('Curriculum/class-info-model');
+		$this->addJS('Curriculum/class-controller');
+
+		$this->addCSS('CourseCoffee/dialog');
+		$this->addCSS('CourseCoffee/panel');
+		$this->addCSS('Quest/task');
+		$this->addCSS('Item/book-list');
+		$this->addCSS('Curriculum/class-remove');
+		$this->addCSS('Curriculum/class');
 	}
 
 	/**
