@@ -4,13 +4,13 @@
  * Suggest list of books for a class
  */
 
-require_once LIB_PATH . '/booksearcher/AmazonAPI.php';
-require_once LIB_PATH . '/booksearcher/BarnesNobleAPI.php';
-require_once LIB_PATH . '/booksearcher/BookRenterAPI.php';
-require_once LIB_PATH . '/booksearcher/CheggAPI.php';
-require_once LIB_PATH . '/booksearcher/eCampusAPI.php';
-require_once LIB_PATH . '/booksearcher/KnetBooksAPI.php';
-require_once LIB_PATH . '/booksearcher/ValoreBooksAPI.php';
+require_once __DIR__ . '/lib/AmazonAPI.php';
+require_once __DIR__ . '/lib/BarnesNobleAPI.php';
+require_once __DIR__ . '/lib/BookRenterAPI.php';
+require_once __DIR__ . '/lib/CheggAPI.php';
+require_once __DIR__ . '/lib/eCampusAPI.php';
+require_once __DIR__ . '/lib/KnetBooksAPI.php';
+require_once __DIR__ . '/lib/ValoreBooksAPI.php';
 
 class ItemSuggestModel extends Model {
 

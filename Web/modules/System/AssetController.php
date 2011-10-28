@@ -20,20 +20,17 @@ class AssetController {
 	 */
 	public static function Route() {
 		return array(
-			'getCSS' => array(
-				'css',
-			),
-			'getJS' => array(
-				'js',
-			),
+			'css' => 'getCSS',
+			'js' => 'getJS',
 		);
 	}
 
 	/**
 	 * Implement ControllerInterface::action()
 	 */
-	public function action($callback, array $params = null) {
-		call_user_func_array(array($this, $callback), $params);
+	public function beforeAction() {
+	}
+	public function afterAction() {
 	}
 
 	/**
@@ -50,12 +47,12 @@ compressed
 if 
 	 *  the request is asking for compressed & cached CSS
 	 */
-	public function getCSS($key, $file = '') {
+	public function getCSS($params) {
 		header('Content-type: text/css');
 		global $config;
 
-		if ($file != '' && !$config->compressCSS) {
-			include MODULES_PATH . '/' . $key . '/css/' . $file;
+		if (!$config->compressCSS) {
+			include MODULES_PATH . '/' . $params[0]. '/css/' . $params[1];
 			return;
 		}
 
@@ -79,12 +76,12 @@ compressed
 if 
 	 *  the request is asking for compressed & cached JS
 	 */
-	public function getJS($key, $file = '') {
+	public function getJS($params) {
 		header('Content-type: text/javascript');
 		global $config;
 
 		if (!$config->compressJS) {
-			include MODULES_PATH . '/' . $key . '/js/' . $file;
+			include MODULES_PATH . '/' . $params[0]. '/js/' . $params[1];
 			return;
 		}
 

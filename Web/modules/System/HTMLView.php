@@ -44,10 +44,10 @@ abstract class HTMLView extends View {
 	protected function addCSS($css, $option = 'internal') {
 		switch ($option) {
 			case 'internal':
-				$this->data['css'][] = "/css/{$css}";
+				$this->data['css'][$option][] = "/css/{$css}.css";
 				break;
 			case  'external':
-				$this->data['css'][] = $css;
+				$this->data['css'][$option][] = $css;
 				break;
 		}
 	}

@@ -59,12 +59,9 @@ page
 
 		$this->setPageTitle('CourseCoffee.com');
 		$this->addJQuery();
-		$this->addJS('Page/main');
-		$this->addJS('Page/cache');
-		$this->addJS('Page/modal');
-		$this->addCSS('Page/layout');
-		$this->addCSS('Page/modal');
-		$this->addCSS('Page/main');
+		$this->addJS('CourseCoffee/main');
+		$this->addCSS('CourseCoffee/layout');
+		$this->addCSS('CourseCoffee/main');
 		//$this->cache = new FileCache();
 		$this->cache = new DBCache();
 	}
@@ -170,31 +167,26 @@ CSS;
 	 */
 	protected function renderInternalCSS() {
 		if (!$config->compressCSS) {
-			array_walk($this->data['css']['internal'],
-'PageView::setLinkTag');
+			array_walk($this->data['css']['internal'], 'PageView::setLinkTag');
 			return implode("\n", $this->data['css']['internal']);
 
 		} else {
-			$cache_key   =
-sha1(implode($this->data['css']['internal']) . $config->build);
+			$cache_key = sha1(implode($this->data['css']['internal']) . $config->build);
 			$cache_value = $this->cache->get($cache_key);
 			if (!$cache_value) {
-				foreach ($this->data['css']['internal'] as $css)
-{
+				foreach ($this->data['css']['internal'] as $css) {
 					$css_info = explode('/', $css);
 					$cache_value .= file_get_contents(
 						MODULES_PATH . '/' .
-$css_info[2]. '/css/' . $css_info[3]
+						$css_info[2]. '/css/' . $css_info[3]
 					);
 				}
 				/* remove comments */
-				$cache_value =
-preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $cache_value);
+				$cache_value = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $cache_value);
 				/* remove tabs, spaces, newlines, etc. */
 				$cache_value = str_replace(array("\r\n", "\r",
 "\n", "\t", '  ', '    ', '    '), '', $cache_value);
-				// expire not defined so it gets flushed when
-cron runs
+				// expire not defined so it gets flushed when cron runs
 				$this->cache->set($cache_key, $cache_value);
 			}
 
@@ -456,16 +448,14 @@ $block['css']['internal']
 		$js  = $this->renderJS();
 		$css = $this->renderCSS();
 
-		// Render Jquery UI stuff because it doesn't play nice with
-others when cached
+		// Render Jquery UI stuff because it doesn't play nice with others when 
+		// cached
 		if (isset($this->data['jquery_ui']['js'])) {
-			array_walk($this->data['jquery_ui']['js'],
-'PageView::setScriptTag');
+			array_walk($this->data['jquery_ui']['js'], 'PageView::setScriptTag');
 			$js .= implode("\n", $this->data['jquery_ui']['js']);
 		}
 		if (isset($this->data['jquery_ui']['css'])) {
-			array_walk($this->data['jquery_ui']['css'],
-'PageView::setLinkTag');
+			array_walk($this->data['jquery_ui']['css'], 'PageView::setLinkTag');
 			$css .= implode("\n", $this->data['jquery_ui']['css']);
 		}
 
@@ -476,21 +466,17 @@ others when cached
 
 		return <<<HTML
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:fb="http://www.facebook.com/2008/fbml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
 	<head>
-		<link rel="shortcut icon" href="/favicon.ico"
-type="image/x-icon" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<meta http-equiv='data-type' data='text/html;charset=UTF-8' /> 
 		<meta http-equiv='Pragma' data='no-cache' /> 
 		<script type="text/javascript">
 			(function() {
 				var po = document.createElement('script');
-po.type = 'text/javascript'; po.async = true;
-				po.src =
-'https://apis.google.com/js/plusone.js';
-				var s =
-document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+				po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 			})();
 		</script>
 		<title>{$title}</title>

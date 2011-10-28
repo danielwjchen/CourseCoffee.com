@@ -18,7 +18,7 @@ class HomePageView extends PageView implements PageViewInterface {
 
 		$this->addJS('CourseCoffee/panel-model');
 		$this->addJS('Quest/task-model');
-		$this->addJS('Quest/to-do.js');
+		$this->addJS('Quest/to-do-model');
 		$this->addJS('Home/home-controller');
 		$this->addJS('CourseCoffee/timer');
 
