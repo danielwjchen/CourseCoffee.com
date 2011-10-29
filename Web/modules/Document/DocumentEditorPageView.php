@@ -16,9 +16,9 @@ class DocumentEditorPageView extends PageView implements PageViewInterface {
 
 		$this->addJS('Item/book-suggest-model');
 		$this->addJS('Curriculum/class-suggest-model');
-		$this->addJS('Curriculuml/class-remove-model');
-		$this->addJS('Curriculuml/class-enroll-model');
-		$this->addJS('Curriculuml/class-edit-model');
+		$this->addJS('Curriculum/class-remove-model');
+		$this->addJS('Curriculum/class-enroll-model');
+		$this->addJS('Curriculum/class-edit-model');
 
 		$this->addJS('User/register-model');
 

@@ -45,7 +45,7 @@
 	position: absolute;
 	right: -5px;
 	top: -5px;
-	background: url('../images/dialog-close.png') center center no-repeat;
+	background: url('/images/dialog-close.png') center center no-repeat;
 }
 .dialog-inner {
 	margin: 50px auto 0;

@@ -166,6 +166,7 @@ CSS;
 	 *  formated <link> stylesheet tags
 	 */
 	protected function renderInternalCSS() {
+		global $config;
 		if (!$config->compressCSS) {
 			array_walk($this->data['css']['internal'], 'PageView::setLinkTag');
 			return implode("\n", $this->data['css']['internal']);
@@ -226,8 +227,7 @@ even
 	 * Render external JS links
 	 */
 	protected function renderExternalJS() {
-		array_walk($this->data['js']['external'],
-'PageView::setScriptTag');
+		array_walk($this->data['js']['external'], 'PageView::setScriptTag');
 		return implode("\n", $this->data['js']['external']);
 	}
 
@@ -238,22 +238,20 @@ even
 	 *  formated <script> javasript tags
 	 */
 	protected function renderInternalJS() {
+		global $config;
 		if (!$config->compressJS) {
-			array_walk($this->data['js']['internal'],
-'PageView::setScriptTag');
+			array_walk($this->data['js']['internal'], 'PageView::setScriptTag');
 			return implode("\n", $this->data['js']['internal']);
 
 		} else {
 			require_once MODULES_PATH . '/System/lib/JSMin.php';
 
-			$cache_key   = sha1(implode('', $this->data['js']) .
-$config->build);
+			$cache_key   = sha1(implode('', $this->data['js']['internal']) . $config->build);
 			$cache_value = $this->cache->get($cache_key);
 			if (!$cache_value) {
-				foreach ($this->data['js'] as $js) {
+				foreach ($this->data['js']['internal'] as $js) {
 					$js_info = explode('/', $js);
-					$cache_value .=
-file_get_contents(MODULES_PATH . '/' . $js_info[2]. '/js/' . $js_info[3]);
+					$cache_value .= file_get_contents(MODULES_PATH . '/' . $js_info[2]. '/js/' . $js_info[3]);
 				}
 				$cache_value = JSMIN::minify($cache_value);
 				$this->cache->set($cache_key, $cache_value);
@@ -261,8 +259,8 @@ file_get_contents(MODULES_PATH . '/' . $js_info[2]. '/js/' . $js_info[3]);
 
 			$cache_js_tag = '/js/' . $cache_key . '.js';
 
-			$this->setScriptTag($js_tag);
-			return $cache_js_link;
+			$this->setScriptTag($cache_js_tag);
+			return $cache_js_tag;
 		}
 	}
 
@@ -400,36 +398,28 @@ HTML;
 
 			if (isset($block['js'])) {
 				if (isset($block['js']['external'])) {
-					$this->data['js']['external'] =
-array_merge(
-						$this->data['js']['external'],
-$block['js']['external']
+					$this->data['js']['external'] = array_merge(
+						$this->data['js']['external'], $block['js']['external']
 					);
 				}
 
 				if (isset($block['js']['internal'])) {
-					$this->data['js']['internal'] =
-array_merge(
-						$this->data['js']['internal'],
-$block['js']['internal']
+					$this->data['js']['internal'] = array_merge(
+						$this->data['js']['internal'], $block['js']['internal']
 					);
 				}
 
 			}
 			if (isset($block['css'])) {
 				if (isset($block['css']['external'])) {
-					$this->data['css']['external'] =
-array_merge(
-						$this->data['css']['external'],
-$block['css']['external']
+					$this->data['css']['external'] = array_merge(
+						$this->data['css']['external'], $block['css']['external']
 					);
 				}
 
 				if (isset($block['css']['internal'])) {
-					$this->data['css']['internal'] =
-array_merge(
-						$this->data['css']['internal'],
-$block['css']['internal']
+					$this->data['css']['internal'] = array_merge(
+						$this->data['css']['internal'], $block['css']['internal']
 					);
 				}
 

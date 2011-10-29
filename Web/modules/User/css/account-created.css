@@ -64,7 +64,7 @@
 }
 .account-created .panel-02 .panel-inner{
   height: 475px;
-  background: url('../images/syllabus-icon.png') center center no-repeat;
+  background: url('/images/syllabus-icon.png') center center no-repeat;
 }
 .account-created .panel-02 .button{
   margin: 220px auto;

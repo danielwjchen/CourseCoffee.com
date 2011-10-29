@@ -56,7 +56,7 @@ if
 			return;
 		}
 
-		$key = str_replace('.css', '', $key);
+		$key = str_replace('.css', '', $params[0]);
 
 		$value = $this->cache->get($key);
 		echo $value;
@@ -85,7 +85,7 @@ if
 			return;
 		}
 
-		$key = str_replace('.js', '', $key);
+		$key = str_replace('.js', '', $params[0]);
 
 		$value = $this->cache->get($key);
 		echo $value;

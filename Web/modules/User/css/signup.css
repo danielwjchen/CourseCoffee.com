@@ -87,4 +87,12 @@
 	-webkit-box-shadow: inset 0 0 15px 15px#d06e06;
 	box-shadow: inset 0 0 15px 15px #d06e06;
 }
-
+.user-agreement {
+	width: 400px;
+	margin: 10px auto;
+	font-size: 12px;
+}
+.user-agreement a {
+	color: #333333;
+	font-weight: bold;
+}
