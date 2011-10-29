@@ -27,7 +27,7 @@ class BookLoaderXML {
      *  an associative array that defines database connection
      */
     function __construct($xml_file, $config_db) {
-        //$this->db = new DB($config_db);
+        $this->db = new DB($config_db);
         $this->xml = new DOMDocument();
         $this->xml->load(__DIR__ . "/Bookstore/XML/" . $xml_file . ".xml");
     }
@@ -50,7 +50,7 @@ class BookLoaderXML {
      * @return section_id
      */
     protected function checkAndUpdateCurriculumRecord(array $subject, array $course, array $section) {
-        $section_record = $db->fetch("
+        $section_record = $this->db->fetch("
             SELECT sec.id 
             FROM section sec
             INNER JOIN course c
@@ -69,37 +69,54 @@ class BookLoaderXML {
             return $section_record['id'];
 
         } else {
-            $subject_record = $db->fetch(
+            $subject_record = $this->db->fetch(
                 "SELECT * FROM subject WHERE abbr = :abbr", 
                 array('abbr' => $subject['abbr'])
             );
-            $course_record  = $db->fetch(
-                "SELECT * FROM course WHERE num = :num", 
-                array('num' => $course['num'])
-            );
+						$subjec_id = '';
             if (empty($subject_record['id'])) {
-                $subject_id = $db->insert(
+                $subject_id = $this->db->insert(
                     "INSERT INTO subject (abbr) VALUE (:abbr)",
                     array('abbr' => $subject['abbr'])
                 );
+            } else {
+							$subject_id = $subject_record['id'];
             }
+            $course_record  = $this->db->fetch(
+                "SELECT * FROM course WHERE num = :num AND subject_id = :subject_id", 
+                array('num' => $course['num'],
+									'subject_id' => $subject_id)
+            );
+						$course_id = '';
             if (empty($course_record['id'])) {
-                $course_id = $db->insert(
+                $course_id = $this->db->insert(
                     "INSERT INTO course (subject_id, num) VALUE (:subject_id, :num)",
                     array(
-                        'subject_id' => $subject_record['id'],
+                        'subject_id' => $subject_id,
                         'num' => $course['num']
                     )
                 );
-            }
-
-            return  $db->insert(
-                "INSERT INTO section (course_id, num) VALUE (:course_id, :num)",
+            } else {
+							$course_id = $course_record['id'];
+						}
+            $section_record = $this->db->fetch(
+                "SELECT * FROM section WHERE num = :num AND course_id = :course_id", 
                 array(
-                    'course_id' => $course_record['id'],
-                    'num' => $section['num']
-                )
+									'num' => $section['num'],
+									'course_id' => $course_id)
             );
+						if (!empty($section_record['id'])) {
+							return $section_record['id'];
+
+						} else {
+							return  $this->db->insert(
+									"INSERT INTO section (course_id, num) VALUE (:course_id, :num)",
+									array(
+											'course_id' => $course_id,
+											'num' => $section['num']
+									)
+							);
+						}
         }
     }
 
@@ -115,29 +132,53 @@ class BookLoaderXML {
      *  - isbn
      */
     protected function checkAndUpdateItemRecord($section_id, array $item) {
-        $item_record = $db->fetch(
-            'SELECT * FROM `book` WHERE `isbn` = :isbn OR `title` = :title', 
-            array('isbn' => $item['isbn'], 'title' => $item['title'])
-        );
-        $item_id = $item_record['id'];
-		if (empty($item_id)) {
-            $item_id = $db->insert(
-                'INSERT INTO `book` (`isbn`, `title`) VALUES (:isbn, :title)', 
-                array('isbn' => $item['isbn'], 'title' => $item['title'])
-			);
-		} elseif (empty($item_record['isbn'])) {
-            $item_id = $db->insert(
-                'UPDATE `book` SET `isbn` = :isbn WHERE `id` = :id', 
-                array('id' => $item_record['id'], 'isbn' => $item['isbn'])
-            );
-		} elseif (empty($item_record['title'])) {
-            $item_id = $db->insert(
-                'UPDATE `book` SET `title` = :title WHERE `id` = :id', 
-                array('id' => $item_record['id'], 'title' => $item['title'])
-            );
-		}
+				if (!empty($item['isbn'])) {
+					$item_record = $this->db->fetch(
+							'SELECT * FROM `book` WHERE `isbn` = :isbn', 
+							array('isbn' => $item['isbn'])
+					);
+				} else {
+					$item_record = $this->db->fetch(
+							'SELECT * FROM `book` WHERE `title` = :title', 
+							array('title' => $item['title'])
+					);
+				}
 
-        $linkage = $db->fetch("
+        $item_id = $item_record['id'];
+				if (empty($item_id)) {
+					if (!empty($item['title']) && !empty($item['isbn'])) {
+						$item_id = $this->db->insert(
+								'INSERT INTO `book` (`isbn`, `title`) VALUES (:isbn, :title)', 
+								array('isbn' => $item['isbn'], 'title' => $item['title'])
+						);
+					} elseif (!empty($item['isbn'])) {
+						$item_id = $this->db->insert(
+							'INSERT INTO `book` (`isbn`) VALUE (:isbn)', 
+							array('isbn' => $item['isbn'])
+						);
+					} elseif(!empty($item['title'])) {
+						$item_id = $this->db->insert(
+							'INSERT INTO `book` (`title`) VALUES (:title)', 
+							array('title' => $item['title'])
+						);
+					}
+				} elseif (empty($item_record['isbn'])) {
+								$item_id = $this->db->insert(
+										'UPDATE `book` SET `isbn` = :isbn WHERE `id` = :id', 
+										array('id' => $item_id, 'isbn' => $item['isbn'])
+								);
+				} elseif (empty($item_record['title'])) {
+								$item_id = $this->db->insert(
+										'UPDATE `book` SET `title` = :title WHERE `id` = :id', 
+										array('id' => $item_id, 'title' => $item['title'])
+								);
+				}
+
+				if (empty($item_id)) {
+					return ;
+				}
+
+        $linkage = $this->db->fetch("
             SELECT * FROM `book_section_linkage`
             WHERE `book_id` = :book_id 
             AND `section_id` = :section_id",
@@ -151,7 +192,7 @@ class BookLoaderXML {
             return ;
         }
 
-		$db->perform("
+		$this->db->perform("
 			INSERT INTO `book_section_linkage` 
 			(`book_id`, `section_id`) VALUES (:book_id, :section_id)
 			", array(
@@ -187,6 +228,7 @@ class BookLoaderXML {
     }
 }
 
-print_r($config->db);
-$loader = new BookLoaderXML('CMU_Neebo', $config->db['institution']['cmu']);
+//$loader = new BookLoaderXML('CMU_Neebo', $config->db['institution']['cmu']);
+//$loader = new BookLoaderXML('EMICH_bkstr', $config->db['institution']['emich']);
+$loader = new BookLoaderXML('WISC_Neebo', $config->db['institution']['wisc']);
 $loader->process();
