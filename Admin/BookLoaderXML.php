@@ -230,5 +230,7 @@ class BookLoaderXML {
 
 //$loader = new BookLoaderXML('CMU_Neebo', $config->db['institution']['cmu']);
 //$loader = new BookLoaderXML('EMICH_bkstr', $config->db['institution']['emich']);
-$loader = new BookLoaderXML('WISC_Neebo', $config->db['institution']['wisc']);
+//$loader = new BookLoaderXML('WISC_Neebo', $config->db['institution']['wisc']);
+//$loader = new BookLoaderXML('NEBRASKA_Neebo', $config->db['institution']['unl']);
+$loader = new BookLoaderXML('CMU_Neebo', $config->db['institution']['cmu']);
 $loader->process();
