@@ -31,9 +31,6 @@ class SignUpPageView extends PageView implements PageViewInterface {
 			'header' => array(
 				'callback' => 'LogoHeaderBlockView',
 			),
-			'legal' => array(
-				'callback' => 'UserAgreementBlockView',
-			),
 			'footer' => array(
 				'callback' => 'FooterBlockView',
 			),
@@ -112,7 +109,9 @@ class SignUpPageView extends PageView implements PageViewInterface {
 						</div>
 						<a href="#" class="button sign-up">Join</a> 
 					</form> 
-					{$legal}
+					<div class="user-agreement">
+						<p>By clicking Join, you agree to CourseCoffee.com <a href="/terms-of-use" target="_blank">terms of use</a> and <a href="privacy-policy">privacy policy</a>.</p>
+					</div>
 				</div>
 			</div>
 		</div>
