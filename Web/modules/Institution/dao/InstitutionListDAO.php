@@ -9,28 +9,24 @@ class InstitutionListDAO extends ListDAO implements ListDAOInterface {
 	 */
 	public function read(array $params = null) {
 		$sql = "SELECT * FROM `institution`";
+		$sql_params = array();
 
 		if (isset($params['name'])) {
 			$sql .= 'WHERE `name` LIKE :name';
-			$this->list = $this->db->fetchList($sql, array(
-				'name' => '%' . $params['name'] . '%'
-			));
+			$sql_params = array('name' => '%' . $params['name'] . '%');
 
 		} elseif (isset($params['domain'])) {
 			$sql .= "WHERE `domain` = :domain";
-			$this->list = $this->db->fetchList($sql, array(
-				'domain' => '%' . $params['domain'] . '%'
-			));
+			$sql_params = array('domain' => '%' . $params['domain'] . '%');
 
 		} elseif (isset($params['uri'])) {
 			$sql .= "WHERE `uri` = :uri";
-			$this->list = $this->db->fetchList($sql, array(
-				'uri' => '%' . $params['uri'] . '%'
-			));
+			$sql_params = array('uri' => '%' . $params['uri'] . '%');
 
-		} else {
-			$this->list = $this->db->fetchList($sql);
 		}
+
+		$sql .= " ORDER BY name";
+		$this->list = $this->db->fetchList($sql, $sql_params);
 
 		return empty($this->list);
 
